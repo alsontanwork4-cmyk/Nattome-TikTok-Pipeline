@@ -1,0 +1,22 @@
+{
+  "status": "skipped",
+  "engine": {
+    "primary": "paddleocr",
+    "fallback": "tesseract",
+    "selected": null
+  },
+  "languages_requested": [
+    "English",
+    "Malay",
+    "Simplified Chinese",
+    "Traditional Chinese",
+    "mixed-language text"
+  ],
+  "frames": [],
+  "summary": {
+    "frame_count": 0,
+    "text_frame_count": 0,
+    "combined_text": ""
+  },
+  "reason": "no extracted timeline frames are available for OCR"
+}

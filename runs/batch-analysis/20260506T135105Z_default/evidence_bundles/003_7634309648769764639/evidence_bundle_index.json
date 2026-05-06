@@ -1,0 +1,23 @@
+{
+  "candidate_id": "7634309648769764639",
+  "rank": 3,
+  "bundle_folder": "evidence_bundles\\003_7634309648769764639",
+  "original_tiktok_url": "https://www.tiktok.com/@healifyhub/video/7634309648769764639",
+  "source_metadata": "evidence_bundles\\003_7634309648769764639\\source_metadata.json",
+  "download_status": {
+    "status": "missing",
+    "reason": "no downloadable video source was provided in candidate metadata"
+  },
+  "artifacts": {
+    "source_video": {
+      "exists": false,
+      "path": null
+    },
+    "hybrid_timeline": {
+      "exists": false,
+      "path": "evidence_bundles\\003_7634309648769764639\\hybrid_timeline.json",
+      "frame_count": 0,
+      "status": "skipped"
+    }
+  }
+}

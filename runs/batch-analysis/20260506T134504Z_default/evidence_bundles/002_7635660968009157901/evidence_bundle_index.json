@@ -1,0 +1,17 @@
+{
+  "candidate_id": "7635660968009157901",
+  "rank": 2,
+  "bundle_folder": "evidence_bundles\\002_7635660968009157901",
+  "original_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7635660968009157901",
+  "source_metadata": "evidence_bundles\\002_7635660968009157901\\source_metadata.json",
+  "download_status": {
+    "status": "missing",
+    "reason": "no downloadable video source was provided in candidate metadata"
+  },
+  "artifacts": {
+    "source_video": {
+      "exists": false,
+      "path": null
+    }
+  }
+}

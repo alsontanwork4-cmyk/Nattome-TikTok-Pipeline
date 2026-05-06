@@ -1,0 +1,17 @@
+{
+  "candidate_id": "7632021443202616607",
+  "rank": 4,
+  "bundle_folder": "evidence_bundles\\004_7632021443202616607",
+  "original_tiktok_url": "https://www.tiktok.com/@drjoe_md/video/7632021443202616607",
+  "source_metadata": "evidence_bundles\\004_7632021443202616607\\source_metadata.json",
+  "download_status": {
+    "status": "missing",
+    "reason": "no downloadable video source was provided in candidate metadata"
+  },
+  "artifacts": {
+    "source_video": {
+      "exists": false,
+      "path": null
+    }
+  }
+}

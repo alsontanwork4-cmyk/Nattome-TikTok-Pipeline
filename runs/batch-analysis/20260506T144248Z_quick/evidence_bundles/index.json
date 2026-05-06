@@ -1,0 +1,326 @@
+{
+  "created_at": "2026-05-06T14:42:48Z",
+  "bundle_count": 5,
+  "bundles": [
+    {
+      "candidate_id": "7633461167788166413",
+      "rank": 1,
+      "bundle_folder": "evidence_bundles\\001_7633461167788166413",
+      "original_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "source_metadata": "evidence_bundles\\001_7633461167788166413\\source_metadata.json",
+      "download_status": {
+        "status": "missing",
+        "reason": "no downloadable video source was provided in candidate metadata"
+      },
+      "artifacts": {
+        "source_video": {
+          "exists": false,
+          "path": null
+        },
+        "hybrid_timeline": {
+          "exists": false,
+          "path": "evidence_bundles\\001_7633461167788166413\\hybrid_timeline.json",
+          "frame_count": 0,
+          "status": "skipped"
+        },
+        "ocr_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\001_7633461167788166413\\ocr_evidence.json",
+          "frame_count": 0,
+          "text_frame_count": 0,
+          "status": "skipped"
+        },
+        "audio": {
+          "exists": false,
+          "path": null,
+          "status": "skipped"
+        },
+        "transcript_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\001_7633461167788166413\\transcript_evidence.json",
+          "segment_count": 0,
+          "status": "skipped"
+        },
+        "baseline_audio_analysis": {
+          "exists": true,
+          "path": "evidence_bundles\\001_7633461167788166413\\baseline_audio_analysis.json",
+          "status": "completed"
+        },
+        "claim_safety_review": {
+          "exists": true,
+          "path": "evidence_bundles\\001_7633461167788166413\\claim_safety_review.json",
+          "status": "completed",
+          "flagged_count": 0
+        },
+        "evidence_quality": {
+          "exists": true,
+          "path": "evidence_bundles\\001_7633461167788166413\\evidence_quality.json",
+          "status": "completed",
+          "score": "low",
+          "manual_review_required": true
+        },
+        "video_evidence_report": {
+          "exists": true,
+          "path": "evidence_bundles\\001_7633461167788166413\\video_evidence_report.md",
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "candidate_id": "7635660968009157901",
+      "rank": 2,
+      "bundle_folder": "evidence_bundles\\002_7635660968009157901",
+      "original_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7635660968009157901",
+      "source_metadata": "evidence_bundles\\002_7635660968009157901\\source_metadata.json",
+      "download_status": {
+        "status": "missing",
+        "reason": "no downloadable video source was provided in candidate metadata"
+      },
+      "artifacts": {
+        "source_video": {
+          "exists": false,
+          "path": null
+        },
+        "hybrid_timeline": {
+          "exists": false,
+          "path": "evidence_bundles\\002_7635660968009157901\\hybrid_timeline.json",
+          "frame_count": 0,
+          "status": "skipped"
+        },
+        "ocr_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\002_7635660968009157901\\ocr_evidence.json",
+          "frame_count": 0,
+          "text_frame_count": 0,
+          "status": "skipped"
+        },
+        "audio": {
+          "exists": false,
+          "path": null,
+          "status": "skipped"
+        },
+        "transcript_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\002_7635660968009157901\\transcript_evidence.json",
+          "segment_count": 0,
+          "status": "skipped"
+        },
+        "baseline_audio_analysis": {
+          "exists": true,
+          "path": "evidence_bundles\\002_7635660968009157901\\baseline_audio_analysis.json",
+          "status": "completed"
+        },
+        "claim_safety_review": {
+          "exists": true,
+          "path": "evidence_bundles\\002_7635660968009157901\\claim_safety_review.json",
+          "status": "completed",
+          "flagged_count": 0
+        },
+        "evidence_quality": {
+          "exists": true,
+          "path": "evidence_bundles\\002_7635660968009157901\\evidence_quality.json",
+          "status": "completed",
+          "score": "low",
+          "manual_review_required": true
+        },
+        "video_evidence_report": {
+          "exists": true,
+          "path": "evidence_bundles\\002_7635660968009157901\\video_evidence_report.md",
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "candidate_id": "7634309648769764639",
+      "rank": 3,
+      "bundle_folder": "evidence_bundles\\003_7634309648769764639",
+      "original_tiktok_url": "https://www.tiktok.com/@healifyhub/video/7634309648769764639",
+      "source_metadata": "evidence_bundles\\003_7634309648769764639\\source_metadata.json",
+      "download_status": {
+        "status": "missing",
+        "reason": "no downloadable video source was provided in candidate metadata"
+      },
+      "artifacts": {
+        "source_video": {
+          "exists": false,
+          "path": null
+        },
+        "hybrid_timeline": {
+          "exists": false,
+          "path": "evidence_bundles\\003_7634309648769764639\\hybrid_timeline.json",
+          "frame_count": 0,
+          "status": "skipped"
+        },
+        "ocr_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\003_7634309648769764639\\ocr_evidence.json",
+          "frame_count": 0,
+          "text_frame_count": 0,
+          "status": "skipped"
+        },
+        "audio": {
+          "exists": false,
+          "path": null,
+          "status": "skipped"
+        },
+        "transcript_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\003_7634309648769764639\\transcript_evidence.json",
+          "segment_count": 0,
+          "status": "skipped"
+        },
+        "baseline_audio_analysis": {
+          "exists": true,
+          "path": "evidence_bundles\\003_7634309648769764639\\baseline_audio_analysis.json",
+          "status": "completed"
+        },
+        "claim_safety_review": {
+          "exists": true,
+          "path": "evidence_bundles\\003_7634309648769764639\\claim_safety_review.json",
+          "status": "completed",
+          "flagged_count": 0
+        },
+        "evidence_quality": {
+          "exists": true,
+          "path": "evidence_bundles\\003_7634309648769764639\\evidence_quality.json",
+          "status": "completed",
+          "score": "low",
+          "manual_review_required": true
+        },
+        "video_evidence_report": {
+          "exists": true,
+          "path": "evidence_bundles\\003_7634309648769764639\\video_evidence_report.md",
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "candidate_id": "7632021443202616607",
+      "rank": 4,
+      "bundle_folder": "evidence_bundles\\004_7632021443202616607",
+      "original_tiktok_url": "https://www.tiktok.com/@drjoe_md/video/7632021443202616607",
+      "source_metadata": "evidence_bundles\\004_7632021443202616607\\source_metadata.json",
+      "download_status": {
+        "status": "missing",
+        "reason": "no downloadable video source was provided in candidate metadata"
+      },
+      "artifacts": {
+        "source_video": {
+          "exists": false,
+          "path": null
+        },
+        "hybrid_timeline": {
+          "exists": false,
+          "path": "evidence_bundles\\004_7632021443202616607\\hybrid_timeline.json",
+          "frame_count": 0,
+          "status": "skipped"
+        },
+        "ocr_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\004_7632021443202616607\\ocr_evidence.json",
+          "frame_count": 0,
+          "text_frame_count": 0,
+          "status": "skipped"
+        },
+        "audio": {
+          "exists": false,
+          "path": null,
+          "status": "skipped"
+        },
+        "transcript_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\004_7632021443202616607\\transcript_evidence.json",
+          "segment_count": 0,
+          "status": "skipped"
+        },
+        "baseline_audio_analysis": {
+          "exists": true,
+          "path": "evidence_bundles\\004_7632021443202616607\\baseline_audio_analysis.json",
+          "status": "completed"
+        },
+        "claim_safety_review": {
+          "exists": true,
+          "path": "evidence_bundles\\004_7632021443202616607\\claim_safety_review.json",
+          "status": "completed",
+          "flagged_count": 0
+        },
+        "evidence_quality": {
+          "exists": true,
+          "path": "evidence_bundles\\004_7632021443202616607\\evidence_quality.json",
+          "status": "completed",
+          "score": "low",
+          "manual_review_required": true
+        },
+        "video_evidence_report": {
+          "exists": true,
+          "path": "evidence_bundles\\004_7632021443202616607\\video_evidence_report.md",
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "candidate_id": "7630786863220935943",
+      "rank": 5,
+      "bundle_folder": "evidence_bundles\\005_7630786863220935943",
+      "original_tiktok_url": "https://www.tiktok.com/@askdocdoc/video/7630786863220935943",
+      "source_metadata": "evidence_bundles\\005_7630786863220935943\\source_metadata.json",
+      "download_status": {
+        "status": "missing",
+        "reason": "no downloadable video source was provided in candidate metadata"
+      },
+      "artifacts": {
+        "source_video": {
+          "exists": false,
+          "path": null
+        },
+        "hybrid_timeline": {
+          "exists": false,
+          "path": "evidence_bundles\\005_7630786863220935943\\hybrid_timeline.json",
+          "frame_count": 0,
+          "status": "skipped"
+        },
+        "ocr_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\005_7630786863220935943\\ocr_evidence.json",
+          "frame_count": 0,
+          "text_frame_count": 0,
+          "status": "skipped"
+        },
+        "audio": {
+          "exists": false,
+          "path": null,
+          "status": "skipped"
+        },
+        "transcript_evidence": {
+          "exists": false,
+          "path": "evidence_bundles\\005_7630786863220935943\\transcript_evidence.json",
+          "segment_count": 0,
+          "status": "skipped"
+        },
+        "baseline_audio_analysis": {
+          "exists": true,
+          "path": "evidence_bundles\\005_7630786863220935943\\baseline_audio_analysis.json",
+          "status": "completed"
+        },
+        "claim_safety_review": {
+          "exists": true,
+          "path": "evidence_bundles\\005_7630786863220935943\\claim_safety_review.json",
+          "status": "completed",
+          "flagged_count": 0
+        },
+        "evidence_quality": {
+          "exists": true,
+          "path": "evidence_bundles\\005_7630786863220935943\\evidence_quality.json",
+          "status": "completed",
+          "score": "low",
+          "manual_review_required": true
+        },
+        "video_evidence_report": {
+          "exists": true,
+          "path": "evidence_bundles\\005_7630786863220935943\\video_evidence_report.md",
+          "status": "completed"
+        }
+      }
+    }
+  ]
+}

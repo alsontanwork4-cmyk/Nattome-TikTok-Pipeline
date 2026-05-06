@@ -1,0 +1,17 @@
+{
+  "candidate_id": "7630786863220935943",
+  "rank": 5,
+  "bundle_folder": "evidence_bundles\\005_7630786863220935943",
+  "original_tiktok_url": "https://www.tiktok.com/@askdocdoc/video/7630786863220935943",
+  "source_metadata": "evidence_bundles\\005_7630786863220935943\\source_metadata.json",
+  "download_status": {
+    "status": "missing",
+    "reason": "no downloadable video source was provided in candidate metadata"
+  },
+  "artifacts": {
+    "source_video": {
+      "exists": false,
+      "path": null
+    }
+  }
+}

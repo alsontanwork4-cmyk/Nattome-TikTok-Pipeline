@@ -1,0 +1,19 @@
+{
+  "status": "skipped",
+  "source_video": null,
+  "duration_seconds": null,
+  "sampling_strategy": {
+    "baseline_interval_seconds": 1,
+    "hook_extra_timestamps_seconds": [
+      0.5,
+      1.5,
+      2.5
+    ]
+  },
+  "extension_points": {
+    "text_change_samples": "not_implemented",
+    "scene_change_samples": "not_implemented"
+  },
+  "frames": [],
+  "reason": "source video artifact is missing"
+}

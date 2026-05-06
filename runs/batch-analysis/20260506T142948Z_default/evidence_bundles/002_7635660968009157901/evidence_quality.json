@@ -1,0 +1,48 @@
+{
+  "status": "completed",
+  "evidence_quality_score": {
+    "level": "low",
+    "reason": "video download failed; timeline extraction incomplete; transcript failed"
+  },
+  "manual_review_flag": {
+    "required": true,
+    "reasons": [
+      "evidence_quality_low",
+      "transcript_language_detection_failed",
+      "first_three_second_hook_unclear"
+    ]
+  },
+  "checks": {
+    "video_download": {
+      "status": "missing",
+      "passed": false
+    },
+    "timeline_completeness": {
+      "status": "skipped",
+      "passed": false
+    },
+    "ocr_quality": {
+      "status": "skipped",
+      "visible_text_expected": false,
+      "text_frame_count": 0,
+      "passed": false
+    },
+    "transcript_quality": {
+      "status": "skipped",
+      "language_detected": false,
+      "confidence_usable": false,
+      "passed": false
+    },
+    "first_three_second_hook": {
+      "clear": false
+    },
+    "audio_analysis": {
+      "status": "completed",
+      "passed": true
+    },
+    "claim_uncertainty": {
+      "status": "clear",
+      "flagged_count": 0
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "_comment": "Copy this to ../config.json and edit. Hashtags should NOT include the # (the scraper strips it but cleaner without). Keywords are search queries. Profiles are TikTok handles without the @ — competitors and category accounts.",
+
+  "hashtags": [
+    "bloating",
+    "guthealth",
+    "ibs",
+    "digestion",
+    "gutfeeling",
+    "stomachhealth",
+    "constipation",
+    "acidreflux",
+    "guttok",
+    "healthygut"
+  ],
+
+  "keywords": [
+    "bloated stomach",
+    "stomach pain after eating",
+    "ibs tips",
+    "gut health routine",
+    "natural antacid",
+    "fix bloating",
+    "digestive health"
+  ],
+
+  "competitor_profiles": [
+    "gaviscon",
+    "gutgang",
+    "drwillcole"
+  ],
+
+  "_notes": "Tune these weekly. If a hashtag stops surfacing useful videos, swap it. Add Malaysia/SEA-specific tags (e.g. 'malaysiatiktok', 'guthealthmalaysia') if regional relevance matters."
+}

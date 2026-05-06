@@ -1,0 +1,48 @@
+{
+  "skill_name": "nattome-tiktok-discovery",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the daily Nattome TikTok brief for today. Pull the top 5 viral videos in the digestive-health space, break down why each one works, and give me 3 angles per topic that I can shoot this week. Save the brief as a markdown file.",
+      "expected_output": "A daily_brief_YYYY-MM-DD.md file with 5 topics, each containing: source video link + stats, virality breakdown (hook/pacing/structure/emotional trigger/why it won), and 3 Nattome angles (hook, avatar, format, product, script outline). Brand voice rules followed (named clinical study, no overclaim, format choice justified).",
+      "files": [],
+      "assertions": [
+        {"text": "Output is saved as a markdown file with date in the filename", "type": "file_check"},
+        {"text": "All 5 topics include a working TikTok URL", "type": "content_check"},
+        {"text": "Each topic has a hook breakdown labeled by hook type (symptom recognition, counter-intuitive, POV, etc.)", "type": "content_check"},
+        {"text": "Each topic has 3 Nattome angles", "type": "content_check"},
+        {"text": "Each angle names a specific product (DH, DR, or DH-R) and explains why that product fits", "type": "content_check"},
+        {"text": "Each angle picks a single avatar (Sufferer, Maintainer, or Pharmacy Browser)", "type": "content_check"},
+        {"text": "Each angle picks a format (talking head, VLOG, or both) with reasoning", "type": "content_check"},
+        {"text": "When clinical backing is referenced, it names UCSI University or NCT06524271 (not vague 'studies show')", "type": "content_check"},
+        {"text": "No banned phrases appear in scripted angle copy: 'miracle', 'cure', 'instant fix', 'detox', 'cleanse'", "type": "content_check"},
+        {"text": "If competing with Gaviscon, framing is natural-vs-chemical or long-term-vs-temporary, not name-trashing", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Here's a viral TikTok URL: https://www.tiktok.com/@example/video/7234567890123456789 — break it down for me and give me 3 Nattome angles based on it. (Pretend you scraped it; the URL is a placeholder.)",
+      "expected_output": "Single-video brief with virality breakdown + 3 Nattome angles. Skips full daily template since it's only one video.",
+      "files": [],
+      "assertions": [
+        {"text": "Output includes hook/pacing/structure/emotional-trigger breakdown for the single video", "type": "content_check"},
+        {"text": "Output includes exactly 3 Nattome angles", "type": "content_check"},
+        {"text": "Each angle specifies product + avatar + format + script outline", "type": "content_check"},
+        {"text": "Skill does NOT generate a fake list of 5 topics — respects the single-URL scope", "type": "content_check"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I don't want to run a scrape today. The trend right now is people doing 'POV: bloating after a Ramadan buka puasa buffet'. Give me 3 Nattome angles for this trend.",
+      "expected_output": "3 angles for the bloating-after-buffet topic, with format choices and product tie-ins. No scraping, no fake virality stats.",
+      "files": [],
+      "assertions": [
+        {"text": "Skill does NOT call the Apify scraper for this prompt", "type": "behavior_check"},
+        {"text": "Output contains 3 distinct angles", "type": "content_check"},
+        {"text": "DR (instant relief) is featured prominently — it's the obvious post-buffet product fit", "type": "content_check"},
+        {"text": "At least one angle uses 'Both' format (the POV → reveal pattern is Nattome's strongest)", "type": "content_check"},
+        {"text": "Brand voice is sincere/professional — no influencer-hype language", "type": "content_check"}
+      ]
+    }
+  ]
+}

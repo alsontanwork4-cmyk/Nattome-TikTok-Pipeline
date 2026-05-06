@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": null
+  },
+  "audio_format": "unknown",
+  "mood": "unknown",
+  "hook_support": "no audio hook evidence captured yet",
+  "nattome_recommendation": {
+    "action": "avoid",
+    "reason": "No usable audio evidence was captured for adaptation."
+  },
+  "evidence_basis": {
+    "source_metadata": "source_metadata.json",
+    "transcript_evidence": "transcript_evidence.json"
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

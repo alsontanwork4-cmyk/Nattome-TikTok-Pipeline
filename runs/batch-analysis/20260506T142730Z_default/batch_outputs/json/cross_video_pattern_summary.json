@@ -1,0 +1,407 @@
+{
+  "created_at": "2026-05-06T14:27:30Z",
+  "source_video_count": 10,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Unclear hook requiring manual review",
+        "video_count": 10,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7630786863220935943",
+          "7631009309169683726",
+          "7632021443202616607",
+          "7633461167788166413",
+          "7633580497142156558",
+          "7633871365006691597",
+          "7634309648769764639",
+          "7634984620081155342",
+          "7635660968009157901"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "unknown",
+        "video_count": 10,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7630786863220935943",
+          "7631009309169683726",
+          "7632021443202616607",
+          "7633461167788166413",
+          "7633580497142156558",
+          "7633871365006691597",
+          "7634309648769764639",
+          "7634984620081155342",
+          "7635660968009157901"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive discomfort relief",
+        "video_count": 4,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7630786863220935943",
+          "7632021443202616607",
+          "7633461167788166413"
+        ]
+      },
+      {
+        "pattern": "Digestive-health curiosity",
+        "video_count": 4,
+        "candidate_ids": [
+          "7631009309169683726",
+          "7633871365006691597",
+          "7634984620081155342",
+          "7635660968009157901"
+        ]
+      },
+      {
+        "pattern": "Routine confidence",
+        "video_count": 2,
+        "candidate_ids": [
+          "7633580497142156558",
+          "7634309648769764639"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "no audio hook evidence captured yet",
+        "video_count": 10,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7630786863220935943",
+          "7631009309169683726",
+          "7632021443202616607",
+          "7633461167788166413",
+          "7633580497142156558",
+          "7633871365006691597",
+          "7634309648769764639",
+          "7634984620081155342",
+          "7635660968009157901"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "No risky claims flagged from available evidence",
+        "video_count": 10,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7630786863220935943",
+          "7631009309169683726",
+          "7632021443202616607",
+          "7633461167788166413",
+          "7633580497142156558",
+          "7633871365006691597",
+          "7634309648769764639",
+          "7634984620081155342",
+          "7635660968009157901"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 8,
+        "candidate_ids": [
+          "7630786863220935943",
+          "7631009309169683726",
+          "7632021443202616607",
+          "7633461167788166413",
+          "7633580497142156558",
+          "7633871365006691597",
+          "7634309648769764639",
+          "7634984620081155342"
+        ]
+      },
+      {
+        "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "video_count": 2,
+        "candidate_ids": [
+          "7629457560977952031",
+          "7635660968009157901"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7629457560977952031",
+      "source_tiktok_url": "https://www.tiktok.com/@drclaylowder/video/7629457560977952031",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: If your stomach’s acting up, here’s the real plan from a medical standpoint: Skip the “pink stuff” for ongoing symptoms—it may help short term, but it’s not addressing the root of the problem. For nausea, Emetrol is a solid option and often works well without being overly harsh. If you’re dealing with reflux or heartburn, medications like omeprazole or Prevacid actually reduce acid production and give your esophagus time to heal. These work best when taken consistently, not just as needed. For quick, immediate relief, Tums can still be helpful to neutralize acid in the moment. Also pay attention to triggers—late meals, caffeine, alcohol, and spicy foods are common culprits. Small changes there can make a big difference. Treat the cause, not just the symptoms. That’s how you actually start to feel better. #fyp #heart #medical #guthealth #doctor",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 25,
+        "max_points": 30
+      },
+      "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7630786863220935943",
+      "source_tiktok_url": "https://www.tiktok.com/@askdocdoc/video/7630786863220935943",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Quick fix for sudden stomach pain and bloating after outside food! #digestion #stomachpain #foodpoisoningrelief #naturalremedy #healthtips #bloatingrelief #wellnesstips #instantrelief #viral #trending #reels #explorepage",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 25,
+        "max_points": 30
+      },
+      "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 25,
+        "max_points": 30
+      },
+      "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    },
+    {
+      "candidate_id": "7632021443202616607",
+      "source_tiktok_url": "https://www.tiktok.com/@drjoe_md/video/7632021443202616607",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Eating a large amount of sunflower seed shells can do more than just upset your stomach. The shells are mostly made of rough, indigestible fiber, so instead of breaking down, they can clump together, dry out, and form a painful fecal impaction. On the way out, those sharp shell fragments can also scrape the rectum and anus, causing pain, bleeding, and small tears. In other words, eat the seed, not the shell. #ERdoctor #ConstipationRelief #DigestiveHealth #MedicalFacts",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 5,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 4
+    },
+    {
+      "candidate_id": "7634309648769764639",
+      "source_tiktok_url": "https://www.tiktok.com/@healifyhub/video/7634309648769764639",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Fix Your Gut Fast With Simple Juice Blends Simple fruit and veggie drinks you can add to your morning routine for better hydration, digestion support, and cleaner daily nutrition. Save this so you can try one tomorrow. #nutritiontips #healthyhabits #guthealth #wellnesstips #healthydrinks",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 5
+    },
+    {
+      "candidate_id": "7635660968009157901",
+      "source_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7635660968009157901",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Peas are a gut-health MVP: they bring fiber that helps keep digestion moving, plus prebiotic fibers that feed your beneficial gut bacteria. They also contain resistant starch and fermentable carbs that can support a healthier microbiome. And here’s what makes them even more valuable—those fermentable fibers get broken down by your gut microbes into short-chain fatty acids like butyrate, which help nourish your gut lining, reduce inflammation, and support overall gut function. On top of that, peas provide plant-based protein and polyphenols that further support microbial diversity and metabolic health. #plantbased #healthyfood #easyrecipes #fiber",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 6
+    },
+    {
+      "candidate_id": "7631009309169683726",
+      "source_tiktok_url": "https://www.tiktok.com/@christinevetick/video/7631009309169683726",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: like does it ever end 🥲 #stomachproblems #stomachproblemscheck #stomachproblemslol #ibs #ibstok",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 23,
+        "max_points": 30
+      },
+      "why": "23/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 7
+    },
+    {
+      "candidate_id": "7633871365006691597",
+      "source_tiktok_url": "https://www.tiktok.com/@doctorsood/video/7633871365006691597",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Have you ever tried a belly massage and noticed a difference? Belly massage follows the natural path of the colon, which is why it’s done in a clockwise motion. That gentle pressure can stimulate gut movement and trigger the body’s natural reflex to move stool along. It’s a simple, low-risk way to support bowel function, especially in mild constipation. VC: @lola_krissss Follow @doctorsoood to improve your health IQ and for similar content. #constipationrelief #guthealth #bellymassage #digestion #health",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 5,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 23,
+        "max_points": 30
+      },
+      "why": "23/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 8
+    },
+    {
+      "candidate_id": "7633580497142156558",
+      "source_tiktok_url": "https://www.tiktok.com/@drtoddstrong/video/7633580497142156558",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Do These 4 Things Every Morning and Watch Your Gut Start to Heal #gut #leakygut #nutrition #diabetes #guthealth",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 4
+        },
+        "total": 21,
+        "max_points": 30
+      },
+      "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 9
+    },
+    {
+      "candidate_id": "7634984620081155342",
+      "source_tiktok_url": "https://www.tiktok.com/@doctorsood/video/7634984620081155342",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Turn this creator topic into a safe question: Have you ever known someone who went this long without a bowel movement? Going three weeks without a bowel movement is considered obstipation, a severe form of constipation where the colon stops moving stool effectively. At this stage, the risk of fecal impaction, abdominal swelling, and liquid stool leaking around a blockage increases significantly. Constipation this severe always requires urgent medical evaluation. PMID: 30020663, 32809443 VC: @pana4president Follow @doctorsoood to improve your health IQ and for similar content. #constipation #guthealth #medical #health #constipationrelief",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Adapt the pain point and structure, then keep the product role to support language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "evidence_quality": "low",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 3,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 5
+        },
+        "total": 21,
+        "max_points": 30
+      },
+      "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 10
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7629457560977952031",
+    "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

@@ -1,0 +1,394 @@
+## 2026-05-06 - 0001 Create Batch Analysis Run Skeleton
+
+Task completed from `docs/issues/0001-create-batch-analysis-run-skeleton.md`.
+
+Key decisions made:
+- Added a zero-dependency Python CLI at `scripts/run_batch_analysis.py`.
+- The Run Folder structure is rooted at `runs/batch-analysis/<timestamp>_<mode>/`.
+- The skeleton records metadata and explicitly marks evidence extraction, OCR, transcription, and reports as `not_implemented` instead of fabricating outputs.
+- Explicit missing config paths fail before any Run Folder is created.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T133718Z_debug/`
+
+Feedback:
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode debug --batch-size 1` created `runs/batch-analysis/20260506T133718Z_debug`.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Next issue can build on this CLI to ingest candidates and write selected batch previews.
+
+## 2026-05-06 - 0002 Select Default Batch With Minimum Eligibility Filter
+
+Task completed from `docs/issues/0002-select-default-batch-with-minimum-eligibility-filter.md`.
+
+Key decisions made:
+- Added `--candidates` to `scripts/run_batch_analysis.py` so the run can ingest Apify-style output or local fixture JSON.
+- Candidate ingestion accepts `top`, `items`, `candidates`, or a bare list.
+- The Minimum Eligibility Filter excludes candidates below 10,000 views, older than 30 days, below 3% weighted engagement, or missing a usable TikTok video link.
+- Viral Relevance Selection ranks eligible candidates by weighted engagement, reach, recency decay, and Nattome relevance terms.
+- Selected batch previews are written to `batch_outputs/json/selected_batch.json` and `batch_outputs/markdown/selected_batch.md`.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T134030Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T134030Z_default`.
+- The real fixture run selected 10 candidates from 30 inputs and excluded 8 candidates before ranking.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Downloadability is still not proven from evidence; the next issue should create per-video Evidence Bundle folders and record download success or failure honestly.
+
+## 2026-05-06 - 0003 Download Video Evidence Bundles
+
+Task completed from `docs/issues/0003-download-video-evidence-bundles.md`.
+
+Key decisions made:
+- Evidence Bundle folders are created for every selected candidate at `evidence_bundles/<rank>_<candidate-id>/`.
+- Each bundle writes `source_metadata.json`, `download_status.json`, `evidence_bundle_index.json`, and an `artifacts/` folder.
+- Source videos are copied or downloaded into `artifacts/source_video.<ext>` when candidate metadata includes a downloadable source field such as `video_download_url`.
+- Missing or failed downloads are recorded in download status and bundle indexes without creating fake source video artifacts.
+- The run-level Evidence Bundle index is written to `evidence_bundles/index.json` and preserves original TikTok links.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T134504Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T134504Z_default`.
+- The real fixture run created 10 Evidence Bundle folders and recorded missing downloadable video sources honestly because the fixture only contains TikTok page URLs.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- The next issue can use these Evidence Bundle folders as the target location for Hybrid Timeline frame artifacts.
+
+## 2026-05-06 - 0004 Extract Hybrid Timeline Frames
+
+Task completed from `docs/issues/0004-extract-hybrid-timeline-frames.md`.
+
+Key decisions made:
+- Added `--ffmpeg-bin` so Hybrid Timeline extraction uses FFmpeg by default while tests can inject a fake executable.
+- Downloaded source videos now get `artifacts/frames/` frame files and a per-bundle `hybrid_timeline.json`.
+- The timeline samples one baseline frame per second from known duration metadata and adds hook-focused samples at 0.5, 1.5, and 2.5 seconds.
+- Timeline JSON records timestamp, frame path, sampling reason, sampling strategy, and extension points for future text-change and scene-change sampling.
+- Missing source videos produce `hybrid_timeline.json` with `status: skipped` instead of fake frame evidence.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T135105Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k downloaded_videos_get_hybrid_timeline_frame_artifacts` passed.
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T135105Z_default`.
+- The real fixture run wrote Hybrid Timeline JSON files for all 10 Evidence Bundles; they are marked skipped because the fixture has no downloadable source videos.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- FFmpeg is not installed on PATH in this environment; real downloaded videos will need FFmpeg available for actual frame image extraction.
+- The next issue can attach OCR to `hybrid_timeline.json` frame paths.
+
+## 2026-05-06 - 0005 Add OCR Evidence Capture
+
+Task completed from `docs/issues/0005-add-ocr-evidence-capture.md`.
+
+Key decisions made:
+- Added `--ocr-primary-bin` and `--ocr-fallback-bin` so the pipeline can run PaddleOCR first and fall back to Tesseract.
+- Each Evidence Bundle now writes `ocr_evidence.json` after Hybrid Timeline extraction.
+- OCR evidence is timestamped, linked to the source frame path, records sampling reason, and includes the selected OCR engine.
+- OCR evidence declares the intended language coverage for English, Malay, Simplified Chinese, Traditional Chinese, and mixed-language text.
+- OCR summary output is included in `ocr_evidence.json` as `summary.frame_count`, `summary.text_frame_count`, and `summary.combined_text`.
+- Missing frames or missing OCR tooling are recorded as skipped or failed setup states instead of breaking the run or fabricating text.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T135400Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k extracted_timeline_frames_get_timestamped_ocr_evidence` passed.
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k missing_ocr_tooling_is_recorded_as_setup_error` passed.
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T135400Z_default`.
+- The real fixture run wrote `ocr_evidence.json` for all 10 Evidence Bundles; OCR is skipped because the fixture has no downloaded video frames.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Real OCR requires PaddleOCR or Tesseract to be installed and available through the configured binary path.
+- The next issue can use frame paths and OCR evidence as inputs for speech transcription or later evidence reports.
+
+## 2026-05-06 - 0006 Add Multilingual Speech Transcription
+
+Task completed from `docs/issues/0006-add-multilingual-speech-transcription.md`.
+
+Key decisions made:
+- Added `--transcription-bin` for a configurable Whisper-style transcription executable.
+- Downloaded source videos now get audio extracted to `artifacts/audio/source_audio.wav` through FFmpeg.
+- Each Evidence Bundle now writes `transcript_evidence.json`.
+- Transcript evidence stores timestamped segments, language metadata, confidence or uncertainty metadata when available, and a combined-text summary.
+- Transcript evidence declares English, Malay, Mandarin Chinese, and code-mixed English-Malay-Chinese as required language coverage.
+- Missing source videos, FFmpeg failures, or missing transcription tooling are recorded as skipped or failed setup states instead of fabricating transcript text.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T135648Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k downloaded_videos_get_timestamped_transcript_evidence` passed.
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k missing_transcription_tooling_is_recorded_as_setup_error` passed.
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T135648Z_default`.
+- The real fixture run wrote `transcript_evidence.json` for all 10 Evidence Bundles; transcription is skipped because the fixture has no downloaded source videos.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Real transcription requires FFmpeg and a Whisper-style transcriber to be installed and available through configured binary paths.
+- The next issue can build baseline audio/music trend analysis from the extracted audio artifact and transcript evidence.
+
+## 2026-05-06 - 0007 Add Baseline Audio/Music Trend Analysis
+
+Task completed from `docs/issues/0007-add-baseline-audio-music-trend-analysis.md`.
+
+Key decisions made:
+- Each Evidence Bundle now writes `baseline_audio_analysis.json`.
+- Baseline Audio Analysis records available sound title, sound author, reused-sound status, inferred audio format, mood, hook support, and Nattome recommendation.
+- Audio format can use source metadata hints and otherwise infers from transcript text or sound metadata where possible.
+- Nattome recommendations use `adapt` when usable hook or audio evidence exists and `avoid` when no usable audio evidence was captured.
+- Deep Sound Research is left as an explicit extension point with `status: not_implemented`.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T135910Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k every_bundle_gets_baseline_audio_analysis` passed.
+- `python -m unittest discover -s tests` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T135910Z_default`.
+- The real fixture run wrote `baseline_audio_analysis.json` for all 10 Evidence Bundles; entries are metadata-limited because the fixture has no downloaded source videos, audio artifacts, or transcripts.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Richer sound format and mood detection will need real source audio, transcript evidence, or later Deep Sound Research.
+- The next issue can compute evidence quality and manual review flags from skipped, failed, and completed artifact statuses.
+
+## 2026-05-06 - 0008 Compute Evidence Quality And Manual Review Flags
+
+Task completed from `docs/issues/0008-compute-evidence-quality-and-manual-review-flags.md`.
+
+Key decisions made:
+- Each Evidence Bundle now writes `evidence_quality.json`.
+- Evidence Quality Score is stored as `high`, `medium`, or `low` with a short reason.
+- Manual Review Flag is stored with `required` and structured reason codes.
+- Medium and low evidence quality automatically require manual review.
+- Missing videos, incomplete timelines, failed visible-text OCR, transcript failures, language detection failures, low or missing transcript confidence, unclear first-three-second hooks, and incomplete audio analysis feed the score.
+- Normalized candidate metadata now preserves visible-text hint fields used by quality scoring.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `runs/batch-analysis/20260506T140628Z_default/`
+- `runs/batch-analysis/20260506T140658Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k evidence_quality` passed.
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py'` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T140658Z_default`.
+- The real fixture run wrote `evidence_quality.json` for all 10 Evidence Bundles and indexed each score; all fixture videos scored low because the current candidate data has no downloadable video source.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Claim uncertainty is recorded as `not_assessed` until the claim safety review issue is implemented.
+- The next issue can add claim safety review and feed medical-claim and unverified-claim reasons into manual review.
+
+## 2026-05-06 - 0009 Add Claim Safety Review
+
+Task completed from `docs/issues/0009-add-claim-safety-review.md`.
+
+Key decisions made:
+- Each Evidence Bundle now writes `claim_safety_review.json`.
+- Claim Safety Review scans OCR frame text and transcript segment text.
+- The ruleset flags cure claims, guaranteed outcomes, one-night fixes, cancer prevention, zero-side-effect claims, detox or cleanse language, unverified doctor-recommended claims, unsupported clinical percentages, and aggressive competitor claims.
+- Each flagged claim stores category, claim text, evidence source, timestamp when available, and Nattome guidance with `reuse`, `soften`, `avoid`, or `reframe` action language.
+- Claim Safety Review runs before Evidence Quality so unsafe claims can add manual review reason `claim_safety_review_flagged_claims` and set claim uncertainty to `flagged`.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0008-compute-evidence-quality-and-manual-review-flags.md`
+- `runs/batch-analysis/20260506T141026Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k claim_safety` passed.
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py'` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T141026Z_default`.
+- The real fixture run wrote `claim_safety_review.json` for all 10 Evidence Bundles; flagged counts are zero because the fixture has no OCR or transcript evidence to scan.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Claim Safety Review is deterministic keyword/pattern screening, not legal approval.
+- The next issue can generate per-video evidence reports using evidence quality and claim safety artifacts.
+
+## 2026-05-06 - 0010 Generate Per-Video Evidence Reports
+
+Task completed from `docs/issues/0010-generate-per-video-evidence-reports.md`.
+
+Key decisions made:
+- Each Evidence Bundle now writes `video_evidence_report.md`.
+- The report includes the fixed sections: Video Reference, Executive Creative Read, First 3 Seconds Hook Audit, Hybrid Timeline, OCR Text Summary, Speech Transcript Summary, Audio/Music Trend Analysis, Virality Breakdown, Nattome POV, Shootable Angles, Claim Safety Review, and Evidence Quality.
+- Reports link the source TikTok and local evidence artifacts.
+- Every report includes one Nattome Shootable Angle with hook, avatar, format, product tie-in, script beats, CTA, and claim guardrails.
+- Missing or skipped artifacts are reported as not available, and missing media reports explicitly state they do not claim video evidence was inspected.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0009-add-claim-safety-review.md`
+- `runs/batch-analysis/20260506T141330Z_default/`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py' -k video_evidence_report` passed.
+- `python -m unittest discover -s tests -p 'test_batch_analysis_run.py'` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T141330Z_default`.
+- The real fixture run wrote 10 `video_evidence_report.md` files; reports are evidence-limited because the fixture has no downloadable video artifacts.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Report content is a deterministic first-pass report form; richer creative interpretation should wait for cross-video summary and priority scoring.
+- The next issue can generate a cross-video pattern summary from per-video reports and bundle artifacts.
+
+## 2026-05-06 - 0011 Generate Cross-Video Pattern Summary And Priority Scores
+
+Task completed from `docs/issues/0011-generate-cross-video-pattern-summary-and-priority-scores.md`.
+
+Key decisions made:
+- Each Batch Analysis Run with selected evidence bundles now writes a Cross-Video Pattern Summary in Markdown and JSON.
+- The summary compares hooks, formats, emotional triggers, audio patterns, risky claims, and Nattome opportunities across the selected videos.
+- Each Shootable Angle receives a Nattome Priority Score with six 5-point dimensions: viral strength, Nattome relevance, evidence confidence, brand safety, ease of production, and product fit.
+- Scores total out of 30 points and are used to rank the top priority Shootable Angles.
+- The summary recommends what to shoot first and explains the recommendation.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0011-generate-cross-video-pattern-summary-and-priority-scores.md`
+- `runs/batch-analysis/20260506T142336Z_default/`
+
+Feedback:
+- `python -m unittest tests.test_batch_analysis_run.BatchAnalysisRunCliTest.test_batch_run_gets_cross_video_pattern_summary_with_priority_scores` passed.
+- `python -m unittest discover -s tests -p test_batch_analysis_run.py` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T142336Z_default`.
+- The real fixture run wrote `batch_outputs/markdown/cross_video_pattern_summary.md` and `batch_outputs/json/cross_video_pattern_summary.json`; the top recommended Shootable Angle scored 25/30.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- The real fixture still has no downloadable video artifacts, so hook/audio evidence remains limited and the summary reports that uncertainty instead of claiming inspected media evidence.
+- The next issue can add structured JSON and spreadsheet summaries that reuse the cross-video priority scores.
+
+## 2026-05-06 - 0012 Generate Structured JSON And Spreadsheet Summary
+
+Task completed from `docs/issues/0012-generate-structured-json-and-spreadsheet-summary.md`.
+
+Key decisions made:
+- Each Batch Analysis Run with selected evidence bundles now writes `batch_outputs/json/structured_batch_analysis.json`.
+- Structured JSON preserves run metadata, selection decisions, the Evidence Bundle index, Cross-Video Pattern Summary, per-video evidence artifacts, virality analysis, claim safety review, quality score, manual review flag, Shootable Angles, and Nattome Priority Score.
+- Each Batch Analysis Run now writes `batch_outputs/spreadsheets/spreadsheet_summary.csv` as the marketing-facing spreadsheet summary.
+- The spreadsheet has one row per analyzed video and includes link, topic, hook type, format, emotional trigger, avatar, product fit, priority score, evidence quality, and recommended angle.
+- The batch index lists the Markdown, JSON, and spreadsheet outputs inside the Run Folder.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0012-generate-structured-json-and-spreadsheet-summary.md`
+- `runs/batch-analysis/20260506T142730Z_default/`
+
+Feedback:
+- `python -m unittest tests.test_batch_analysis_run.BatchAnalysisRunCliTest.test_batch_run_gets_structured_json_and_spreadsheet_summary` passed.
+- `python -m unittest discover -s tests -p test_batch_analysis_run.py` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T142730Z_default`.
+- The real fixture run wrote `structured_batch_analysis.json` and `spreadsheet_summary.csv` with 10 analyzed video rows.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Spreadsheet output is CSV for now, using the existing `batch_outputs/spreadsheets` folder without adding a new workbook dependency.
+- The next issue can add Telegram weekly evidence brief delivery using the generated summary outputs.
+
+## 2026-05-06 - 0013 Add Telegram Weekly Evidence Brief Delivery
+
+Task completed from `docs/issues/0013-add-telegram-weekly-evidence-brief-delivery.md`.
+
+Key decisions made:
+- Telegram Delivery now builds a concise Weekly Evidence Brief message from run metadata and the Cross-Video Pattern Summary.
+- Runtime configuration reads `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` by default, with config keys available for alternate env names or direct injected credentials.
+- Missing credentials are recorded clearly in `logs/telegram_delivery.json` with the missing runtime names.
+- The Telegram message includes output locations for Markdown, structured JSON, and spreadsheet outputs.
+- The send path accepts an injectable sender, so tests can verify delivery behavior without sending real Telegram messages.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0013-add-telegram-weekly-evidence-brief-delivery.md`
+- `runs/batch-analysis/20260506T142948Z_default/`
+
+Feedback:
+- `python -m unittest tests.test_batch_analysis_run.BatchAnalysisRunCliTest.test_telegram_delivery_reports_missing_credentials_and_supports_fake_sender` passed.
+- `python -m unittest discover -s tests -p test_batch_analysis_run.py` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T142948Z_default` with Telegram env vars cleared.
+- The real fixture run wrote `logs/telegram_delivery.json` with `status: skipped` and missing `TELEGRAM_BOT_TOKEN` plus `TELEGRAM_CHAT_ID`.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- Real Telegram sending was not exercised because credentials were intentionally absent; the test covers the send path with a fake sender.
+- The next issue can wire Scheduled Analysis Run behavior around these completed outputs and Telegram delivery.
+
+## 2026-05-06 - 0015 Add Evidence Artifact Cleanup And Refinement Hooks
+
+Task completed from `docs/issues/0015-add-evidence-artifact-cleanup-and-refinement-hooks.md`.
+
+Key decisions made:
+- Evidence Artifact cleanup is opt-in through runtime config and is disabled by default.
+- Cleanup remains approval-gated by default with `requires_report_approval` and `report_approved` config controls.
+- When enabled and approved, cleanup removes downloaded source videos and extracted frame directories while preserving Video Evidence Reports, Cross-Video Pattern Summary, Structured JSON Output, and Spreadsheet Summary Output.
+- Cleanup decisions and removed artifacts are recorded in `logs/evidence_artifact_cleanup.json`.
+- Refinement extension points are written to `batch_outputs/json/refinement_hooks.json` for Deep Sound Research, multilingual quality improvements, and future full-script generation from top priority Shootable Angles.
+
+Files changed:
+- `scripts/run_batch_analysis.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0015-add-evidence-artifact-cleanup-and-refinement-hooks.md`
+- `runs/batch-analysis/20260506T143231Z_default/`
+
+Feedback:
+- `python -m unittest tests.test_batch_analysis_run.BatchAnalysisRunCliTest.test_optional_cleanup_removes_large_artifacts_and_writes_refinement_hooks` passed.
+- `python -m unittest discover -s tests -p test_batch_analysis_run.py` passed.
+- `python scripts\run_batch_analysis.py --mode default --candidates nattome_raw_20260506_top30.json` created `runs/batch-analysis/20260506T143231Z_default`.
+- The real fixture run wrote `refinement_hooks.json` and logged cleanup as skipped because cleanup is disabled by default.
+
+Blockers or notes for the next iteration:
+- This workspace is not a git repository, so no commit could be created.
+- `0014` remains open because it is marked HITL and needs human review of schedule, runner, and credential setup before implementation.

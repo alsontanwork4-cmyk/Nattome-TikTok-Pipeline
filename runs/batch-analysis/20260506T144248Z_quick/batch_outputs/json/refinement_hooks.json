@@ -1,0 +1,31 @@
+{
+  "deep_sound_research": {
+    "status": "extension_point",
+    "source": "baseline_audio_analysis",
+    "trigger": "Run deeper sound research when reused sound or music appears to drive virality.",
+    "candidate_ids": [
+      "7630786863220935943",
+      "7633461167788166413",
+      "7632021443202616607",
+      "7634309648769764639",
+      "7635660968009157901"
+    ]
+  },
+  "multilingual_quality_improvements": {
+    "status": "extension_point",
+    "source": "ocr_evidence and transcript_evidence",
+    "trigger": "Improve OCR/transcription where language detection, confidence, or mixed-language capture is weak."
+  },
+  "full_script_generation": {
+    "status": "extension_point",
+    "source": "top_priority_shootable_angles",
+    "trigger": "Generate full scripts only for selected winning Shootable Angles after human approval.",
+    "candidate_ids": [
+      "7630786863220935943",
+      "7633461167788166413",
+      "7632021443202616607",
+      "7634309648769764639",
+      "7635660968009157901"
+    ]
+  }
+}
