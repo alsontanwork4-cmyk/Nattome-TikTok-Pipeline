@@ -111,7 +111,7 @@ def main() -> int:
         print(f"error: brief not found at {args.brief}", file=sys.stderr)
         return 2
 
-    text = args.brief.read_text()
+    text = args.brief.read_text(encoding="utf-8")
 
     if args.as_document:
         send_document(token, chat_id, args.brief, caption="Nattome daily TikTok brief")

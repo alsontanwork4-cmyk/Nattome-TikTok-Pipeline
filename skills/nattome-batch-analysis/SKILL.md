@@ -62,6 +62,8 @@ Before launching the run, verify these. Stop and tell the user honestly if a req
 | `GEMINI_API_KEY` env var | `$env:GEMINI_API_KEY` in PowerShell. | Ask the user to set it. Without it, the run records missing Gemini evidence rather than fabricating analysis. |
 | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | Env vars. | Optional. Skip Telegram silently if either is missing. |
 
+Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/writes for candidate JSON, reports, CSV exports, manifests, and Telegram logs so Unicode captions do not fail on Windows `cp1252`.
+
 `APIFY_TOKEN` is needed only if you must run fresh discovery first. A Batch Analysis Run can use an existing candidates JSON without calling Apify.
 
 ## Choose The Mode

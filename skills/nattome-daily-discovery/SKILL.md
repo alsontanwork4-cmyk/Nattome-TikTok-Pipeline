@@ -72,6 +72,8 @@ python skills/nattome-daily-discovery/scripts/scrape_tiktok.py `
 
 The script writes a JSON file with candidate videos that are already filtered for digestive-health relevance. If `--top` is omitted, it returns the top 5.
 
+On Windows, keep all scraper JSON/config/brief files in UTF-8. The bundled scripts explicitly read config and markdown as UTF-8 and write JSON as UTF-8 with `ensure_ascii=False`, so TikTok captions with Unicode characters do not fail under the default `cp1252` console/file encoding.
+
 If Apify returns errors or empty results, report it honestly to the user and ask whether to retry, change inputs, or proceed with whatever did come back. Do not fabricate viral videos.
 
 ### Step 2 - Analyze Each Top Video

@@ -40,11 +40,11 @@ RECENCY_HALFLIFE_DAYS = 7
 
 def load_config(path: Path) -> dict:
     if path.exists():
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     fallback = Path(__file__).parent.parent / "assets" / "config.example.json"
     if fallback.exists():
         print(f"[info] no config.json found, using {fallback}", file=sys.stderr)
-        return json.loads(fallback.read_text())
+        return json.loads(fallback.read_text(encoding="utf-8"))
     raise FileNotFoundError(f"No config at {path} and no example config bundled.")
 
 
@@ -68,8 +68,13 @@ def apify_run_actor(token: str, actor_id: str, run_input: dict, timeout_s: int =
         raise RuntimeError(f"Apify network error: {e.reason}") from e
 
 
-def build_run_input(hashtags: list[str], keywords: list[str], profiles: list[str],
-                    results_per_input: int) -> dict:
+def build_run_input(
+    hashtags: list[str],
+    keywords: list[str],
+    profiles: list[str],
+    results_per_input: int,
+    download_videos: bool,
+) -> dict:
     """Shape the input the way clockworks/tiktok-scraper expects.
 
     The actor accepts hashtags, search queries, and profile URLs in one run.
@@ -83,7 +88,7 @@ def build_run_input(hashtags: list[str], keywords: list[str], profiles: list[str
         "searchQueries": keywords,
         "profiles": profile_urls,
         "resultsPerPage": results_per_input,
-        "shouldDownloadVideos": False,
+        "shouldDownloadVideos": download_videos,
         "shouldDownloadCovers": False,
         "shouldDownloadSubtitles": False,
         "shouldDownloadSlideshowImages": False,
@@ -139,6 +144,41 @@ def virality_score(item: dict, now: datetime) -> float:
     return engagement_rate * reach * recency
 
 
+def first_nonempty(*values) -> str | None:
+    for value in values:
+        if isinstance(value, str) and value:
+            return value
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, str) and item:
+                    return item
+        if isinstance(value, dict):
+            nested = first_nonempty(*value.values())
+            if nested:
+                return nested
+    return None
+
+
+def downloadable_video_url(item: dict) -> str | None:
+    video_meta = item.get("videoMeta") if isinstance(item.get("videoMeta"), dict) else {}
+    media_urls = item.get("mediaUrls") or item.get("media_urls") or []
+    return first_nonempty(
+        item.get("video_download_url"),
+        item.get("download_url"),
+        item.get("downloadUrl"),
+        item.get("downloadLink"),
+        item.get("downloadedVideoUrl"),
+        item.get("downloaded_video_url"),
+        item.get("media_url"),
+        item.get("mediaUrl"),
+        media_urls,
+        video_meta.get("downloadAddr"),
+        video_meta.get("downloadUrl"),
+        video_meta.get("download_url"),
+        video_meta.get("playAddr"),
+    )
+
+
 def normalize(item: dict) -> dict:
     """Pull a clean, predictable shape out of the actor's verbose output."""
     author = item.get("authorMeta") or {}
@@ -152,6 +192,7 @@ def normalize(item: dict) -> dict:
         "hashtags": [h.get("name") for h in (item.get("hashtags") or []) if h.get("name")],
         "duration_s": item.get("videoMeta", {}).get("duration") if isinstance(item.get("videoMeta"), dict) else None,
         "music": {"title": music.get("musicName"), "author": music.get("musicAuthor"), "original": music.get("musicOriginal")},
+        "video_download_url": downloadable_video_url(item),
         "play_count": item.get("playCount"),
         "like_count": item.get("diggCount"),
         "comment_count": item.get("commentCount"),
@@ -182,6 +223,8 @@ def main() -> int:
     ap.add_argument("--top", type=int, default=5, help="How many top videos to keep (default: 5)")
     ap.add_argument("--results-per-input", type=int, default=20,
                     help="Apify resultsPerPage per hashtag/keyword/profile (default: 20)")
+    ap.add_argument("--download-videos", action="store_true",
+                    help="Ask Apify to include downloadable video sources for evidence-first batch analysis")
     ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default="all",
                     help="Limit which inputs to run (useful for narrower runs)")
     args = ap.parse_args()
@@ -203,7 +246,13 @@ def main() -> int:
 
     print(f"[info] scraping: {len(hashtags)} hashtags, {len(keywords)} keywords, {len(profiles)} profiles", file=sys.stderr)
 
-    run_input = build_run_input(hashtags, keywords, profiles, args.results_per_input)
+    run_input = build_run_input(
+        hashtags,
+        keywords,
+        profiles,
+        args.results_per_input,
+        args.download_videos,
+    )
     t0 = time.time()
     raw = apify_run_actor(token, APIFY_ACTOR_ID, run_input)
     print(f"[info] apify returned {len(raw)} raw items in {time.time()-t0:.1f}s", file=sys.stderr)
@@ -226,7 +275,7 @@ def main() -> int:
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"[ok] wrote top {len(top)} to {args.output}", file=sys.stderr)
     return 0
 
