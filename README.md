@@ -75,10 +75,23 @@ New code should import from `batch_analysis/` instead of importing the CLI scrip
 
 ```powershell
 python skills/nattome-daily-discovery/scripts/scrape_tiktok.py `
-  --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd).json
+  --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd)_top30.json `
+  --top 30 `
+  --download-videos `
+  --daily-selection-output data/daily_selections/nattome_daily_$(Get-Date -Format yyyyMMdd)_top5.json
 ```
 
 Then ask Claude Code: *"Run the Nattome daily TikTok discovery brief for today."* — the skill picks up the JSON, analyzes the top 5, and writes the brief.
+
+**Daily evidence analysis for the same top videos:**
+
+```powershell
+python scripts/run_batch_analysis.py `
+  --mode daily `
+  --candidates data/daily_selections/nattome_daily_<YYYYMMDD>_top5.json
+```
+
+`daily` mode preserves the handoff order and analyzes only the daily-selected videos instead of reranking the top-30 scrape into the 10-video weekly batch.
 
 **Weekly batch evidence analysis:**
 

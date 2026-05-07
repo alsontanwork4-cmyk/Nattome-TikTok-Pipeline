@@ -70,6 +70,48 @@ class CandidateSelectionTest(unittest.TestCase):
         self.assertEqual(selected_batch["eligible_candidate_count"], 2)
         self.assertEqual(selected_batch["excluded_candidates"], [])
 
+    def test_preserve_order_uses_daily_handoff_order_without_reranking(self):
+        configuration = deepcopy(DEFAULT_CONFIG)
+
+        selected_batch = select_candidates(
+            [
+                eligible_candidate("daily-first", play_count=10000, like_count=500, comment_count=10, share_count=10),
+                eligible_candidate("daily-second", play_count=500000, like_count=90000, comment_count=900, share_count=900),
+                eligible_candidate("daily-third", play_count=300000, like_count=80000, comment_count=800, share_count=800),
+            ],
+            configuration,
+            RUN_TIMESTAMP,
+            batch_size=2,
+            candidates_path=None,
+            preserve_order=True,
+        )
+
+        self.assertEqual(
+            [candidate["id"] for candidate in selected_batch["selected_candidates"]],
+            ["daily-first", "daily-second"],
+        )
+        self.assertEqual(selected_batch["selection_strategy"], "input_order")
+
+    def test_default_selection_still_reranks_by_viral_relevance_score(self):
+        configuration = deepcopy(DEFAULT_CONFIG)
+
+        selected_batch = select_candidates(
+            [
+                eligible_candidate("weaker-first", play_count=10000, like_count=500, comment_count=10, share_count=10),
+                eligible_candidate("stronger-second", play_count=500000, like_count=90000, comment_count=900, share_count=900),
+            ],
+            configuration,
+            RUN_TIMESTAMP,
+            batch_size=2,
+            candidates_path=None,
+        )
+
+        self.assertEqual(
+            [candidate["id"] for candidate in selected_batch["selected_candidates"]],
+            ["stronger-second", "weaker-first"],
+        )
+        self.assertEqual(selected_batch["selection_strategy"], "viral_relevance_score")
+
 
 if __name__ == "__main__":
     unittest.main()

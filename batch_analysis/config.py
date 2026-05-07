@@ -7,6 +7,7 @@ from typing import Any
 
 MODE_DEFAULT_BATCH_SIZE = {
     "debug": 1,
+    "daily": 5,
     "quick": 5,
     "default": 10,
     "deep": 20,

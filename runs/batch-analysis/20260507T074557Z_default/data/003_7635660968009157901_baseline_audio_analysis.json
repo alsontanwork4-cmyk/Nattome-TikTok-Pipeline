@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": null
+  },
+  "audio_format": "voiceover",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video starts with a young woman eating peas, and a doctor in an overlay. The visible text immediately introduces peas as 'High protein AND high fiber but delicious and inexpensive', setting up a health/nutrition topic within the first 3 seconds.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

@@ -87,6 +87,62 @@ def complete_gemini_evidence(**overrides):
 
 
 class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
+    def test_daily_mode_preserves_daily_handoff_order(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = write_candidates(
+                temp_path,
+                [
+                    candidate(
+                        temp_path,
+                        id="daily-first",
+                        play_count=10000,
+                        like_count=500,
+                        comment_count=10,
+                        share_count=10,
+                    ),
+                    candidate(
+                        temp_path,
+                        id="daily-second",
+                        play_count=500000,
+                        like_count=90000,
+                        comment_count=900,
+                        share_count=900,
+                    ),
+                    candidate(
+                        temp_path,
+                        id="daily-third",
+                        play_count=300000,
+                        like_count=80000,
+                        comment_count=800,
+                        share_count=800,
+                    ),
+                ],
+            )
+            adapter = FakeGeminiAdapter({"default": complete_gemini_evidence()})
+
+            run_folder = create_run(
+                Namespace(
+                    mode="daily",
+                    batch_size=None,
+                    runs_dir=temp_path / "runs",
+                    config=None,
+                    candidates=candidates_path,
+                    timestamp="2026-05-07T08:00:00Z",
+                    gemini_adapter=adapter,
+                )
+            )
+
+            selected = json.loads(
+                (run_folder / "data" / "selected_batch.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(selected["selection_strategy"], "input_order")
+            self.assertEqual(selected["requested_batch_size"], 5)
+            self.assertEqual(
+                [candidate["id"] for candidate in selected["selected_candidates"]],
+                ["daily-first", "daily-second", "daily-third"],
+            )
+
     def test_create_run_uses_two_layer_snapshots_gemini_adapter_and_manifest_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

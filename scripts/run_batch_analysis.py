@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         choices=sorted(MODE_DEFAULT_BATCH_SIZE),
         default="default",
-        help="Run mode. Defaults to the 10-video Default Batch.",
+        help="Run mode. Use daily for the daily top-video handoff; defaults to the 10-video Default Batch.",
     )
     parser.add_argument(
         "--batch-size",
@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidates",
         type=Path,
-        help="Apify output or local fixture JSON containing TikTok candidate metadata.",
+        help="Apify output, daily handoff, or local fixture JSON containing TikTok candidate metadata.",
     )
     parser.add_argument(
         "--timestamp",

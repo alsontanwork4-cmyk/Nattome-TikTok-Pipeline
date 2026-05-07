@@ -149,6 +149,7 @@ def create_run(args: argparse.Namespace) -> Path:
             timestamp,
             batch_size,
             args.candidates,
+            preserve_order=args.mode == "daily",
         )
 
     if selected_batch is not None:

@@ -97,8 +97,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 self.assertEqual(metadata["requested_batch_size"], 1)
                 self.assertEqual(metadata["configuration"]["outputs"]["markdown"], "reports")
                 self.assertEqual(metadata["implementation_status"]["video_download"], "not_implemented")
-                self.assertEqual(metadata["implementation_status"]["ocr"], "not_implemented")
-                self.assertEqual(metadata["implementation_status"]["transcription"], "not_implemented")
+                self.assertEqual(metadata["implementation_status"]["gemini_evidence"], "not_implemented")
+                self.assertEqual(metadata["implementation_status"]["audio_music_trend_analysis"], "not_implemented")
 
                 expected_paths = [
                     "reports",
@@ -1358,6 +1358,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["video_evidence_reports"], "implemented")
 
+    @legacy_nested_cli_test
     def test_batch_run_gets_cross_video_pattern_summary_with_priority_scores(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -1490,6 +1491,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 "implemented",
             )
 
+    @legacy_nested_cli_test
     def test_batch_run_gets_structured_json_and_spreadsheet_summary(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

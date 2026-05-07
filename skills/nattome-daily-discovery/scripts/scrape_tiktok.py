@@ -202,6 +202,45 @@ def normalize(item: dict) -> dict:
     }
 
 
+def build_output_payload(
+    *,
+    now: datetime,
+    scope: str,
+    hashtags: list[str],
+    keywords: list[str],
+    profiles: list[str],
+    total_candidates: int,
+    top: list[dict],
+) -> dict:
+    return {
+        "generated_at": now.isoformat(),
+        "scope": scope,
+        "inputs": {"hashtags": hashtags, "keywords": keywords, "profiles": profiles},
+        "total_candidates": total_candidates,
+        "top": [
+            {**normalize(it), "virality_score": round(virality_score(it, now), 4)}
+            for it in top
+        ],
+    }
+
+
+def build_daily_selection_payload(
+    *,
+    full_payload: dict,
+    source_scrape: Path,
+    selection_size: int,
+) -> dict:
+    top = full_payload.get("top") if isinstance(full_payload.get("top"), list) else []
+    selected = top[:selection_size]
+    return {
+        "generated_at": full_payload.get("generated_at"),
+        "source_scrape": str(source_scrape),
+        "selection_purpose": "daily_evidence_analysis_handoff",
+        "selection_count": len(selected),
+        "top": selected,
+    }
+
+
 def deduplicate(items: list[dict]) -> list[dict]:
     """Same video can come back from multiple inputs — keep the first."""
     seen = set()
@@ -225,6 +264,10 @@ def main() -> int:
                     help="Apify resultsPerPage per hashtag/keyword/profile (default: 20)")
     ap.add_argument("--download-videos", action="store_true",
                     help="Ask Apify to include downloadable video sources for evidence-first batch analysis")
+    ap.add_argument("--daily-selection-output", type=Path,
+                    help="Optional handoff JSON containing the daily top videos for daily evidence analysis")
+    ap.add_argument("--daily-selection-size", type=int, default=5,
+                    help="How many top videos to include in the daily evidence handoff (default: 5)")
     ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default="all",
                     help="Limit which inputs to run (useful for narrower runs)")
     args = ap.parse_args()
@@ -263,20 +306,34 @@ def main() -> int:
     scored = sorted(raw, key=lambda it: virality_score(it, now), reverse=True)
     top = scored[: args.top]
 
-    payload = {
-        "generated_at": now.isoformat(),
-        "scope": args.scope,
-        "inputs": {"hashtags": hashtags, "keywords": keywords, "profiles": profiles},
-        "total_candidates": len(raw),
-        "top": [
-            {**normalize(it), "virality_score": round(virality_score(it, now), 4)}
-            for it in top
-        ],
-    }
+    payload = build_output_payload(
+        now=now,
+        scope=args.scope,
+        hashtags=hashtags,
+        keywords=keywords,
+        profiles=profiles,
+        total_candidates=len(raw),
+        top=top,
+    )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"[ok] wrote top {len(top)} to {args.output}", file=sys.stderr)
+    if args.daily_selection_output:
+        daily_selection = build_daily_selection_payload(
+            full_payload=payload,
+            source_scrape=args.output,
+            selection_size=args.daily_selection_size,
+        )
+        args.daily_selection_output.parent.mkdir(parents=True, exist_ok=True)
+        args.daily_selection_output.write_text(
+            json.dumps(daily_selection, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(
+            f"[ok] wrote daily selection top {daily_selection['selection_count']} to {args.daily_selection_output}",
+            file=sys.stderr,
+        )
     return 0
 
 

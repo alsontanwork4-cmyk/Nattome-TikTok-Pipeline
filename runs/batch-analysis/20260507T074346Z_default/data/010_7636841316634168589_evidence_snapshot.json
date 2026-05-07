@@ -1,0 +1,56 @@
+{
+  "candidate_id": "7636841316634168589",
+  "rank": 10,
+  "prefix": "010_7636841316634168589",
+  "snapshot_path": "data/010_7636841316634168589_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/010_7636841316634168589_source_metadata.json"
+  },
+  "source_video": {
+    "state": "failed",
+    "path": null,
+    "reason": "HTTP Error 403: Forbidden",
+    "source": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-thestomach-20260506180514-7636841316634168589.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "HTTP Error 403: Forbidden",
+      "missing_evidence": [
+        "visual_observations",
+        "visible_text",
+        "spoken_content",
+        "audio_cues",
+        "hook_evidence",
+        "claim_evidence"
+      ]
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/010_7636841316634168589_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/010_7636841316634168589_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/010_7636841316634168589_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/010_7636841316634168589_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/010_7636841316634168589_video_evidence_report.md"
+    }
+  }
+}

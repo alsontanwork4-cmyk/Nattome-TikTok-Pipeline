@@ -1,0 +1,19 @@
+{
+  "deep_sound_research": {
+    "status": "extension_point",
+    "source": "baseline_audio_analysis",
+    "trigger": "Run deeper sound research when reused sound or music appears to drive virality.",
+    "candidate_ids": []
+  },
+  "multilingual_quality_improvements": {
+    "status": "extension_point",
+    "source": "gemini_evidence",
+    "trigger": "Improve Gemini evidence capture where language detection, confidence, or mixed-language capture is weak."
+  },
+  "full_script_generation": {
+    "status": "extension_point",
+    "source": "top_priority_shootable_angles",
+    "trigger": "Generate full scripts only for selected winning Shootable Angles after human approval.",
+    "candidate_ids": []
+  }
+}

@@ -71,11 +71,12 @@ Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/wri
 | Mode | Batch size | When to use |
 |---|---:|---|
 | `debug` | 1 | Smoke test, schema check, or one-video analysis. |
+| `daily` | 5 | Daily evidence analysis for the exact top videos from `nattome-daily-discovery`. Preserves input order and does not rerank to 10. |
 | `quick` | 5 | Pilot or mid-week sanity check. |
 | `default` | 10 | Weekly standard run. Use this unless the user says otherwise. |
 | `deep` | 20 | Strategic deep-dive. Use only when explicitly asked. |
 
-If the user asks for the top candidate or one video, use `debug`. If the user asks for a full weekly batch and does not specify size, use `default`.
+If the user asks for the top candidate or one video, use `debug`. If the user asks to analyze the daily report videos, use `daily` with the newest `data/daily_selections/nattome_daily_*_top5.json`. If the user asks for a full weekly batch and does not specify size, use `default`.
 
 ## The Run
 
@@ -86,6 +87,16 @@ python scripts/run_batch_analysis.py `
   --mode default `
   --candidates data/raw_scrapes/nattome_raw_<YYYYMMDD>_top30.json
 ```
+
+For daily evidence analysis, use the daily handoff produced by `nattome-daily-discovery`:
+
+```powershell
+python scripts/run_batch_analysis.py `
+  --mode daily `
+  --candidates data/daily_selections/nattome_daily_<YYYYMMDD>_top5.json
+```
+
+Daily mode preserves the handoff order and analyzes only those 4-5 daily report videos that pass the Minimum Eligibility Filter.
 
 Optional flags:
 
@@ -120,6 +131,7 @@ Stream the CLI output to the user as it runs. Preserve missing-evidence signals 
 ## When The User Asks Variants
 
 - **"Just run debug"** -> `--mode debug`, 1 video.
+- **"Analyze today's daily videos"** -> pick the newest `data/daily_selections/nattome_daily_*_top5.json` and run `--mode daily`.
 - **"Use last week's candidates"** -> pick the second-newest scrape from `data/raw_scrapes/`.
 - **"Skip Telegram this time"** -> set a config with Telegram disabled or note that missing Telegram env vars intentionally skip delivery.
 - **"Re-run on the same candidates"** -> safe; each run gets a fresh timestamped Run Folder.

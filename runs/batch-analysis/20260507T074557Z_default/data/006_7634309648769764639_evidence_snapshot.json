@@ -1,0 +1,51 @@
+{
+  "candidate_id": "7634309648769764639",
+  "rank": 6,
+  "prefix": "006_7634309648769764639",
+  "snapshot_path": "data/006_7634309648769764639_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/006_7634309648769764639_source_metadata.json"
+  },
+  "source_video": {
+    "state": "available",
+    "path": "evidence/006_7634309648769764639_source_video.mp4",
+    "bytes": 1271222,
+    "source": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-healifyhub-20260429222040-7634309648769764639.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "partial",
+      "path": "data/006_7634309648769764639_gemini_evidence.json",
+      "reason": null,
+      "missing_evidence": [
+        "spoken_content"
+      ]
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/006_7634309648769764639_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/006_7634309648769764639_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/006_7634309648769764639_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/006_7634309648769764639_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/006_7634309648769764639_video_evidence_report.md"
+    }
+  }
+}

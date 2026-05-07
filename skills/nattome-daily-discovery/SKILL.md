@@ -65,12 +65,15 @@ Run the discovery:
 
 ```powershell
 python skills/nattome-daily-discovery/scripts/scrape_tiktok.py `
-  --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd).json
+  --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd)_top30.json `
+  --top 30 `
+  --download-videos `
+  --daily-selection-output data/daily_selections/nattome_daily_$(Get-Date -Format yyyyMMdd)_top5.json
 ```
 
-(POSIX equivalent: `python skills/nattome-daily-discovery/scripts/scrape_tiktok.py --output data/raw_scrapes/nattome_raw_$(date +%Y%m%d).json`)
+(POSIX equivalent: `python skills/nattome-daily-discovery/scripts/scrape_tiktok.py --output data/raw_scrapes/nattome_raw_$(date +%Y%m%d)_top30.json --top 30 --download-videos --daily-selection-output data/daily_selections/nattome_daily_$(date +%Y%m%d)_top5.json`)
 
-The script writes a JSON file with candidate videos that are already filtered for digestive-health relevance. If `--top` is omitted, it returns the top 5.
+The script writes the full ranked scrape and a separate daily evidence-analysis handoff. The handoff contains the same top videos used for the daily brief and is the source for daily video evidence analysis. If `--top` is omitted, the scraper returns only the top 5, but the normal daily pipeline should keep the top-30 scrape for audit and the top-5 handoff for analysis.
 
 On Windows, keep all scraper JSON/config/brief files in UTF-8. The bundled scripts explicitly read config and markdown as UTF-8 and write JSON as UTF-8 with `ensure_ascii=False`, so TikTok captions with Unicode characters do not fail under the default `cp1252` console/file encoding.
 

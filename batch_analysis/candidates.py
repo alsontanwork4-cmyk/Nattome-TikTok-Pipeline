@@ -214,6 +214,8 @@ def select_candidates(
     run_timestamp: datetime,
     batch_size: int,
     candidates_path: Path | None,
+    *,
+    preserve_order: bool = False,
 ) -> dict[str, Any]:
     eligible = []
     excluded = []
@@ -231,7 +233,7 @@ def select_candidates(
             continue
         eligible.append(candidate)
 
-    ranked = sorted(
+    ranked = eligible if preserve_order else sorted(
         eligible,
         key=lambda candidate: selection_score(candidate, run_timestamp),
         reverse=True,
@@ -244,6 +246,7 @@ def select_candidates(
     return {
         "selected_at": isoformat_z(run_timestamp),
         "candidate_source": str(candidates_path) if candidates_path else None,
+        "selection_strategy": "input_order" if preserve_order else "viral_relevance_score",
         "requested_batch_size": batch_size,
         "input_candidate_count": len(candidates),
         "eligible_candidate_count": len(eligible),
