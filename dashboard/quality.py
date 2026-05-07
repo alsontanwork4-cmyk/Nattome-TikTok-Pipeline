@@ -7,6 +7,12 @@ from pathlib import Path
 import sqlite3
 from typing import Any
 
+from .scoring import (
+    nattome_relevance,
+    score_band,
+    scrape_freshness_score,
+    weighted_engagement,
+)
 from .store import connect_dashboard_store, dump_json
 
 
@@ -18,23 +24,6 @@ COMPONENT_WEIGHTS = {
     "engagement_strength": 15,
     "duplicate_noise_control": 5,
 }
-
-NATTOME_TERMS = (
-    "acid reflux",
-    "reflux",
-    "bloating",
-    "bloated",
-    "gut",
-    "digest",
-    "digestion",
-    "digestive",
-    "stomach",
-    "heartburn",
-    "ibs",
-    "constipation",
-    "antacid",
-    "gastric",
-)
 
 
 @dataclass(frozen=True)
@@ -91,9 +80,9 @@ def _score_run(connection: sqlite3.Connection, run: sqlite3.Row) -> ScrapeQualit
     ratios = {
         "candidate_volume": _ratio(raw_count, max(requested_batch_size * 1.25, 1.0)),
         "eligibility_yield": _ratio(eligible_count, max(raw_count, 1)),
-        "nattome_relevance": _average([_nattome_relevance(row) for row in videos]),
-        "freshness": _average([_freshness(row, run_timestamp, max_age_days) for row in videos]),
-        "engagement_strength": _ratio(_average([_weighted_engagement(row) for row in videos]), 0.08),
+        "nattome_relevance": _average([nattome_relevance(row) for row in videos]),
+        "freshness": _average([scrape_freshness_score(row, run_timestamp, max_age_days) for row in videos]),
+        "engagement_strength": _ratio(_average([weighted_engagement(row) for row in videos]), 0.08),
         "duplicate_noise_control": _duplicate_noise_control(videos),
     }
     components = {
@@ -101,7 +90,7 @@ def _score_run(connection: sqlite3.Connection, run: sqlite3.Row) -> ScrapeQualit
         for name, value in ratios.items()
     }
     total = min(100, max(0, sum(components.values())))
-    band = _band(total)
+    band = score_band(total)
     return ScrapeQualityScore(
         run_id=run["run_id"],
         score=total,
@@ -168,14 +157,6 @@ def _persist_score(connection: sqlite3.Connection, score: ScrapeQualityScore) ->
     )
 
 
-def _band(score: int) -> str:
-    if score >= 80:
-        return "strong scrape"
-    if score >= 60:
-        return "usable scrape"
-    return "needs attention"
-
-
 def _drivers(
     raw_count: int,
     eligible_count: int,
@@ -206,36 +187,6 @@ def _drivers(
             }
         )
     return drivers
-
-
-def _nattome_relevance(row: sqlite3.Row) -> float:
-    hashtags = _json_loads(row["hashtags_json"])
-    hashtag_text = " ".join(str(item) for item in hashtags) if isinstance(hashtags, list) else str(hashtags)
-    haystack = " ".join(
-        [
-            str(row["caption"] or ""),
-            hashtag_text,
-            str(row["source_input"] or ""),
-        ]
-    ).lower()
-    matches = sum(1 for term in NATTOME_TERMS if term in haystack)
-    return min(matches / 4, 1.0)
-
-
-def _freshness(row: sqlite3.Row, run_timestamp: datetime | None, max_age_days: float) -> float:
-    created = _parse_datetime(row["created_at"])
-    if created is None or run_timestamp is None:
-        return 0.5
-    age_days = max((run_timestamp - created).total_seconds() / 86400, 0.0)
-    return 1.0 - min(age_days / max(max_age_days, 1.0), 1.0)
-
-
-def _weighted_engagement(row: sqlite3.Row) -> float:
-    views = max(_positive_int(row["play_count"], 0), 1)
-    likes = _positive_int(row["like_count"], 0)
-    comments = _positive_int(row["comment_count"], 0)
-    shares = _positive_int(row["share_count"], 0)
-    return (likes + comments * 5 + shares * 10) / views
 
 
 def _duplicate_noise_control(videos: list[sqlite3.Row]) -> float:

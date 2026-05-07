@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Any
 
 from .manual_runs import list_manual_runs
-from .quality import NATTOME_TERMS
 from .refresh import refresh_dashboard_derivatives
+from .scoring import nattome_relevance, weighted_engagement
 from .store import connect_dashboard_store
 
 
@@ -200,8 +200,8 @@ def _scheduled_run_row(connection: sqlite3.Connection, run: sqlite3.Row) -> RunH
         raw_candidates=raw_candidates,
         eligible_candidates=eligible_candidates,
         selected_count=selected_count,
-        average_nattome_relevance=_average([_nattome_relevance(video) for video in videos]),
-        average_engagement=_average([_weighted_engagement(video) for video in videos]),
+        average_nattome_relevance=_average([nattome_relevance(video) for video in videos]),
+        average_engagement=_average([weighted_engagement(video) for video in videos]),
         freshness_score=int(score["freshness_score"]) if score else None,
         duplicate_noise_score=int(score["duplicate_noise_control_score"]) if score else None,
         pipeline_health=str(health["status"]) if health else "unknown",
@@ -389,28 +389,6 @@ def _phase_list(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     if not isinstance(phases, list):
         return []
     return [phase for phase in phases if isinstance(phase, dict)]
-
-
-def _nattome_relevance(row: sqlite3.Row) -> float:
-    hashtags = _json_loads(row["hashtags_json"])
-    hashtag_text = " ".join(str(item) for item in hashtags) if isinstance(hashtags, list) else str(hashtags)
-    haystack = " ".join(
-        [
-            str(row["caption"] or ""),
-            hashtag_text,
-            str(row["source_input"] or ""),
-        ]
-    ).lower()
-    matches = sum(1 for term in NATTOME_TERMS if term in haystack)
-    return min(matches / 4, 1.0)
-
-
-def _weighted_engagement(row: sqlite3.Row) -> float:
-    views = max(_positive_int(row["play_count"], 0), 1)
-    likes = _positive_int(row["like_count"], 0)
-    comments = _positive_int(row["comment_count"], 0)
-    shares = _positive_int(row["share_count"], 0)
-    return (likes + comments * 5 + shares * 10) / views
 
 
 def _average(values: list[float]) -> float:

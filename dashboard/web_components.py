@@ -5,6 +5,7 @@ import json
 
 from pathlib import Path
 
+from .scoring import engagement_rate_text, freshness_label, percent_text, relevance_label, score_text
 from .web_constants import CURATION_LABELS, NAV_GROUPS, NAV_ITEMS
 
 _ICON_PATHS: dict[str, str] = {
@@ -196,35 +197,21 @@ def _display_status(value: object) -> str:
 
 
 def _engagement_rate(video: dict[str, object]) -> str:
-    views = _int_value(video.get("play_count"))
-    if views <= 0:
-        return "--"
-    likes = _int_value(video.get("like_count"))
-    comments = _int_value(video.get("comment_count"))
-    shares = _int_value(video.get("share_count"))
-    rate = (likes + comments * 5 + shares * 10) / views
-    return f"{rate * 100:.1f}%"
+    return engagement_rate_text(video)
 
 
 def _relevance_label(caption: str, hashtags: str, source_input: str) -> str:
-    haystack = f"{caption} {hashtags} {source_input}".lower()
-    matches = sum(1 for term in ("gut", "digest", "bloating", "reflux", "stomach") if term in haystack)
-    if matches >= 2:
-        return "high"
-    if matches == 1:
-        return "medium"
-    return "low"
+    return relevance_label(
+        {
+            "caption": caption,
+            "hashtags": hashtags,
+            "source_input": source_input,
+        }
+    )
 
 
 def _freshness_label(created_at: object) -> str:
-    return "created date available" if created_at else "created date missing"
-
-
-def _int_value(value: object) -> int:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return 0
+    return freshness_label(created_at)
 
 
 def _render_placeholder(title: str) -> str:
@@ -245,15 +232,11 @@ def _title_for_path(path: str) -> str:
             return "Latest Run Overview" if route == "/" else label
     return "Dashboard"
 def _score_text(value: object) -> str:
-    return "--" if value is None else html.escape(str(value))
+    return html.escape(score_text(value))
 
 
 def _percent_text(value: object) -> str:
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return "--"
-    return f"{number * 100:.1f}%"
+    return percent_text(value)
 def _health_panel_class(health_summary: dict[str, object] | None) -> str:
     if not health_summary:
         return "notice"

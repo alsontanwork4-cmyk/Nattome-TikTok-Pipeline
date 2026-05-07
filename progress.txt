@@ -1498,3 +1498,34 @@ Feedback:
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - Context threshold is above the requested stop point, so stop after completing issue 0056 rather than starting issue 0057.
+
+## 2026-05-07 - 0057 Centralize Nattome Scoring Vocabulary
+
+Task completed from `docs/issues/0057-centralize-nattome-scoring-vocabulary.md`.
+
+Key decisions made:
+- Added `dashboard.scoring` as the shared owner for Nattome relevance terms, relevance bands, weighted engagement, freshness behavior, score bands, and score/percent display text.
+- Migrated Scrape Quality, Run History, Search facets, and web-rendered score/engagement text to call the shared scoring module.
+- Kept existing dashboard behavior stable while removing duplicated scoring logic from page-specific modules.
+- Added scoring parity tests around representative raw TikTok records and Batch Analysis Run freshness behavior.
+
+Files changed:
+- `dashboard/scoring.py`
+- `dashboard/quality.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `dashboard/web_components.py`
+- `dashboard/web_run_history.py`
+- `tests/test_dashboard_scoring.py`
+- `progress.txt`
+- `docs/issues/done/0057-centralize-nattome-scoring-vocabulary.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_scoring.py` failed because `dashboard.scoring` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_scoring.py` passed with 2 tests.
+- `python -m pytest tests/test_dashboard_scoring.py tests/test_scrape_quality_score.py tests/test_dashboard_run_history.py tests/test_dashboard_global_search.py tests/test_dashboard_shell.py` passed with 26 tests.
+- `python -m pytest` passed with 115 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0057 rather than starting issue 0058.

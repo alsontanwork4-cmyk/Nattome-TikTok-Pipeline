@@ -5,7 +5,9 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from .run_history import load_run_history, load_run_history_detail
-from .web_components import _format_count, _percent_text, _render_empty_state, _render_page_header, _score_text
+from .scoring import percent_text as _plain_percent_text
+from .scoring import score_text as _plain_score_text
+from .web_components import _format_count, _render_empty_state, _render_page_header
 
 def _render_run_history(workspace: Path, *, run_history_run_id: str = "") -> str:
     history = load_run_history(workspace)
@@ -223,12 +225,8 @@ def _render_output_links(links: list[object]) -> str:
 
 
 def _score_text(value: object) -> str:
-    return "--" if value is None else html.escape(str(value))
+    return html.escape(_plain_score_text(value))
 
 
 def _percent_text(value: object) -> str:
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return "--"
-    return f"{number * 100:.1f}%"
+    return _plain_percent_text(value)

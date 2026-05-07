@@ -3,12 +3,11 @@ from __future__ import annotations
 import json
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .quality import NATTOME_TERMS
 from .refresh import refresh_dashboard_derivatives
+from .scoring import engagement_band, freshness_facet, relevance_band, video_score_band
 from .store import connect_dashboard_store
 
 
@@ -152,11 +151,11 @@ def _raw_video_records(
                         "label": labels,
                         "score_band": [
                             run_context.get(run_id, {}).get("score_band") or "",
-                            _video_score_band(row, hashtags),
+                            video_score_band(row),
                         ],
-                        "relevance_band": _relevance_band(row["caption"], hashtags, row["source_input"]),
-                        "engagement_band": _engagement_band(row),
-                        "freshness": _freshness(row["created_at"], run_context.get(run_id, {})),
+                        "relevance_band": relevance_band(row),
+                        "engagement_band": engagement_band(row),
+                        "freshness": freshness_facet(row["created_at"], run_context.get(run_id, {}).get("run_timestamp")),
                         "author": str(row["author_handle"] or ""),
                         "hashtag_topic": hashtags,
                         "source_input": str(row["source_input"] or ""),
@@ -538,66 +537,6 @@ def _run_video_context(connection: sqlite3.Connection, run_id: str) -> str:
             for row in rows
         ]
     )
-
-
-def _relevance_band(caption: Any, hashtags: list[str], source_input: Any) -> str:
-    haystack = _compact_text(caption, " ".join(hashtags), source_input).lower()
-    matches = sum(1 for term in NATTOME_TERMS if term in haystack)
-    if matches >= 2:
-        return "high relevance"
-    if matches == 1:
-        return "medium relevance"
-    return "low relevance"
-
-
-def _engagement_band(row: sqlite3.Row) -> str:
-    views = max(_int_value(row["play_count"]), 1)
-    engagement = (_int_value(row["like_count"]) + _int_value(row["comment_count"]) * 5 + _int_value(row["share_count"]) * 10) / views
-    if engagement >= 0.08:
-        return "high engagement"
-    if engagement >= 0.03:
-        return "medium engagement"
-    return "low engagement"
-
-
-def _video_score_band(row: sqlite3.Row, hashtags: list[str]) -> str:
-    relevance = _relevance_band(row["caption"], hashtags, row["source_input"])
-    engagement = _engagement_band(row)
-    if relevance == "high relevance" and engagement == "high engagement":
-        return "strong scrape"
-    if relevance != "low relevance" and engagement != "low engagement":
-        return "usable scrape"
-    return "needs attention"
-
-
-def _freshness(created_at: Any, context: dict[str, Any]) -> str:
-    created = _parse_datetime(created_at)
-    run_timestamp = _parse_datetime(context.get("run_timestamp"))
-    if created is None or run_timestamp is None:
-        return "undated"
-    age_days = max((run_timestamp - created).total_seconds() / 86400, 0.0)
-    if age_days <= 14:
-        return "fresh"
-    if age_days <= 45:
-        return "aging"
-    return "stale"
-
-
-def _parse_datetime(value: Any) -> datetime | None:
-    text = str(value or "")
-    if not text:
-        return None
-    try:
-        return datetime.fromisoformat(text.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-
-
-def _int_value(value: Any) -> int:
-    try:
-        return int(value or 0)
-    except (TypeError, ValueError):
-        return 0
 
 
 def _read_text(path: Path) -> str:
