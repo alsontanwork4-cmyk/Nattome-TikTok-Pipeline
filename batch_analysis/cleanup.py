@@ -5,12 +5,14 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+
 def resolved_inside(parent: Path, path: Path) -> bool:
     try:
         path.resolve().relative_to(parent.resolve())
     except ValueError:
         return False
     return True
+
 
 def remove_artifact(path: Path, run_folder: Path, removed: list[dict[str, Any]]) -> None:
     if not path.exists() or not resolved_inside(run_folder, path):
@@ -28,28 +30,38 @@ def remove_artifact(path: Path, run_folder: Path, removed: list[dict[str, Any]])
         }
     )
 
+
 def durable_outputs_exist(run_folder: Path) -> bool:
     manifest_path = run_folder / "run_manifest.json"
-    if manifest_path.exists():
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            manifest = {}
-        outputs = manifest.get("outputs") if isinstance(manifest, dict) else {}
-        final_outputs = outputs.get("final_outputs") if isinstance(outputs, dict) else []
-        output_root = Path(outputs.get("output_root")) if isinstance(outputs, dict) and outputs.get("output_root") else None
-        if output_root is not None and isinstance(final_outputs, list) and final_outputs:
-            return all(
-                (output_root / str(output.get("path", ""))).exists()
-                for output in final_outputs
-                if isinstance(output, dict)
-            )
+    if not manifest_path.exists():
+        return False
 
-    required = [
-        run_folder / "reports" / "cross_video_pattern_summary.md",
-        run_folder / "data" / "structured_batch_analysis.json",
-    ]
-    return all(path.exists() for path in required)
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+
+    outputs = manifest.get("outputs") if isinstance(manifest, dict) else None
+    if not isinstance(outputs, dict):
+        return False
+
+    output_root_value = outputs.get("output_root")
+    final_outputs = outputs.get("final_outputs")
+    if not output_root_value or not isinstance(final_outputs, list) or not final_outputs:
+        return False
+
+    output_root = Path(str(output_root_value))
+    final_output_paths = []
+    for output in final_outputs:
+        if not isinstance(output, dict) or not output.get("path"):
+            return False
+        output_path = output_root / str(output["path"])
+        if not resolved_inside(output_root, output_path):
+            return False
+        final_output_paths.append(output_path)
+
+    return all(path.exists() for path in final_output_paths)
+
 
 def cleanup_evidence_artifacts(
     run_folder: Path,

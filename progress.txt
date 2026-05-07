@@ -869,3 +869,28 @@ Feedback:
 Blockers or notes for the next iteration:
 - Issue `0033-remove-cleanup-fallbacks-for-retired-outputs.md` is next.
 - Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0033 Remove Cleanup Fallbacks For Retired Outputs
+
+Task completed from `docs/issues/0033-remove-cleanup-fallbacks-for-retired-outputs.md`.
+
+Key decisions made:
+- Made cleanup preservation depend only on `run_manifest.json` entries under `outputs.output_root` and `outputs.final_outputs`.
+- Removed the legacy fallback that treated run-folder Cross-Video Markdown plus structured data as durable output proof.
+- Kept final output path checks bounded under the configured output root.
+- Reworked cleanup regression coverage so retired Cross-Video Markdown and CSV files no longer count as preserved durable outputs.
+
+Files changed:
+- `batch_analysis/cleanup.py`
+- `tests/test_cleanup.py`
+- `progress.txt`
+- `docs/issues/done/0033-remove-cleanup-fallbacks-for-retired-outputs.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cleanup.EvidenceArtifactCleanupTest.test_cleanup_does_not_preserve_artifacts_for_retired_output_files -v` failed first on the old fallback, then passed after removing it.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cleanup -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 63 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0034-delete-skipped-legacy-nested-pipeline-tests.md` is next.
+- Per user instruction, stop after this issue because the context window is high.

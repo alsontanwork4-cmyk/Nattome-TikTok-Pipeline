@@ -85,7 +85,7 @@ class EvidenceArtifactCleanupTest(unittest.TestCase):
             log = json.loads((logs / "evidence_artifact_cleanup.json").read_text())
             self.assertTrue(log["bundles"][0]["preserved_outputs"])
 
-    def test_cleanup_removes_large_artifacts_after_report_approval(self):
+    def test_cleanup_does_not_preserve_artifacts_for_retired_output_files(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
             logs = run_folder / "logs"
@@ -96,13 +96,12 @@ class EvidenceArtifactCleanupTest(unittest.TestCase):
             source_video.write_bytes(b"large video")
 
             for path in [
-                run_folder / "reports" / "001_cleanup-video_video_evidence_report.md",
                 run_folder / "reports" / "cross_video_pattern_summary.md",
                 run_folder / "data" / "structured_batch_analysis.json",
                 run_folder / "data" / "spreadsheet_summary.csv",
             ]:
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text("durable", encoding="utf-8")
+                path.write_text("retired output", encoding="utf-8")
 
             evidence_index = {
                 "bundles": [
@@ -128,4 +127,4 @@ class EvidenceArtifactCleanupTest(unittest.TestCase):
             self.assertEqual(status["removed_artifact_count"], 1)
             self.assertFalse(source_video.exists())
             log = json.loads((logs / "evidence_artifact_cleanup.json").read_text())
-            self.assertTrue(log["bundles"][0]["preserved_outputs"])
+            self.assertFalse(log["bundles"][0]["preserved_outputs"])
