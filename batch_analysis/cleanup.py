@@ -29,6 +29,22 @@ def remove_artifact(path: Path, run_folder: Path, removed: list[dict[str, Any]])
     )
 
 def durable_outputs_exist(run_folder: Path) -> bool:
+    manifest_path = run_folder / "run_manifest.json"
+    if manifest_path.exists():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            manifest = {}
+        outputs = manifest.get("outputs") if isinstance(manifest, dict) else {}
+        final_outputs = outputs.get("final_outputs") if isinstance(outputs, dict) else []
+        output_root = Path(outputs.get("output_root")) if isinstance(outputs, dict) and outputs.get("output_root") else None
+        if output_root is not None and isinstance(final_outputs, list) and final_outputs:
+            return all(
+                (output_root / str(output.get("path", ""))).exists()
+                for output in final_outputs
+                if isinstance(output, dict)
+            )
+
     required = [
         run_folder / "reports" / "cross_video_pattern_summary.md",
         run_folder / "data" / "structured_batch_analysis.json",

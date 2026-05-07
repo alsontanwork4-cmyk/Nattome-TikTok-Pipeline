@@ -444,6 +444,8 @@ def write_cross_video_pattern_summary(
     run_folder: Path,
     selected_batch: dict[str, Any],
     evidence_index: dict[str, Any],
+    *,
+    write_markdown: bool = True,
 ) -> dict[str, Any]:
     hooks: dict[str, set[str]] = {}
     formats: dict[str, set[str]] = {}
@@ -666,8 +668,9 @@ def write_cross_video_pattern_summary(
         ]
     )
 
-    markdown_path = output_report_path(run_folder, "cross_video_pattern_summary.md")
-    markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if write_markdown:
+        markdown_path = output_report_path(run_folder, "cross_video_pattern_summary.md")
+        markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return {"status": "completed", "top_angle_count": len(angle_rows), "summary": summary}
 
 def first_angle_by_candidate(cross_video_summary: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -689,6 +692,8 @@ def write_structured_json_and_spreadsheet_summary(
     evidence_index: dict[str, Any],
     metadata: dict[str, Any],
     cross_video_summary: dict[str, Any],
+    *,
+    write_spreadsheet: bool = True,
 ) -> dict[str, Any]:
     candidates_by_id = {
         str(candidate.get("id")): candidate
@@ -805,28 +810,30 @@ def write_structured_json_and_spreadsheet_summary(
         encoding="utf-8",
     )
 
-    spreadsheet_path = output_json_path(run_folder, "spreadsheet_summary.csv")
-    fieldnames = [
-        "link",
-        "topic",
-        "hook_type",
-        "format",
-        "emotional_trigger",
-        "avatar",
-        "product_fit",
-        "priority_score",
-        "evidence_quality",
-        "recommended_angle",
-    ]
-    with spreadsheet_path.open("w", newline="", encoding="utf-8") as spreadsheet_file:
-        writer = csv.DictWriter(spreadsheet_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(spreadsheet_rows)
-
-    return {
+    result = {
         "status": "completed",
         "structured_json_path": relative_output_path(structured_path, run_folder),
-        "spreadsheet_path": relative_output_path(spreadsheet_path, run_folder),
         "row_count": len(spreadsheet_rows),
     }
+    if write_spreadsheet:
+        spreadsheet_path = output_json_path(run_folder, "spreadsheet_summary.csv")
+        fieldnames = [
+            "link",
+            "topic",
+            "hook_type",
+            "format",
+            "emotional_trigger",
+            "avatar",
+            "product_fit",
+            "priority_score",
+            "evidence_quality",
+            "recommended_angle",
+        ]
+        with spreadsheet_path.open("w", newline="", encoding="utf-8") as spreadsheet_file:
+            writer = csv.DictWriter(spreadsheet_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(spreadsheet_rows)
+        result["spreadsheet_path"] = relative_output_path(spreadsheet_path, run_folder)
+
+    return result
 

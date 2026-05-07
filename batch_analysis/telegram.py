@@ -23,6 +23,7 @@ def build_telegram_brief_message(
     run_folder: Path,
     metadata: dict[str, Any],
     cross_video_summary: dict[str, Any],
+    final_outputs: list[dict[str, Any]] | None = None,
 ) -> str:
     angles = cross_video_summary.get("top_priority_shootable_angles")
     top_angles = angles[:3] if isinstance(angles, list) else []
@@ -58,16 +59,23 @@ def build_telegram_brief_message(
     else:
         lines.append("No shootable angles available.")
 
-    lines.extend(
-        [
-            "",
-            "Outputs:",
-            "Markdown: reports/cross_video_pattern_summary.md",
-            "JSON: data/structured_batch_analysis.json",
-            "Spreadsheet: data/spreadsheet_summary.csv",
-            f"Run folder: {run_folder}",
-        ]
-    )
+    lines.extend(["", "Outputs:"])
+    if final_outputs:
+        for output in final_outputs:
+            if not isinstance(output, dict):
+                continue
+            label = output.get("label", "Output")
+            path = output.get("path", "")
+            lines.append(f"{label}: {path}")
+    else:
+        lines.extend(
+            [
+                "Markdown: reports/cross_video_pattern_summary.md",
+                "JSON: data/structured_batch_analysis.json",
+                "Spreadsheet: data/spreadsheet_summary.csv",
+            ]
+        )
+    lines.append(f"Run folder: {run_folder}")
     return "\n".join(lines)
 
 def send_telegram_message(token: str, chat_id: str, text: str) -> dict[str, Any]:
@@ -96,6 +104,7 @@ def deliver_telegram_brief(
     metadata: dict[str, Any],
     cross_video_summary: dict[str, Any],
     telegram_config: dict[str, Any],
+    final_outputs: list[dict[str, Any]] | None = None,
     sender=send_telegram_message,
 ) -> dict[str, Any]:
     log_path = run_folder / "logs" / "telegram_delivery.json"
@@ -108,7 +117,12 @@ def deliver_telegram_brief(
         return status
 
     token, chat_id, missing = telegram_credentials(telegram_config)
-    message = build_telegram_brief_message(run_folder, metadata, cross_video_summary)
+    message = build_telegram_brief_message(
+        run_folder,
+        metadata,
+        cross_video_summary,
+        final_outputs,
+    )
     if missing:
         status = {
             "status": "skipped",

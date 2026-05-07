@@ -705,3 +705,38 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Continue with issue 0028 to replace final batch output registration.
+
+## 2026-05-07 - 0028 Replace Final Batch Output Registration
+
+Task completed from `docs/issues/0028-replace-final-batch-output-registration.md`.
+
+Key decisions made:
+- Completed runs now register exactly two marketer-facing final outputs: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook under `outputs/reports/YYYY-MM-DD/`.
+- The run folder still keeps internal structured JSON, including `data/cross_video_pattern_summary.json` and `data/structured_batch_analysis.json`, but new completed runs no longer write `reports/cross_video_pattern_summary.md` or `data/spreadsheet_summary.csv`.
+- The run manifest records `outputs.output_root` and `outputs.final_outputs` so downstream delivery, cleanup, and indexes can use the new final output set.
+- The batch index now has a `Final Outputs` section for the report/workbook and keeps internal structured data separate from marketer-facing deliverables.
+- Telegram delivery can render the registered final outputs, and cleanup can verify durable outputs from the manifest while preserving the old fallback for direct cleanup tests.
+
+Files changed:
+- `batch_analysis/cleanup.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/telegram.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_full_batch_analysis_two_layer_cli.py`
+- `progress.txt`
+- `docs/issues/done/0028-replace-final-batch-output-registration.md`
+
+Feedback:
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m py_compile batch_analysis\outputs.py batch_analysis\run.py batch_analysis\run_manifest.py batch_analysis\telegram.py batch_analysis\cleanup.py tests\test_full_batch_analysis_two_layer_cli.py tests\test_batch_analysis_run.py` passed.
+- Manual completed-run smoke under `.tmp\issue0028_smoke` passed and verified the new final output pair, manifest registration, batch index entries, and absence of old Markdown/CSV outputs.
+- `unittest` with a workspace temp-directory harness passed for `tests.test_full_batch_analysis_two_layer_cli`.
+- `unittest` with the same harness passed for the touched Telegram path plus `tests.test_batch_outputs_two_layer`, `tests.test_outputs`, `tests.test_telegram_delivery`, and `tests.test_cleanup`.
+- `unittest` with the same harness passed for `tests.test_top5_creative_report` and `tests.test_top5_angle_planning_workbook`.
+- `unittest discover` with the same harness passed with 58 tests and 14 skipped legacy nested-layout tests.
+
+Blockers or notes for the next iteration:
+- The current sandbox cannot run the project tests through normal `tempfile.TemporaryDirectory`; the stdlib temp folders are created without usable write access, so verification used a workspace temp-directory harness.
+- The bundled Python runtime does not include `pytest`, and the shared `python.exe`/venv launchers are inaccessible in this sandbox.
+- Per user instruction, stop after this issue because the context window is high; issue 0029 remains next.

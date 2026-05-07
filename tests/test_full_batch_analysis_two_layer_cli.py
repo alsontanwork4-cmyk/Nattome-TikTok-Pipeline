@@ -147,6 +147,11 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             candidates_path = write_candidates(temp_path, [candidate(temp_path)])
+            config_path = temp_path / "config.json"
+            config_path.write_text(
+                json.dumps({"telegram": {"enabled": False}}),
+                encoding="utf-8",
+            )
             adapter = FakeGeminiAdapter({"default": complete_gemini_evidence()})
 
             run_folder = create_run(
@@ -154,7 +159,7 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
                     mode="debug",
                     batch_size=1,
                     runs_dir=temp_path / "runs",
-                    config=None,
+                    config=config_path,
                     candidates=candidates_path,
                     timestamp="2026-05-06T13:45:30Z",
                     gemini_adapter=adapter,
@@ -174,19 +179,47 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
             self.assertTrue((run_folder / "data" / "001_two-layer-video_gemini_evidence.json").is_file())
             self.assertTrue((run_folder / "reports" / "001_two-layer-video_video_evidence_report.md").is_file())
             self.assertTrue((run_folder / "data" / "001_two-layer-video_shootable_angles.json").is_file())
-            self.assertTrue((run_folder / "reports" / "cross_video_pattern_summary.md").is_file())
+            self.assertFalse((run_folder / "reports" / "cross_video_pattern_summary.md").exists())
+            self.assertTrue((run_folder / "data" / "cross_video_pattern_summary.json").is_file())
             self.assertTrue((run_folder / "data" / "structured_batch_analysis.json").is_file())
-            self.assertTrue((run_folder / "data" / "spreadsheet_summary.csv").is_file())
+            self.assertFalse((run_folder / "data" / "spreadsheet_summary.csv").exists())
             self.assertTrue((run_folder / "logs" / "telegram_delivery.json").is_file())
             self.assertTrue((run_folder / "logs" / "evidence_artifact_cleanup.json").is_file())
             self.assertTrue((run_folder / "data" / "refinement_hooks.json").is_file())
+            output_root = temp_path / "outputs"
+            final_report = (
+                output_root
+                / "reports"
+                / "2026-05-06"
+                / "top5_creative_production_report_2026-05-06.md"
+            )
+            final_workbook = (
+                output_root
+                / "reports"
+                / "2026-05-06"
+                / "top5_angle_planning_sheet_2026-05-06.xlsx"
+            )
+            self.assertTrue(final_report.is_file())
+            self.assertTrue(final_workbook.is_file())
 
             manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(
                 next(phase for phase in manifest["phases"] if phase["name"] == "gemini_evidence")["status"],
                 "completed",
             )
-            self.assertIn("data/structured_batch_analysis.json", (run_folder / "batch_index.md").read_text(encoding="utf-8"))
+            final_outputs = manifest["outputs"]["final_outputs"]
+            self.assertEqual(
+                [output["path"] for output in final_outputs],
+                [
+                    "reports/2026-05-06/top5_creative_production_report_2026-05-06.md",
+                    "reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx",
+                ],
+            )
+            batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
+            self.assertIn("top5_creative_production_report_2026-05-06.md", batch_index)
+            self.assertIn("top5_angle_planning_sheet_2026-05-06.xlsx", batch_index)
+            self.assertNotIn("cross_video_pattern_summary.md", batch_index)
+            self.assertNotIn("spreadsheet_summary.csv", batch_index)
 
     def test_cli_records_missing_gemini_credentials_without_legacy_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:

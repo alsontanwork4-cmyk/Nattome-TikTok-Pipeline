@@ -24,7 +24,7 @@ from .outputs import (
     write_top5_creative_production_report,
 )
 from .planning_workbook import write_top5_angle_planning_workbook
-from .run_manifest import build_run_manifest, write_batch_index_from_manifest
+from .run_manifest import build_run_manifest, write_batch_index_from_manifest, write_run_manifest
 from .telegram import deliver_telegram_brief
 from .tool_adapters import GeminiFlashAdapter
 
@@ -238,6 +238,7 @@ def create_run(args: argparse.Namespace) -> Path:
             run_folder,
             selected_batch,
             flat_evidence_index,
+            write_markdown=False,
         )
 
     has_gemini_evidence = flat_evidence_index is not None
@@ -266,7 +267,7 @@ def create_run(args: argparse.Namespace) -> Path:
         has_video_evidence_reports,
         cross_video_summary is not None,
         has_structured_outputs,
-        has_structured_outputs,
+        False,
         has_telegram_delivery,
         has_evidence_artifact_cleanup,
         has_refinement_hooks,
@@ -288,6 +289,7 @@ def create_run(args: argparse.Namespace) -> Path:
         has_refinement_hooks=has_refinement_hooks,
         gemini_evidence_statuses=gemini_evidence_statuses,
     )
+    final_outputs: list[dict[str, Any]] = []
     if has_structured_outputs:
         write_structured_json_and_spreadsheet_summary(
             run_folder,
@@ -295,21 +297,38 @@ def create_run(args: argparse.Namespace) -> Path:
             flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
+            write_spreadsheet=False,
         )
-        write_top5_creative_production_report(
+        output_root = output_root_for_args(args)
+        report_status = write_top5_creative_production_report(
             run_folder,
-            output_root_for_args(args),
+            output_root,
             selected_batch,
             flat_evidence_index,
             metadata["run_timestamp"],
         )
-        write_top5_angle_planning_workbook(
+        workbook_status = write_top5_angle_planning_workbook(
             run_folder,
-            output_root_for_args(args),
+            output_root,
             selected_batch,
             flat_evidence_index,
             metadata["run_timestamp"],
         )
+        final_outputs = [
+            {
+                "label": "Top 5 Creative Production Report",
+                "kind": "markdown",
+                "path": report_status["path"],
+            },
+            {
+                "label": "Top 5 Angle Planning Workbook",
+                "kind": "spreadsheet",
+                "path": workbook_status["path"],
+            },
+        ]
+        manifest["outputs"]["output_root"] = str(output_root)
+        manifest["outputs"]["final_outputs"] = final_outputs
+        write_run_manifest(run_folder, manifest)
         write_refinement_hooks(run_folder, cross_video_summary["summary"])
     if has_telegram_delivery:
         deliver_telegram_brief(
@@ -317,6 +336,7 @@ def create_run(args: argparse.Namespace) -> Path:
             metadata,
             cross_video_summary["summary"],
             configuration.get("telegram", {}),
+            final_outputs,
         )
     if has_evidence_artifact_cleanup:
         cleanup_evidence_artifacts(

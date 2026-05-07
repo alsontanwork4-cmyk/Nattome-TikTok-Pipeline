@@ -110,7 +110,6 @@ def build_run_manifest(
             "cross_video_pattern_summary",
             "completed" if has_cross_video_pattern_summary else "skipped",
             outputs={
-                "markdown": "reports/cross_video_pattern_summary.md",
                 "json": "data/cross_video_pattern_summary.json",
             }
             if has_cross_video_pattern_summary
@@ -121,7 +120,6 @@ def build_run_manifest(
             "completed" if has_structured_outputs else "skipped",
             outputs={
                 "json": "data/structured_batch_analysis.json",
-                "spreadsheet": "data/spreadsheet_summary.csv",
             }
             if has_structured_outputs
             else {},
@@ -173,7 +171,6 @@ def render_batch_index(manifest: dict[str, Any]) -> str:
     }
     candidate_selection = phase_by_name.get("candidate_selection", {})
     evidence_bundles = phase_by_name.get("evidence_bundles", {})
-    cross_video_summary = phase_by_name.get("cross_video_pattern_summary", {})
     structured_outputs = phase_by_name.get("structured_outputs", {})
     telegram_delivery = phase_by_name.get("telegram_delivery", {})
     cleanup = phase_by_name.get("evidence_artifact_cleanup", {})
@@ -194,6 +191,19 @@ def render_batch_index(manifest: dict[str, Any]) -> str:
     for subdirectory in manifest.get("folders", []):
         lines.append(f"- `{subdirectory}`")
 
+    final_outputs = manifest.get("outputs", {}).get("final_outputs", [])
+    lines.extend(["", "## Final Outputs", ""])
+    if final_outputs:
+        for output in final_outputs:
+            if not isinstance(output, dict):
+                continue
+            label = output.get("label", "Output")
+            path = output.get("path", "")
+            kind = output.get("kind", "file")
+            lines.append(f"- {label} ({kind}): `{path}`")
+    else:
+        lines.append("- Final marketer-facing outputs were not created.")
+
     lines.extend(["", "## Selection", ""])
     selection_outputs = candidate_selection.get("outputs", {})
     if candidate_selection.get("status") == "completed":
@@ -213,26 +223,12 @@ def render_batch_index(manifest: dict[str, Any]) -> str:
     else:
         lines.append("- Evidence bundles were not created because no selected batch was available.")
 
-    lines.extend(["", "## Cross-Video Pattern Summary", ""])
-    summary_outputs = cross_video_summary.get("outputs", {})
-    if cross_video_summary.get("status") == "completed":
-        lines.extend(
-            [
-                f"- Markdown: `{summary_outputs['markdown']}`",
-                f"- JSON: `{summary_outputs['json']}`",
-            ]
-        )
-    else:
-        lines.append("- Cross-video pattern summary was not created because no evidence bundles were available.")
-
-    lines.extend(["", "## Structured Outputs", ""])
+    lines.extend(["", "## Internal Structured Data", ""])
     structured = structured_outputs.get("outputs", {})
     if structured_outputs.get("status") == "completed":
         lines.append(f"- Structured JSON: `{structured['json']}`")
-        lines.append(f"- Spreadsheet summary: `{structured['spreadsheet']}`")
     else:
         lines.append("- Structured JSON was not created because no evidence bundles were available.")
-        lines.append("- Spreadsheet summary was not created because no evidence bundles were available.")
 
     lines.extend(["", "## Telegram Delivery", ""])
     telegram_outputs = telegram_delivery.get("outputs", {})

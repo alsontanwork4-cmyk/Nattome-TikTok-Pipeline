@@ -1683,6 +1683,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             from batch_analysis.telegram import deliver_telegram_brief
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
             cross_summary = json.loads(
                 (
                     run_folder
@@ -1705,6 +1706,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                     "bot_token": "fake-token",
                     "chat_id": "fake-chat",
                 },
+                manifest["outputs"]["final_outputs"],
                 sender=fake_sender,
             )
 
@@ -1715,9 +1717,10 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(chat_id, "fake-chat")
             self.assertLess(len(message), 1200)
             self.assertIn("Weekly Evidence Brief", message)
-            self.assertIn("reports/cross_video_pattern_summary.md", message)
-            self.assertIn("data/structured_batch_analysis.json", message)
-            self.assertIn("data/spreadsheet_summary.csv", message)
+            self.assertIn("top5_creative_production_report_2026-05-06.md", message)
+            self.assertIn("top5_angle_planning_sheet_2026-05-06.xlsx", message)
+            self.assertNotIn("reports/cross_video_pattern_summary.md", message)
+            self.assertNotIn("data/spreadsheet_summary.csv", message)
             self.assertIn("No shootable angles available.", message)
             self.assertNotIn("## Cross-Video Pattern Comparison", message)
 
