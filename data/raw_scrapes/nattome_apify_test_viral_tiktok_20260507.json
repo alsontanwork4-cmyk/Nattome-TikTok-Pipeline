@@ -1,0 +1,222 @@
+{
+  "generated_at": "2026-05-07T04:25:33.811121+00:00",
+  "mode": "legacy",
+  "scope": "keywords",
+  "video_download_requested": false,
+  "inputs": {
+    "legacy": {
+      "hashtags": [],
+      "keywords": [
+        "viral tiktok video"
+      ],
+      "profiles": []
+    }
+  },
+  "apify": {
+    "actor_id": "clockworks/tiktok-scraper",
+    "options": {},
+    "resultsPerPage": 1
+  },
+  "bucket_counts": {},
+  "selection_notes": [],
+  "download_enrichment": {
+    "status": "not_requested"
+  },
+  "discovery_trace": {
+    "mode": "bucket",
+    "diagnostic_attribution": {
+      "enabled": false
+    },
+    "bucket_calls": [
+      {
+        "bucket": "legacy",
+        "status": "completed",
+        "started_at": "2026-05-07T04:25:33Z",
+        "ended_at": "2026-05-07T04:25:40Z",
+        "duration_seconds": 7.021,
+        "actor_id": "clockworks/tiktok-scraper",
+        "apify_options": {},
+        "resultsPerPage": 1,
+        "video_download_enrichment_requested": false,
+        "sanitized_run_input": {
+          "hashtags": [],
+          "searchQueries": [
+            "viral tiktok video"
+          ],
+          "profiles": [],
+          "postURLs": [],
+          "resultsPerPage": 1,
+          "shouldDownloadVideos": false,
+          "shouldDownloadCovers": false,
+          "shouldDownloadSubtitles": false,
+          "shouldDownloadSlideshowImages": false,
+          "downloadSubtitlesOptions": "NEVER_DOWNLOAD_SUBTITLES",
+          "commentsPerPost": 0,
+          "topLevelCommentsPerPost": 0,
+          "maxRepliesPerComment": 0
+        },
+        "returned_candidate_count": 1,
+        "unique_candidate_count": 1
+      }
+    ]
+  },
+  "total_candidates": 1,
+  "candidates": [
+    {
+      "id": "7596112480833703182",
+      "url": "https://www.tiktok.com/@user385659357/video/7596112480833703182",
+      "video_download_url": null,
+      "author_handle": "user385659357",
+      "author_followers": 368500,
+      "caption": "#BalliBotMogis #TrendingReels #TrendingReels #Foryoupage ##FYP #FYP #ViralTikTok #MillionViews #TechMagic #SmartBot #AITrend #RobotVibes #Innovation #PakistaniDrama #DramaZone  #OfficialChannel  #PakistaniTikTok  #ForYou  #ViralVideo  #TikTokPakistanOfficial  #ExposePoint #Team7Bro  #FYP #RelatableContent  #DramaticStory  #EmotionalScene  #ViralPakistaniDrama  #GrowTogether  #exposepoint  #team7bro  #foryoupage #foryou  #account #grow  #video #Viral #4748❣️ #4748❤️ ",
+      "hashtags": [
+        "ballibotmogis",
+        "trendingreels",
+        "trendingreels",
+        "foryoupage",
+        "fyp",
+        "fyp",
+        "viraltiktok",
+        "millionviews",
+        "techmagic",
+        "smartbot",
+        "aitrend",
+        "robotvibes",
+        "innovation",
+        "pakistanidrama",
+        "dramazone",
+        "officialchannel",
+        "pakistanitiktok",
+        "foryou",
+        "viralvideo",
+        "tiktokpakistanofficial",
+        "exposepoint",
+        "team7bro",
+        "fyp",
+        "relatablecontent",
+        "dramaticstory",
+        "emotionalscene",
+        "viralpakistanidrama",
+        "growtogether",
+        "exposepoint",
+        "team7bro",
+        "foryoupage",
+        "foryou",
+        "account",
+        "grow",
+        "video",
+        "viral",
+        "4748❣️",
+        "4748❤️"
+      ],
+      "duration_s": 45,
+      "music": {
+        "title": "original sound",
+        "author": ".•♫•♬•Power of  USA•♬•♫•.",
+        "original": true
+      },
+      "play_count": 4900000,
+      "like_count": 78000,
+      "comment_count": 1056,
+      "share_count": 4069,
+      "created_at": "2026-01-16T23:56:27+00:00",
+      "source_input": "bucket:legacy",
+      "discovery_bucket": "legacy",
+      "source_trace": [
+        {
+          "mode": "bucket",
+          "bucket": "legacy",
+          "input_ref": "bucket:legacy",
+          "inputs": {
+            "hashtags": [],
+            "keywords": [
+              "viral tiktok video"
+            ],
+            "profiles": []
+          }
+        }
+      ],
+      "duplicate_source_count": 1,
+      "virality_score": 0.0
+    }
+  ],
+  "top": [
+    {
+      "id": "7596112480833703182",
+      "url": "https://www.tiktok.com/@user385659357/video/7596112480833703182",
+      "video_download_url": null,
+      "author_handle": "user385659357",
+      "author_followers": 368500,
+      "caption": "#BalliBotMogis #TrendingReels #TrendingReels #Foryoupage ##FYP #FYP #ViralTikTok #MillionViews #TechMagic #SmartBot #AITrend #RobotVibes #Innovation #PakistaniDrama #DramaZone  #OfficialChannel  #PakistaniTikTok  #ForYou  #ViralVideo  #TikTokPakistanOfficial  #ExposePoint #Team7Bro  #FYP #RelatableContent  #DramaticStory  #EmotionalScene  #ViralPakistaniDrama  #GrowTogether  #exposepoint  #team7bro  #foryoupage #foryou  #account #grow  #video #Viral #4748❣️ #4748❤️ ",
+      "hashtags": [
+        "ballibotmogis",
+        "trendingreels",
+        "trendingreels",
+        "foryoupage",
+        "fyp",
+        "fyp",
+        "viraltiktok",
+        "millionviews",
+        "techmagic",
+        "smartbot",
+        "aitrend",
+        "robotvibes",
+        "innovation",
+        "pakistanidrama",
+        "dramazone",
+        "officialchannel",
+        "pakistanitiktok",
+        "foryou",
+        "viralvideo",
+        "tiktokpakistanofficial",
+        "exposepoint",
+        "team7bro",
+        "fyp",
+        "relatablecontent",
+        "dramaticstory",
+        "emotionalscene",
+        "viralpakistanidrama",
+        "growtogether",
+        "exposepoint",
+        "team7bro",
+        "foryoupage",
+        "foryou",
+        "account",
+        "grow",
+        "video",
+        "viral",
+        "4748❣️",
+        "4748❤️"
+      ],
+      "duration_s": 45,
+      "music": {
+        "title": "original sound",
+        "author": ".•♫•♬•Power of  USA•♬•♫•.",
+        "original": true
+      },
+      "play_count": 4900000,
+      "like_count": 78000,
+      "comment_count": 1056,
+      "share_count": 4069,
+      "created_at": "2026-01-16T23:56:27+00:00",
+      "source_input": "bucket:legacy",
+      "discovery_bucket": "legacy",
+      "source_trace": [
+        {
+          "mode": "bucket",
+          "bucket": "legacy",
+          "input_ref": "bucket:legacy",
+          "inputs": {
+            "hashtags": [],
+            "keywords": [
+              "viral tiktok video"
+            ],
+            "profiles": []
+          }
+        }
+      ],
+      "duplicate_source_count": 1,
+      "virality_score": 0.0
+    }
+  ]
+}
