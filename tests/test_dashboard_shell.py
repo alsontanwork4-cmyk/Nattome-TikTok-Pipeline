@@ -10,12 +10,70 @@ from urllib.parse import urlencode
 from dashboard.store import (
     DASHBOARD_DB_PATH,
     MUTABLE_TABLES,
+    connect_dashboard_store,
+    dump_json,
     initialize_dashboard_store,
+    load_json,
 )
+from dashboard.web_actions import _save_video_curation
 from dashboard.web import DashboardServer, NAV_ITEMS, create_handler, resolve_dashboard_workspace
 
 
 class DashboardStoreTest(unittest.TestCase):
+    def test_dashboard_connection_helper_initializes_store_with_row_access(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            connection = connect_dashboard_store(workspace)
+            try:
+                schema = connection.execute(
+                    "SELECT value FROM dashboard_metadata WHERE key = 'schema_name'"
+                ).fetchone()
+                user_version = connection.execute("PRAGMA user_version").fetchone()
+            finally:
+                connection.close()
+
+            self.assertTrue((workspace / DASHBOARD_DB_PATH).is_file())
+            self.assertEqual(schema["value"], "nattome_scrape_quality_dashboard")
+            self.assertEqual(user_version["user_version"], 1)
+
+    def test_store_json_helpers_use_explicit_fallbacks_and_deterministic_dumps(self):
+        fallback = {"fallback": True}
+
+        self.assertEqual(load_json('{"b": 2, "a": 1}', fallback), {"a": 1, "b": 2})
+        self.assertIs(load_json("", fallback), fallback)
+        self.assertIs(load_json("{broken", fallback), fallback)
+        self.assertEqual(dump_json({"b": 2, "a": "é"}), '{"a": "\\u00e9", "b": 2}')
+
+    def test_video_curation_action_initializes_store_before_saving(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            _save_video_curation(
+                workspace,
+                {
+                    "video_id": ["video-1"],
+                    "labels": ["Relevant", "Great Hook"],
+                    "exclude_similar_reason": [""],
+                    "note": ["Preserve hook pattern"],
+                },
+            )
+            connection = connect_dashboard_store(workspace)
+            try:
+                row = connection.execute(
+                    """
+                    SELECT labels, note
+                    FROM video_curation
+                    WHERE tiktok_video_id = 'video-1'
+                    """
+                ).fetchone()
+            finally:
+                connection.close()
+
+            self.assertIsNotNone(row)
+            self.assertEqual(load_json(row["labels"], []), ["Relevant", "Great Hook"])
+            self.assertEqual(row["note"], "Preserve hook pattern")
+
     def test_dashboard_store_initializes_predictable_sqlite_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)

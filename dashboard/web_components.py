@@ -5,7 +5,6 @@ import json
 
 from pathlib import Path
 
-from .store import DASHBOARD_DB_PATH
 from .web_constants import CURATION_LABELS, NAV_GROUPS, NAV_ITEMS
 
 _ICON_PATHS: dict[str, str] = {
@@ -81,7 +80,6 @@ def _render_breadcrumb(active_path: str) -> str:
 
 
 def _render_topbar(active_path: str, workspace: Path) -> str:
-    db_path = html.escape(str(Path(workspace) / DASHBOARD_DB_PATH))
     return f"""
     <header class="topbar" role="banner">
       <div class="brand-mark">
@@ -91,7 +89,7 @@ def _render_topbar(active_path: str, workspace: Path) -> str:
       </div>
       <div class="topbar-meta">
         <span class="meta-pill primary"><span class="dot" aria-hidden="true"></span>Pipeline ready</span>
-        <span class="meta-pill">{_icon('db')}<code>{db_path}</code></span>
+        <span class="meta-pill">{_icon('db')}Local workspace</span>
       </div>
     </header>
     """

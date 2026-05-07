@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-import sqlite3
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -11,7 +9,7 @@ from typing import Callable, Sequence
 
 from .indexer import index_pipeline_artifacts
 from .settings import get_active_settings_version
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json, load_json
 
 
 SCRAPE_ONLY = "scrape_only"
@@ -89,9 +87,7 @@ def trigger_manual_run(
 
 
 def list_manual_runs(workspace: Path | str = ".") -> list[ManualRunRecord]:
-    db_path = initialize_dashboard_store(Path(workspace))
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         rows = connection.execute(
             """
@@ -126,8 +122,7 @@ def _insert_manual_run(
     commands: list[list[str]],
     output_paths: dict[str, str],
 ) -> int:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
+    connection = connect_dashboard_store(workspace)
     try:
         cursor = connection.execute(
             """
@@ -173,7 +168,7 @@ def _update_manual_run_status(
     *,
     error_text: str = "",
 ) -> None:
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
+    connection = connect_dashboard_store(workspace)
     try:
         connection.execute(
             """
@@ -191,8 +186,7 @@ def _update_manual_run_status(
 
 
 def _manual_run_by_id(workspace: Path, record_id: int) -> ManualRunRecord:
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         row = connection.execute(
             "SELECT * FROM manual_runs WHERE id = ?",
@@ -298,7 +292,7 @@ def _run_id(timestamp: datetime, run_type: str) -> str:
     return f"manual_{timestamp.strftime('%Y%m%dT%H%M%SZ')}_{run_type}"
 
 
-def _row_to_manual_run(row: sqlite3.Row) -> ManualRunRecord:
+def _row_to_manual_run(row) -> ManualRunRecord:
     return ManualRunRecord(
         id=int(row["id"]),
         run_id=str(row["run_id"] or ""),
@@ -315,16 +309,11 @@ def _row_to_manual_run(row: sqlite3.Row) -> ManualRunRecord:
 
 
 def _json_dumps(value: object) -> str:
-    return json.dumps(value, sort_keys=True, ensure_ascii=False)
+    return dump_json(value)
 
 
 def _json_loads(value: str | None, fallback):
-    if not value:
-        return fallback
-    try:
-        return json.loads(value)
-    except json.JSONDecodeError:
-        return fallback
+    return load_json(value, fallback)
 
 
 def _isoformat_z(timestamp: datetime) -> str:

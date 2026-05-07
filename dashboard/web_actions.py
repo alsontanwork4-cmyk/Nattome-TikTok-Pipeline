@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-import sqlite3
 from pathlib import Path
 
 from .nattome_pov_library import (
@@ -19,7 +17,7 @@ from .pattern_library import (
 )
 from .recommendations import VALID_RECOMMENDATION_STATUSES, update_recommendation_status
 from .settings import rollback_settings_version, save_settings_version
-from .store import DASHBOARD_DB_PATH
+from .store import connect_dashboard_store, dump_json
 from .web_components import _first_form_value
 from .web_constants import CURATION_LABELS
 
@@ -32,7 +30,7 @@ def _save_video_curation(workspace: Path, form: dict[str, list[str]]) -> None:
     if "Exclude Similar" in labels and not exclude_reason.strip():
         labels = [label for label in labels if label != "Exclude Similar"]
     note = _first_form_value(form, "note")[:500]
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
+    connection = connect_dashboard_store(workspace)
     try:
         connection.execute(
             """
@@ -50,7 +48,7 @@ def _save_video_curation(workspace: Path, form: dict[str, list[str]]) -> None:
                 note = excluded.note,
                 updated_at = CURRENT_TIMESTAMP
             """,
-            (video_id, json.dumps(labels, ensure_ascii=True), exclude_reason, note),
+            (video_id, dump_json(labels), exclude_reason, note),
         )
         connection.commit()
     finally:

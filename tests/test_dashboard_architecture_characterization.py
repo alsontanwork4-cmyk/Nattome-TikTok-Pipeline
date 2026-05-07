@@ -40,18 +40,22 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
         self.assertTrue(callable(namespace["resolve_dashboard_workspace"]))
         self.assertTrue(issubclass(namespace["DashboardServer"], dashboard_web.DashboardServer))
 
-    def test_topbar_preserves_visible_brand_status_and_database_location(self):
+    def test_topbar_preserves_visible_brand_and_operational_status(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             response, body = self._request(workspace, "GET", "/")
+            topbar = body[
+                body.index('<header class="topbar"') : body.index("</header>") + len("</header>")
+            ]
 
             self.assertEqual(response.status, 200)
-            self.assertIn('<header class="topbar" role="banner">', body)
-            self.assertIn('<div class="brand-mark">', body)
-            self.assertIn("<span>Nattome</span>", body)
-            self.assertIn('<span class="brand-tag">Scrape Quality</span>', body)
-            self.assertIn("Pipeline ready", body)
-            self.assertIn(html.escape(str(workspace / DASHBOARD_DB_PATH)), body)
+            self.assertIn('<header class="topbar" role="banner">', topbar)
+            self.assertIn('<div class="brand-mark">', topbar)
+            self.assertIn("<span>Nattome</span>", topbar)
+            self.assertIn('<span class="brand-tag">Scrape Quality</span>', topbar)
+            self.assertIn("Pipeline ready", topbar)
+            self.assertIn("Local workspace", topbar)
+            self.assertNotIn(html.escape(str(workspace / DASHBOARD_DB_PATH)), topbar)
             self.assertLess(body.index('<header class="topbar"'), body.index('<aside class="sidebar"'))
 
     def test_navigation_routes_initialize_the_dashboard_store_through_public_requests(self):

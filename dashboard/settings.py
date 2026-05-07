@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import json
-import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json, load_json
 
 
 VALID_SCOPES = {"all", "hashtags", "keywords", "profiles"}
@@ -189,9 +187,7 @@ def get_active_settings_version(workspace: Path | str) -> ScrapeSettingsVersion:
 
 
 def list_settings_versions(workspace: Path | str) -> list[ScrapeSettingsVersion]:
-    initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(Path(workspace) / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         rows = connection.execute(
             """
@@ -214,8 +210,7 @@ def _insert_settings_version(
     user: str,
     rollback_of_version: int | None,
 ) -> ScrapeSettingsVersion:
-    initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
+    connection = connect_dashboard_store(workspace)
     try:
         next_version = int(
             connection.execute(
@@ -264,9 +259,7 @@ def _active_settings_or_default(workspace: Path | str) -> dict[str, Any]:
 
 
 def _active_version(workspace: Path) -> ScrapeSettingsVersion | None:
-    initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         row = connection.execute(
             """
@@ -283,9 +276,7 @@ def _active_version(workspace: Path) -> ScrapeSettingsVersion | None:
 
 
 def _version_by_number(workspace: Path, version: int) -> ScrapeSettingsVersion | None:
-    initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         row = connection.execute(
             "SELECT * FROM scrape_settings_versions WHERE version = ?",
@@ -296,7 +287,7 @@ def _version_by_number(workspace: Path, version: int) -> ScrapeSettingsVersion |
         connection.close()
 
 
-def _row_to_version(row: sqlite3.Row) -> ScrapeSettingsVersion:
+def _row_to_version(row) -> ScrapeSettingsVersion:
     return ScrapeSettingsVersion(
         version=int(row["version"]),
         old_settings=_json_loads(row["old_settings_json"]),
@@ -425,14 +416,9 @@ def _bool_value(raw_value: Any) -> bool:
 
 
 def _json_dumps(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=True, sort_keys=True)
+    return dump_json(value)
 
 
 def _json_loads(value: Any) -> dict[str, Any]:
-    if not value:
-        return {}
-    try:
-        loaded = json.loads(str(value))
-    except json.JSONDecodeError:
-        return {}
+    loaded = load_json(value, {})
     return loaded if isinstance(loaded, dict) else {}

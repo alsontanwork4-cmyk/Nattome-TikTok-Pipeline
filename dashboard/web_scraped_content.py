@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import html
-import sqlite3
 from pathlib import Path
 
 from .indexer import index_pipeline_artifacts
-from .store import DASHBOARD_DB_PATH
+from .store import connect_dashboard_store
 from .web_components import (
     _curation_labels,
     _display_status,
@@ -47,8 +46,7 @@ def _render_scraped_content(workspace: Path) -> str:
 
 
 def _load_scraped_videos(workspace: Path) -> list[dict[str, object]]:
-    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         rows = connection.execute(
             """

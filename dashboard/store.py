@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
 
@@ -55,6 +56,27 @@ def initialize_dashboard_store(workspace: Path | str = ".") -> Path:
         connection.close()
 
     return db_path
+
+
+def connect_dashboard_store(workspace: Path | str = ".") -> sqlite3.Connection:
+    """Initialize the dashboard store and return a row-access connection."""
+    db_path = initialize_dashboard_store(workspace)
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+def load_json(value: object, fallback: object) -> object:
+    if not value:
+        return fallback
+    try:
+        return json.loads(str(value))
+    except (TypeError, json.JSONDecodeError):
+        return fallback
+
+
+def dump_json(value: object) -> str:
+    return json.dumps(value, ensure_ascii=True, sort_keys=True)
 
 
 def _create_mutable_tables(connection: sqlite3.Connection) -> None:

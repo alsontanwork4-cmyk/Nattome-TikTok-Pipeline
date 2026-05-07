@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import html
-import sqlite3
 from pathlib import Path
 
 from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .quality import compute_scrape_quality_scores
-from .store import DASHBOARD_DB_PATH
+from .store import DASHBOARD_DB_PATH, connect_dashboard_store
 from .web_components import (
     _display_status,
     _engagement_rate,
@@ -139,9 +138,7 @@ def _render_overview_actions() -> str:
       </div>
     """
 def _load_latest_overview(workspace: Path) -> dict[str, object] | None:
-    db_path = workspace / DASHBOARD_DB_PATH
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         run = connection.execute(
             """
@@ -181,10 +178,10 @@ def _load_latest_overview(workspace: Path) -> dict[str, object] | None:
 
 
 def _latest_run_videos(
-    connection: sqlite3.Connection,
+    connection,
     run_id: str,
-    selected: sqlite3.Row | None,
-) -> list[sqlite3.Row]:
+    selected,
+) -> list:
     if selected and selected["candidate_source"]:
         rows = list(
             connection.execute(
@@ -214,7 +211,7 @@ def _latest_run_videos(
     )
 
 
-def _run_configuration(manifest: dict[str, object], selected: sqlite3.Row | None) -> dict[str, object]:
+def _run_configuration(manifest: dict[str, object], selected) -> dict[str, object]:
     configuration = manifest.get("configuration")
     if not isinstance(configuration, dict):
         configuration = {}
