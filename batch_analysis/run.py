@@ -23,6 +23,7 @@ from .outputs import (
     write_structured_json_and_spreadsheet_summary,
     write_top5_creative_production_report,
 )
+from .planning_workbook import write_top5_angle_planning_workbook
 from .run_manifest import build_run_manifest, write_batch_index_from_manifest
 from .telegram import deliver_telegram_brief
 from .tool_adapters import GeminiFlashAdapter
@@ -296,6 +297,13 @@ def create_run(args: argparse.Namespace) -> Path:
             cross_video_summary["summary"],
         )
         write_top5_creative_production_report(
+            run_folder,
+            output_root_for_args(args),
+            selected_batch,
+            flat_evidence_index,
+            metadata["run_timestamp"],
+        )
+        write_top5_angle_planning_workbook(
             run_folder,
             output_root_for_args(args),
             selected_batch,

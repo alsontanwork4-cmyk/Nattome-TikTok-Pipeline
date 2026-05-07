@@ -677,3 +677,31 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - Continue with issue 0027 to generate the two-sheet Excel planning workbook.
+
+## 2026-05-07 - 0027 Generate Two-Sheet Excel Planning Workbook
+
+Task completed from `docs/issues/0027-generate-two-sheet-excel-planning-workbook.md`.
+
+Key decisions made:
+- Added a narrow `write_top5_angle_planning_workbook` interface that builds the workbook from selected candidates and flat evidence snapshots.
+- Completed runs now write `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx` beside the Top 5 Creative Production Report.
+- The workbook contains exactly two sheets: `Angles` and `Source Videos`.
+- The `Angles` sheet writes one row per shootable Nattome angle, marks the first angle as the Recommended Shoot for each source video, preserves priority score dimensions and evidence quality fields, and excludes timed-script/full-script fields.
+- The workbook writer uses a small stdlib XLSX package writer, avoiding new runtime spreadsheet dependencies.
+
+Files changed:
+- `batch_analysis/planning_workbook.py`
+- `batch_analysis/run.py`
+- `tests/test_top5_angle_planning_workbook.py`
+- `progress.txt`
+- `docs/issues/done/0027-generate-two-sheet-excel-planning-workbook.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_angle_planning_workbook -v` failed first when the writer module was missing, then passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_creative_report tests.test_top5_angle_planning_workbook -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis\planning_workbook.py batch_analysis\run.py tests\test_top5_angle_planning_workbook.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 58 tests and 14 skipped legacy nested-layout tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest tests\test_top5_angle_planning_workbook.py -q` could not run because `pytest` is not installed in the shared venv.
+
+Blockers or notes for the next iteration:
+- Continue with issue 0028 to replace final batch output registration.
