@@ -37,6 +37,12 @@ def parse_args() -> argparse.Namespace:
         help="Directory where timestamped Run Folders are created.",
     )
     parser.add_argument(
+        "--outputs-dir",
+        type=Path,
+        default=Path("outputs"),
+        help="Directory where final dated marketer-facing outputs are written.",
+    )
+    parser.add_argument(
         "--config",
         type=Path,
         help="Optional JSON config file to merge into the recorded run configuration.",

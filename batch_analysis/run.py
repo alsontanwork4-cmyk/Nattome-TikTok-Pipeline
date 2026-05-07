@@ -21,10 +21,19 @@ from .outputs import (
     write_cross_video_pattern_summary,
     write_selected_batch,
     write_structured_json_and_spreadsheet_summary,
+    write_top5_creative_production_report,
 )
 from .run_manifest import build_run_manifest, write_batch_index_from_manifest
 from .telegram import deliver_telegram_brief
 from .tool_adapters import GeminiFlashAdapter
+
+
+def output_root_for_args(args: argparse.Namespace) -> Path:
+    explicit_output_root = getattr(args, "outputs_dir", None)
+    if explicit_output_root is not None:
+        return explicit_output_root
+    return args.runs_dir.parent / "outputs"
+
 
 def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]) -> dict[str, Any]:
     angles = cross_video_summary.get("top_priority_shootable_angles")
@@ -285,6 +294,13 @@ def create_run(args: argparse.Namespace) -> Path:
             flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
+        )
+        write_top5_creative_production_report(
+            run_folder,
+            output_root_for_args(args),
+            selected_batch,
+            flat_evidence_index,
+            metadata["run_timestamp"],
         )
         write_refinement_hooks(run_folder, cross_video_summary["summary"])
     if has_telegram_delivery:

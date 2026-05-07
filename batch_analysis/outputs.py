@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +30,10 @@ def output_report_path(run_folder: Path, filename: str) -> Path:
 
 def relative_output_path(path: Path, run_folder: Path) -> str:
     return str(path.relative_to(run_folder)).replace("\\", "/")
+
+
+def relative_external_output_path(path: Path, output_root: Path) -> str:
+    return str(path.relative_to(output_root)).replace("\\", "/")
 
 
 def bundle_artifact_path(
@@ -90,6 +95,212 @@ def shootable_angles_for_bundle(
     if not isinstance(angles, list):
         return []
     return [angle for angle in angles if isinstance(angle, dict)]
+
+
+def output_report_date(timestamp: str) -> str:
+    parsed = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d")
+
+
+def markdown_cell(value: Any, fallback: str = "Not available") -> str:
+    return compact_markdown_text(value, fallback).replace("|", "\\|")
+
+
+def ranked_top_five(selected_batch: dict[str, Any]) -> list[dict[str, Any]]:
+    candidates = [
+        candidate
+        for candidate in selected_batch.get("selected_candidates", [])
+        if isinstance(candidate, dict)
+    ]
+    return sorted(
+        candidates,
+        key=lambda candidate: (
+            int(candidate.get("rank") or 9999),
+            str(candidate.get("id") or ""),
+        ),
+    )[:5]
+
+
+def source_creator(candidate: dict[str, Any]) -> str:
+    author = candidate.get("author_handle") or candidate.get("creator") or candidate.get("author")
+    if isinstance(author, dict):
+        return compact_markdown_text(
+            author.get("handle") or author.get("username") or author.get("name")
+        )
+    return compact_markdown_text(author)
+
+
+def candidate_metric(candidate: dict[str, Any], key: str) -> int:
+    value = candidate.get(key)
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def evidence_bundles_by_candidate(evidence_index: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    bundles = {}
+    for bundle in evidence_index.get("bundles", []):
+        if not isinstance(bundle, dict):
+            continue
+        candidate_id = str(bundle.get("candidate_id") or "")
+        if candidate_id:
+            bundles[candidate_id] = bundle
+    return bundles
+
+
+def recommended_concept_name(
+    candidate: dict[str, Any],
+    angles: list[dict[str, Any]],
+) -> str:
+    for key in (
+        "recommended_nattome_concept_name",
+        "nattome_concept_name",
+        "recommended_concept_name",
+        "recommended_angle",
+        "concept_name",
+    ):
+        value = compact_markdown_text(candidate.get(key), "")
+        if value:
+            return value
+    for angle in angles:
+        value = compact_markdown_text(angle.get("angle_title"), "")
+        if value:
+            return value
+    return f"Nattome Creative Brief - {compact_markdown_text(candidate.get('id'), 'source video')}"
+
+
+def concept_rows_for_report(
+    candidate: dict[str, Any],
+    angles: list[dict[str, Any]],
+) -> list[dict[str, str]]:
+    rows = []
+    for angle in angles[:3]:
+        rows.append(
+            {
+                "concept": compact_markdown_text(angle.get("angle_title"), "Nattome concept"),
+                "hook": compact_markdown_text(angle.get("hook")),
+                "format": compact_markdown_text(angle.get("format")),
+                "why": compact_markdown_text(
+                    angle.get("recommendation") or angle.get("recommended_angle"),
+                    "Use the observed source pattern as Nattome-safe inspiration.",
+                ),
+            }
+        )
+
+    fallback_rows = [
+        {
+            "concept": "Claim-Safe Problem Question",
+            "hook": "Open with the same digestive discomfort tension as a question.",
+            "format": "Talking-head explainer",
+            "why": "Keeps the source's relatable pain point while avoiding unsupported outcomes.",
+        },
+        {
+            "concept": "Daily Routine Support",
+            "hook": "Show the moment someone wants simple digestive support.",
+            "format": "Routine demonstration",
+            "why": "Turns the viral premise into an easy Nattome production setup.",
+        },
+        {
+            "concept": "Simple Overlay Rewrite",
+            "hook": "Use short on-screen text to frame the safe takeaway.",
+            "format": "Text-led explainer",
+            "why": "Preserves clarity without repeating the original caption or claims.",
+        },
+    ]
+    while len(rows) < 3:
+        rows.append(fallback_rows[len(rows)])
+    return rows
+
+
+def write_top5_creative_production_report(
+    run_folder: Path,
+    output_root: Path,
+    selected_batch: dict[str, Any],
+    evidence_index: dict[str, Any],
+    timestamp: str,
+) -> dict[str, Any]:
+    report_date = output_report_date(timestamp)
+    report_path = (
+        output_root
+        / "reports"
+        / report_date
+        / f"top5_creative_production_report_{report_date}.md"
+    )
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+
+    bundles_by_candidate = evidence_bundles_by_candidate(evidence_index)
+    selected = ranked_top_five(selected_batch)
+
+    lines = [
+        "# What We Learned From These 5 Videos",
+        "",
+        "- Lead with a concrete digestive discomfort moment the audience already recognizes.",
+        "- Translate the source pattern into Nattome support language instead of repeating claims.",
+        "- Keep each production idea simple enough to shoot as a talking-head, routine, or text-led short.",
+        "- Use source videos as creative inspiration, then rewrite hooks and overlays for brand-safe execution.",
+        "",
+    ]
+
+    for index, candidate in enumerate(selected, start=1):
+        candidate_id = str(candidate.get("id") or "")
+        bundle = bundles_by_candidate.get(candidate_id, {})
+        angle_rows = shootable_angles_for_bundle(run_folder, bundle) if bundle else []
+        concept_name = recommended_concept_name(candidate, angle_rows)
+        first_angle = angle_rows[0] if angle_rows else {}
+        pattern = compact_markdown_text(
+            first_angle.get("format") if isinstance(first_angle, dict) else None,
+            "Claim-safe adaptation of a proven digestive discomfort pattern.",
+        )
+        why = compact_markdown_text(
+            first_angle.get("recommendation") if isinstance(first_angle, dict) else None,
+            "The source gives a relatable audience tension that can be rewritten into Nattome routine-support language without copying unsupported claims.",
+        )
+
+        lines.extend(
+            [
+                f"## {index}. {concept_name}",
+                "",
+                "### Source Reference",
+                "",
+                f"- Creator: {source_creator(candidate)}",
+                f"- Source video: {compact_markdown_text(candidate.get('url'))}",
+                f"- Views: {candidate_metric(candidate, 'play_count')}",
+                f"- Likes: {candidate_metric(candidate, 'like_count')}",
+                f"- Comments: {candidate_metric(candidate, 'comment_count')}",
+                f"- Shares: {candidate_metric(candidate, 'share_count')}",
+                "",
+                "### Inspiration Pattern",
+                "",
+                pattern,
+                "",
+                "### Why This Works For Nattome Content",
+                "",
+                why,
+                "",
+                "| Concept | Hook | Format | Why it works |",
+                "|---|---|---|---|",
+            ]
+        )
+        for row in concept_rows_for_report(candidate, angle_rows):
+            lines.append(
+                "| {concept} | {hook} | {format} | {why} |".format(
+                    concept=markdown_cell(row["concept"]),
+                    hook=markdown_cell(row["hook"]),
+                    format=markdown_cell(row["format"]),
+                    why=markdown_cell(row["why"]),
+                )
+            )
+        lines.append("")
+
+    report_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    return {
+        "status": "completed",
+        "path": relative_external_output_path(report_path, output_root),
+        "source_video_count": len(selected),
+    }
 
 
 def write_selected_batch(run_folder: Path, selected_batch: dict[str, Any]) -> None:

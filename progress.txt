@@ -623,3 +623,31 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - The legacy nested writer remains available as a compatibility helper, but it is no longer used by the normal Batch Analysis Run workflow.
+
+## 2026-05-07 - 0025 Build Top 5 Creative Report Tracer
+
+Task completed from `docs/issues/0025-build-top-5-creative-report-tracer.md`.
+
+Key decisions made:
+- Added the first Top 5 Creative Production Report renderer as a Markdown output path, separate from the existing run-folder reports.
+- Completed runs with selected evidence now write `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md` through the CLI default, while direct test calls can pass an isolated output root.
+- The report preserves selected rank order, limits itself to the final top five selected videos, starts with `What We Learned From These 5 Videos`, and renders source references, Inspiration Pattern, Nattome rationale, and compact three-angle concept tables.
+- The tracer intentionally keeps old Cross-Video Pattern Summary and spreadsheet registration untouched because replacement of final output registration is covered by issue 0028.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `scripts/run_batch_analysis.py`
+- `tests/test_top5_creative_report.py`
+- `progress.txt`
+- `docs/issues/done/0025-build-top-5-creative-report-tracer.md`
+
+Feedback:
+- `python -m pytest tests\test_top5_creative_report.py -q` could not run because the available venv does not have `pytest` installed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_creative_report -v` failed before implementation, then passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_outputs tests.test_batch_outputs_two_layer tests.test_full_batch_analysis_two_layer_cli -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 54 tests and 14 skipped legacy nested-layout tests.
+
+Blockers or notes for the next iteration:
+- Continue with issue 0026 to add the Recommended Shoot marker and timed script table.
+- Full pytest remains unavailable in the current shared venv; use unittest here unless pytest is installed.
