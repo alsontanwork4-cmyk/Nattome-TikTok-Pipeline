@@ -1234,3 +1234,31 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue. The next available issue is `0047-build-candidate-and-approved-pattern-library.md`.
+
+## 2026-05-07 - 0047 Build Candidate And Approved Pattern Library
+
+Task completed from `docs/issues/0047-build-candidate-and-approved-pattern-library.md`.
+
+Key decisions made:
+- Added `dashboard.pattern_library` as the public Pattern Library workflow module.
+- Candidate Patterns are generated deterministically from indexed eligible, selected, and analyzed videos with linked TikTok source URLs, source runs, inferred external mechanics, and performance evidence.
+- Candidate Patterns remain separate from Approved Patterns; approving a candidate creates a canonical Approved Pattern row without mutating the candidate.
+- Approved Patterns support draft, approved, and archived statuses plus the requested canonical fields: pattern name, hook type, format type, emotional trigger, source videos, why it works, Nattome adaptation notes, shoot difficulty, freshness, performance evidence, approval metadata, related POVs, avoid notes, and targeting.
+- Approved Pattern creates, edits, approvals, and archives preserve append-only version history with attribution and timestamps.
+- The `/pattern-library` dashboard route now renders Candidate Patterns, Approved Patterns, source links, version history, and forms for approve, create, edit, and archive actions.
+
+Files changed:
+- `dashboard/pattern_library.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_pattern_library.py`
+- `progress.txt`
+- `docs/issues/done/0047-build-candidate-and-approved-pattern-library.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_pattern_library` first failed with `ModuleNotFoundError: No module named 'dashboard.pattern_library'`, then passed with 2 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_dashboard*.py'` first failed because the append-only version history table was listed as a mutable table without standard attribution columns, then passed with 23 tests after keeping that audit table out of `MUTABLE_TABLES`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 87 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0048-build-nattome-pov-library.md`.

@@ -12,6 +12,16 @@ from urllib.parse import parse_qs, urlparse
 from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .manual_runs import trigger_manual_run
+from .pattern_library import (
+    APPROVED_PATTERN_STATUSES,
+    approve_candidate_pattern,
+    archive_approved_pattern,
+    create_approved_pattern,
+    generate_candidate_patterns,
+    list_approved_patterns,
+    list_pattern_versions,
+    update_approved_pattern,
+)
 from .quality import compute_scrape_quality_scores
 from .recommendations import (
     VALID_RECOMMENDATION_STATUSES,
@@ -141,6 +151,50 @@ def create_handler(
                     return
                 self._redirect("/recommendations")
                 return
+            if parsed_path == "/pattern-library/approve":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _approve_pattern_candidate(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/pattern-library")
+                return
+            if parsed_path == "/pattern-library/create":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _create_pattern(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/pattern-library")
+                return
+            if parsed_path == "/pattern-library/edit":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _edit_pattern(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/pattern-library")
+                return
+            if parsed_path == "/pattern-library/archive":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _archive_pattern(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/pattern-library")
+                return
             self.send_error(404, "Dashboard route not found")
 
         def log_message(self, format: str, *args: object) -> None:
@@ -201,6 +255,8 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
         overview = _render_run_history(workspace, run_history_run_id=run_history_run_id)
     elif active_path == "/recommendations":
         overview = _render_recommendations(workspace)
+    elif active_path == "/pattern-library":
+        overview = _render_pattern_library(workspace)
     else:
         overview = _render_placeholder(title)
     return f"""<!doctype html>
@@ -583,6 +639,38 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
       font-weight: 700;
       padding: 10px 12px;
     }}
+    .pattern-list {{
+      display: grid;
+      gap: 16px;
+    }}
+    .pattern-header {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }}
+    .pattern-form {{
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+    }}
+    .pattern-form-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }}
+    .pattern-form button {{
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      justify-self: start;
+      padding: 10px 12px;
+    }}
     code {{
       background: #eef1ec;
       border-radius: 4px;
@@ -600,6 +688,7 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
       .scraped-card-header,
       .run-controls,
       .settings-grid,
+      .pattern-form-grid,
       .metadata-grid {{ grid-template-columns: 1fr; }}
     }}
   </style>
@@ -1590,6 +1679,316 @@ def _update_recommendation_status(workspace: Path, form: dict[str, list[str]]) -
 
 def _display_recommendation_status(status: str) -> str:
     return status.replace("_", " ")
+
+
+def _render_pattern_library(workspace: Path) -> str:
+    candidates = generate_candidate_patterns(workspace)
+    approved_patterns = list_approved_patterns(workspace)
+    candidate_body = (
+        "".join(_render_candidate_pattern(candidate) for candidate in candidates)
+        if candidates
+        else '<p class="muted">No candidate patterns have been generated from indexed run analysis yet.</p>'
+    )
+    approved_body = (
+        "".join(_render_approved_pattern(workspace, pattern) for pattern in approved_patterns)
+        if approved_patterns
+        else '<p class="muted">No approved patterns have been curated yet.</p>'
+    )
+    return f"""
+      <h1>Pattern Library</h1>
+      <p class="lede">External TikTok mechanics stay separate from Nattome interpretation: generated candidates on one side, marketer-approved canonical patterns on the other.</p>
+      <section class="panel wide-panel">
+        <h2>Candidate Patterns</h2>
+        <div class="pattern-list" aria-label="Candidate patterns">
+          {candidate_body}
+        </div>
+      </section>
+      <section class="panel wide-panel">
+        <h2>Approved Patterns</h2>
+        <div class="pattern-list" aria-label="Approved patterns">
+          {approved_body}
+        </div>
+      </section>
+      <section class="panel wide-panel">
+        <h2>Create Approved Pattern</h2>
+        {_render_pattern_create_form()}
+      </section>
+    """
+
+
+def _render_candidate_pattern(candidate: object) -> str:
+    return f"""
+      <article class="panel">
+        <div class="pattern-header">
+          <div>
+            <h3>{html.escape(str(getattr(candidate, "pattern_name")))}</h3>
+            <p>{html.escape(str(getattr(candidate, "why_it_works")))}</p>
+          </div>
+          <span class="status-pill">{html.escape(str(getattr(candidate, "status")))}</span>
+        </div>
+        <dl class="metadata-grid">
+          {_metadata_item("Hook Type", str(getattr(candidate, "hook_type")))}
+          {_metadata_item("Format Type", str(getattr(candidate, "format_type")))}
+          {_metadata_item("Emotional Trigger", str(getattr(candidate, "emotional_trigger")))}
+          {_metadata_item("Source Run", str(getattr(candidate, "source_run_id") or "Not linked"))}
+        </dl>
+        {_render_pattern_sources(getattr(candidate, "source_videos"))}
+        {_render_pattern_evidence(getattr(candidate, "performance_evidence"))}
+        <form class="pattern-form" method="post" action="/pattern-library/approve">
+          <input type="hidden" name="candidate_id" value="{getattr(candidate, "id")}">
+          <div class="pattern-form-grid">
+            {_input_field("User", "user", "local")}
+            {_input_field("Approval notes", "notes", "")}
+          </div>
+          <button type="submit">Approve candidate</button>
+        </form>
+      </article>
+    """
+
+
+def _render_approved_pattern(workspace: Path, pattern: object) -> str:
+    versions = list_pattern_versions(workspace, getattr(pattern, "id"))
+    return f"""
+      <article class="panel">
+        <div class="pattern-header">
+          <div>
+            <h3>{html.escape(str(getattr(pattern, "pattern_name")))}</h3>
+            <p>{html.escape(str(getattr(pattern, "why_it_works")))}</p>
+          </div>
+          <span class="status-pill">{html.escape(str(getattr(pattern, "status")))} v{getattr(pattern, "version")}</span>
+        </div>
+        <dl class="metadata-grid">
+          {_metadata_item("Hook Type", str(getattr(pattern, "hook_type")))}
+          {_metadata_item("Format Type", str(getattr(pattern, "format_type")))}
+          {_metadata_item("Emotional Trigger", str(getattr(pattern, "emotional_trigger")))}
+          {_metadata_item("Freshness", str(getattr(pattern, "freshness") or "Not set"))}
+          {_metadata_item("Shoot Difficulty", str(getattr(pattern, "shoot_difficulty") or "Not set"))}
+          {_metadata_item("Related POVs", ", ".join(getattr(pattern, "related_povs") or []) or "None")}
+          {_metadata_item("Targeting", _targeting_text(getattr(pattern, "targeting")))}
+          {_metadata_item("Updated By", str(getattr(pattern, "updated_by")))}
+        </dl>
+        {_render_pattern_sources(getattr(pattern, "source_videos"))}
+        <h3>Nattome adaptation notes</h3>
+        <p>{html.escape(str(getattr(pattern, "nattome_adaptation_notes") or "Not set"))}</p>
+        <h3>Avoid notes</h3>
+        <p>{html.escape(str(getattr(pattern, "avoid_notes") or "None"))}</p>
+        {_render_pattern_evidence(getattr(pattern, "performance_evidence"))}
+        {_render_pattern_versions(versions)}
+        {_render_pattern_edit_form(pattern)}
+        {_render_pattern_archive_form(pattern)}
+      </article>
+    """
+
+
+def _render_pattern_sources(source_videos: object) -> str:
+    if not isinstance(source_videos, list) or not source_videos:
+        return '<p class="muted">No source videos linked.</p>'
+    items = []
+    for video in source_videos[:8]:
+        if not isinstance(video, dict):
+            continue
+        video_id = str(video.get("video_id") or "source")
+        url = str(video.get("tiktok_url") or "")
+        caption = str(video.get("caption") or "")
+        source = f' <a href="{html.escape(url)}">{html.escape(url)}</a>' if url else ""
+        items.append(f"<li><strong>{html.escape(video_id)}</strong>{source}<br>{html.escape(caption)}</li>")
+    return f"""
+      <h3>Source videos</h3>
+      <ul class="compact-list">{"".join(items)}</ul>
+    """
+
+
+def _render_pattern_evidence(evidence: object) -> str:
+    if not isinstance(evidence, dict) or not evidence:
+        return '<p class="muted">No performance evidence recorded.</p>'
+    items = [
+        f"<li>{html.escape(str(key).replace('_', ' ').title())}: {html.escape(str(value))}</li>"
+        for key, value in evidence.items()
+    ]
+    return f"""
+      <h3>Performance evidence</h3>
+      <ul class="compact-list">{"".join(items)}</ul>
+    """
+
+
+def _render_pattern_versions(versions: list[object]) -> str:
+    if not versions:
+        return '<p class="muted">No version history recorded.</p>'
+    items = [
+        (
+            f"<li>v{getattr(version, 'version')} {html.escape(str(getattr(version, 'change_type')))} "
+            f"by {html.escape(str(getattr(version, 'changed_by')))} "
+            f"{html.escape(str(getattr(version, 'changed_at')))}</li>"
+        )
+        for version in versions
+    ]
+    return f"""
+      <h3>Version history</h3>
+      <ul class="compact-list">{"".join(items)}</ul>
+    """
+
+
+def _render_pattern_create_form() -> str:
+    return f"""
+      <form class="pattern-form" method="post" action="/pattern-library/create">
+        <div class="pattern-form-grid">
+          {_input_field("Pattern name", "pattern_name", "")}
+          {_input_field("Hook type", "hook_type", "")}
+          {_input_field("Format type", "format_type", "")}
+          {_input_field("Emotional trigger", "emotional_trigger", "")}
+          {_input_field("Shoot difficulty", "shoot_difficulty", "")}
+          {_input_field("Freshness", "freshness", "")}
+          {_input_field("Target market", "target_market", "")}
+          {_input_field("Target persona", "target_persona", "")}
+          {_textarea_field("Source videos", "source_videos", "")}
+          {_textarea_field("Why it works", "why_it_works", "")}
+          {_textarea_field("Nattome adaptation notes", "nattome_adaptation_notes", "")}
+          {_textarea_field("Related POVs", "related_povs", "")}
+          {_textarea_field("Avoid notes", "avoid_notes", "")}
+          {_input_field("User", "user", "local")}
+        </div>
+        <button type="submit">Create approved pattern</button>
+      </form>
+    """
+
+
+def _render_pattern_edit_form(pattern: object) -> str:
+    return f"""
+      <form class="pattern-form" method="post" action="/pattern-library/edit">
+        <input type="hidden" name="pattern_id" value="{getattr(pattern, "id")}">
+        <div class="pattern-form-grid">
+          {_input_field("Pattern name", "pattern_name", getattr(pattern, "pattern_name"))}
+          {_input_field("Hook type", "hook_type", getattr(pattern, "hook_type"))}
+          {_input_field("Format type", "format_type", getattr(pattern, "format_type"))}
+          {_input_field("Emotional trigger", "emotional_trigger", getattr(pattern, "emotional_trigger"))}
+          {_input_field("Status", "status", getattr(pattern, "status"))}
+          {_input_field("Shoot difficulty", "shoot_difficulty", getattr(pattern, "shoot_difficulty"))}
+          {_input_field("Freshness", "freshness", getattr(pattern, "freshness"))}
+          {_input_field("Target market", "target_market", _targeting_field(getattr(pattern, "targeting"), "market"))}
+          {_input_field("Target persona", "target_persona", _targeting_field(getattr(pattern, "targeting"), "persona"))}
+          {_textarea_field("Source videos", "source_videos", _source_video_lines(getattr(pattern, "source_videos")))}
+          {_textarea_field("Why it works", "why_it_works", getattr(pattern, "why_it_works"))}
+          {_textarea_field("Nattome adaptation notes", "nattome_adaptation_notes", getattr(pattern, "nattome_adaptation_notes"))}
+          {_textarea_field("Related POVs", "related_povs", "\n".join(getattr(pattern, "related_povs") or []))}
+          {_textarea_field("Avoid notes", "avoid_notes", getattr(pattern, "avoid_notes"))}
+          {_input_field("User", "user", "local")}
+        </div>
+        <button type="submit">Save pattern</button>
+      </form>
+    """
+
+
+def _render_pattern_archive_form(pattern: object) -> str:
+    if str(getattr(pattern, "status")) == "archived":
+        return ""
+    return f"""
+      <form class="pattern-form" method="post" action="/pattern-library/archive">
+        <input type="hidden" name="pattern_id" value="{getattr(pattern, "id")}">
+        {_input_field("User", "user", "local")}
+        <button type="submit">Archive pattern</button>
+      </form>
+    """
+
+
+def _approve_pattern_candidate(workspace: Path, form: dict[str, list[str]]) -> None:
+    approve_candidate_pattern(
+        workspace,
+        int(_first_form_value(form, "candidate_id") or "0"),
+        user=_first_form_value(form, "user") or "local",
+        notes=_first_form_value(form, "notes"),
+    )
+
+
+def _create_pattern(workspace: Path, form: dict[str, list[str]]) -> None:
+    create_approved_pattern(
+        workspace,
+        _pattern_form_payload(form),
+        user=_first_form_value(form, "user") or "local",
+        status="draft",
+    )
+
+
+def _edit_pattern(workspace: Path, form: dict[str, list[str]]) -> None:
+    update_approved_pattern(
+        workspace,
+        int(_first_form_value(form, "pattern_id") or "0"),
+        _pattern_form_payload(form, include_status=True),
+        user=_first_form_value(form, "user") or "local",
+    )
+
+
+def _archive_pattern(workspace: Path, form: dict[str, list[str]]) -> None:
+    archive_approved_pattern(
+        workspace,
+        int(_first_form_value(form, "pattern_id") or "0"),
+        user=_first_form_value(form, "user") or "local",
+    )
+
+
+def _pattern_form_payload(
+    form: dict[str, list[str]],
+    *,
+    include_status: bool = False,
+) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "pattern_name": _first_form_value(form, "pattern_name"),
+        "hook_type": _first_form_value(form, "hook_type"),
+        "format_type": _first_form_value(form, "format_type"),
+        "emotional_trigger": _first_form_value(form, "emotional_trigger"),
+        "source_videos": _parse_source_videos(_first_form_value(form, "source_videos")),
+        "why_it_works": _first_form_value(form, "why_it_works"),
+        "nattome_adaptation_notes": _first_form_value(form, "nattome_adaptation_notes"),
+        "shoot_difficulty": _first_form_value(form, "shoot_difficulty"),
+        "freshness": _first_form_value(form, "freshness"),
+        "related_povs": _first_form_value(form, "related_povs").splitlines(),
+        "avoid_notes": _first_form_value(form, "avoid_notes"),
+        "targeting": {
+            "market": _first_form_value(form, "target_market"),
+            "persona": _first_form_value(form, "target_persona"),
+        },
+    }
+    if include_status:
+        status = _first_form_value(form, "status") or "draft"
+        if status not in APPROVED_PATTERN_STATUSES:
+            raise ValueError(f"Invalid pattern status: {status}")
+        payload["status"] = status
+    return payload
+
+
+def _parse_source_videos(raw_value: str) -> list[dict[str, object]]:
+    videos = []
+    for line in raw_value.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if "|" in line:
+            video_id, url = [part.strip() for part in line.split("|", 1)]
+        else:
+            video_id, url = line, ""
+        videos.append({"video_id": video_id, "tiktok_url": url})
+    return videos
+
+
+def _source_video_lines(source_videos: object) -> str:
+    if not isinstance(source_videos, list):
+        return ""
+    lines = []
+    for video in source_videos:
+        if not isinstance(video, dict):
+            continue
+        lines.append(f"{video.get('video_id') or ''}|{video.get('tiktok_url') or ''}")
+    return "\n".join(lines)
+
+
+def _targeting_text(targeting: object) -> str:
+    if not isinstance(targeting, dict) or not targeting:
+        return "None"
+    items = [f"{key}: {value}" for key, value in targeting.items() if value]
+    return ", ".join(items) if items else "None"
+
+
+def _targeting_field(targeting: object, key: str) -> str:
+    return str(targeting.get(key) or "") if isinstance(targeting, dict) else ""
 
 
 def _settings_form_payload(form: dict[str, list[str]]) -> dict[str, object]:

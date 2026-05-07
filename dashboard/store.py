@@ -10,6 +10,7 @@ MUTABLE_TABLES = (
     "video_curation",
     "scrape_settings_versions",
     "recommendations",
+    "candidate_patterns",
     "approved_patterns",
     "nattome_povs",
     "manual_runs",
@@ -102,6 +103,19 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
     )
     connection.execute(
         f"""
+        CREATE TABLE IF NOT EXISTS candidate_patterns (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fingerprint TEXT NOT NULL UNIQUE,
+            status TEXT NOT NULL DEFAULT 'candidate',
+            pattern_json TEXT NOT NULL DEFAULT '{{}}',
+            source_run_id TEXT,
+            {ATTRIBUTION_COLUMNS}
+        )
+        """
+    )
+    _ensure_column(connection, "candidate_patterns", "source_run_id", "TEXT")
+    connection.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS approved_patterns (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -109,6 +123,19 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
             pattern_json TEXT NOT NULL DEFAULT '{{}}',
             version INTEGER NOT NULL DEFAULT 1,
             {ATTRIBUTION_COLUMNS}
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS approved_pattern_versions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pattern_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            change_type TEXT NOT NULL,
+            pattern_json TEXT NOT NULL DEFAULT '{}',
+            changed_by TEXT NOT NULL DEFAULT 'local',
+            changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
         """
     )
