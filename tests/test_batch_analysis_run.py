@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from argparse import Namespace
 from pathlib import Path
 
 
@@ -30,6 +31,31 @@ def run_cli(*args, cwd=WORKSPACE):
 
 
 class BatchAnalysisRunCliTest(unittest.TestCase):
+    def test_batch_analysis_run_is_callable_from_importable_module(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            runs_dir = Path(temp_dir) / "runs"
+            from batch_analysis.run import create_run
+
+            run_folder = create_run(
+                Namespace(
+                    mode="debug",
+                    batch_size=1,
+                    runs_dir=runs_dir,
+                    config=None,
+                    candidates=None,
+                    timestamp="2026-05-06T13:45:30Z",
+                    ffmpeg_bin="ffmpeg",
+                    ocr_primary_bin="paddleocr",
+                    ocr_fallback_bin="tesseract",
+                    transcription_bin="whisper",
+                )
+            )
+
+            self.assertEqual(run_folder, runs_dir / "20260506T134530Z_debug")
+            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata["run_timestamp"], "2026-05-06T13:45:30Z")
+            self.assertTrue((run_folder / "batch_index.md").is_file())
+
     def test_batch_analysis_run_creates_timestamped_run_folder(self):
         with self.subTest("debug run folder"):
             with tempfile.TemporaryDirectory() as temp_dir:
@@ -1562,7 +1588,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertIn("TELEGRAM_BOT_TOKEN", delivery_log["missing"])
             self.assertIn("TELEGRAM_CHAT_ID", delivery_log["missing"])
 
-            module = load_pipeline_module()
+            from batch_analysis.telegram import deliver_telegram_brief
+
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             cross_summary = json.loads(
                 (
@@ -1578,7 +1605,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 sent_messages.append((token, chat_id, text))
                 return {"ok": True}
 
-            send_status = module.deliver_telegram_brief(
+            send_status = deliver_telegram_brief(
                 run_folder,
                 metadata,
                 cross_summary,
