@@ -1290,3 +1290,29 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0049-build-pipeline-architecture-browser.md`.
+
+## 2026-05-07 - 0049 Build Pipeline Architecture Browser
+
+Task completed from `docs/issues/0049-build-pipeline-architecture-browser.md`.
+
+Key decisions made:
+- Added `dashboard.architecture` as a read-only view-model module for the Pipeline Architecture dashboard section.
+- The architecture view model reuses the existing artifact/documentation index instead of creating a separate docs scanner.
+- Pipeline Architecture exposes README, CONTEXT, PRDs, ADRs, skill docs, the high-level scrape-to-report flow, tool decisions, latest run phase statuses, file/output groups, and data lineage.
+- Tool decisions explicitly call out Apify discovery/download, Gemini evidence-first analysis, the local SQLite dashboard index, and durable markdown/JSON/XLSX/log outputs.
+- The `/pipeline-architecture` route renders read-only architecture content without POST forms or mutation actions.
+
+Files changed:
+- `dashboard/architecture.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_pipeline_architecture.py`
+- `progress.txt`
+- `docs/issues/done/0049-build-pipeline-architecture-browser.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_pipeline_architecture` first failed with `ModuleNotFoundError: No module named 'dashboard.architecture'`, then passed with 1 test after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer tests.test_dashboard_shell tests.test_dashboard_run_history tests.test_pipeline_health tests.test_dashboard_pipeline_architecture` passed with 17 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 90 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0050-add-global-search-and-facets.md`.
