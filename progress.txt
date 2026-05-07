@@ -1179,3 +1179,30 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue instead of continuing to issue `0045` in this context.
+
+## 2026-05-07 - 0045 Run History Trend Monitoring
+
+Task completed from `docs/issues/0045-run-history-trend-monitoring.md`.
+
+Key decisions made:
+- Added `dashboard.run_history` as the public read model for Run History rows, trend points, config overlays, and run drill-down detail.
+- Unified scheduled Batch Analysis Runs and manual dashboard runs into one Run History table while preserving manual run provenance, source type, triggered user, status, and output paths.
+- Scheduled run rows now expose config version, Scrape Quality Score, raw candidates, eligible candidates, selected count, average Nattome relevance, average engagement, freshness score, duplicate/noise score, Pipeline Health, top issue, and linked output artifacts.
+- Trend monitoring data is derived from scheduled runs in chronological order, with config overlays marking the first indexed run for each config version.
+- Run drill-down detail links raw content, selected content, quality drivers, pipeline phases, logs, Markdown reports, Excel workbooks, and other existing artifacts rather than replacing them.
+- Empty and partial-history states explain what data is missing before scheduled or manual runs have been indexed.
+
+Files changed:
+- `dashboard/run_history.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_run_history.py`
+- `progress.txt`
+- `docs/issues/done/0045-run-history-trend-monitoring.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_dashboard_run_history.py'` first failed with `ModuleNotFoundError: No module named 'dashboard.run_history'`, then passed with 2 tests after implementation.
+- `python -m unittest discover -s tests -p 'test_dashboard*.py'` first failed because the unified row did not render existing manual-run provenance text, then passed with 16 tests after restoring source and triggered-by details.
+- `python -m unittest discover -s tests` passed with 80 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the context window is past the requested threshold. The next available issue is `0046-generate-passive-scrape-recommendations.md`.
