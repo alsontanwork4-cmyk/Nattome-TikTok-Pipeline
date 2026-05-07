@@ -8,6 +8,7 @@ from typing import Any
 from .candidates import load_candidates, select_candidates
 from .cleanup import cleanup_evidence_artifacts
 from .config import (
+    LEGACY_OUTPUT_SUBDIRECTORIES,
     MODE_DEFAULT_BATCH_SIZE,
     RUN_SUBDIRECTORIES,
     isoformat_z,
@@ -21,6 +22,7 @@ from .outputs import (
     write_selected_batch,
     write_structured_json_and_spreadsheet_summary,
 )
+from .run_manifest import build_run_manifest, write_batch_index_from_manifest
 from .telegram import deliver_telegram_brief
 
 def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]) -> dict[str, Any]:
@@ -230,6 +232,8 @@ def create_run(args: argparse.Namespace) -> Path:
 
     selected_batch = None
     if candidates is not None:
+        for subdirectory in LEGACY_OUTPUT_SUBDIRECTORIES:
+            (run_folder / subdirectory).mkdir(parents=True, exist_ok=True)
         selected_batch = select_candidates(
             candidates,
             configuration,
@@ -296,6 +300,18 @@ def create_run(args: argparse.Namespace) -> Path:
         json.dumps(metadata, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+    manifest = build_run_manifest(
+        args,
+        timestamp,
+        configuration,
+        has_candidate_selection=selected_batch is not None,
+        has_evidence_bundles=evidence_index is not None,
+        has_cross_video_pattern_summary=cross_video_summary is not None,
+        has_structured_outputs=has_structured_outputs,
+        has_telegram_delivery=has_telegram_delivery,
+        has_evidence_artifact_cleanup=has_evidence_artifact_cleanup,
+        has_refinement_hooks=has_refinement_hooks,
+    )
     if has_structured_outputs:
         write_structured_json_and_spreadsheet_summary(
             run_folder,
@@ -320,16 +336,5 @@ def create_run(args: argparse.Namespace) -> Path:
         )
     if selected_batch is not None:
         write_selected_batch(run_folder, selected_batch)
-    write_batch_index(
-        run_folder,
-        metadata,
-        selected_batch is not None,
-        evidence_index is not None,
-        cross_video_summary is not None,
-        has_structured_outputs,
-        has_structured_outputs,
-        has_telegram_delivery,
-        has_evidence_artifact_cleanup,
-        has_refinement_hooks,
-    )
+    write_batch_index_from_manifest(run_folder, manifest)
     return run_folder

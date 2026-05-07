@@ -97,14 +97,14 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 self.assertEqual(metadata["implementation_status"]["transcription"], "not_implemented")
 
                 expected_paths = [
-                    "batch_outputs/markdown",
-                    "batch_outputs/json",
-                    "batch_outputs/spreadsheets",
-                    "evidence_bundles",
+                    "reports",
+                    "data",
+                    "evidence",
                     "logs",
                 ]
                 for relative_path in expected_paths:
                     self.assertTrue((run_folder / relative_path).is_dir(), relative_path)
+                self.assertTrue((run_folder / "run_manifest.json").is_file())
 
                 self.assertTrue(
                     (run_folder / "batch_index.md").read_text(encoding="utf-8").startswith(
@@ -112,6 +112,60 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                     )
                 )
                 self.assertIn(str(run_folder), result.stdout)
+
+    def test_skeleton_run_uses_two_layer_layout_and_manifest_index(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            runs_dir = Path(temp_dir) / "runs"
+
+            result = run_cli(
+                "--mode",
+                "debug",
+                "--batch-size",
+                "1",
+                "--runs-dir",
+                str(runs_dir),
+                "--timestamp",
+                "2026-05-06T13:45:30Z",
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            run_folder = runs_dir / "20260506T134530Z_debug"
+            self.assertEqual(
+                sorted(child.name for child in run_folder.iterdir() if child.is_dir()),
+                ["data", "evidence", "logs", "reports"],
+            )
+            self.assertFalse((run_folder / "batch_outputs").exists())
+            self.assertFalse((run_folder / "evidence_bundles").exists())
+
+            generated_paths = [
+                path.relative_to(run_folder)
+                for path in run_folder.rglob("*")
+                if path != run_folder
+            ]
+            too_deep_paths = [
+                str(path)
+                for path in generated_paths
+                if len(path.parts) > 2
+            ]
+            self.assertEqual(too_deep_paths, [])
+
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["run_timestamp"], "2026-05-06T13:45:30Z")
+            self.assertEqual(manifest["mode"], "debug")
+            self.assertEqual(manifest["requested_batch_size"], 1)
+            self.assertIn("configuration", manifest)
+            self.assertIsInstance(manifest["phases"], list)
+            self.assertTrue(manifest["phases"])
+            self.assertTrue(all(isinstance(phase, dict) for phase in manifest["phases"]))
+            self.assertTrue(all("name" in phase and "status" in phase for phase in manifest["phases"]))
+            self.assertNotIn("implementation_status", manifest)
+
+            batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
+            self.assertIn("# Batch Analysis Run", batch_index)
+            self.assertIn("run_manifest.json", batch_index)
+            self.assertIn("- `reports`", batch_index)
+            self.assertIn("- Candidate selection was not run", batch_index)
 
     def test_missing_explicit_config_fails_without_creating_run_folder(self):
         with tempfile.TemporaryDirectory() as temp_dir:

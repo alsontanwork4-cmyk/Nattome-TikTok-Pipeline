@@ -418,3 +418,30 @@ Feedback:
 Blockers or notes for the next iteration:
 - Python had to be run outside the sandbox because the sandboxed WindowsApps `python.exe` launcher could not be accessed.
 - The pytest run still emits an existing `RequestsDependencyWarning` about the local `urllib3`/charset dependency versions.
+
+## 2026-05-07 - 0018 Create Two-Layer Run Folder And Run Manifest Skeleton
+
+Task completed from `docs/issues/0018-create-two-layer-run-folder-and-run-manifest-skeleton.md`.
+
+Key decisions made:
+- Skeleton Batch Analysis Runs now create direct Run Folder child folders for `reports`, `data`, `evidence`, and `logs`.
+- Skeleton runs write `run_manifest.json` with configuration, timestamp, mode, requested batch size, folders, and structured phase records.
+- `batch_index.md` is generated from the Run Manifest and links back to `run_manifest.json`.
+- Existing candidate-run writers keep their legacy nested output folders only when a candidate file is provided, so later migration issues can move evidence and output writers incrementally.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0018-create-two-layer-run-folder-and-run-manifest-skeleton.md`
+
+Feedback:
+- `python -m pytest tests\test_batch_analysis_run.py::BatchAnalysisRunCliTest::test_skeleton_run_uses_two_layer_layout_and_manifest_index -q` failed before implementation, then passed.
+- `python -m pytest tests\test_batch_analysis_run.py -q` passed.
+- `python -m pytest -q` passed with 29 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Issue 0019 can migrate evidence bundle snapshots onto the new direct `evidence` and `data` folders.

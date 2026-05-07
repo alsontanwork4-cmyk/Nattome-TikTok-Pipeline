@@ -13,6 +13,13 @@ MODE_DEFAULT_BATCH_SIZE = {
 }
 
 RUN_SUBDIRECTORIES = [
+    "reports",
+    "data",
+    "evidence",
+    "logs",
+]
+
+LEGACY_OUTPUT_SUBDIRECTORIES = [
     "batch_outputs/markdown",
     "batch_outputs/json",
     "batch_outputs/spreadsheets",
