@@ -1316,3 +1316,27 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0050-add-global-search-and-facets.md`.
+
+## 2026-05-07 - 0050 Add Global Search And Facets
+
+Task completed from `docs/issues/0050-add-global-search-and-facets.md`.
+
+Key decisions made:
+- Added `dashboard.search` as the public search service for indexed dashboard artifacts plus dashboard-owned mutable state.
+- Search records are typed as raw videos, runs, curation labels/notes, Candidate Patterns, Approved Patterns, Nattome POVs, reports, architecture docs, and pipeline phases.
+- Facets are derived from available record context instead of adding a new index table: run date, run type, config version, source input, video status, label, score band, relevance band, engagement band, freshness, author, hashtag/topic, pattern, POV, market, campaign, product, pipeline phase, and pipeline phase status.
+- Keyword search and facets compose through the same service, and the `/search` route renders the form, selected facets, typed results, links, and an empty-results message.
+
+Files changed:
+- `dashboard/search.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_global_search.py`
+- `progress.txt`
+- `docs/issues/done/0050-add-global-search-and-facets.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_global_search` first failed with `ModuleNotFoundError: No module named 'dashboard.search'`, then passed with 4 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 94 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue. The next available issue is `0051-add-mvp-dashboard-exports.md`.

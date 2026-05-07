@@ -7,7 +7,7 @@ import sqlite3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Callable
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from .architecture import load_pipeline_architecture
 from .health import compute_pipeline_health
@@ -38,6 +38,7 @@ from .recommendations import (
     update_recommendation_status,
 )
 from .run_history import load_run_history, load_run_history_detail
+from .search import SearchResponse, search_dashboard_records
 from .settings import (
     READ_ONLY_SETTINGS,
     get_active_settings_version,
@@ -50,6 +51,7 @@ from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
 
 NAV_ITEMS = (
     ("Overview", "/"),
+    ("Global Search", "/search"),
     ("Scraped Content", "/scraped-content"),
     ("Run History", "/run-history"),
     ("Scrape Settings", "/scrape-settings"),
@@ -95,6 +97,7 @@ def create_handler(
                     render_page(
                         parsed_path,
                         workspace_path,
+                        query_params=query,
                         run_history_run_id=_first_form_value(query, "run_id") if parsed_path == "/run-history" else "",
                     )
                 )
@@ -281,14 +284,23 @@ def create_handler(
     return DashboardRequestHandler
 
 
-def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = "") -> str:
+def render_page(
+    active_path: str,
+    workspace: Path,
+    *,
+    query_params: dict[str, list[str]] | None = None,
+    run_history_run_id: str = "",
+) -> str:
     title = _title_for_path(active_path)
+    query_params = query_params or {}
     nav = "\n".join(
         _render_nav_item(label, route, active_path)
         for label, route in NAV_ITEMS
     )
     if active_path == "/":
         overview = _render_overview(workspace)
+    elif active_path == "/search":
+        overview = _render_search(workspace, query_params)
     elif active_path == "/scraped-content":
         overview = _render_scraped_content(workspace)
     elif active_path == "/scrape-settings":
@@ -661,6 +673,44 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
       padding: 7px 9px;
       white-space: nowrap;
     }}
+    .search-form {{
+      display: grid;
+      gap: 12px;
+    }}
+    .search-form input {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      font: inherit;
+      padding: 10px 12px;
+      width: 100%;
+    }}
+    .search-form button {{
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      justify-self: start;
+      padding: 10px 12px;
+    }}
+    .facet-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px 14px;
+    }}
+    .search-result-list {{
+      display: grid;
+      gap: 12px;
+    }}
+    .search-result-header {{
+      align-items: start;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }}
     .recommendation-form {{
       align-items: end;
       display: flex;
@@ -735,6 +785,7 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
       .run-controls,
       .settings-grid,
       .pattern-form-grid,
+      .facet-grid,
       .metadata-grid {{ grid-template-columns: 1fr; }}
     }}
   </style>
@@ -757,6 +808,149 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
 def _render_nav_item(label: str, route: str, active_path: str) -> str:
     current = ' aria-current="page"' if route == active_path else ""
     return f'<a class="nav-link" href="{html.escape(route)}"{current}>{html.escape(label)}</a>'
+
+
+def _render_search(workspace: Path, query_params: dict[str, list[str]]) -> str:
+    normalized_query = _normalize_query_params(query_params)
+    search_query = _first_form_value(normalized_query, "q")
+    selected_facets = {
+        key: values
+        for key, values in normalized_query.items()
+        if key != "q" and values
+    }
+    response = search_dashboard_records(
+        workspace,
+        query=search_query,
+        facets=selected_facets,
+    )
+    return f"""
+      <h1>Global Search</h1>
+      <p class="lede">Search indexed dashboard records and combine facets across videos, runs, curation, patterns, POVs, reports, and docs.</p>
+      <section class="panel wide-panel" aria-label="Global dashboard search form">
+        {_render_search_form(response)}
+      </section>
+      <section class="panel wide-panel" aria-label="Global search results">
+        <h2>Results</h2>
+        {_render_search_results(response)}
+      </section>
+    """
+
+
+def _normalize_query_params(query_params: dict[str, object]) -> dict[str, list[str]]:
+    normalized: dict[str, list[str]] = {}
+    for key, value in query_params.items():
+        if isinstance(value, list):
+            normalized[key] = [str(item) for item in value]
+        elif isinstance(value, tuple):
+            normalized[key] = [str(item) for item in value]
+        else:
+            normalized[key] = [str(value)]
+    return normalized
+
+
+def _render_search_form(response: SearchResponse) -> str:
+    facet_controls = "".join(
+        _render_facet_group(response, facet_name)
+        for facet_name in [
+            "record_type",
+            "run_date",
+            "run_type",
+            "config_version",
+            "source_input",
+            "video_status",
+            "label",
+            "score_band",
+            "relevance_band",
+            "engagement_band",
+            "freshness",
+            "author",
+            "hashtag_topic",
+            "pattern",
+            "pov",
+            "market",
+            "campaign",
+            "product",
+            "pipeline_phase",
+            "pipeline_phase_status",
+        ]
+        if response.facets.get(facet_name)
+    )
+    return f"""
+      <form class="search-form" method="get" action="/search">
+        <label class="field-label">
+          Keyword
+          <input type="search" name="q" value="{html.escape(response.query)}">
+        </label>
+        <div class="facet-grid">
+          {facet_controls}
+        </div>
+        <button type="submit">Search</button>
+      </form>
+    """
+
+
+def _render_facet_group(response: SearchResponse, facet_name: str) -> str:
+    values = response.facets.get(facet_name, ())
+    selected = set(response.selected_facets.get(facet_name, ()))
+    checkboxes = []
+    for value in values[:12]:
+        checked = " checked" if value in selected else ""
+        checkboxes.append(
+            f"""
+            <label class="check-label">
+              <input type="checkbox" name="{html.escape(facet_name)}" value="{html.escape(value)}"{checked}>
+              {html.escape(value)}
+            </label>
+            """
+        )
+    return f"""
+      <fieldset>
+        <legend>{html.escape(facet_name.replace("_", " ").title())}</legend>
+        <div class="label-grid">{"".join(checkboxes)}</div>
+      </fieldset>
+    """
+
+
+def _render_search_results(response: SearchResponse) -> str:
+    if not response.results:
+        return '<p class="muted">No matching dashboard records found.</p>'
+    return f"""
+      <div class="search-result-list">
+        {"".join(_render_search_result(result) for result in response.results)}
+      </div>
+    """
+
+
+def _render_search_result(result: object) -> str:
+    url = str(getattr(result, "url"))
+    link = (
+        f'<a href="{html.escape(url)}">Open</a>'
+        if url
+        else '<span class="muted">No direct link</span>'
+    )
+    facet_text = _search_result_facet_text(getattr(result, "facets"))
+    return f"""
+      <article class="panel">
+        <div class="search-result-header">
+          <div>
+            <span class="status-pill">{html.escape(str(getattr(result, "record_type")).replace("_", " "))}</span>
+            <h3>{html.escape(str(getattr(result, "title")))}</h3>
+          </div>
+          {link}
+        </div>
+        <p>{html.escape(str(getattr(result, "context"))[:360])}</p>
+        <p class="muted">{html.escape(facet_text)}</p>
+      </article>
+    """
+
+
+def _search_result_facet_text(facets: dict[str, tuple[str, ...]]) -> str:
+    parts = []
+    for name in ["run_date", "run_type", "config_version", "video_status", "label", "pattern", "pov", "pipeline_phase_status"]:
+        values = facets.get(name)
+        if values:
+            parts.append(f"{name.replace('_', ' ')}: {', '.join(values)}")
+    return " | ".join(parts)
 
 
 def _render_overview(workspace: Path) -> str:
