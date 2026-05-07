@@ -1,4 +1,5 @@
 import importlib.util
+import inspect
 import json
 import os
 import re
@@ -8,6 +9,8 @@ import tempfile
 import unittest
 from argparse import Namespace
 from pathlib import Path
+
+from batch_analysis.run import build_metadata
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
@@ -35,6 +38,11 @@ def run_cli(*args, cwd=WORKSPACE):
 
 
 class BatchAnalysisRunCliTest(unittest.TestCase):
+    def test_build_metadata_has_no_spreadsheet_summary_status_input(self):
+        signature = inspect.signature(build_metadata)
+
+        self.assertNotIn("has_spreadsheet_summary", signature.parameters)
+
     def write_metadata_preview_config(self, temp_path):
         config_path = temp_path / "metadata_preview_config.json"
         config_path.write_text(
@@ -99,6 +107,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 self.assertEqual(metadata["implementation_status"]["video_download"], "not_implemented")
                 self.assertEqual(metadata["implementation_status"]["gemini_evidence"], "not_implemented")
                 self.assertEqual(metadata["implementation_status"]["audio_music_trend_analysis"], "not_implemented")
+                self.assertNotIn("spreadsheet_summary", metadata["implementation_status"])
 
                 expected_paths = [
                     "reports",
@@ -1584,7 +1593,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["structured_json_output"], "implemented")
-            self.assertEqual(metadata["implementation_status"]["spreadsheet_summary"], "not_implemented")
+            self.assertNotIn("spreadsheet_summary", metadata["implementation_status"])
 
     def test_telegram_delivery_reports_missing_credentials_and_supports_fake_sender(self):
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -618,7 +618,7 @@ def first_angle_by_candidate(cross_video_summary: dict[str, Any]) -> dict[str, d
             by_candidate[candidate_id] = angle
     return by_candidate
 
-def write_structured_json_and_spreadsheet_summary(
+def write_structured_json_output(
     run_folder: Path,
     selected_batch: dict[str, Any],
     evidence_index: dict[str, Any],

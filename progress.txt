@@ -837,3 +837,35 @@ Feedback:
 Blockers or notes for the next iteration:
 - Issue `0032-remove-obsolete-spreadsheet-summary-status-surface.md` is next.
 - Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0032 Remove Obsolete Spreadsheet Summary Status Surface
+
+Task completed from `docs/issues/0032-remove-obsolete-spreadsheet-summary-status-surface.md`.
+
+Key decisions made:
+- Removed `has_spreadsheet_summary` from `build_metadata`.
+- Removed `implementation_status.spreadsheet_summary` from `run_metadata.json` output.
+- Kept `implementation_status.structured_json_output` as the internal structured data status.
+- Renamed the structured writer from `write_structured_json_and_spreadsheet_summary` to `write_structured_json_output` so `batch_analysis` no longer carries stale spreadsheet-summary naming.
+- Removed the CSV fallback item from cleanup's durable-output check; the remaining cross-video fallback is scoped to issue 0033.
+
+Files changed:
+- `batch_analysis/run.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/cleanup.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `progress.txt`
+- `docs/issues/done/0032-remove-obsolete-spreadsheet-summary-status-surface.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` first failed on the old metadata signature and status key, then passed after removing them.
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` passed after the structured writer rename.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed after removing the CSV fallback item.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m py_compile batch_analysis\run.py batch_analysis\outputs.py batch_analysis\cleanup.py tests\test_batch_analysis_run.py tests\test_batch_outputs_two_layer.py` passed.
+- `python -m unittest discover -s tests` passed with 63 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0033-remove-cleanup-fallbacks-for-retired-outputs.md` is next.
+- Per user instruction, stop after this issue because the context window is high.

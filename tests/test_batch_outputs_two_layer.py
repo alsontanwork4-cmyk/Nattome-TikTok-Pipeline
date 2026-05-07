@@ -6,13 +6,13 @@ from pathlib import Path
 
 from batch_analysis.outputs import (
     write_cross_video_pattern_summary,
-    write_structured_json_and_spreadsheet_summary,
+    write_structured_json_output,
 )
 
 
 class TwoLayerBatchOutputsTest(unittest.TestCase):
     def test_structured_output_writer_has_no_spreadsheet_option(self):
-        signature = inspect.signature(write_structured_json_and_spreadsheet_summary)
+        signature = inspect.signature(write_structured_json_output)
 
         self.assertNotIn("write_spreadsheet", signature.parameters)
 
@@ -130,7 +130,7 @@ class TwoLayerBatchOutputsTest(unittest.TestCase):
             summary_result = write_cross_video_pattern_summary(
                 run_folder, selected_batch, evidence_index
             )
-            structured_result = write_structured_json_and_spreadsheet_summary(
+            structured_result = write_structured_json_output(
                 run_folder,
                 selected_batch,
                 evidence_index,

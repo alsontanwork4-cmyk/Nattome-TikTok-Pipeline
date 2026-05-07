@@ -20,7 +20,7 @@ from .evidence_io import EvidenceBundleStore
 from .outputs import (
     write_cross_video_pattern_summary,
     write_selected_batch,
-    write_structured_json_and_spreadsheet_summary,
+    write_structured_json_output,
     write_top5_creative_production_report,
 )
 from .planning_workbook import write_top5_angle_planning_workbook
@@ -87,7 +87,6 @@ def build_metadata(
     has_video_evidence_reports: bool,
     has_cross_video_pattern_summary: bool,
     has_structured_json_output: bool,
-    has_spreadsheet_summary: bool,
     has_telegram_delivery: bool,
     has_evidence_artifact_cleanup: bool,
     has_refinement_hooks: bool,
@@ -117,9 +116,6 @@ def build_metadata(
             else "not_implemented",
             "structured_json_output": "implemented"
             if has_structured_json_output
-            else "not_implemented",
-            "spreadsheet_summary": "implemented"
-            if has_spreadsheet_summary
             else "not_implemented",
             "telegram_delivery": "implemented" if has_telegram_delivery else "not_implemented",
             "evidence_artifact_cleanup": "implemented"
@@ -266,7 +262,6 @@ def create_run(args: argparse.Namespace) -> Path:
         has_video_evidence_reports,
         cross_video_summary is not None,
         has_structured_outputs,
-        False,
         has_telegram_delivery,
         has_evidence_artifact_cleanup,
         has_refinement_hooks,
@@ -290,7 +285,7 @@ def create_run(args: argparse.Namespace) -> Path:
     )
     final_outputs: list[dict[str, Any]] = []
     if has_structured_outputs:
-        write_structured_json_and_spreadsheet_summary(
+        write_structured_json_output(
             run_folder,
             selected_batch,
             flat_evidence_index,

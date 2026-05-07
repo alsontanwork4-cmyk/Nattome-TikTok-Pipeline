@@ -48,7 +48,6 @@ def durable_outputs_exist(run_folder: Path) -> bool:
     required = [
         run_folder / "reports" / "cross_video_pattern_summary.md",
         run_folder / "data" / "structured_batch_analysis.json",
-        run_folder / "data" / "spreadsheet_summary.csv",
     ]
     return all(path.exists() for path in required)
 
