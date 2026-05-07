@@ -1,3 +1,4 @@
+import inspect
 import json
 import tempfile
 import unittest
@@ -7,6 +8,11 @@ from batch_analysis.outputs import write_cross_video_pattern_summary
 
 
 class BatchOutputSetTest(unittest.TestCase):
+    def test_cross_video_pattern_summary_writer_has_no_markdown_option(self):
+        signature = inspect.signature(write_cross_video_pattern_summary)
+
+        self.assertNotIn("write_markdown", signature.parameters)
+
     def test_cross_video_pattern_summary_writes_priority_score_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
@@ -120,8 +126,11 @@ class BatchOutputSetTest(unittest.TestCase):
                 top_angle["priority_score"]["total"],
                 sum(top_angle["priority_score"]["dimensions"].values()),
             )
-            markdown = (
-                run_folder / "reports" / "cross_video_pattern_summary.md"
-            ).read_text(encoding="utf-8")
-            self.assertIn("Nattome Priority Score", markdown)
-            self.assertIn("output-video", markdown)
+            self.assertIn("hooks", summary["pattern_comparison"])
+            self.assertEqual(
+                summary["recommendation"]["what_to_shoot_first"],
+                "Evidence-Led Bloating Routine",
+            )
+            self.assertFalse(
+                (run_folder / "reports" / "cross_video_pattern_summary.md").exists()
+            )

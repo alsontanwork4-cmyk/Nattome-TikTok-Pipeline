@@ -238,7 +238,6 @@ def create_run(args: argparse.Namespace) -> Path:
             run_folder,
             selected_batch,
             flat_evidence_index,
-            write_markdown=False,
         )
 
     has_gemini_evidence = flat_evidence_index is not None

@@ -1440,13 +1440,10 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
 
             run_folder = runs_dir / "20260506T134530Z_quick"
-            summary_markdown = (
-                run_folder / "reports" / "cross_video_pattern_summary.md"
-            )
             summary_json = (
                 run_folder / "data" / "cross_video_pattern_summary.json"
             )
-            self.assertTrue(summary_markdown.is_file())
+            self.assertFalse((run_folder / "reports" / "cross_video_pattern_summary.md").exists())
             self.assertTrue(summary_json.is_file())
 
             summary = json.loads(summary_json.read_text(encoding="utf-8"))
@@ -1464,26 +1461,12 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             )
             self.assertEqual(summary["top_priority_shootable_angles"], [])
             self.assertIn("what_to_shoot_first", summary["recommendation"])
-
-            markdown = summary_markdown.read_text(encoding="utf-8")
-            for section in [
-                "## Cross-Video Pattern Comparison",
-                "### Hooks",
-                "### Formats",
-                "### Emotional Triggers",
-                "### Audio Patterns",
-                "### Risky Claims",
-                "### Nattome Opportunities",
-                "## Top Priority Shootable Angles",
-                "## What To Shoot First",
-            ]:
-                self.assertIn(section, markdown)
-            self.assertIn("Nattome Priority Score", markdown)
-            self.assertIn("No shootable angles were available.", markdown)
-            self.assertIn("bloating-routine", markdown)
+            self.assertIn("hooks", summary["pattern_comparison"])
+            self.assertIn("formats", summary["pattern_comparison"])
+            self.assertIn("risky_claims", summary["pattern_comparison"])
 
             batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
-            self.assertIn("cross_video_pattern_summary.md", batch_index)
+            self.assertNotIn("cross_video_pattern_summary.md", batch_index)
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(

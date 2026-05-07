@@ -444,8 +444,6 @@ def write_cross_video_pattern_summary(
     run_folder: Path,
     selected_batch: dict[str, Any],
     evidence_index: dict[str, Any],
-    *,
-    write_markdown: bool = True,
 ) -> dict[str, Any]:
     hooks: dict[str, set[str]] = {}
     formats: dict[str, set[str]] = {}
@@ -606,71 +604,6 @@ def write_cross_video_pattern_summary(
         encoding="utf-8",
     )
 
-    lines = [
-        "# Cross-Video Pattern Summary",
-        "",
-        f"- Source videos compared: {summary['source_video_count']}",
-        "- Nattome Priority Score: six dimensions, five points each, total out of 30.",
-        "",
-        "## Cross-Video Pattern Comparison",
-        "",
-    ]
-    section_titles = {
-        "hooks": "Hooks",
-        "formats": "Formats",
-        "emotional_triggers": "Emotional Triggers",
-        "audio_patterns": "Audio Patterns",
-        "risky_claims": "Risky Claims",
-        "nattome_opportunities": "Nattome Opportunities",
-    }
-    for key, title in section_titles.items():
-        lines.extend([f"### {title}", ""])
-        rows = summary["pattern_comparison"][key]
-        if rows:
-            for row in rows:
-                lines.append(
-                    f"- {row['pattern']}: {row['video_count']} video(s) ({', '.join(row['candidate_ids'])})"
-                )
-        else:
-            lines.append("- No pattern available.")
-        lines.append("")
-
-    lines.extend(["## Top Priority Shootable Angles", ""])
-    if angle_rows:
-        lines.extend(
-            [
-                "| Rank | Candidate | Nattome Priority Score | Avatar | Product Fit | Recommended Angle |",
-                "|---:|---|---:|---|---|---|",
-            ]
-        )
-        for angle in angle_rows:
-            lines.append(
-                "| {rank} | {candidate} | {score}/30 | {avatar} | {product_fit} | {recommended} |".format(
-                    rank=angle["rank"],
-                    candidate=angle["candidate_id"],
-                    score=angle["priority_score"]["total"],
-                    avatar=angle["avatar"],
-                    product_fit=angle["product_fit"],
-                    recommended=angle["recommended_angle"],
-                )
-            )
-    else:
-        lines.append("No shootable angles were available.")
-
-    lines.extend(
-        [
-            "",
-            "## What To Shoot First",
-            "",
-            f"- Shoot first: {recommendation['what_to_shoot_first']}",
-            f"- Candidate: {recommendation['candidate_id'] or 'Not available'}",
-            f"- Why: {recommendation['why']}",
-        ]
-    )
-
-    if write_markdown:
-        markdown_path = output_report_path(run_folder, "cross_video_pattern_summary.md")
-        markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return {"status": "completed", "top_angle_count": len(angle_rows), "summary": summary}
 
 def first_angle_by_candidate(cross_video_summary: dict[str, Any]) -> dict[str, dict[str, Any]]:

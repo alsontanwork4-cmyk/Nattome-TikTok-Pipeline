@@ -133,7 +133,7 @@ class TwoLayerBatchOutputsTest(unittest.TestCase):
                 summary_result["summary"],
             )
 
-            self.assertTrue((run_folder / "reports" / "cross_video_pattern_summary.md").is_file())
+            self.assertFalse((run_folder / "reports" / "cross_video_pattern_summary.md").exists())
             self.assertTrue((run_folder / "data" / "cross_video_pattern_summary.json").is_file())
             self.assertTrue((run_folder / "data" / "structured_batch_analysis.json").is_file())
             self.assertTrue((run_folder / "data" / "spreadsheet_summary.csv").is_file())
@@ -148,11 +148,9 @@ class TwoLayerBatchOutputsTest(unittest.TestCase):
                 summary["top_priority_shootable_angles"][0]["angle_title"],
                 "Evidence-Led Bloating Routine",
             )
-            self.assertNotIn(
-                "Digestive Comfort Routine Check",
-                (run_folder / "reports" / "cross_video_pattern_summary.md").read_text(
-                    encoding="utf-8"
-                ),
+            self.assertEqual(
+                summary["recommendation"]["what_to_shoot_first"],
+                "Evidence-Led Bloating Routine",
             )
 
             with (run_folder / "data" / "spreadsheet_summary.csv").open(

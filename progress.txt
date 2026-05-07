@@ -774,3 +774,34 @@ Feedback:
 Blockers or notes for the next iteration:
 - No `0030` issue file exists under `docs/issues`; after moving `0029`, there are no active AFK issue files left in `docs/issues`.
 - The sandbox still cannot use normal `tempfile.TemporaryDirectory`; continue using a workspace temp-directory harness for full unittest verification.
+
+## 2026-05-07 - 0030 Remove Cross-Video Markdown Report Output
+
+Task completed from `docs/issues/0030-remove-cross-video-markdown-report-output.md`.
+
+Key decisions made:
+- Removed the retired Cross-Video Pattern Summary Markdown rendering branch from `write_cross_video_pattern_summary`; the writer now only persists the internal JSON summary.
+- Removed the `write_markdown` interface option and updated the batch runner to call the writer without the obsolete flag.
+- Reworked regressions around `cross_video_pattern_summary.json`, including top priority Shootable Angles, pattern comparison data, recommendation data, and explicit absence of `reports/cross_video_pattern_summary.md`.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `tests/test_outputs.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0030-remove-cross-video-markdown-report-output.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_outputs.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` passed.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` passed with 20 tests and 14 skipped.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed.
+- `python -m unittest discover -s tests -p "test_telegram_delivery.py"` passed.
+- `python -m unittest discover -s tests` passed with 61 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0031-remove-csv-spreadsheet-summary-output.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
