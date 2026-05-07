@@ -57,6 +57,9 @@ def angles(prefix: str):
                 "hook": "Ask what changed after meals.",
                 "format": "Talking-head explainer",
                 "recommendation": "Convert the discomfort moment into routine support.",
+                "recommended_because": "It is the clearest low-lift way to turn the source tension into a Nattome retail education moment.",
+                "product_fit": "DH for daily digestive maintenance and routine support.",
+                "cta": "Ask for Nattome DH at your nearest pharmacy if you want daily digestive support.",
             },
             {
                 "angle_title": f"{prefix} Claim-Safe Overlay",
@@ -72,6 +75,19 @@ def angles(prefix: str):
             },
         ],
     }
+
+
+def soft_close_angles(prefix: str):
+    payload = angles(prefix)
+    payload["angles"][0] = {
+        "angle_title": f"{prefix} Calm After-Meal Routine",
+        "hook": "Start with the moment your stomach feels heavy after makan.",
+        "format": "Voiceover routine",
+        "recommendation": "Use a gentle routine story instead of a hard product sell.",
+        "recommended_because": "It fits a softer routine concept where a direct CTA would feel too salesy.",
+        "soft_close": "Try one small after-meal routine first and see what feels comfortable for you.",
+    }
+    return payload
 
 
 def complete_gemini_evidence():
@@ -196,6 +212,74 @@ class Top5CreativeReportTest(unittest.TestCase):
             report = report_path.read_text(encoding="utf-8")
             self.assertTrue(report.startswith("# What We Learned From These 5 Videos"))
             self.assertEqual(report.count("### Source Reference"), 5)
+
+    def test_recommended_shoot_gets_the_only_full_script_with_cta_ending(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            run_folder = Path(temp_dir) / "run"
+            (run_folder / "data").mkdir(parents=True)
+            output_root = Path(temp_dir) / "outputs"
+            candidates = [candidate(Path(temp_dir), 1, id="rank-1", rank=1)]
+            selected_batch = {
+                "selected_at": "2026-05-07T08:00:00Z",
+                "selected_candidates": candidates,
+            }
+            bundle = snapshot("rank-1", 1)
+            write_json(
+                run_folder / bundle["artifacts"]["shootable_angles"]["path"],
+                angles("rank-1"),
+            )
+            evidence_index = {"bundle_count": 1, "bundles": [bundle]}
+
+            status = write_top5_creative_production_report(
+                run_folder,
+                output_root,
+                selected_batch,
+                evidence_index,
+                "2026-05-07T08:00:00Z",
+            )
+
+            report = (output_root / status["path"]).read_text(encoding="utf-8")
+            self.assertEqual(report.count("### Recommended Shoot"), 1)
+            self.assertIn("Recommended because: It is the clearest low-lift way", report)
+            self.assertIn("Hook: Ask what changed after meals.", report)
+            self.assertEqual(report.count("| Time | Scene | On-screen text | Exact line |"), 1)
+            self.assertIn("| 22-30s | Close | Daily support, simple choice | Ask for Nattome DH at your nearest pharmacy if you want daily digestive support. |", report)
+            self.assertIn("| rank-1 Claim-Safe Overlay | Turn the source tension into a safer question. | Text-led explainer |", report)
+            self.assertNotIn("#### rank-1 Claim-Safe Overlay", report)
+
+    def test_recommended_shoot_script_can_use_soft_close_ending(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            run_folder = Path(temp_dir) / "run"
+            (run_folder / "data").mkdir(parents=True)
+            output_root = Path(temp_dir) / "outputs"
+            candidates = [candidate(Path(temp_dir), 1, id="rank-1", rank=1)]
+            selected_batch = {
+                "selected_at": "2026-05-07T08:00:00Z",
+                "selected_candidates": candidates,
+            }
+            bundle = snapshot("rank-1", 1)
+            write_json(
+                run_folder / bundle["artifacts"]["shootable_angles"]["path"],
+                soft_close_angles("rank-1"),
+            )
+            evidence_index = {"bundle_count": 1, "bundles": [bundle]}
+
+            status = write_top5_creative_production_report(
+                run_folder,
+                output_root,
+                selected_batch,
+                evidence_index,
+                "2026-05-07T08:00:00Z",
+            )
+
+            report = (output_root / status["path"]).read_text(encoding="utf-8")
+            self.assertEqual(report.count("### Recommended Shoot"), 1)
+            self.assertIn("Recommended because: It fits a softer routine concept", report)
+            self.assertIn("Hook: Start with the moment your stomach feels heavy after makan.", report)
+            self.assertIn("| 14-22s | Routine proof | One small habit | Keep the story on one everyday habit, so the message feels helpful instead of salesy. |", report)
+            self.assertIn("| 22-30s | Close | Small routine first | Try one small after-meal routine first and see what feels comfortable for you. |", report)
+            self.assertNotIn("Ask for Nattome DH", report)
+            self.assertNotIn("If Nattome fits this concept", report)
 
 
 if __name__ == "__main__":

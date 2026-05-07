@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .creative_scripts import recommended_shoot_markdown
 from .evidence_io import read_json_object
 from .reports import (
     avatar_for_candidate,
@@ -294,6 +295,7 @@ def write_top5_creative_production_report(
                 )
             )
         lines.append("")
+        lines.extend(recommended_shoot_markdown(candidate, first_angle))
 
     report_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     return {

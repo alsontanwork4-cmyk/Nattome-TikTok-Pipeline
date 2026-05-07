@@ -651,3 +651,29 @@ Feedback:
 Blockers or notes for the next iteration:
 - Continue with issue 0026 to add the Recommended Shoot marker and timed script table.
 - Full pytest remains unavailable in the current shared venv; use unittest here unless pytest is installed.
+
+## 2026-05-07 - 0026 Add Recommended Shoot Timed Scripts
+
+Task completed from `docs/issues/0026-add-recommended-shoot-timed-scripts.md`.
+
+Key decisions made:
+- Added a focused creative script renderer for the Recommended Shoot, keeping timed-script rules out of the top-five report wiring.
+- Each brief now renders exactly one `Recommended Shoot` section after the compact three-angle concept table.
+- The Recommended Shoot includes a one-sentence `Recommended because` reason, a separate Hook line, and a 20-30 second timed script table with `Time`, `Scene`, `On-screen text`, and `Exact line`.
+- CTA and soft-close endings are concept-specific: the renderer uses explicit concept fields when present and falls back to a soft close instead of forcing a hard CTA.
+- Product context is optional and only appears when the selected concept supplies product context or a CTA.
+
+Files changed:
+- `batch_analysis/creative_scripts.py`
+- `batch_analysis/outputs.py`
+- `tests/test_top5_creative_report.py`
+- `progress.txt`
+- `docs/issues/done/0026-add-recommended-shoot-timed-scripts.md`
+
+Feedback:
+- `python -m pytest tests\test_top5_creative_report.py` failed first with missing Recommended Shoot sections, then passed.
+- `python -m pytest` passed with 42 tests and 14 skipped tests.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Continue with issue 0027 to generate the two-sheet Excel planning workbook.
