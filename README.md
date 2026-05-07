@@ -22,9 +22,10 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 ├── skills/
 │   ├── nattome-daily-discovery/   ← daily ideation skill (with scrape + Telegram scripts)
 │   └── nattome-batch-analysis/    ← weekly evidence-first analysis skill
+├── batch_analysis/                ← importable weekly batch analysis package
 ├── scripts/
-│   └── run_batch_analysis.py      ← core batch CLI (called by the batch skill)
-├── tests/                         ← unit tests for the batch CLI
+│   └── run_batch_analysis.py      ← thin compatibility CLI (called by the batch skill)
+├── tests/                         ← unit tests for extracted modules + CLI behavior
 ├── docs/
 │   ├── prd/                       ← full product spec
 │   ├── adr/                       ← architecture decisions
@@ -44,6 +45,28 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 
 External tools used by the weekly batch analysis (must be on `PATH` or passed via CLI flags): `ffmpeg`, `paddleocr` (or `tesseract` fallback), `whisper`.
 
+## Weekly Batch Architecture
+
+The weekly batch pipeline keeps `scripts/run_batch_analysis.py` as the stable CLI interface. It should stay thin: parse flags, call `batch_analysis.run.create_run`, and return the process exit code. Existing prompts, schedules, and shell commands can keep using the same script path and flags.
+
+Implementation logic lives in `batch_analysis/`:
+
+| Module | Responsibility |
+|---|---|
+| `config.py` | Defaults, run timestamps, run folder naming, config loading, mode batch sizes. |
+| `candidates.py` | Candidate JSON loading, normalization, scoring, filtering, and selection. |
+| `tool_adapters.py` | FFmpeg, OCR, transcription, and video download/copy adapters. |
+| `evidence.py` | Evidence Bundle orchestration: frames, OCR, transcript, audio baseline, and timeline outputs. |
+| `claim_safety.py` | Claim safety review rules and report writing. |
+| `evidence_quality.py` | Evidence Quality Score and manual review flag logic. |
+| `reports.py` | Per-video Video Evidence Report generation. |
+| `outputs.py` | Batch-level summaries, JSON output, CSV spreadsheet, and priority scoring. |
+| `telegram.py` | Optional Telegram delivery. |
+| `cleanup.py` | Optional evidence artifact cleanup. |
+| `run.py` | End-to-end weekly batch orchestration. |
+
+New code should import from `batch_analysis/` instead of importing the CLI script. This keeps the CLI from bloating again and makes each workflow stage easier to test directly.
+
 ## Running Manually
 
 **Daily discovery brief:**
@@ -62,6 +85,8 @@ python scripts/run_batch_analysis.py `
   --mode default `
   --candidates data/raw_scrapes/nattome_raw_<YYYYMMDD>_top30.json
 ```
+
+The CLI interface is preserved for compatibility. Use it from Codex, Claude Code, schedules, or PowerShell exactly as before.
 
 Or ask Claude Code: *"Run the Nattome weekly batch evidence analysis on this week's top candidates."*
 
@@ -90,4 +115,10 @@ Manage these via `/anthropic-skills:schedule` (create / list / update / run).
 
 ```powershell
 python -m unittest discover -s tests
+```
+
+On this workstation, use the project virtual environment directly if `python` resolves to the Windows Store shim:
+
+```powershell
+C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests
 ```
