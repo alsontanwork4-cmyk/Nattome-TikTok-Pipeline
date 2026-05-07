@@ -946,3 +946,32 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - No more active issue files remain in `docs/issues/` after this slice.
+
+## 2026-05-07 - 0037 Bootstrap Local Dashboard Shell
+
+Task completed from `docs/issues/0037-bootstrap-local-dashboard-shell.md`.
+
+Key decisions made:
+- Built the dashboard foundation as a Python standard-library local web app so it can run in the current repo without adding dependency management.
+- Added a dashboard-owned SQLite store at `data/dashboard/dashboard.sqlite3`.
+- Initialized mutable dashboard-owned tables with the shared attribution convention: `created_by`, `updated_by`, `created_at`, and `updated_at`.
+- Kept the first Overview route independent of Apify, Gemini, raw scrapes, and Batch Analysis Run artifacts.
+- Wired placeholder navigation for Overview, Scraped Content, Run History, Scrape Settings, Recommendations, Pattern Library, Nattome POV Library, and Pipeline Architecture.
+
+Files changed:
+- `dashboard/__init__.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_shell.py`
+- `README.md`
+- `.gitignore`
+- `progress.txt`
+- `docs/issues/done/0037-bootstrap-local-dashboard-shell.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` failed first with `ModuleNotFoundError: No module named 'dashboard'`, then passed after adding the dashboard package.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` briefly failed on Windows temp SQLite cleanup because `sqlite3.Connection` context managers do not close connections; explicit close handling fixed it.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 52 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0038-index-pipeline-artifacts-into-sqlite.md` is next, but per user instruction only continue after the current issue passes. This slice is complete and green.
