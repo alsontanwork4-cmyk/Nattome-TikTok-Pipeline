@@ -48,6 +48,30 @@ def load_config(path: Path) -> dict:
     raise FileNotFoundError(f"No config at {path} and no example config bundled.")
 
 
+def effective_scrape_options(config: dict, args) -> dict:
+    """Resolve CLI flags over dashboard-saved production scrape defaults."""
+    selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
+    return {
+        "scope": args.scope or config.get("scope") or "all",
+        "results_per_input": int(
+            args.results_per_input
+            if args.results_per_input is not None
+            else config.get("results_per_input", 20)
+        ),
+        "top": int(args.top if args.top is not None else config.get("top_n", 5)),
+        "daily_selection_size": int(
+            args.daily_selection_size
+            if args.daily_selection_size is not None
+            else config.get("daily_selection_size", 5)
+        ),
+        "download_videos": bool(
+            args.download_videos
+            or config.get("requires_downloadable_video")
+            or selection.get("requires_downloadable_video")
+        ),
+    }
+
+
 def apify_run_actor(token: str, actor_id: str, run_input: dict, timeout_s: int = 300) -> list[dict]:
     """Run an Apify actor synchronously and return its dataset items."""
     url = f"{APIFY_BASE}/acts/{actor_id}/run-sync-get-dataset-items?token={token}"
@@ -259,17 +283,18 @@ def main() -> int:
     ap.add_argument("--config", type=Path, default=Path(__file__).parent.parent / "config.json",
                     help="Path to config.json (defaults to ../config.json then bundled example)")
     ap.add_argument("--output", type=Path, required=True, help="Where to write the ranked top-N JSON")
-    ap.add_argument("--top", type=int, default=5, help="How many top videos to keep (default: 5)")
-    ap.add_argument("--results-per-input", type=int, default=20,
-                    help="Apify resultsPerPage per hashtag/keyword/profile (default: 20)")
+    ap.add_argument("--top", type=int, default=None,
+                    help="How many top videos to keep (default: config top_n, then 5)")
+    ap.add_argument("--results-per-input", type=int, default=None,
+                    help="Apify resultsPerPage per hashtag/keyword/profile (default: config results_per_input, then 20)")
     ap.add_argument("--download-videos", action="store_true",
                     help="Ask Apify to include downloadable video sources for evidence-first batch analysis")
     ap.add_argument("--daily-selection-output", type=Path,
                     help="Optional handoff JSON containing the daily top videos for daily evidence analysis")
-    ap.add_argument("--daily-selection-size", type=int, default=5,
-                    help="How many top videos to include in the daily evidence handoff (default: 5)")
-    ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default="all",
-                    help="Limit which inputs to run (useful for narrower runs)")
+    ap.add_argument("--daily-selection-size", type=int, default=None,
+                    help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 5)")
+    ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default=None,
+                    help="Limit which inputs to run (default: config scope, then all)")
     args = ap.parse_args()
 
     token = os.environ.get("APIFY_TOKEN")
@@ -279,9 +304,11 @@ def main() -> int:
 
     config = load_config(args.config)
 
-    hashtags = config.get("hashtags", []) if args.scope in ("all", "hashtags") else []
-    keywords = config.get("keywords", []) if args.scope in ("all", "keywords") else []
-    profiles = config.get("competitor_profiles", []) if args.scope in ("all", "profiles") else []
+    options = effective_scrape_options(config, args)
+
+    hashtags = config.get("hashtags", []) if options["scope"] in ("all", "hashtags") else []
+    keywords = config.get("keywords", []) if options["scope"] in ("all", "keywords") else []
+    profiles = config.get("competitor_profiles", []) if options["scope"] in ("all", "profiles") else []
 
     if not (hashtags or keywords or profiles):
         print("error: nothing to scrape (config has no hashtags/keywords/profiles for this scope)", file=sys.stderr)
@@ -293,8 +320,8 @@ def main() -> int:
         hashtags,
         keywords,
         profiles,
-        args.results_per_input,
-        args.download_videos,
+        options["results_per_input"],
+        options["download_videos"],
     )
     t0 = time.time()
     raw = apify_run_actor(token, APIFY_ACTOR_ID, run_input)
@@ -304,11 +331,11 @@ def main() -> int:
 
     now = datetime.now(tz=timezone.utc)
     scored = sorted(raw, key=lambda it: virality_score(it, now), reverse=True)
-    top = scored[: args.top]
+    top = scored[: options["top"]]
 
     payload = build_output_payload(
         now=now,
-        scope=args.scope,
+        scope=options["scope"],
         hashtags=hashtags,
         keywords=keywords,
         profiles=profiles,
@@ -323,7 +350,7 @@ def main() -> int:
         daily_selection = build_daily_selection_payload(
             full_payload=payload,
             source_scrape=args.output,
-            selection_size=args.daily_selection_size,
+            selection_size=options["daily_selection_size"],
         )
         args.daily_selection_output.parent.mkdir(parents=True, exist_ok=True)
         args.daily_selection_output.write_text(

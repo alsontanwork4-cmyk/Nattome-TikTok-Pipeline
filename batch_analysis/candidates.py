@@ -206,7 +206,26 @@ def exclusion_reasons(
     if selection.get("requires_downloadable_video", True) and not downloadable_video_source(candidate):
         reasons.append("missing downloadable video source")
 
+    for term in selection.get("exclusion_terms") or []:
+        normalized_term = str(term).strip().lower()
+        if normalized_term and normalized_term in exclusion_haystack(candidate):
+            reasons.append(f"matches exclusion term: {term}")
+
     return reasons
+
+def exclusion_haystack(candidate: dict[str, Any]) -> str:
+    hashtags = candidate.get("hashtags") or []
+    if isinstance(hashtags, list):
+        hashtag_text = " ".join(str(item) for item in hashtags)
+    else:
+        hashtag_text = str(hashtags)
+    return " ".join(
+        [
+            str(candidate.get("caption") or candidate.get("text") or ""),
+            hashtag_text,
+            str(candidate.get("source_input") or candidate.get("sourceInput") or ""),
+        ]
+    ).lower()
 
 def select_candidates(
     candidates: list[dict[str, Any]],

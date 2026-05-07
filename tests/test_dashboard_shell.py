@@ -5,6 +5,7 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
+from urllib.parse import urlencode
 
 from dashboard.store import (
     DASHBOARD_DB_PATH,
@@ -216,6 +217,104 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Exclude Similar", body)
             self.assertIn("Wrong market pattern", body)
             self.assertIn("Keep for hook study", body)
+
+    def test_scrape_settings_route_saves_versions_and_rolls_back(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            initial_response, initial_body = self._request(workspace, "GET", "/scrape-settings")
+            missing_reason_response, missing_reason_body = self._request(
+                workspace,
+                "POST",
+                "/scrape-settings/save",
+                body=urlencode(
+                    {
+                        "hashtags": "#guthealth",
+                        "keywords": "bloating",
+                        "competitor_profiles": "@gaviscon",
+                    }
+                ),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            first_save_response, _ = self._request(
+                workspace,
+                "POST",
+                "/scrape-settings/save",
+                body=urlencode(
+                    {
+                        "hashtags": "#guthealth\n#digestion",
+                        "keywords": "bloating\nacid reflux",
+                        "competitor_profiles": "@gaviscon",
+                        "scope": "all",
+                        "results_per_input": "25",
+                        "top_n": "30",
+                        "daily_selection_size": "5",
+                        "minimum_views": "10000",
+                        "maximum_age_days": "14",
+                        "minimum_weighted_engagement_rate": "0.025",
+                        "requires_downloadable_video": "on",
+                        "exclusion_terms": "weight loss",
+                        "reason": "Add focused gut health settings",
+                        "user": "marketer@example.com",
+                    }
+                ),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            second_save_response, _ = self._request(
+                workspace,
+                "POST",
+                "/scrape-settings/save",
+                body=urlencode(
+                    {
+                        "hashtags": "#random",
+                        "keywords": "bloating",
+                        "competitor_profiles": "@gaviscon",
+                        "scope": "all",
+                        "results_per_input": "25",
+                        "top_n": "30",
+                        "daily_selection_size": "5",
+                        "minimum_views": "10000",
+                        "maximum_age_days": "14",
+                        "minimum_weighted_engagement_rate": "0.025",
+                        "reason": "Bad source experiment",
+                        "user": "marketer@example.com",
+                    }
+                ),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            rollback_response, _ = self._request(
+                workspace,
+                "POST",
+                "/scrape-settings/rollback",
+                body=urlencode(
+                    {
+                        "target_version": "1",
+                        "reason": "Restore gut health settings",
+                        "user": "marketer@example.com",
+                    }
+                ),
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            final_response, final_body = self._request(workspace, "GET", "/scrape-settings")
+
+            self.assertEqual(initial_response.status, 200)
+            self.assertIn("Production Scrape Settings", initial_body)
+            self.assertIn("API keys", initial_body)
+            self.assertIn("APIFY_TOKEN", initial_body)
+            self.assertEqual(missing_reason_response.status, 400)
+            self.assertIn("requires a reason", missing_reason_body)
+            self.assertEqual(first_save_response.status, 303)
+            self.assertEqual(second_save_response.status, 303)
+            self.assertEqual(rollback_response.status, 303)
+            self.assertEqual(final_response.status, 200)
+            self.assertIn("Current production config version", final_body)
+            self.assertIn("v3", final_body)
+            self.assertIn("Next scheduled run will use version v3", final_body)
+            self.assertIn("guthealth", final_body)
+            self.assertIn("digestion", final_body)
+            self.assertIn("Rollback of v1", final_body)
+            self.assertIn("Restore gut health settings", final_body)
+            self.assertNotIn(">#guthealth<", final_body)
 
     def _get_overview(self, workspace: Path):
         return self._request(workspace, "GET", "/")

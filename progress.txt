@@ -1111,3 +1111,42 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0043-manage-scrape-settings-with-version-history.md` is next.
+
+## 2026-05-07 - 0043 Manage Scrape Settings With Version History
+
+Task completed from `docs/issues/0043-manage-scrape-settings-with-version-history.md`.
+
+Key decisions made:
+- Added `dashboard.settings` as the public scrape settings validation and config versioning module.
+- Normalized marketer-editable hashtags, keywords, competitor profiles, scope, volume settings, Minimum Eligibility Filter thresholds, downloadable-video requirement, and exclusion terms.
+- Kept API keys, Apify actor ID, Gemini model, output paths, cleanup deletion behavior, report schema, and scoring internals read-only in the dashboard MVP.
+- Required a save reason for production settings changes and recorded old settings, new settings, reason, user, timestamp, active version state, and rollback source.
+- Made rollback create a new active version instead of deleting or mutating existing history.
+- Wrote the active production scrape snapshot to dashboard state and `skills/nattome-daily-discovery/config.json` so the next scraper run can pick up marketer-edited settings.
+- Updated the daily scraper to honor config-backed defaults for scope, results per input, top N, daily selection size, and downloadable-video requirement.
+- Added candidate exclusion-term filtering through the existing Minimum Eligibility path.
+- Built the `/scrape-settings` dashboard route with validated forms, version history, read-only MVP settings, required save reason handling, and rollback controls.
+
+Files changed:
+- `dashboard/settings.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `skills/nattome-daily-discovery/scripts/scrape_tiktok.py`
+- `batch_analysis/candidates.py`
+- `tests/test_scrape_settings.py`
+- `tests/test_dashboard_shell.py`
+- `tests/test_daily_discovery_handoff.py`
+- `tests/test_candidate_selection.py`
+- `progress.txt`
+- `docs/issues/done/0043-manage-scrape-settings-with-version-history.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_scrape_settings` first failed with `ModuleNotFoundError: No module named 'dashboard.settings'`, then passed with 4 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell.DashboardWebShellTest.test_scrape_settings_route_saves_versions_and_rolls_back` first failed on the placeholder Scrape Settings route, then passed after the route and POST handlers were implemented.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_discovery_handoff` first failed because the scraper had no config-default resolver, then passed after adding `effective_scrape_options`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_candidate_selection.CandidateSelectionTest.test_exclusion_terms_filter_caption_hashtags_and_source_input` first failed because exclusion terms were not applied, then passed after adding the filter.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_scrape_settings tests.test_daily_discovery_handoff tests.test_candidate_selection` passed with 19 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 73 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0044-trigger-manual-runs-from-dashboard.md` is next, but per instruction this loop stops after the current completed issue instead of continuing further in this context.

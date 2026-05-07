@@ -75,12 +75,18 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             version INTEGER NOT NULL,
             settings_json TEXT NOT NULL,
+            old_settings_json TEXT NOT NULL DEFAULT '{{}}',
+            new_settings_json TEXT NOT NULL DEFAULT '{{}}',
             reason TEXT NOT NULL,
+            rollback_of_version INTEGER,
             is_active INTEGER NOT NULL DEFAULT 0,
             {ATTRIBUTION_COLUMNS}
         )
         """
     )
+    _ensure_column(connection, "scrape_settings_versions", "old_settings_json", "TEXT NOT NULL DEFAULT '{}'")
+    _ensure_column(connection, "scrape_settings_versions", "new_settings_json", "TEXT NOT NULL DEFAULT '{}'")
+    _ensure_column(connection, "scrape_settings_versions", "rollback_of_version", "INTEGER")
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS recommendations (

@@ -12,6 +12,13 @@ from urllib.parse import parse_qs, urlparse
 from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .quality import compute_scrape_quality_scores
+from .settings import (
+    READ_ONLY_SETTINGS,
+    get_active_settings_version,
+    list_settings_versions,
+    rollback_settings_version,
+    save_settings_version,
+)
 from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
 
 
@@ -66,6 +73,28 @@ def create_handler(workspace: Path | str = ".") -> type[BaseHTTPRequestHandler]:
                 _save_video_curation(workspace_path, parse_qs(body))
                 self._redirect("/scraped-content")
                 return
+            if parsed_path == "/scrape-settings/save":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _save_scrape_settings(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/scrape-settings")
+                return
+            if parsed_path == "/scrape-settings/rollback":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _rollback_scrape_settings(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/scrape-settings")
+                return
             self.send_error(404, "Dashboard route not found")
 
         def log_message(self, format: str, *args: object) -> None:
@@ -93,6 +122,20 @@ def create_handler(workspace: Path | str = ".") -> type[BaseHTTPRequestHandler]:
             self.end_headers()
             self.wfile.write(encoded)
 
+        def _send_error_page(self, status: int, message: str) -> None:
+            body = f"""<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Dashboard error</title></head>
+<body><h1>Dashboard error</h1><p>{html.escape(message)}</p></body>
+</html>
+"""
+            encoded = body.encode("utf-8")
+            self.send_response(status)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(encoded)))
+            self.end_headers()
+            self.wfile.write(encoded)
+
     return DashboardRequestHandler
 
 
@@ -106,6 +149,8 @@ def render_page(active_path: str, workspace: Path) -> str:
         overview = _render_overview(workspace)
     elif active_path == "/scraped-content":
         overview = _render_scraped_content(workspace)
+    elif active_path == "/scrape-settings":
+        overview = _render_scrape_settings(workspace)
     else:
         overview = _render_placeholder(title)
     return f"""<!doctype html>
@@ -339,6 +384,50 @@ def render_page(active_path: str, workspace: Path) -> str:
       justify-self: start;
       padding: 10px 12px;
     }}
+    .settings-form {{
+      display: grid;
+      gap: 14px;
+    }}
+    .settings-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }}
+    .settings-form select {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      font: inherit;
+      padding: 9px 10px;
+      width: 100%;
+    }}
+    .settings-form button,
+    .rollback-form button {{
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      justify-self: start;
+      padding: 10px 12px;
+    }}
+    .history-list {{
+      display: grid;
+      gap: 12px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }}
+    .history-item {{
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }}
+    .rollback-form {{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }}
     code {{
       background: #eef1ec;
       border-radius: 4px;
@@ -354,6 +443,7 @@ def render_page(active_path: str, workspace: Path) -> str:
       .grid {{ grid-template-columns: 1fr; }}
       .video-row {{ grid-template-columns: 1fr; }}
       .scraped-card-header,
+      .settings-grid,
       .metadata-grid {{ grid-template-columns: 1fr; }}
     }}
   </style>
@@ -858,6 +948,202 @@ def _save_video_curation(workspace: Path, form: dict[str, list[str]]) -> None:
         connection.commit()
     finally:
         connection.close()
+
+
+def _render_scrape_settings(workspace: Path) -> str:
+    active = get_active_settings_version(workspace)
+    versions = list_settings_versions(workspace)
+    settings = active.new_settings
+    active_label = _version_label(active.version)
+    return f"""
+      <h1>Production Scrape Settings</h1>
+      <p class="lede">Validated marketer-editable scrape settings. Risky pipeline internals stay read-only in MVP.</p>
+      <section class="grid" aria-label="Scrape settings status">
+        <article class="panel">
+          <h2>Current production config version</h2>
+          <p class="metric">{html.escape(active_label)}</p>
+          <p class="muted">Next scheduled run will use version {html.escape(active_label)}.</p>
+        </article>
+        <article class="panel">
+          <h2>Last change reason</h2>
+          <p>{html.escape(active.reason)}</p>
+          <p class="muted">{html.escape(active.changed_by)} {html.escape(active.timestamp)}</p>
+        </article>
+        <article class="panel">
+          <h2>Read-only MVP settings</h2>
+          {_render_read_only_settings()}
+        </article>
+      </section>
+      <section class="panel wide-panel">
+        <h2>Edit production settings</h2>
+        {_render_settings_form(settings)}
+      </section>
+      <section class="panel wide-panel">
+        <h2>Config version history</h2>
+        {_render_version_history(versions)}
+      </section>
+    """
+
+
+def _render_settings_form(settings: dict[str, object]) -> str:
+    checked = " checked" if settings.get("requires_downloadable_video") else ""
+    return f"""
+      <form class="settings-form" method="post" action="/scrape-settings/save">
+        <div class="settings-grid">
+          {_textarea_field("Hashtags", "hashtags", _lines(settings.get("hashtags")))}
+          {_textarea_field("Keywords", "keywords", _lines(settings.get("keywords")))}
+          {_textarea_field("Competitor profiles", "competitor_profiles", _lines(settings.get("competitor_profiles")))}
+          {_textarea_field("Exclusion terms", "exclusion_terms", _lines(settings.get("exclusion_terms")))}
+          <label class="field-label">
+            Scrape scope
+            <select name="scope">
+              {_scope_options(str(settings.get("scope") or "all"))}
+            </select>
+          </label>
+          {_input_field("Results per input", "results_per_input", settings.get("results_per_input"))}
+          {_input_field("Top N", "top_n", settings.get("top_n"))}
+          {_input_field("Daily selection size", "daily_selection_size", settings.get("daily_selection_size"))}
+          {_input_field("Minimum views", "minimum_views", settings.get("minimum_views"))}
+          {_input_field("Maximum age days", "maximum_age_days", settings.get("maximum_age_days"))}
+          {_input_field("Minimum weighted engagement rate", "minimum_weighted_engagement_rate", settings.get("minimum_weighted_engagement_rate"))}
+          <label class="check-label">
+            <input type="checkbox" name="requires_downloadable_video" value="on"{checked}>
+            Require downloadable video
+          </label>
+          {_input_field("User", "user", "local")}
+          {_textarea_field("Save reason", "reason", "")}
+        </div>
+        <button type="submit">Save production settings</button>
+      </form>
+    """
+
+
+def _render_read_only_settings() -> str:
+    items = [
+        f"<li><strong>{html.escape(label)}</strong>: {html.escape(value)}</li>"
+        for label, value in READ_ONLY_SETTINGS.items()
+    ]
+    return f'<ul class="compact-list">{"".join(items)}</ul>'
+
+
+def _render_version_history(versions: list[object]) -> str:
+    if not versions:
+        return '<p class="muted">No saved config versions yet.</p>'
+    items = []
+    for version in versions:
+        label = _version_label(version.version)
+        active = "active" if version.is_active else "inactive"
+        rollback_text = (
+            f"Rollback of v{version.rollback_of_version}. "
+            if version.rollback_of_version
+            else ""
+        )
+        settings = version.new_settings
+        rollback_form = "" if version.is_active else _render_rollback_form(version.version)
+        items.append(
+            f"""
+            <li class="history-item">
+              <p><strong>{html.escape(label)}</strong> - {html.escape(active)} - {html.escape(rollback_text)}{html.escape(version.reason)}</p>
+              <p class="muted">{html.escape(version.changed_by)} {html.escape(version.timestamp)}</p>
+              <p class="muted">Hashtags: {html.escape(", ".join(settings.get("hashtags") or []))}</p>
+              <p class="muted">Keywords: {html.escape(", ".join(settings.get("keywords") or []))}</p>
+              {rollback_form}
+            </li>
+            """
+        )
+    return f'<ul class="history-list">{"".join(items)}</ul>'
+
+
+def _render_rollback_form(target_version: int) -> str:
+    return f"""
+      <form class="rollback-form" method="post" action="/scrape-settings/rollback">
+        <input type="hidden" name="target_version" value="{target_version}">
+        <label class="field-label">
+          Rollback reason
+          <input type="text" name="reason" maxlength="240">
+        </label>
+        <label class="field-label">
+          User
+          <input type="text" name="user" value="local" maxlength="120">
+        </label>
+        <button type="submit">Roll back to {_version_label(target_version)}</button>
+      </form>
+    """
+
+
+def _save_scrape_settings(workspace: Path, form: dict[str, list[str]]) -> None:
+    save_settings_version(
+        workspace,
+        _settings_form_payload(form),
+        reason=_first_form_value(form, "reason"),
+        user=_first_form_value(form, "user") or "local",
+    )
+
+
+def _rollback_scrape_settings(workspace: Path, form: dict[str, list[str]]) -> None:
+    target_version = int(_first_form_value(form, "target_version") or "0")
+    rollback_settings_version(
+        workspace,
+        target_version=target_version,
+        reason=_first_form_value(form, "reason"),
+        user=_first_form_value(form, "user") or "local",
+    )
+
+
+def _settings_form_payload(form: dict[str, list[str]]) -> dict[str, object]:
+    return {
+        "hashtags": _first_form_value(form, "hashtags"),
+        "keywords": _first_form_value(form, "keywords"),
+        "competitor_profiles": _first_form_value(form, "competitor_profiles"),
+        "scope": _first_form_value(form, "scope") or "all",
+        "results_per_input": _first_form_value(form, "results_per_input"),
+        "top_n": _first_form_value(form, "top_n"),
+        "daily_selection_size": _first_form_value(form, "daily_selection_size"),
+        "minimum_views": _first_form_value(form, "minimum_views"),
+        "maximum_age_days": _first_form_value(form, "maximum_age_days"),
+        "minimum_weighted_engagement_rate": _first_form_value(
+            form,
+            "minimum_weighted_engagement_rate",
+        ),
+        "requires_downloadable_video": "requires_downloadable_video" in form,
+        "exclusion_terms": _first_form_value(form, "exclusion_terms"),
+    }
+
+
+def _textarea_field(label: str, name: str, value: object) -> str:
+    return f"""
+      <label class="field-label">
+        {html.escape(label)}
+        <textarea name="{html.escape(name)}">{html.escape(str(value or ""))}</textarea>
+      </label>
+    """
+
+
+def _input_field(label: str, name: str, value: object) -> str:
+    return f"""
+      <label class="field-label">
+        {html.escape(label)}
+        <input type="text" name="{html.escape(name)}" value="{html.escape(str(value or ""))}">
+      </label>
+    """
+
+
+def _scope_options(active_scope: str) -> str:
+    options = []
+    for scope in ("all", "hashtags", "keywords", "profiles"):
+        selected = " selected" if scope == active_scope else ""
+        options.append(f'<option value="{scope}"{selected}>{scope}</option>')
+    return "".join(options)
+
+
+def _lines(value: object) -> str:
+    if isinstance(value, list):
+        return "\n".join(str(item) for item in value)
+    return str(value or "")
+
+
+def _version_label(version: int) -> str:
+    return "Default" if version <= 0 else f"v{version}"
 
 
 def _first_form_value(form: dict[str, list[str]], key: str) -> str:

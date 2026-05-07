@@ -1,4 +1,5 @@
 import importlib.util
+from types import SimpleNamespace
 from pathlib import Path
 import unittest
 
@@ -15,6 +16,37 @@ def load_scraper_module():
 
 
 class DailyDiscoveryHandoffTest(unittest.TestCase):
+    def test_dashboard_saved_config_can_supply_scrape_option_defaults(self):
+        scraper = load_scraper_module()
+
+        options = scraper.effective_scrape_options(
+            {
+                "scope": "hashtags",
+                "results_per_input": 25,
+                "top_n": 30,
+                "daily_selection_size": 7,
+                "selection": {"requires_downloadable_video": True},
+            },
+            SimpleNamespace(
+                scope=None,
+                results_per_input=None,
+                top=None,
+                daily_selection_size=None,
+                download_videos=False,
+            ),
+        )
+
+        self.assertEqual(
+            options,
+            {
+                "scope": "hashtags",
+                "results_per_input": 25,
+                "top": 30,
+                "daily_selection_size": 7,
+                "download_videos": True,
+            },
+        )
+
     def test_daily_selection_payload_preserves_top_slice_and_source_scrape(self):
         scraper = load_scraper_module()
         full_payload = {

@@ -70,6 +70,31 @@ class CandidateSelectionTest(unittest.TestCase):
         self.assertEqual(selected_batch["eligible_candidate_count"], 2)
         self.assertEqual(selected_batch["excluded_candidates"], [])
 
+    def test_exclusion_terms_filter_caption_hashtags_and_source_input(self):
+        configuration = deepcopy(DEFAULT_CONFIG)
+        configuration["selection"]["exclusion_terms"] = ["weight loss"]
+
+        selected_batch = select_candidates(
+            [
+                eligible_candidate("gut-fit"),
+                eligible_candidate(
+                    "excluded-topic",
+                    caption="Weight loss cleanse for bloating",
+                ),
+            ],
+            configuration,
+            RUN_TIMESTAMP,
+            batch_size=2,
+            candidates_path=None,
+        )
+
+        self.assertEqual(
+            [candidate["id"] for candidate in selected_batch["selected_candidates"]],
+            ["gut-fit"],
+        )
+        excluded = {item["id"]: item["reason"] for item in selected_batch["excluded_candidates"]}
+        self.assertIn("matches exclusion term: weight loss", excluded["excluded-topic"])
+
     def test_preserve_order_uses_daily_handoff_order_without_reranking(self):
         configuration = deepcopy(DEFAULT_CONFIG)
 
