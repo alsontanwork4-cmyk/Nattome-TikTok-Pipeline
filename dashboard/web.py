@@ -10,6 +10,12 @@ from typing import Callable
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from .architecture import load_pipeline_architecture
+from .exports import (
+    export_approved_patterns_markdown,
+    export_nattome_povs_markdown,
+    export_raw_videos_csv,
+    export_run_summaries_csv,
+)
 from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .manual_runs import trigger_manual_run
@@ -89,6 +95,39 @@ def create_handler(
             parsed_path = urlparse(self.path).path
             if parsed_path == "/healthz":
                 self._send_text("ok\n")
+                return
+            if parsed_path == "/exports/raw-videos.csv":
+                initialize_dashboard_store(workspace_path)
+                query = parse_qs(urlparse(self.path).query)
+                self._send_export(
+                    export_raw_videos_csv(workspace_path, filters=_first_query_values(query)),
+                    content_type="text/csv; charset=utf-8",
+                    filename="nattome-raw-videos.csv",
+                )
+                return
+            if parsed_path == "/exports/run-summaries.csv":
+                initialize_dashboard_store(workspace_path)
+                self._send_export(
+                    export_run_summaries_csv(workspace_path),
+                    content_type="text/csv; charset=utf-8",
+                    filename="nattome-run-summaries.csv",
+                )
+                return
+            if parsed_path == "/exports/approved-patterns.md":
+                initialize_dashboard_store(workspace_path)
+                self._send_export(
+                    export_approved_patterns_markdown(workspace_path),
+                    content_type="text/markdown; charset=utf-8",
+                    filename="nattome-approved-patterns.md",
+                )
+                return
+            if parsed_path == "/exports/nattome-povs.md":
+                initialize_dashboard_store(workspace_path)
+                self._send_export(
+                    export_nattome_povs_markdown(workspace_path),
+                    content_type="text/markdown; charset=utf-8",
+                    filename="nattome-povs.md",
+                )
                 return
             if parsed_path in {route for _, route in NAV_ITEMS}:
                 initialize_dashboard_store(workspace_path)
@@ -263,6 +302,15 @@ def create_handler(
             encoded = body.encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Length", str(len(encoded)))
+            self.end_headers()
+            self.wfile.write(encoded)
+
+        def _send_export(self, body: str, *, content_type: str, filename: str) -> None:
+            encoded = body.encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
             self.send_header("Content-Length", str(len(encoded)))
             self.end_headers()
             self.wfile.write(encoded)
@@ -1081,6 +1129,9 @@ def _render_run_history(workspace: Path, *, run_history_run_id: str = "") -> str
     return f"""
       <h1>Run History</h1>
       <p class="lede">Trend monitoring for scheduled and manual runs, with audit links back to existing reports and workbooks.</p>
+      <div class="actions" aria-label="Run history exports">
+        <a class="action-link" href="/exports/run-summaries.csv">Export run summaries CSV</a>
+      </div>
       {_render_manual_run_controls()}
       <section class="panel wide-panel" aria-label="Run history table">
         <h2>Runs</h2>
@@ -1618,6 +1669,9 @@ def _render_scraped_content(workspace: Path) -> str:
     return f"""
       <h1>Raw Scraped Videos</h1>
       <p class="lede">Browse indexed TikTok scrape records, review selection status, and save lightweight curation notes.</p>
+      <div class="actions" aria-label="Raw video exports">
+        <a class="action-link" href="/exports/raw-videos.csv">Export raw videos CSV</a>
+      </div>
       <section class="content-list" aria-label="Raw scraped videos">
         {"".join(_render_scraped_video(video) for video in videos)}
       </section>
@@ -2043,6 +2097,9 @@ def _render_pattern_library(workspace: Path) -> str:
     return f"""
       <h1>Pattern Library</h1>
       <p class="lede">External TikTok mechanics stay separate from Nattome interpretation: generated candidates on one side, marketer-approved canonical patterns on the other.</p>
+      <div class="actions" aria-label="Pattern exports">
+        <a class="action-link" href="/exports/approved-patterns.md">Export approved patterns Markdown</a>
+      </div>
       <section class="panel wide-panel">
         <h2>Candidate Patterns</h2>
         <div class="pattern-list" aria-label="Candidate patterns">
@@ -2295,6 +2352,9 @@ def _render_nattome_pov_library(workspace: Path) -> str:
     return f"""
       <h1>Nattome POV Library</h1>
       <p class="lede">Owned Nattome interpretations live here: brand-safe readings, targeting, adaptation rules, and source links. External TikTok mechanics remain in the Pattern Library and are linked only as approved inputs.</p>
+      <div class="actions" aria-label="Nattome POV exports">
+        <a class="action-link" href="/exports/nattome-povs.md">Export Nattome POVs Markdown</a>
+      </div>
       <section class="panel wide-panel">
         <h2>Nattome POV Entries</h2>
         <div class="pattern-list" aria-label="Nattome POV entries">
@@ -2625,6 +2685,14 @@ def _version_label(version: int) -> str:
 def _first_form_value(form: dict[str, list[str]], key: str) -> str:
     values = form.get(key) or [""]
     return values[0].strip()
+
+
+def _first_query_values(query: dict[str, list[str]]) -> dict[str, str]:
+    return {
+        key: values[0].strip()
+        for key, values in query.items()
+        if values and values[0].strip()
+    }
 
 
 def _curation_labels(raw_value: object) -> list[str]:

@@ -1340,3 +1340,28 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue. The next available issue is `0051-add-mvp-dashboard-exports.md`.
+
+## 2026-05-07 - 0051 Add MVP Dashboard Exports
+
+Task completed from `docs/issues/0051-add-mvp-dashboard-exports.md`.
+
+Key decisions made:
+- Added `dashboard.exports` as the public export service for marketer-facing CSV and Markdown artifacts.
+- Raw video CSV exports support query-style filters, including selection status, label, free-text `q`, and exact metadata fields, while preserving source links, run/config context, curation labels, notes, status, counts, and source artifact paths.
+- Run summary CSV exports reuse the run history model so existing Markdown reports and Excel workbooks remain linked as source deliverables instead of being replaced.
+- Approved Pattern Markdown exports include only `approved` records; Nattome POV Markdown exports include non-archived POVs with status, version, campaign/product/market metadata, source links, and linked approved pattern IDs.
+- Dashboard routes now expose `/exports/raw-videos.csv`, `/exports/run-summaries.csv`, `/exports/approved-patterns.md`, and `/exports/nattome-povs.md`, with action links from the relevant dashboard sections.
+
+Files changed:
+- `dashboard/exports.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_exports.py`
+- `progress.txt`
+- `docs/issues/done/0051-add-mvp-dashboard-exports.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_exports` first failed with `ModuleNotFoundError: No module named 'dashboard.exports'`, then passed with 5 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 99 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue.
