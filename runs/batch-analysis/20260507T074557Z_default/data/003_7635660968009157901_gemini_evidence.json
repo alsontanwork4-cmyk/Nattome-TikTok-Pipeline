@@ -1,0 +1,527 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A young woman is eating peas from a white bowl with a spoon. A man in medical scrubs and a stethoscope is visible in a smaller overlay at the bottom left of the screen.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1,
+      "observation": "The young woman continues to eat peas, looking at the camera. The man in medical scrubs remains in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2,
+      "observation": "The young woman smiles slightly while eating peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3,
+      "observation": "The young woman continues to eat peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 4,
+      "observation": "The young woman looks at the camera and smiles while eating peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "The young woman continues to eat peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 6,
+      "observation": "The young woman is eating peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 7,
+      "observation": "The young woman is eating peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 8,
+      "observation": "The young woman is eating peas. The man in medical scrubs is still in the overlay.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 9,
+      "observation": "The scene changes to the man in medical scrubs sitting in a car, looking directly at the camera and speaking.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 10,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 11,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 12,
+      "observation": "A graphic appears showing a bowl of peas with text below it. The background is white.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 13,
+      "observation": "The graphic with the bowl of peas and nutritional information is displayed.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 14,
+      "observation": "The graphic with the bowl of peas and nutritional information is displayed.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 15,
+      "observation": "The graphic with the bowl of peas and nutritional information is displayed, then transitions back to the man in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 16,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 17,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 18,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 19,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 20,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 21,
+      "observation": "The man in medical scrubs is speaking in the car, then the scene transitions to a close-up of peas being stirred into rice in a pot.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 22,
+      "observation": "Peas are being stirred into rice in a pot with a spoon.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 23,
+      "observation": "Peas are being stirred into rice in a pot with a spoon.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 24,
+      "observation": "Peas are being stirred into rice in a pot with a spoon.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 25,
+      "observation": "Peas are being stirred into rice in a pot with a wooden spoon.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 26,
+      "observation": "Peas are being stirred into rice in a pot with a wooden spoon.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 27,
+      "observation": "Peas are being stirred into rice in a pot, then transitions back to the man in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 28,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 29,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 30,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 31,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 32,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 33,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 34,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 35,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 36,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 37,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 38,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 39,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 40,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 41,
+      "observation": "The man in medical scrubs is speaking in the car.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "If peas get their marketing right they will be the next cottage cheese. High protein AND high fiber but delicious and inexpensive",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 6,
+      "text": "if you want to improve your gut health",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 9,
+      "text": "you should eat more peas",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 10,
+      "text": "so peas have both protein and fiber",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "1 cup of peas",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 13,
+      "text": "Protein: ~8.6g\nFiber: ~8.8g",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 14,
+      "text": "vitamins A, K, iron and potassium",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 16,
+      "text": "also one of the easiest foods to work with",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 19,
+      "text": "they pair well with rice, soups",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 20,
+      "text": "pasta, salads",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 21,
+      "text": "and even stir fryes",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 22,
+      "text": "If you stir frozen peas into hot rice at the end of cooking",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "it warms it in",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 26,
+      "text": "without any extra work",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 28,
+      "text": "they're also inexpensive come frozen",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 31,
+      "text": "it adds more volume",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 32,
+      "text": "and makes them useful if you're trying to eat more filling",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 34,
+      "text": "high fiber meals",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 36,
+      "text": "I'm a board certified gastroenterologist",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 38,
+      "text": "so hit that follow button",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 40,
+      "text": "and share this with someone who needs to eat more peas",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 6,
+      "end_seconds": 8,
+      "text": "If you want to improve your gut health,",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 8,
+      "end_seconds": 9,
+      "text": "you should eat more peas.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 11,
+      "text": "So peas have both protein and fiber.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 12,
+      "end_seconds": 16,
+      "text": "A cup of peas is about 8.6 grams of protein and about 8.8 grams of fiber.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 16,
+      "end_seconds": 18,
+      "text": "They're also one of the easiest foods to work with.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 18,
+      "end_seconds": 22,
+      "text": "They pair well with rice, soups, pasta, salads, and even stir fries.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 22,
+      "end_seconds": 27,
+      "text": "If you stir frozen peas into hot rice at the end of cooking, it warms it in without any extra work.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 28,
+      "end_seconds": 35,
+      "text": "They're also inexpensive, come frozen, it adds more volume and makes them useful if you're trying to eat more filling, high fiber meals.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 36,
+      "end_seconds": 38,
+      "text": "I'm a board certified gastroenterologist,",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 38,
+      "end_seconds": 41,
+      "text": "so hit that follow button and share this with someone who needs to eat more peas.",
+      "language": "English",
+      "confidence": null
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Music",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 6,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 9,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 12,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 16,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 18,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 22,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 28,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 36,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 38,
+      "cue": "Voiceover",
+      "confidence": null
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with a young woman eating peas, and a doctor in an overlay. The visible text immediately introduces peas as 'High protein AND high fiber but delicious and inexpensive', setting up a health/nutrition topic within the first 3 seconds.",
+      "source": null,
+      "confidence": null
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "If peas get their marketing right they will be the next cottage cheese. High protein AND high fiber but delicious and inexpensive",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 6,
+      "text": "If you want to improve your gut health, you should eat more peas",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 10,
+      "text": "peas have both protein and fiber",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "1 cup of peas Protein: ~8.6g Fiber: ~8.8g",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 14,
+      "text": "vitamins A, K, iron and potassium",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 28,
+      "text": "they're also inexpensive",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 31,
+      "text": "it adds more volume and makes them useful if you're trying to eat more filling high fiber meals",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 36,
+      "text": "I'm a board certified gastroenterologist",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": []
+}

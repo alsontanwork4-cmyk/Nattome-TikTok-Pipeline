@@ -1,0 +1,354 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "An animated view inside a stomach, showing a growth being removed by a medical tool.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.03,
+      "observation": "A doctor in a white coat with a stethoscope smiles in front of an animated stomach and intestines.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.05,
+      "observation": "A glass containing a yellowish liquid with small particles.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.06,
+      "observation": "A hand squeezing half a lemon into a dark bowl or container.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "observation": "A hand holding several small, dark, elongated objects, possibly cardamom pods.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.1,
+      "observation": "Golden honey being poured from a spoon into a clear glass.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.13,
+      "observation": "A spoon stirring the yellowish liquid in the clear glass.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.16,
+      "observation": "An animated view of the human digestive system, showing the esophagus, stomach, and intestines.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.21,
+      "observation": "A clear bowl containing the yellowish liquid, with a lemon half and cardamom pods on a plate next to it.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.22,
+      "observation": "A spoon pouring golden honey into a clear bowl.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "observation": "A whole lemon on a dark surface.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "observation": "A hand squeezing half a lemon into a clear bowl on a decorative plate.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "as soon as you",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.01,
+      "text": "pain,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.03,
+      "text": "or heaviness",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.04,
+      "text": "outside,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.05,
+      "text": "do this immediately.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.06,
+      "text": "take a glass.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.07,
+      "text": "squeeze half",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.08,
+      "text": "lemon into it.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "text": "add two big spoons",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.1,
+      "text": "pure honey and",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.11,
+      "text": "a pinch of cardamom",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.12,
+      "text": "powder.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.13,
+      "text": "mix well and drink",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.14,
+      "text": "it in one go.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.15,
+      "text": "within thirty",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.16,
+      "text": "to forty minutes,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.17,
+      "text": "all the bloating,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.17,
+      "text": "gas,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.18,
+      "text": "stomach cramps",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.19,
+      "text": "and uneasy feeling",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.2,
+      "text": "will disappear",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.2,
+      "text": "completely.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.21,
+      "text": "your stomach",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.22,
+      "text": "will calm down,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.23,
+      "text": "toxins will get",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.24,
+      "text": "flushed out",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.24,
+      "text": "and you'll feel",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "text": "super light again.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "text": "and don't forget",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.27,
+      "text": "to follow",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 3,
+      "text": "As soon as you feel stomach pain, nausea, bloating,",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 3,
+      "end_seconds": 5,
+      "text": "or heaviness after eating outside,",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 5,
+      "end_seconds": 6,
+      "text": "do this immediately.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 6,
+      "end_seconds": 8,
+      "text": "Take a glass. Squeeze half lemon into it.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 12,
+      "text": "Add two big spoons pure honey and a pinch of cardamom powder.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 13,
+      "end_seconds": 15,
+      "text": "Mix well and drink it in one go.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 15,
+      "end_seconds": 20,
+      "text": "Within thirty to forty minutes, all the bloating, gas, stomach cramps and uneasy feeling will disappear completely.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 21,
+      "end_seconds": 25,
+      "text": "Your stomach will calm down, toxins will get flushed out and you'll feel super light again.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 26,
+      "end_seconds": 27,
+      "text": "And don't forget to follow",
+      "language": "English",
+      "confidence": null
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "cue": "Background music",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with an animation of a medical procedure inside a stomach, immediately followed by a doctor addressing common stomach issues like 'stomach pain, nausea, bloating' after eating out.",
+      "source": null,
+      "confidence": 0.9
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 5,
+      "text": "do this immediately.",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "Within thirty to forty minutes, all the bloating, gas, stomach cramps and uneasy feeling will disappear completely.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 21,
+      "text": "Your stomach will calm down, toxins will get flushed out and you'll feel super light again.",
+      "source": null,
+      "confidence": 0.9
+    }
+  ],
+  "missing_evidence": []
+}

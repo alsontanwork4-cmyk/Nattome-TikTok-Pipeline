@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         choices=sorted(MODE_DEFAULT_BATCH_SIZE),
         default="default",
-        help="Run mode. Defaults to the 10-video Default Batch.",
+        help="Run mode. Use daily for the daily top-video handoff; defaults to the 10-video Default Batch.",
     )
     parser.add_argument(
         "--batch-size",
@@ -37,6 +37,12 @@ def parse_args() -> argparse.Namespace:
         help="Directory where timestamped Run Folders are created.",
     )
     parser.add_argument(
+        "--outputs-dir",
+        type=Path,
+        default=Path("outputs"),
+        help="Directory where final dated marketer-facing outputs are written.",
+    )
+    parser.add_argument(
         "--config",
         type=Path,
         help="Optional JSON config file to merge into the recorded run configuration.",
@@ -44,31 +50,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidates",
         type=Path,
-        help="Apify output or local fixture JSON containing TikTok candidate metadata.",
+        help="Apify output, daily handoff, or local fixture JSON containing TikTok candidate metadata.",
     )
     parser.add_argument(
         "--timestamp",
         help="UTC timestamp for deterministic runs or tests, for example 2026-05-06T13:45:30Z.",
-    )
-    parser.add_argument(
-        "--ffmpeg-bin",
-        default="ffmpeg",
-        help="FFmpeg executable used for Hybrid Timeline frame extraction.",
-    )
-    parser.add_argument(
-        "--ocr-primary-bin",
-        default="paddleocr",
-        help="Primary OCR executable used for frame text extraction.",
-    )
-    parser.add_argument(
-        "--ocr-fallback-bin",
-        default="tesseract",
-        help="Fallback OCR executable used when the primary OCR path is unavailable.",
-    )
-    parser.add_argument(
-        "--transcription-bin",
-        default="whisper",
-        help="Whisper-style executable used for multilingual speech transcription.",
     )
     return parser.parse_args()
 

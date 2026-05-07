@@ -7,16 +7,16 @@ from typing import Any
 
 MODE_DEFAULT_BATCH_SIZE = {
     "debug": 1,
+    "daily": 5,
     "quick": 5,
     "default": 10,
     "deep": 20,
 }
 
 RUN_SUBDIRECTORIES = [
-    "batch_outputs/markdown",
-    "batch_outputs/json",
-    "batch_outputs/spreadsheets",
-    "evidence_bundles",
+    "reports",
+    "data",
+    "evidence",
     "logs",
 ]
 
@@ -29,18 +29,18 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "requires_downloadable_video": True,
     },
     "outputs": {
-        "markdown": "batch_outputs/markdown",
-        "json": "batch_outputs/json",
-        "spreadsheet": "batch_outputs/spreadsheets",
-        "evidence_bundles": "evidence_bundles",
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
         "logs": "logs",
     },
     "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
         "discovery_download": "Apify",
-        "video_processing": "FFmpeg",
-        "ocr_primary": "PaddleOCR",
-        "ocr_fallback": "Tesseract",
-        "transcription": "Whisper-style multilingual transcription",
+        "evidence_extraction": "Gemini 2.5 Flash",
     },
     "telegram": {
         "enabled": True,

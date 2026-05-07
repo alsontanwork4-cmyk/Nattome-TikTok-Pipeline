@@ -1,0 +1,274 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman in medical attire is speaking directly to the camera in what appears to be a medical setting with equipment in the background.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 7,
+      "observation": "The woman holds up one finger while speaking.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 15,
+      "observation": "The woman holds up two fingers while speaking, then gestures with her hand.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 24,
+      "observation": "The woman holds up three fingers while speaking, then gestures with her hand.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 37,
+      "observation": "The woman holds up four fingers while speaking, then gestures with her hand.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 45,
+      "observation": "The woman steps back slightly and gestures with both hands while speaking.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 54,
+      "observation": "The woman gestures with both hands while speaking.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 105,
+      "observation": "The woman is now sitting and gesturing with her hands while speaking.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 115,
+      "observation": "The woman is sitting and gesturing with her hands while speaking.",
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 127,
+      "observation": "The woman is sitting and gesturing, then stands up and gestures while speaking.",
+      "confidence": 0.99
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "THIS IS DR",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3,
+      "text": "GASTROENTEROLOGIST, AND LET'S TALK",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "about nine interesting facts about your gut that sound COMPLETELY FAKE, BUT AREN'T.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 7,
+      "text": "NUMBER ONE, your gut has its own BRAIN. The enteric nervous system contains millions of neurons and can function largely INDEPENDENTLY from your brain.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "NUMBER TWO, WILD. Your intestines have TASTE receptors, the same receptor FAMILIES that are found on your tongue are actually found THROUGHOUT your GI TRACT to help detect NUTRIENTS and trigger DIGESTION.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "NUMBER THREE. Your MICROBIOME helps keep you alive. GUT BACTERIA help produce VITAMINS, metabolize BILE ACIDS, influence NEUROTRANSMITTERS, and even affect how certain MEDICATIONS work.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 37,
+      "text": "NUMBER FOUR, your gut has built-in PACEMAKER cells. These cells GENERATE electrical RHYTHMS that coordinate PERISTALSIS and move through your DIGESTIVE TRACT.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 45,
+      "text": "NUMBER FIVE, your MICROBIOME becomes surprisingly STABLE EARLY in life. After about AGE THREE, your gut MICROBIAL COMPOSITION tends to remain relatively STABLE over time.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 54,
+      "text": "NUMBER SIX. Digestive diseases are INCREDIBLY common. GLOBALLY, billions of people are AFFECTED BY GI DISEASES EVERY YEAR. About a third of all DISEASES have A GI LINK.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 106,
+      "text": "NUMBER SEVEN, disorders of the GUT-BRAIN INTERACTION are among the most common MEDICAL CONDITIONS WORLDWIDE, and nearly HALF THE POPULATION meets CRITERIA for some of these.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 115,
+      "text": "NUMBER EIGHT, STOOL samples don't TELL THE WHOLE STORY. BACTERIA found in stool can differ SIGNIFICANTLY from the organisms ACTUALLY ATTACHED to the INTESTINAL lining. So this poses a CHALLENGE for us to understand the GUT MICROBIOME even MORE.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 128,
+      "text": "NUMBER NINE, your gut is one of the MOST COMPLEX SYSTEMS in THE HUMAN BODY. It relies on CONSTANT COMMUNICATION between nerves, IMMUNE CELLS, HORMONES, MICROBES, and SMOOTH MUSCLE all happening SIMULTANEOUSLY. The best system, if I have to say so myself.",
+      "confidence": 0.99,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 6.9,
+      "text": "This is Dr. Tori, your friendly gastroenterologist, and let's talk about nine interesting facts about your gut that sound completely fake, but aren't.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 7,
+      "end_seconds": 14.9,
+      "text": "Number one, your gut has its own brain. The enteric nervous system contains millions of neurons and can function largely independently from your brain.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 15,
+      "end_seconds": 24.5,
+      "text": "Number two, wild. Your intestines have taste receptors, the same receptor families that are found on your tongue are actually found throughout your GI tract to help detect nutrients and trigger digestion.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 24.9,
+      "end_seconds": 37,
+      "text": "Number three, your microbiome helps keep you alive. Gut bacteria help produce vitamins, metabolize bile acids, influence neurotransmitters, and even affect how certain medications work.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 37.4,
+      "end_seconds": 45.2,
+      "text": "Number four, your gut has built-in pacemaker cells. These cells generate electrical rhythms that coordinate peristalsis and move through your digestive tract.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 45.5,
+      "end_seconds": 54.2,
+      "text": "Number five, your microbiome becomes surprisingly stable early in life. After about age three, your gut microbial composition tends to remain relatively stable over time.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 54.5,
+      "end_seconds": 65,
+      "text": "Number six, digestive diseases are incredibly common. Globally, billions of people are affected by GI diseases every year. About a third of all diseases have a GI link.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 105.7,
+      "end_seconds": 114.9,
+      "text": "Number seven, disorders of the gut-brain interaction are among the most common medical conditions worldwide, and nearly half the population meets criteria for some of these.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 115.2,
+      "end_seconds": 127.4,
+      "text": "Number eight, stool samples don't tell the whole story. Bacteria found in stool can differ significantly from the organisms actually attached to the intestinal lining. So this poses a challenge for us to understand the gut microbiome even more.",
+      "language": "English",
+      "confidence": 0.99
+    },
+    {
+      "start_seconds": 128,
+      "end_seconds": 142,
+      "text": "Number nine, your gut is one of the most complex systems in the human body. It relies on constant communication between nerves, immune cells, hormones, microbes, and smooth muscle all happening simultaneously. The best system, if I have to say so myself.",
+      "language": "English",
+      "confidence": 0.99
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Voiceover by the woman speaking.",
+      "confidence": 0.99
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with a doctor introducing herself as a gastroenterologist and stating she will talk about 'nine interesting facts about your gut that sound completely fake, but aren't'. This immediately sets up a listicle format with intriguing claims about gut health.",
+      "source": null,
+      "confidence": 0.95
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 7,
+      "text": "your gut has its own brain. The enteric nervous system contains millions of neurons and can function largely independently from your brain.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "Your intestines have taste receptors, the same receptor families that are found on your tongue are actually found throughout your GI tract to help detect nutrients and trigger digestion.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 24,
+      "text": "Your microbiome helps keep you alive. Gut bacteria help produce vitamins, metabolize bile acids, influence neurotransmitters, and even affect how certain medications work.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 37,
+      "text": "your gut has built-in pacemaker cells. These cells generate electrical rhythms that coordinate peristalsis and move through your digestive tract.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 45,
+      "text": "your microbiome becomes surprisingly stable early in life. After about age three, your gut microbial composition tends to remain relatively stable over time.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 54,
+      "text": "Digestive diseases are incredibly common. Globally, billions of people are affected by GI diseases every year. About a third of all diseases have a GI link.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 105,
+      "text": "disorders of the gut-brain interaction are among the most common medical conditions worldwide, and nearly half the population meets criteria for some of these.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 115,
+      "text": "Stool samples don't tell the whole story. Bacteria found in stool can differ significantly from the organisms actually attached to the intestinal lining. So this poses a challenge for us to understand the gut microbiome even more.",
+      "source": null,
+      "confidence": 0.99
+    },
+    {
+      "timestamp_seconds": 128,
+      "text": "Your gut is one of the most complex systems in the human body. It relies on constant communication between nerves, immune cells, hormones, microbes, and smooth muscle all happening simultaneously.",
+      "source": null,
+      "confidence": 0.99
+    }
+  ],
+  "missing_evidence": []
+}

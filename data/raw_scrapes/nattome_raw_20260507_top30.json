@@ -1,0 +1,853 @@
+{
+  "generated_at": "2026-05-07T07:41:52.134812+00:00",
+  "scope": "all",
+  "inputs": {
+    "hashtags": [
+      "bloating",
+      "guthealth",
+      "ibs",
+      "digestion",
+      "gutfeeling",
+      "stomachhealth",
+      "constipation",
+      "acidreflux",
+      "guttok",
+      "healthygut"
+    ],
+    "keywords": [
+      "bloated stomach",
+      "stomach pain after eating",
+      "ibs tips",
+      "gut health routine",
+      "natural antacid",
+      "fix bloating",
+      "digestive health"
+    ],
+    "profiles": [
+      "gaviscon",
+      "gutgang",
+      "drwillcole"
+    ]
+  },
+  "total_candidates": 317,
+  "top": [
+    {
+      "id": "7634979445400407309",
+      "url": "https://www.tiktok.com/@dr_kevin_reese/video/7634979445400407309",
+      "author_handle": "dr_kevin_reese",
+      "author_followers": 189300,
+      "caption": "Are you dealing with acid reflux? GERD? Some of you asked for longer videos… let’s dive in. Show love and share this knowledge. \n\n #drreese",
+      "hashtags": [
+        "drreese"
+      ],
+      "duration_s": 585,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Kevin Reese",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-dr_kevin_r-20260501174013-7634979445400407309.mp4",
+      "play_count": 60600,
+      "like_count": 4153,
+      "comment_count": 393,
+      "share_count": 1458,
+      "created_at": "2026-05-01T17:40:13+00:00",
+      "source_input": null,
+      "virality_score": 0.9396
+    },
+    {
+      "id": "7635800388498623746",
+      "url": "https://www.tiktok.com/@nonnarosaremedies/video/7635800388498623746",
+      "author_handle": "nonnarosaremedies",
+      "author_followers": 4252,
+      "caption": "Stop the acid reflux in one night. No pills, no diet changes. One shot before bed, three ingredients, done.\n\n🍶 Apple cider vinegar\n🌱 Ginger\n🍯 Honey\n\nComment YES if you are going to try this! And please friends, follow for more recipes! \n\n#NaturalRemedies #AcidReflux #DigestiveHealth #recipes #remedy ",
+      "hashtags": [
+        "naturalremedies",
+        "acidreflux",
+        "digestivehealth",
+        "recipes",
+        "remedy"
+      ],
+      "duration_s": 22,
+      "music": {
+        "title": "original sound - Nonna Rosa Remedies",
+        "author": "Nonna Rosa Remedies",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-nonnarosar-20260504070000-7635800388498623746.mp4",
+      "play_count": 80300,
+      "like_count": 1213,
+      "comment_count": 26,
+      "share_count": 1569,
+      "created_at": "2026-05-04T07:00:00+00:00",
+      "source_input": null,
+      "virality_score": 0.7708
+    },
+    {
+      "id": "7635660968009157901",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7635660968009157901",
+      "author_handle": "thestomachdoc",
+      "author_followers": 2100000,
+      "caption": "Peas are a gut-health MVP: they bring fiber that helps keep digestion moving, plus prebiotic fibers that feed your beneficial gut bacteria. They also contain resistant starch and fermentable carbs that can support a healthier microbiome.\n\nAnd here’s what makes them even more valuable—those fermentable fibers get broken down by your gut microbes into short-chain fatty acids like butyrate, which help nourish your gut lining, reduce inflammation, and support overall gut function. On top of that, peas provide plant-based protein and polyphenols that further support microbial diversity and metabolic health.\n\n#plantbased #healthyfood #easyrecipes #fiber",
+      "hashtags": [
+        "plantbased",
+        "healthyfood",
+        "easyrecipes",
+        "fiber"
+      ],
+      "duration_s": 41,
+      "music": {
+        "title": "BABYDOLL SPEED",
+        "author": "ari 2.0",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-thestomach-20260503134457-7635660968009157901.mp4",
+      "play_count": 729800,
+      "like_count": 35900,
+      "comment_count": 1019,
+      "share_count": 8411,
+      "created_at": "2026-05-03T13:44:57+00:00",
+      "source_input": null,
+      "virality_score": 0.6935
+    },
+    {
+      "id": "7633919058752113950",
+      "url": "https://www.tiktok.com/@bearenger/video/7633919058752113950",
+      "author_handle": "bearenger",
+      "author_followers": 1500000,
+      "caption": "A blessing and a curse 🥲 #healthyrecipes #easyrecipes #wellnesstips #foodasmr IB mrisfitness 💕",
+      "hashtags": [
+        "healthyrecipes",
+        "easyrecipes",
+        "wellnesstips",
+        "foodasmr"
+      ],
+      "duration_s": 12,
+      "music": {
+        "title": "Beauty And A Beat",
+        "author": "Justin Bieber",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-bearenger-20260428210509-7633919058752113950.mp4",
+      "play_count": 38000,
+      "like_count": 8300,
+      "comment_count": 59,
+      "share_count": 412,
+      "created_at": "2026-04-28T21:05:09+00:00",
+      "source_input": null,
+      "virality_score": 0.6642
+    },
+    {
+      "id": "7633461167788166413",
+      "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "author_handle": "onehealthygut",
+      "author_followers": 102400,
+      "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+      "hashtags": [
+        "bloatingrelief",
+        "ibsrelief",
+        "bloatedstomach",
+        "bloatingtips",
+        "guthealthtips"
+      ],
+      "duration_s": 161,
+      "music": {
+        "title": "original sound",
+        "author": "Meg McDonald",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+      "play_count": 648700,
+      "like_count": 66600,
+      "comment_count": 520,
+      "share_count": 9124,
+      "created_at": "2026-04-27T15:28:58+00:00",
+      "source_input": null,
+      "virality_score": 0.5514
+    },
+    {
+      "id": "7636035926086421782",
+      "url": "https://www.tiktok.com/@drkenjifocus/video/7636035926086421782",
+      "author_handle": "drkenjifocus",
+      "author_followers": 5354,
+      "caption": "If you’re from the US 🇺🇸 comment “tea” for gut healing protocol #us #health #doctor #remedy #detox ",
+      "hashtags": [
+        "us",
+        "health",
+        "doctor",
+        "remedy",
+        "detox"
+      ],
+      "duration_s": 99,
+      "music": {
+        "title": "original sound",
+        "author": "DrKenjiFocus",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-drkenjifoc-20260504135927-7636035926086421782.mp4",
+      "play_count": 1624,
+      "like_count": 50,
+      "comment_count": 7,
+      "share_count": 23,
+      "created_at": "2026-05-04T13:59:27+00:00",
+      "source_input": null,
+      "virality_score": 0.4749
+    },
+    {
+      "id": "7634309648769764639",
+      "url": "https://www.tiktok.com/@healifyhub/video/7634309648769764639",
+      "author_handle": "healifyhub",
+      "author_followers": 26300,
+      "caption": "Fix Your Gut Fast With Simple Juice Blends\n\nSimple fruit and veggie drinks you can add to your morning routine for better hydration, digestion support, and cleaner daily nutrition. Save this so you can try one tomorrow.\n\n#nutritiontips #healthyhabits #guthealth #wellnesstips #healthydrinks",
+      "hashtags": [
+        "nutritiontips",
+        "healthyhabits",
+        "guthealth",
+        "wellnesstips",
+        "healthydrinks"
+      ],
+      "duration_s": 35,
+      "music": {
+        "title": "Two Car Garage",
+        "author": "Jon Bellion & Swae Lee & FANDOM",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-healifyhub-20260429222040-7634309648769764639.mp4",
+      "play_count": 56900,
+      "like_count": 1688,
+      "comment_count": 10,
+      "share_count": 957,
+      "created_at": "2026-04-29T22:20:40+00:00",
+      "source_input": null,
+      "virality_score": 0.4546
+    },
+    {
+      "id": "7636604850024893716",
+      "url": "https://www.tiktok.com/@maddybirtch/video/7636604850024893716",
+      "author_handle": "maddybirtch",
+      "author_followers": 49300,
+      "caption": "happy gut = happy life ✨🧘🏼‍♀️🍵🍓🫶🏻🥒🪷#guthealth #cleaneating #healthandwellness #healthylifestyle #healthyeating ",
+      "hashtags": [
+        "guthealth",
+        "cleaneating",
+        "healthandwellness",
+        "healthylifestyle",
+        "healthyeating"
+      ],
+      "duration_s": 71,
+      "music": {
+        "title": "original sound",
+        "author": "madeline rose",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-maddybirtc-20260506024712-7636604850024893716.mp4",
+      "play_count": 4100,
+      "like_count": 368,
+      "comment_count": 3,
+      "share_count": 17,
+      "created_at": "2026-05-06T02:47:12+00:00",
+      "source_input": null,
+      "virality_score": 0.4325
+    },
+    {
+      "id": "7636347821003787528",
+      "url": "https://www.tiktok.com/@sohamnaorganics28/video/7636347821003787528",
+      "author_handle": "sohamnaorganics28",
+      "author_followers": 157,
+      "caption": "This Ayurvedic morning habit controls blood sugar naturally 💧\n\n1 tbsp fenugreek seeds soaked overnight drink the water every morning.\n\n1️⃣ Slows sugar absorption → kills cravings\n2️⃣ Makes insulin work smarter, not harder\n3️⃣ Natural antacid → goodbye morning bloat\n\nBitter? Yes. Worth it? Absolutely. 🌿\n\nTry it 7 days 👇 Follow for more wellness hacks.\n\n#bloodsugar #ayurveda #fenugreekseeds #morningdetox #guthealth          ",
+      "hashtags": [
+        "bloodsugar",
+        "ayurveda",
+        "fenugreekseeds",
+        "morningdetox",
+        "guthealth"
+      ],
+      "duration_s": 44,
+      "music": {
+        "title": "Epic Music(863502)",
+        "author": "Draganov89",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-sohamnaorg-20260505112819-7636347821003787528.mp4",
+      "play_count": 1025,
+      "like_count": 25,
+      "comment_count": 6,
+      "share_count": 12,
+      "created_at": "2026-05-05T11:28:19+00:00",
+      "source_input": null,
+      "virality_score": 0.4284
+    },
+    {
+      "id": "7636875940865379597",
+      "url": "https://www.tiktok.com/@shiramcmanus1983/video/7636875940865379597",
+      "author_handle": "shiramcmanus1983",
+      "author_followers": 54700,
+      "caption": "#sibo #ibs #candida #guthealth #guttok ",
+      "hashtags": [
+        "sibo",
+        "ibs",
+        "candida",
+        "guthealth",
+        "guttok"
+      ],
+      "duration_s": 100,
+      "music": {
+        "title": "original sound",
+        "author": "Shira 🍒 All Things Wellness",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-shiramcman-20260506201932-7636875940865379597.mp4",
+      "play_count": 1094,
+      "like_count": 42,
+      "comment_count": 9,
+      "share_count": 5,
+      "created_at": "2026-05-06T20:19:32+00:00",
+      "source_input": null,
+      "virality_score": 0.3632
+    },
+    {
+      "id": "7636207799072066829",
+      "url": "https://www.tiktok.com/@doc.tori.fit/video/7636207799072066829",
+      "author_handle": "doc.tori.fit",
+      "author_followers": 27400,
+      "caption": "💩💩🧬 9 Fascinating Facts About Your Gut💩💩💩\n\nInteresting gut facts:\n• Your intestines have their own nervous system\n• Your gut can “taste” nutrients\n• Trillions of microbes help regulate digestion and metabolism\n• Electrical pacemaker cells coordinate movement through the GI tract\n• Disorders like IBS are incredibly common worldwide\n\nThe gut is one of the most complex organ systems in medicine — and we’re still learning more about it every year.\n\n#boise #doctorsoftiktok #colonoscopy #guttok #guthealth ",
+      "hashtags": [
+        "boise",
+        "doctorsoftiktok",
+        "colonoscopy",
+        "guttok",
+        "guthealth"
+      ],
+      "duration_s": 102,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Tori | GI Doc & Gut Health",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-doctorifit-20260505010644-7636207799072066829.mp4",
+      "play_count": 15300,
+      "like_count": 993,
+      "comment_count": 27,
+      "share_count": 53,
+      "created_at": "2026-05-05T01:06:44+00:00",
+      "source_input": null,
+      "virality_score": 0.362
+    },
+    {
+      "id": "7636841316634168589",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7636841316634168589",
+      "author_handle": "thestomachdoc",
+      "author_followers": 2100000,
+      "caption": "If your poop feels sharp, you could have something called an anal fissure — which is a small cut in your anal canal — or possibly a painful hemorrhoid.\n\nAnd when that happens, the goal is simple:\n\nYou need to make your poop softer, smoother, and easier to pass.\n\nThat usually means treating constipation, and increasing both types of fiber:\n\nSoluble fiber pulls water into the stool and helps create a softer, gel-like poop that is easier to pass. Good examples include oats, chia seeds, psyllium husk, beans, lentils, apples, and berries.\n\nInsoluble fiber adds bulk and helps move stool through the gut more efficiently. You’ll find it in vegetables, whole grains, bran, nuts, seeds, and leafy greens.\n\nIf your stool is hard, dry, or painful, pushing harder can make hemorrhoids worse and keep an anal fissure from healing.\n\nSo if you’re dealing with sharp poop pain, don’t ignore it. Start by softening the stool, increasing fiber slowly, drinking enough water, and get checked if there’s bleeding, severe pain, or symptoms that don’t improve.\n\nSave this if you struggle with constipation, hemorrhoids, or painful poop.\n\n#poop #constipation #fiber #hemorrhoids",
+      "hashtags": [
+        "poop",
+        "constipation",
+        "fiber",
+        "hemorrhoids"
+      ],
+      "duration_s": 61,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Joseph Salhab",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-thestomach-20260506180514-7636841316634168589.mp4",
+      "play_count": 24100,
+      "like_count": 1009,
+      "comment_count": 17,
+      "share_count": 77,
+      "created_at": "2026-05-06T18:05:14+00:00",
+      "source_input": null,
+      "virality_score": 0.3204
+    },
+    {
+      "id": "7633094102338391309",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7633094102338391309",
+      "author_handle": "thestomachdoc",
+      "author_followers": 2100000,
+      "caption": "Doctors tips to help with acid reflux and heartburn #refluxdiet #gerd #gastritis #heartburn #acidreflux",
+      "hashtags": [
+        "refluxdiet",
+        "gerd",
+        "gastritis",
+        "heartburn",
+        "acidreflux"
+      ],
+      "duration_s": 10,
+      "music": {
+        "title": "end of beginning",
+        "author": "overlays ⸆⸉",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-thestomach-20260426154403-7633094102338391309.mp4",
+      "play_count": 433800,
+      "like_count": 27100,
+      "comment_count": 366,
+      "share_count": 3732,
+      "created_at": "2026-04-26T15:44:03+00:00",
+      "source_input": null,
+      "virality_score": 0.2994
+    },
+    {
+      "id": "7634645051045334294",
+      "url": "https://www.tiktok.com/@lenastrelnykova/video/7634645051045334294",
+      "author_handle": "lenastrelnykova",
+      "author_followers": 20200,
+      "caption": "what I eat in a day 🥣🫐🥦🥑🥗\n#whatieatinaday #whatieatinadayrealistic #healthyrecipies #healthyhabits ",
+      "hashtags": [
+        "whatieatinaday",
+        "whatieatinadayrealistic",
+        "healthyrecipies",
+        "healthyhabits"
+      ],
+      "duration_s": 67,
+      "music": {
+        "title": "Idyllic jazz bossa nova with piano and guitar(1298871)",
+        "author": "TAKANORI ONDA",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-lenastreln-20260430200207-7634645051045334294.mp4",
+      "play_count": 26500,
+      "like_count": 2535,
+      "comment_count": 10,
+      "share_count": 30,
+      "created_at": "2026-04-30T20:02:07+00:00",
+      "source_input": null,
+      "virality_score": 0.2533
+    },
+    {
+      "id": "7636237714223942926",
+      "url": "https://www.tiktok.com/@julionomartello/video/7636237714223942926",
+      "author_handle": "julionomartello",
+      "author_followers": 247100,
+      "caption": "#datingadviceforwomen ",
+      "hashtags": [
+        "datingadviceforwomen"
+      ],
+      "duration_s": 83,
+      "music": {
+        "title": "original sound",
+        "author": "julionomartello",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-julionomar-20260505030253-7636237714223942926.mp4",
+      "play_count": 42100,
+      "like_count": 2116,
+      "comment_count": 25,
+      "share_count": 60,
+      "created_at": "2026-05-05T03:02:53+00:00",
+      "source_input": null,
+      "virality_score": 0.2511
+    },
+    {
+      "id": "7633926727030377742",
+      "url": "https://www.tiktok.com/@clairethenutritionist/video/7633926727030377742",
+      "author_handle": "clairethenutritionist",
+      "author_followers": 408600,
+      "caption": "everyone 💩s but not everyone knows if they’re “regular” #nutritionistsoftiktok #guthealth #nutritiontips #digestiontips #holistichealth ",
+      "hashtags": [
+        "nutritionistsoftiktok",
+        "guthealth",
+        "nutritiontips",
+        "digestiontips",
+        "holistichealth"
+      ],
+      "duration_s": 42,
+      "music": {
+        "title": "original sound",
+        "author": "ClaireTheNutritionist",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-clairethen-20260428213448-7633926727030377742.mp4",
+      "play_count": 67300,
+      "like_count": 4246,
+      "comment_count": 64,
+      "share_count": 326,
+      "created_at": "2026-04-28T21:34:48+00:00",
+      "source_input": null,
+      "virality_score": 0.2439
+    },
+    {
+      "id": "7629332221605793046",
+      "url": "https://www.tiktok.com/@jaiaaa.__/video/7629332221605793046",
+      "author_handle": "jaiaaa.__",
+      "author_followers": 87500,
+      "caption": "just a belly full of snacks at the end of the day and back to normal this morning 🤷‍♀️ ALSO new jacket o’clock 🫰🫰🫰",
+      "hashtags": [],
+      "duration_s": 13,
+      "music": {
+        "title": "som original",
+        "author": "bakura",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-jaiaaa__-20260416122540-7629332221605793046.mp4",
+      "play_count": 721100,
+      "like_count": 126300,
+      "comment_count": 360,
+      "share_count": 8939,
+      "created_at": "2026-04-16T12:25:40+00:00",
+      "source_input": null,
+      "virality_score": 0.2252
+    },
+    {
+      "id": "7636960177580707102",
+      "url": "https://www.tiktok.com/@harmonywellness88/video/7636960177580707102",
+      "author_handle": "harmonywellness88",
+      "author_followers": 69000,
+      "caption": "Stop Acid Reflux & Stomach Pain With This Simple Natural Remedy #usa #health #healthy #healthtip #usa_tiktok",
+      "hashtags": [
+        "usa",
+        "health",
+        "healthy",
+        "healthtip",
+        "usa_tiktok"
+      ],
+      "duration_s": 72,
+      "music": {
+        "title": "original sound - Harmony Wellness",
+        "author": "Harmony Wellness",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-harmonywel-20260507014607-7636960177580707102.mp4",
+      "play_count": 548,
+      "like_count": 16,
+      "comment_count": 2,
+      "share_count": 2,
+      "created_at": "2026-05-07T01:46:07+00:00",
+      "source_input": null,
+      "virality_score": 0.2244
+    },
+    {
+      "id": "7636488144937962774",
+      "url": "https://www.tiktok.com/@dr.help_md/video/7636488144937962774",
+      "author_handle": "dr.help_md",
+      "author_followers": 46700,
+      "caption": "Stop the burn in 2 minutes! 🔥🤯 Acid reflux can be painful and damaging if ignored. Learn the immediate steps for fast relief and the biggest mistakes to avoid after heartburn. 🛡️✨\n#acidreflux #heartburn #healthtips #doctor #medicine ",
+      "hashtags": [
+        "acidreflux",
+        "heartburn",
+        "healthtips",
+        "doctor",
+        "medicine"
+      ],
+      "duration_s": 61,
+      "music": {
+        "title": "sonido original",
+        "author": "StoryTime",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-drhelp_md-20260505191416-7636488144937962774.mp4",
+      "play_count": 3168,
+      "like_count": 73,
+      "comment_count": 7,
+      "share_count": 10,
+      "created_at": "2026-05-05T19:14:16+00:00",
+      "source_input": null,
+      "virality_score": 0.1978
+    },
+    {
+      "id": "7636935077275979039",
+      "url": "https://www.tiktok.com/@shapeyourhormonesafter35/video/7636935077275979039",
+      "author_handle": "shapeyourhormonesafter35",
+      "author_followers": 17,
+      "caption": "Discover the best foods and drinks to soothe acid reflux, including fennel seeds, ginger tea, and more!\n.\n.\n.\n.\n.\n#acidreflux #acidrefluxremedy #Health #womenover35 #GutHealth #HormoneBalance",
+      "hashtags": [
+        "acidreflux",
+        "acidrefluxremedy",
+        "health",
+        "womenover35",
+        "guthealth",
+        "hormonebalance"
+      ],
+      "duration_s": 36,
+      "music": {
+        "title": "original sound - shapeyourhormonesafter35",
+        "author": "shapeyourhormonesafter35",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-shapeyourh-20260507000847-7636935077275979039.mp4",
+      "play_count": 290,
+      "like_count": 9,
+      "comment_count": 1,
+      "share_count": 1,
+      "created_at": "2026-05-07T00:08:47+00:00",
+      "source_input": null,
+      "virality_score": 0.1977
+    },
+    {
+      "id": "7634693129093844237",
+      "url": "https://www.tiktok.com/@trav.health/video/7634693129093844237",
+      "author_handle": "trav.health",
+      "author_followers": 133800,
+      "caption": "Luna lab herbal cleanse formula - heal the gut lining - get your own yogurt - fiber",
+      "hashtags": [],
+      "duration_s": 31,
+      "music": {
+        "title": "original sound",
+        "author": "trav.health",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-travhealth-20260430230900-7634693129093844237.mp4",
+      "play_count": 24000,
+      "like_count": 1648,
+      "comment_count": 14,
+      "share_count": 29,
+      "created_at": "2026-04-30T23:09:00+00:00",
+      "source_input": null,
+      "virality_score": 0.1953
+    },
+    {
+      "id": "7631009309169683726",
+      "url": "https://www.tiktok.com/@christinevetick/video/7631009309169683726",
+      "author_handle": "christinevetick",
+      "author_followers": 60000,
+      "caption": "like does it ever end 🥲 #stomachproblems #stomachproblemscheck #stomachproblemslol #ibs #ibstok ",
+      "hashtags": [
+        "stomachproblems",
+        "stomachproblemscheck",
+        "stomachproblemslol",
+        "ibs",
+        "ibstok"
+      ],
+      "duration_s": 13,
+      "music": {
+        "title": "original sound",
+        "author": "DJ Mgod",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-christinev-20260421005355-7631009309169683726.mp4",
+      "play_count": 118900,
+      "like_count": 9473,
+      "comment_count": 205,
+      "share_count": 1168,
+      "created_at": "2026-04-21T00:53:55+00:00",
+      "source_input": null,
+      "virality_score": 0.1888
+    },
+    {
+      "id": "7633896452791602454",
+      "url": "https://www.tiktok.com/@lileya5700/video/7633896452791602454",
+      "author_handle": "lileya5700",
+      "author_followers": 50,
+      "caption": "#castoroil#guthealth#fyp#bellymassage#holistichealth",
+      "hashtags": [
+        "castoroil",
+        "guthealth",
+        "fyp",
+        "bellymassage",
+        "holistichealth"
+      ],
+      "duration_s": 44,
+      "music": {
+        "title": "Selenite",
+        "author": "Surreal_dvd",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-lileya5700-20260428193712-7633896452791602454.mp4",
+      "play_count": 27300,
+      "like_count": 1875,
+      "comment_count": 12,
+      "share_count": 73,
+      "created_at": "2026-04-28T19:37:12+00:00",
+      "source_input": null,
+      "virality_score": 0.1866
+    },
+    {
+      "id": "7630786863220935943",
+      "url": "https://www.tiktok.com/@askdocdoc/video/7630786863220935943",
+      "author_handle": "askdocdoc",
+      "author_followers": 26700,
+      "caption": "Quick fix for sudden stomach pain and bloating after outside food!\n#digestion #stomachpain #foodpoisoningrelief #naturalremedy #healthtips #bloatingrelief #wellnesstips #instantrelief #viral #trending #reels #explorepage",
+      "hashtags": [
+        "digestion",
+        "stomachpain",
+        "foodpoisoningrelief",
+        "naturalremedy",
+        "healthtips",
+        "bloatingrelief",
+        "wellnesstips",
+        "instantrelief",
+        "viral",
+        "trending",
+        "reels",
+        "explorepage"
+      ],
+      "duration_s": 27,
+      "music": {
+        "title": "оригинальный звук - askdocdoc",
+        "author": "askdocdoc",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-askdocdoc-20260420103013-7630786863220935943.mp4",
+      "play_count": 225500,
+      "like_count": 3384,
+      "comment_count": 29,
+      "share_count": 3467,
+      "created_at": "2026-04-20T10:30:13+00:00",
+      "source_input": null,
+      "virality_score": 0.1704
+    },
+    {
+      "id": "7634984620081155342",
+      "url": "https://www.tiktok.com/@doctorsood/video/7634984620081155342",
+      "author_handle": "doctorsood",
+      "author_followers": 2700000,
+      "caption": "Have you ever known someone who went this long without a bowel movement?\nGoing three weeks without a bowel movement is considered obstipation, a severe form of constipation where the colon stops moving stool effectively. At this stage, the risk of fecal impaction, abdominal swelling, and liquid stool leaking around a blockage increases significantly. Constipation this severe always requires urgent medical evaluation.\nPMID: 30020663, 32809443\nVC: @pana4president\nFollow @doctorsoood to improve your health IQ and for similar content.\n#constipation #guthealth #medical #health #constipationrelief",
+      "hashtags": [
+        "constipation",
+        "guthealth",
+        "medical",
+        "health",
+        "constipationrelief"
+      ],
+      "duration_s": 57,
+      "music": {
+        "title": "original sound",
+        "author": "DoctorSood, M.D.",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-doctorsood-20260501180013-7634984620081155342.mp4",
+      "play_count": 50500,
+      "like_count": 1936,
+      "comment_count": 65,
+      "share_count": 90,
+      "created_at": "2026-05-01T18:00:13+00:00",
+      "source_input": null,
+      "virality_score": 0.1696
+    },
+    {
+      "id": "7636557193529085197",
+      "url": "https://www.tiktok.com/@aikowpop/video/7636557193529085197",
+      "author_handle": "aikowpop",
+      "author_followers": 21000,
+      "caption": "This is what happens when you can’t say no to grandma\n\n#bigbelly #foodbaby #stuffed #bloating #bigbellies ",
+      "hashtags": [
+        "bigbelly",
+        "foodbaby",
+        "stuffed",
+        "bloating",
+        "bigbellies"
+      ],
+      "duration_s": 6,
+      "music": {
+        "title": "original sound",
+        "author": "BellyPopAiko",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-aikowpop-20260505234228-7636557193529085197.mp4",
+      "play_count": 26400,
+      "like_count": 812,
+      "comment_count": 10,
+      "share_count": 13,
+      "created_at": "2026-05-05T23:42:28+00:00",
+      "source_input": null,
+      "virality_score": 0.1456
+    },
+    {
+      "id": "7628388611758624031",
+      "url": "https://www.tiktok.com/@bearenger/video/7628388611758624031",
+      "author_handle": "bearenger",
+      "author_followers": 1500000,
+      "caption": "Hormone Happy Kitchen Ep 2 - Pineapple Ginger Gut Healing Gummies 🍍✨\n\nIngredients\n- 1½ cups pineapple juice (simmered 5 minutes, then cooled)\n- ¼ cup ginger juice\n- 1–2 tbsp raw honey\n- Pinch of sea salt\n- 2 tbsp grass-fed gelatin (3 if you want a firmer gummy)\n\nInstructions\n1. Simmer pineapple juice for 5 minutes to break down the bromelain, then let it cool slightly.\n2. In a saucepan, combine pineapple juice, ginger juice, honey, and sea salt.\n3. Sprinkle gelatin evenly over the top and let it bloom for 5 minutes.\n4. Place on low heat and stir gently until fully dissolved and smooth.\n5. Pour into a glass dish or silicone molds.\n6. Refrigerate for a few hours or overnight, until fully set.\n7. Cut into cubes if needed and enjoy.\n\n#healthyrecipes #hormonehealth #womenswellness #easyrecipe",
+      "hashtags": [
+        "healthyrecipes",
+        "hormonehealth",
+        "womenswellness",
+        "easyrecipe"
+      ],
+      "duration_s": 41,
+      "music": {
+        "title": "Bar Mediterraneo",
+        "author": "Nu Genea",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-bearenger-20260413232404-7628388611758624031.mp4",
+      "play_count": 441900,
+      "like_count": 47200,
+      "comment_count": 216,
+      "share_count": 5563,
+      "created_at": "2026-04-13T23:24:04+00:00",
+      "source_input": null,
+      "virality_score": 0.1315
+    },
+    {
+      "id": "7633139497680538894",
+      "url": "https://www.tiktok.com/@kholood.breiche/video/7633139497680538894",
+      "author_handle": "kholood.breiche",
+      "author_followers": 100800,
+      "caption": "What is happening!! #bloating #bloatedqueen ",
+      "hashtags": [
+        "bloating",
+        "bloatedqueen"
+      ],
+      "duration_s": 14,
+      "music": {
+        "title": "original sound",
+        "author": "kiyu",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-kholoodbre-20260426184000-7633139497680538894.mp4",
+      "play_count": 21600,
+      "like_count": 1488,
+      "comment_count": 10,
+      "share_count": 32,
+      "created_at": "2026-04-26T18:40:00+00:00",
+      "source_input": null,
+      "virality_score": 0.1313
+    },
+    {
+      "id": "7635279545062542606",
+      "url": "https://www.tiktok.com/@kalyrix1/video/7635279545062542606",
+      "author_handle": "kalyrix1",
+      "author_followers": 12200,
+      "caption": "Your Stomach Is Under Attack (And You Might Not Know) #StomachHealth #HealthTips #MedicalEducation ",
+      "hashtags": [
+        "stomachhealth",
+        "healthtips",
+        "medicaleducation"
+      ],
+      "duration_s": 70,
+      "music": {
+        "title": "Suspense, horror, piano and music box",
+        "author": "takaya",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-kalyrix1-20260502130459-7635279545062542606.mp4",
+      "play_count": 1136,
+      "like_count": 28,
+      "comment_count": 0,
+      "share_count": 5,
+      "created_at": "2026-05-02T13:04:59+00:00",
+      "source_input": null,
+      "virality_score": 0.1308
+    },
+    {
+      "id": "7636866665594096910",
+      "url": "https://www.tiktok.com/@homewithhaley_/video/7636866665594096910",
+      "author_handle": "homewithhaley_",
+      "author_followers": 7191,
+      "caption": "Better digestion is so simple. adding these Digestive Enzymes to my routine has been such a game changer. 💪💊\n\n#digestivehealth  #digestion  #gut  #guthealth  #guthealthmatters ",
+      "hashtags": [
+        "digestivehealth",
+        "digestion",
+        "gut",
+        "guthealth",
+        "guthealthmatters"
+      ],
+      "duration_s": 26,
+      "music": {
+        "title": "Soft Sunlight",
+        "author": "LoFi Siberinyan",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/Z9fpmiJy5se3ct2Sz/records/video-homewithha-20260506194340-7636866665594096910.mp4",
+      "play_count": 543500,
+      "like_count": 4864,
+      "comment_count": 102,
+      "share_count": 608,
+      "created_at": "2026-05-06T19:43:40+00:00",
+      "source_input": null,
+      "virality_score": 0.115
+    }
+  ]
+}

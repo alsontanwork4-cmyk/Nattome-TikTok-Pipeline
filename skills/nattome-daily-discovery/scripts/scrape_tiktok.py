@@ -40,12 +40,36 @@ RECENCY_HALFLIFE_DAYS = 7
 
 def load_config(path: Path) -> dict:
     if path.exists():
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     fallback = Path(__file__).parent.parent / "assets" / "config.example.json"
     if fallback.exists():
         print(f"[info] no config.json found, using {fallback}", file=sys.stderr)
-        return json.loads(fallback.read_text())
+        return json.loads(fallback.read_text(encoding="utf-8"))
     raise FileNotFoundError(f"No config at {path} and no example config bundled.")
+
+
+def effective_scrape_options(config: dict, args) -> dict:
+    """Resolve CLI flags over dashboard-saved production scrape defaults."""
+    selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
+    return {
+        "scope": args.scope or config.get("scope") or "all",
+        "results_per_input": int(
+            args.results_per_input
+            if args.results_per_input is not None
+            else config.get("results_per_input", 20)
+        ),
+        "top": int(args.top if args.top is not None else config.get("top_n", 5)),
+        "daily_selection_size": int(
+            args.daily_selection_size
+            if args.daily_selection_size is not None
+            else config.get("daily_selection_size", 5)
+        ),
+        "download_videos": bool(
+            args.download_videos
+            or config.get("requires_downloadable_video")
+            or selection.get("requires_downloadable_video")
+        ),
+    }
 
 
 def apify_run_actor(token: str, actor_id: str, run_input: dict, timeout_s: int = 300) -> list[dict]:
@@ -68,8 +92,13 @@ def apify_run_actor(token: str, actor_id: str, run_input: dict, timeout_s: int =
         raise RuntimeError(f"Apify network error: {e.reason}") from e
 
 
-def build_run_input(hashtags: list[str], keywords: list[str], profiles: list[str],
-                    results_per_input: int) -> dict:
+def build_run_input(
+    hashtags: list[str],
+    keywords: list[str],
+    profiles: list[str],
+    results_per_input: int,
+    download_videos: bool,
+) -> dict:
     """Shape the input the way clockworks/tiktok-scraper expects.
 
     The actor accepts hashtags, search queries, and profile URLs in one run.
@@ -83,7 +112,7 @@ def build_run_input(hashtags: list[str], keywords: list[str], profiles: list[str
         "searchQueries": keywords,
         "profiles": profile_urls,
         "resultsPerPage": results_per_input,
-        "shouldDownloadVideos": False,
+        "shouldDownloadVideos": download_videos,
         "shouldDownloadCovers": False,
         "shouldDownloadSubtitles": False,
         "shouldDownloadSlideshowImages": False,
@@ -139,6 +168,41 @@ def virality_score(item: dict, now: datetime) -> float:
     return engagement_rate * reach * recency
 
 
+def first_nonempty(*values) -> str | None:
+    for value in values:
+        if isinstance(value, str) and value:
+            return value
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, str) and item:
+                    return item
+        if isinstance(value, dict):
+            nested = first_nonempty(*value.values())
+            if nested:
+                return nested
+    return None
+
+
+def downloadable_video_url(item: dict) -> str | None:
+    video_meta = item.get("videoMeta") if isinstance(item.get("videoMeta"), dict) else {}
+    media_urls = item.get("mediaUrls") or item.get("media_urls") or []
+    return first_nonempty(
+        item.get("video_download_url"),
+        item.get("download_url"),
+        item.get("downloadUrl"),
+        item.get("downloadLink"),
+        item.get("downloadedVideoUrl"),
+        item.get("downloaded_video_url"),
+        item.get("media_url"),
+        item.get("mediaUrl"),
+        media_urls,
+        video_meta.get("downloadAddr"),
+        video_meta.get("downloadUrl"),
+        video_meta.get("download_url"),
+        video_meta.get("playAddr"),
+    )
+
+
 def normalize(item: dict) -> dict:
     """Pull a clean, predictable shape out of the actor's verbose output."""
     author = item.get("authorMeta") or {}
@@ -152,12 +216,52 @@ def normalize(item: dict) -> dict:
         "hashtags": [h.get("name") for h in (item.get("hashtags") or []) if h.get("name")],
         "duration_s": item.get("videoMeta", {}).get("duration") if isinstance(item.get("videoMeta"), dict) else None,
         "music": {"title": music.get("musicName"), "author": music.get("musicAuthor"), "original": music.get("musicOriginal")},
+        "video_download_url": downloadable_video_url(item),
         "play_count": item.get("playCount"),
         "like_count": item.get("diggCount"),
         "comment_count": item.get("commentCount"),
         "share_count": item.get("shareCount"),
         "created_at": (parse_create_time(item) or "").isoformat() if parse_create_time(item) else None,
         "source_input": item.get("_source_input"),  # set by us below
+    }
+
+
+def build_output_payload(
+    *,
+    now: datetime,
+    scope: str,
+    hashtags: list[str],
+    keywords: list[str],
+    profiles: list[str],
+    total_candidates: int,
+    top: list[dict],
+) -> dict:
+    return {
+        "generated_at": now.isoformat(),
+        "scope": scope,
+        "inputs": {"hashtags": hashtags, "keywords": keywords, "profiles": profiles},
+        "total_candidates": total_candidates,
+        "top": [
+            {**normalize(it), "virality_score": round(virality_score(it, now), 4)}
+            for it in top
+        ],
+    }
+
+
+def build_daily_selection_payload(
+    *,
+    full_payload: dict,
+    source_scrape: Path,
+    selection_size: int,
+) -> dict:
+    top = full_payload.get("top") if isinstance(full_payload.get("top"), list) else []
+    selected = top[:selection_size]
+    return {
+        "generated_at": full_payload.get("generated_at"),
+        "source_scrape": str(source_scrape),
+        "selection_purpose": "daily_evidence_analysis_handoff",
+        "selection_count": len(selected),
+        "top": selected,
     }
 
 
@@ -179,11 +283,18 @@ def main() -> int:
     ap.add_argument("--config", type=Path, default=Path(__file__).parent.parent / "config.json",
                     help="Path to config.json (defaults to ../config.json then bundled example)")
     ap.add_argument("--output", type=Path, required=True, help="Where to write the ranked top-N JSON")
-    ap.add_argument("--top", type=int, default=5, help="How many top videos to keep (default: 5)")
-    ap.add_argument("--results-per-input", type=int, default=20,
-                    help="Apify resultsPerPage per hashtag/keyword/profile (default: 20)")
-    ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default="all",
-                    help="Limit which inputs to run (useful for narrower runs)")
+    ap.add_argument("--top", type=int, default=None,
+                    help="How many top videos to keep (default: config top_n, then 5)")
+    ap.add_argument("--results-per-input", type=int, default=None,
+                    help="Apify resultsPerPage per hashtag/keyword/profile (default: config results_per_input, then 20)")
+    ap.add_argument("--download-videos", action="store_true",
+                    help="Ask Apify to include downloadable video sources for evidence-first batch analysis")
+    ap.add_argument("--daily-selection-output", type=Path,
+                    help="Optional handoff JSON containing the daily top videos for daily evidence analysis")
+    ap.add_argument("--daily-selection-size", type=int, default=None,
+                    help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 5)")
+    ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default=None,
+                    help="Limit which inputs to run (default: config scope, then all)")
     args = ap.parse_args()
 
     token = os.environ.get("APIFY_TOKEN")
@@ -193,9 +304,11 @@ def main() -> int:
 
     config = load_config(args.config)
 
-    hashtags = config.get("hashtags", []) if args.scope in ("all", "hashtags") else []
-    keywords = config.get("keywords", []) if args.scope in ("all", "keywords") else []
-    profiles = config.get("competitor_profiles", []) if args.scope in ("all", "profiles") else []
+    options = effective_scrape_options(config, args)
+
+    hashtags = config.get("hashtags", []) if options["scope"] in ("all", "hashtags") else []
+    keywords = config.get("keywords", []) if options["scope"] in ("all", "keywords") else []
+    profiles = config.get("competitor_profiles", []) if options["scope"] in ("all", "profiles") else []
 
     if not (hashtags or keywords or profiles):
         print("error: nothing to scrape (config has no hashtags/keywords/profiles for this scope)", file=sys.stderr)
@@ -203,7 +316,13 @@ def main() -> int:
 
     print(f"[info] scraping: {len(hashtags)} hashtags, {len(keywords)} keywords, {len(profiles)} profiles", file=sys.stderr)
 
-    run_input = build_run_input(hashtags, keywords, profiles, args.results_per_input)
+    run_input = build_run_input(
+        hashtags,
+        keywords,
+        profiles,
+        options["results_per_input"],
+        options["download_videos"],
+    )
     t0 = time.time()
     raw = apify_run_actor(token, APIFY_ACTOR_ID, run_input)
     print(f"[info] apify returned {len(raw)} raw items in {time.time()-t0:.1f}s", file=sys.stderr)
@@ -212,22 +331,36 @@ def main() -> int:
 
     now = datetime.now(tz=timezone.utc)
     scored = sorted(raw, key=lambda it: virality_score(it, now), reverse=True)
-    top = scored[: args.top]
+    top = scored[: options["top"]]
 
-    payload = {
-        "generated_at": now.isoformat(),
-        "scope": args.scope,
-        "inputs": {"hashtags": hashtags, "keywords": keywords, "profiles": profiles},
-        "total_candidates": len(raw),
-        "top": [
-            {**normalize(it), "virality_score": round(virality_score(it, now), 4)}
-            for it in top
-        ],
-    }
+    payload = build_output_payload(
+        now=now,
+        scope=options["scope"],
+        hashtags=hashtags,
+        keywords=keywords,
+        profiles=profiles,
+        total_candidates=len(raw),
+        top=top,
+    )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"[ok] wrote top {len(top)} to {args.output}", file=sys.stderr)
+    if args.daily_selection_output:
+        daily_selection = build_daily_selection_payload(
+            full_payload=payload,
+            source_scrape=args.output,
+            selection_size=options["daily_selection_size"],
+        )
+        args.daily_selection_output.parent.mkdir(parents=True, exist_ok=True)
+        args.daily_selection_output.write_text(
+            json.dumps(daily_selection, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(
+            f"[ok] wrote daily selection top {daily_selection['selection_count']} to {args.daily_selection_output}",
+            file=sys.stderr,
+        )
     return 0
 
 

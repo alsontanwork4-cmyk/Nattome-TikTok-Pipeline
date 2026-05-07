@@ -392,3 +392,1219 @@ Feedback:
 Blockers or notes for the next iteration:
 - This workspace is not a git repository, so no commit could be created.
 - `0014` remains open because it is marked HITL and needs human review of schedule, runner, and credential setup before implementation.
+
+## 2026-05-07 - 0017 Enforce Evidence-Ready Candidate Selection
+
+Task completed from `docs/issues/0017-enforce-evidence-ready-candidate-selection.md`.
+
+Key decisions made:
+- The Minimum Eligibility Filter now enforces downloadable video source presence by default using candidate source-field presence only.
+- Missing downloadable video source is reported as its own exclusion reason.
+- The existing `selection.requires_downloadable_video` configuration key is the explicit metadata-only/debug preview override.
+- Existing downstream tests that intentionally inspect missing-video artifacts now opt into the override, while normal selection fixtures provide local video sources.
+
+Files changed:
+- `batch_analysis/candidates.py`
+- `tests/test_candidate_selection.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0017-enforce-evidence-ready-candidate-selection.md`
+
+Feedback:
+- `python -m pytest tests\test_candidate_selection.py -q` passed.
+- `python -m pytest tests\test_batch_analysis_run.py -q` passed.
+- `python -m pytest -q` passed with 28 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- Python had to be run outside the sandbox because the sandboxed WindowsApps `python.exe` launcher could not be accessed.
+- The pytest run still emits an existing `RequestsDependencyWarning` about the local `urllib3`/charset dependency versions.
+
+## 2026-05-07 - 0018 Create Two-Layer Run Folder And Run Manifest Skeleton
+
+Task completed from `docs/issues/0018-create-two-layer-run-folder-and-run-manifest-skeleton.md`.
+
+Key decisions made:
+- Skeleton Batch Analysis Runs now create direct Run Folder child folders for `reports`, `data`, `evidence`, and `logs`.
+- Skeleton runs write `run_manifest.json` with configuration, timestamp, mode, requested batch size, folders, and structured phase records.
+- `batch_index.md` is generated from the Run Manifest and links back to `run_manifest.json`.
+- Existing candidate-run writers keep their legacy nested output folders only when a candidate file is provided, so later migration issues can move evidence and output writers incrementally.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0018-create-two-layer-run-folder-and-run-manifest-skeleton.md`
+
+Feedback:
+- `python -m pytest tests\test_batch_analysis_run.py::BatchAnalysisRunCliTest::test_skeleton_run_uses_two_layer_layout_and_manifest_index -q` failed before implementation, then passed.
+- `python -m pytest tests\test_batch_analysis_run.py -q` passed.
+- `python -m pytest -q` passed with 29 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Issue 0019 can migrate evidence bundle snapshots onto the new direct `evidence` and `data` folders.
+
+## 2026-05-07 - 0019 Write Evidence Bundle Snapshots In The Two-Layer Layout
+
+Task completed from `docs/issues/0019-write-evidence-bundle-snapshots-in-two-layer-layout.md`.
+
+Key decisions made:
+- Added `EvidenceBundleStore` as the deep interface that owns stable per-video prefixes, source metadata paths, source video paths, snapshot paths, and snapshot loading.
+- Flat source metadata and Evidence Bundle snapshots are written under `data/`.
+- Flat source video artifacts are written under `evidence/`.
+- Snapshots record explicit available, missing, and failed source video states instead of requiring callers to inspect the filesystem.
+- `create_run` now writes flat source snapshots for selected candidates before the legacy downstream evidence pipeline runs.
+
+Files changed:
+- `batch_analysis/evidence_io.py`
+- `batch_analysis/run.py`
+- `tests/test_evidence_bundle_reader_writer.py`
+- `progress.txt`
+- `docs/issues/done/0019-write-evidence-bundle-snapshots-in-two-layer-layout.md`
+
+Feedback:
+- `python -m pytest tests\test_evidence_bundle_reader_writer.py -q` failed before implementation, then passed.
+- `python -m pytest -q` passed with 31 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Later migration issues still need to move downstream reports, summaries, cleanup, and delivery outputs off the legacy nested writer paths.
+
+## 2026-05-07 - 0020 Add Gemini 2.5 Flash Tool Stack Adapter
+
+Task completed from `docs/issues/0020-add-gemini-2-5-flash-tool-stack-adapter.md`.
+
+Key decisions made:
+- Added `GeminiFlashAdapter` with an injectable client so normal tests use fake Gemini responses and never require live network access.
+- `DEFAULT_CONFIG` now makes `gemini_2_5_flash` the primary Tool Stack Adapter and records the model and API key env var.
+- The adapter normalizes Gemini responses into timestamped visual observations, visible text, spoken content, audio cues, hook evidence, and claim evidence.
+- Adapter output intentionally drops any `shootable_angles` returned by Gemini because Gemini evidence must not become final creative output.
+- Partial responses, client failures, and missing credentials return explicit status payloads.
+- `EvidenceBundleStore` can persist Gemini evidence under the flat `data/` layout and update the per-video snapshot state.
+- `run_manifest.py` can represent Gemini evidence phase states, including failed missing-credential records.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/evidence_io.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/tool_adapters.py`
+- `tests/test_gemini_adapter.py`
+- `progress.txt`
+- `docs/issues/done/0020-add-gemini-2-5-flash-tool-stack-adapter.md`
+
+Feedback:
+- `python -m pytest tests\test_gemini_adapter.py -q` failed before implementation, then passed.
+- `python -m pytest -q` passed with 37 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- This slice adds the adapter contract and persistence path, but does not yet make the full batch run call live Gemini.
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+
+## 2026-05-07 - 0021 Render Video Evidence Reports From Gemini Evidence Snapshots
+
+Task completed from `docs/issues/0021-render-video-evidence-reports-from-gemini-evidence-snapshots.md`.
+
+Key decisions made:
+- Added snapshot-facing output generation so Video Evidence Reports, Evidence Quality, Baseline Audio Analysis, and Claim Safety Review consume Evidence Bundle snapshots with Gemini evidence.
+- Flat snapshot outputs are written under `reports/` and `data/` using the stable Evidence Bundle prefix.
+- Missing or unavailable Gemini evidence now renders explicit uncertainty and manual review states instead of inferred visual, text, spoken, audio, hook, or claim details.
+- Legacy bundle-folder output functions remain in place for existing tests and historical writer compatibility while the migration continues.
+
+Files changed:
+- `batch_analysis/claim_safety.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/evidence_io.py`
+- `batch_analysis/evidence_quality.py`
+- `batch_analysis/reports.py`
+- `batch_analysis/run.py`
+- `tests/test_snapshot_evidence_outputs.py`
+- `progress.txt`
+- `docs/issues/done/0021-render-video-evidence-reports-from-gemini-evidence-snapshots.md`
+
+Feedback:
+- `python -m pytest tests\test_snapshot_evidence_outputs.py -q` failed before implementation, then passed.
+- `python -m pytest tests\test_reports.py tests\test_evidence_quality.py tests\test_claim_safety.py tests\test_evidence_bundle_reader_writer.py tests\test_snapshot_evidence_outputs.py -q` passed.
+- `python -m pytest -q` passed with 40 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The full run still keeps the legacy nested bundle writer until the later architecture migration issue removes old layout writes.
+
+## 2026-05-07 - 0022 Generate Evidence-Backed Shootable Angles Locally
+
+Task completed from `docs/issues/0022-generate-evidence-backed-shootable-angles-locally.md`.
+
+Key decisions made:
+- Added `batch_analysis.shootable_angles` as a pure domain module with no file writes.
+- Local logic now generates zero, one, or up to three Shootable Angles from candidate metadata, Evidence Bundle snapshot context, Gemini evidence, Evidence Quality, and Claim Safety Review.
+- Gemini evidence is used only as input evidence; any Gemini-provided creative angle field is ignored.
+- Snapshot Video Evidence Reports now render locally generated angles and explicitly show when no evidence-backed angle was generated.
+- Nattome Priority Score remains six dimensions with a 30-point maximum.
+
+Files changed:
+- `batch_analysis/shootable_angles.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/reports.py`
+- `tests/test_shootable_angles.py`
+- `tests/test_snapshot_evidence_outputs.py`
+- `progress.txt`
+- `docs/issues/done/0022-generate-evidence-backed-shootable-angles-locally.md`
+
+Feedback:
+- `python -m pytest tests\test_shootable_angles.py -q` failed before implementation, then passed.
+- `python -m pytest tests\test_snapshot_evidence_outputs.py::SnapshotEvidenceOutputsTest::test_partial_and_missing_gemini_snapshots_record_uncertainty tests\test_shootable_angles.py -q` passed.
+- `python -m pytest tests\test_shootable_angles.py tests\test_snapshot_evidence_outputs.py tests\test_reports.py tests\test_outputs.py -q` passed.
+- `python -m pytest -q` passed with 44 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Batch-level cross-video outputs still use the legacy single-angle path until the next output migration slice.
+
+## 2026-05-07 - 0023 Produce Batch Outputs And Delivery Logs From The Manifest
+
+Task completed from `docs/issues/0023-produce-batch-outputs-and-delivery-logs-from-the-manifest.md`.
+
+Key decisions made:
+- Batch-level selected batch, Cross-Video Pattern Summary, Structured JSON, spreadsheet, and refinement hook outputs now write to flat `reports/` and `data/` paths instead of `batch_outputs/`.
+- Snapshot-generated Shootable Angles are persisted as structured `data/<prefix>_shootable_angles.json` artifacts and registered on each Evidence Bundle snapshot.
+- Cross-Video Pattern Summary consumes persisted Shootable Angle data and leaves the angle list empty when no evidence-backed angles exist, instead of inventing a default angle while rendering.
+- The Run Manifest and batch index now register flat output paths for selected batch, evidence index, cross-video summary, structured outputs, Telegram delivery, cleanup, and refinement hooks.
+- Telegram messages now reference flat report/data output paths, and cleanup preservation checks understand the flat Batch Output Set while retaining compatibility with legacy bundle cleanup.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/telegram.py`
+- `batch_analysis/cleanup.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_outputs.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0023-produce-batch-outputs-and-delivery-logs-from-the-manifest.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_outputs_two_layer.py'` failed before implementation, then passed.
+- `python -m unittest discover -s tests` passed with 45 tests.
+- `python -m pytest -q` passed with 45 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The legacy nested per-video Evidence Bundle writer is still present for compatibility; issue 0024 can migrate the full batch run off that remaining legacy architecture.
+
+## 2026-05-07 - 0024 Migrate Full Batch Analysis Run To The New Architecture
+
+Task completed from `docs/issues/0024-migrate-full-batch-analysis-run-to-the-new-architecture.md`.
+
+Key decisions made:
+- The normal Batch Analysis Run path now uses the two-layer Run Folder layout exclusively for new selected runs.
+- `create_run` writes source snapshots, invokes the Gemini 2.5 Flash Tool Stack Adapter seam, writes Gemini evidence back through the Evidence Bundle snapshot store, and renders downstream report, review, quality, Shootable Angle, summary, structured, spreadsheet, Telegram, cleanup, refinement, manifest, and batch index outputs from the flat snapshot index.
+- The legacy nested `evidence_bundles/` and `batch_outputs/` writer path was removed from the normal workflow; historical runs are not migrated or touched.
+- Missing Gemini credentials and per-video Gemini failures are recorded in snapshot artifacts and surfaced in the Run Manifest while the batch still writes durable downstream outputs with manual-review uncertainty.
+- Obsolete CLI tests for the retired nested layout are explicitly skipped, with replacement regressions covering success, missing Gemini evidence, and partial Gemini failure behavior in the new architecture.
+
+Files changed:
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_full_batch_analysis_two_layer_cli.py`
+- `progress.txt`
+- `docs/issues/done/0024-migrate-full-batch-analysis-run-to-the-new-architecture.md`
+
+Feedback:
+- `python -m pytest tests\test_full_batch_analysis_two_layer_cli.py::FullBatchAnalysisTwoLayerCliTest::test_create_run_uses_two_layer_snapshots_gemini_adapter_and_manifest_outputs -q` failed first, then passed.
+- `python -m pytest tests\test_full_batch_analysis_two_layer_cli.py -q` passed.
+- `python -m pytest -q` passed with 36 tests, 12 skipped retired legacy nested CLI tests, and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The legacy nested writer remains available as a compatibility helper, but it is no longer used by the normal Batch Analysis Run workflow.
+
+## 2026-05-07 - 0025 Build Top 5 Creative Report Tracer
+
+Task completed from `docs/issues/0025-build-top-5-creative-report-tracer.md`.
+
+Key decisions made:
+- Added the first Top 5 Creative Production Report renderer as a Markdown output path, separate from the existing run-folder reports.
+- Completed runs with selected evidence now write `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md` through the CLI default, while direct test calls can pass an isolated output root.
+- The report preserves selected rank order, limits itself to the final top five selected videos, starts with `What We Learned From These 5 Videos`, and renders source references, Inspiration Pattern, Nattome rationale, and compact three-angle concept tables.
+- The tracer intentionally keeps old Cross-Video Pattern Summary and spreadsheet registration untouched because replacement of final output registration is covered by issue 0028.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `scripts/run_batch_analysis.py`
+- `tests/test_top5_creative_report.py`
+- `progress.txt`
+- `docs/issues/done/0025-build-top-5-creative-report-tracer.md`
+
+Feedback:
+- `python -m pytest tests\test_top5_creative_report.py -q` could not run because the available venv does not have `pytest` installed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_creative_report -v` failed before implementation, then passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_outputs tests.test_batch_outputs_two_layer tests.test_full_batch_analysis_two_layer_cli -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 54 tests and 14 skipped legacy nested-layout tests.
+
+Blockers or notes for the next iteration:
+- Continue with issue 0026 to add the Recommended Shoot marker and timed script table.
+- Full pytest remains unavailable in the current shared venv; use unittest here unless pytest is installed.
+
+## 2026-05-07 - 0026 Add Recommended Shoot Timed Scripts
+
+Task completed from `docs/issues/0026-add-recommended-shoot-timed-scripts.md`.
+
+Key decisions made:
+- Added a focused creative script renderer for the Recommended Shoot, keeping timed-script rules out of the top-five report wiring.
+- Each brief now renders exactly one `Recommended Shoot` section after the compact three-angle concept table.
+- The Recommended Shoot includes a one-sentence `Recommended because` reason, a separate Hook line, and a 20-30 second timed script table with `Time`, `Scene`, `On-screen text`, and `Exact line`.
+- CTA and soft-close endings are concept-specific: the renderer uses explicit concept fields when present and falls back to a soft close instead of forcing a hard CTA.
+- Product context is optional and only appears when the selected concept supplies product context or a CTA.
+
+Files changed:
+- `batch_analysis/creative_scripts.py`
+- `batch_analysis/outputs.py`
+- `tests/test_top5_creative_report.py`
+- `progress.txt`
+- `docs/issues/done/0026-add-recommended-shoot-timed-scripts.md`
+
+Feedback:
+- `python -m pytest tests\test_top5_creative_report.py` failed first with missing Recommended Shoot sections, then passed.
+- `python -m pytest` passed with 42 tests and 14 skipped tests.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Continue with issue 0027 to generate the two-sheet Excel planning workbook.
+
+## 2026-05-07 - 0027 Generate Two-Sheet Excel Planning Workbook
+
+Task completed from `docs/issues/0027-generate-two-sheet-excel-planning-workbook.md`.
+
+Key decisions made:
+- Added a narrow `write_top5_angle_planning_workbook` interface that builds the workbook from selected candidates and flat evidence snapshots.
+- Completed runs now write `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx` beside the Top 5 Creative Production Report.
+- The workbook contains exactly two sheets: `Angles` and `Source Videos`.
+- The `Angles` sheet writes one row per shootable Nattome angle, marks the first angle as the Recommended Shoot for each source video, preserves priority score dimensions and evidence quality fields, and excludes timed-script/full-script fields.
+- The workbook writer uses a small stdlib XLSX package writer, avoiding new runtime spreadsheet dependencies.
+
+Files changed:
+- `batch_analysis/planning_workbook.py`
+- `batch_analysis/run.py`
+- `tests/test_top5_angle_planning_workbook.py`
+- `progress.txt`
+- `docs/issues/done/0027-generate-two-sheet-excel-planning-workbook.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_angle_planning_workbook -v` failed first when the writer module was missing, then passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_top5_creative_report tests.test_top5_angle_planning_workbook -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis\planning_workbook.py batch_analysis\run.py tests\test_top5_angle_planning_workbook.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 58 tests and 14 skipped legacy nested-layout tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest tests\test_top5_angle_planning_workbook.py -q` could not run because `pytest` is not installed in the shared venv.
+
+Blockers or notes for the next iteration:
+- Continue with issue 0028 to replace final batch output registration.
+
+## 2026-05-07 - 0028 Replace Final Batch Output Registration
+
+Task completed from `docs/issues/0028-replace-final-batch-output-registration.md`.
+
+Key decisions made:
+- Completed runs now register exactly two marketer-facing final outputs: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook under `outputs/reports/YYYY-MM-DD/`.
+- The run folder still keeps internal structured JSON, including `data/cross_video_pattern_summary.json` and `data/structured_batch_analysis.json`, but new completed runs no longer write `reports/cross_video_pattern_summary.md` or `data/spreadsheet_summary.csv`.
+- The run manifest records `outputs.output_root` and `outputs.final_outputs` so downstream delivery, cleanup, and indexes can use the new final output set.
+- The batch index now has a `Final Outputs` section for the report/workbook and keeps internal structured data separate from marketer-facing deliverables.
+- Telegram delivery can render the registered final outputs, and cleanup can verify durable outputs from the manifest while preserving the old fallback for direct cleanup tests.
+
+Files changed:
+- `batch_analysis/cleanup.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/telegram.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_full_batch_analysis_two_layer_cli.py`
+- `progress.txt`
+- `docs/issues/done/0028-replace-final-batch-output-registration.md`
+
+Feedback:
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m py_compile batch_analysis\outputs.py batch_analysis\run.py batch_analysis\run_manifest.py batch_analysis\telegram.py batch_analysis\cleanup.py tests\test_full_batch_analysis_two_layer_cli.py tests\test_batch_analysis_run.py` passed.
+- Manual completed-run smoke under `.tmp\issue0028_smoke` passed and verified the new final output pair, manifest registration, batch index entries, and absence of old Markdown/CSV outputs.
+- `unittest` with a workspace temp-directory harness passed for `tests.test_full_batch_analysis_two_layer_cli`.
+- `unittest` with the same harness passed for the touched Telegram path plus `tests.test_batch_outputs_two_layer`, `tests.test_outputs`, `tests.test_telegram_delivery`, and `tests.test_cleanup`.
+- `unittest` with the same harness passed for `tests.test_top5_creative_report` and `tests.test_top5_angle_planning_workbook`.
+- `unittest discover` with the same harness passed with 58 tests and 14 skipped legacy nested-layout tests.
+
+Blockers or notes for the next iteration:
+- The current sandbox cannot run the project tests through normal `tempfile.TemporaryDirectory`; the stdlib temp folders are created without usable write access, so verification used a workspace temp-directory harness.
+- The bundled Python runtime does not include `pytest`, and the shared `python.exe`/venv launchers are inaccessible in this sandbox.
+- Per user instruction, stop after this issue because the context window is high; issue 0029 remains next.
+
+## 2026-05-07 - 0029 Update Delivery Cleanup Docs And Skills For New Output Set
+
+Task completed from `docs/issues/0029-update-delivery-cleanup-docs-and-skills-for-new-output-set.md`.
+
+Key decisions made:
+- Telegram delivery now labels the message as `Nattome Batch Analysis Final Outputs` and defaults to the dated Top 5 Creative Production Report plus Excel Planning Workbook paths when an explicit final output list is not supplied.
+- Completed run manifests now use the user-facing `Excel Planning Workbook` label for the workbook final output.
+- Cleanup regression coverage verifies that manifest-registered final report and workbook files are preserved while source video artifacts are removed.
+- README and the Nattome batch analysis skill now describe the weekly final output set as `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md` and `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx`; old Cross-Video Markdown and CSV final-output language was removed from current-facing instructions.
+
+Files changed:
+- `README.md`
+- `batch_analysis/run.py`
+- `batch_analysis/telegram.py`
+- `skills/nattome-batch-analysis/SKILL.md`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_cleanup.py`
+- `tests/test_telegram_delivery.py`
+- `progress.txt`
+- `docs/issues/done/0029-update-delivery-cleanup-docs-and-skills-for-new-output-set.md`
+
+Feedback:
+- `python -m unittest tests.test_telegram_delivery tests.test_cleanup -v` could not run through the Windows Store `python.exe` shim.
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m unittest tests.test_telegram_delivery tests.test_cleanup -v` showed the intended Telegram fallback failure first, then exposed the existing sandbox `tempfile.TemporaryDirectory` ACL problem.
+- Workspace temp-directory harness for `tests.test_telegram_delivery` failed first on the stale `Weekly Evidence Brief` heading, then passed after the Telegram title update.
+- Workspace temp-directory harness for `tests.test_telegram_delivery` and `tests.test_cleanup` passed.
+- Workspace temp-directory harness for the CLI Telegram regression, full two-layer CLI tests, Top 5 report tests, and workbook tests passed after correcting one local test selector typo.
+- Workspace temp-directory harness for `unittest discover -s tests` passed with 60 tests and 14 skipped legacy nested-layout tests.
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m py_compile batch_analysis\telegram.py batch_analysis\run.py tests\test_telegram_delivery.py tests\test_cleanup.py tests\test_batch_analysis_run.py` passed.
+
+Blockers or notes for the next iteration:
+- No `0030` issue file exists under `docs/issues`; after moving `0029`, there are no active AFK issue files left in `docs/issues`.
+- The sandbox still cannot use normal `tempfile.TemporaryDirectory`; continue using a workspace temp-directory harness for full unittest verification.
+
+## 2026-05-07 - 0030 Remove Cross-Video Markdown Report Output
+
+Task completed from `docs/issues/0030-remove-cross-video-markdown-report-output.md`.
+
+Key decisions made:
+- Removed the retired Cross-Video Pattern Summary Markdown rendering branch from `write_cross_video_pattern_summary`; the writer now only persists the internal JSON summary.
+- Removed the `write_markdown` interface option and updated the batch runner to call the writer without the obsolete flag.
+- Reworked regressions around `cross_video_pattern_summary.json`, including top priority Shootable Angles, pattern comparison data, recommendation data, and explicit absence of `reports/cross_video_pattern_summary.md`.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `tests/test_outputs.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0030-remove-cross-video-markdown-report-output.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_outputs.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` passed.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` passed with 20 tests and 14 skipped.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed.
+- `python -m unittest discover -s tests -p "test_telegram_delivery.py"` passed.
+- `python -m unittest discover -s tests` passed with 61 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0031-remove-csv-spreadsheet-summary-output.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0031 Remove CSV Spreadsheet Summary Output
+
+Task completed from `docs/issues/0031-remove-csv-spreadsheet-summary-output.md`.
+
+Key decisions made:
+- Removed the retired `spreadsheet_summary.csv` writer branch from `write_structured_json_and_spreadsheet_summary`.
+- Removed the `write_spreadsheet` option and the batch runner's obsolete `write_spreadsheet=False` call.
+- Kept structured JSON as the internal machine-readable output and the dated Excel planning workbook as the spreadsheet deliverable.
+- Reworked direct and CLI regressions to assert `data/spreadsheet_summary.csv` is absent while structured JSON still carries video, Shootable Angle, and priority score data.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0031-remove-csv-spreadsheet-summary-output.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` first failed on the old writer option and CSV file, then passed after the implementation change.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m unittest discover -s tests -p "test_top5_angle_planning_workbook.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` passed with 20 tests and 14 skipped.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed.
+- `python -m unittest discover -s tests -p "test_telegram_delivery.py"` passed.
+- `python -m py_compile batch_analysis\outputs.py batch_analysis\run.py tests\test_batch_outputs_two_layer.py tests\test_batch_analysis_run.py` passed.
+- `python -m unittest discover -s tests` passed with 62 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0032-remove-obsolete-spreadsheet-summary-status-surface.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0032 Remove Obsolete Spreadsheet Summary Status Surface
+
+Task completed from `docs/issues/0032-remove-obsolete-spreadsheet-summary-status-surface.md`.
+
+Key decisions made:
+- Removed `has_spreadsheet_summary` from `build_metadata`.
+- Removed `implementation_status.spreadsheet_summary` from `run_metadata.json` output.
+- Kept `implementation_status.structured_json_output` as the internal structured data status.
+- Renamed the structured writer from `write_structured_json_and_spreadsheet_summary` to `write_structured_json_output` so `batch_analysis` no longer carries stale spreadsheet-summary naming.
+- Removed the CSV fallback item from cleanup's durable-output check; the remaining cross-video fallback is scoped to issue 0033.
+
+Files changed:
+- `batch_analysis/run.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/cleanup.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `progress.txt`
+- `docs/issues/done/0032-remove-obsolete-spreadsheet-summary-status-surface.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` first failed on the old metadata signature and status key, then passed after removing them.
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` passed after the structured writer rename.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed after removing the CSV fallback item.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m py_compile batch_analysis\run.py batch_analysis\outputs.py batch_analysis\cleanup.py tests\test_batch_analysis_run.py tests\test_batch_outputs_two_layer.py` passed.
+- `python -m unittest discover -s tests` passed with 63 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0033-remove-cleanup-fallbacks-for-retired-outputs.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0033 Remove Cleanup Fallbacks For Retired Outputs
+
+Task completed from `docs/issues/0033-remove-cleanup-fallbacks-for-retired-outputs.md`.
+
+Key decisions made:
+- Made cleanup preservation depend only on `run_manifest.json` entries under `outputs.output_root` and `outputs.final_outputs`.
+- Removed the legacy fallback that treated run-folder Cross-Video Markdown plus structured data as durable output proof.
+- Kept final output path checks bounded under the configured output root.
+- Reworked cleanup regression coverage so retired Cross-Video Markdown and CSV files no longer count as preserved durable outputs.
+
+Files changed:
+- `batch_analysis/cleanup.py`
+- `tests/test_cleanup.py`
+- `progress.txt`
+- `docs/issues/done/0033-remove-cleanup-fallbacks-for-retired-outputs.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cleanup.EvidenceArtifactCleanupTest.test_cleanup_does_not_preserve_artifacts_for_retired_output_files -v` failed first on the old fallback, then passed after removing it.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cleanup -v` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 63 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0034-delete-skipped-legacy-nested-pipeline-tests.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0034 Delete Skipped Legacy Nested Pipeline Tests
+
+Task completed from `docs/issues/0034-delete-skipped-legacy-nested-pipeline-tests.md`.
+
+Key decisions made:
+- Deleted the `legacy_nested_cli_test` skip decorator instead of re-enabling retired tests.
+- Deleted the skipped legacy nested evidence-bundle CLI tests from `tests/test_batch_analysis_run.py`.
+- Removed local fake FFmpeg/OCR/transcription helper methods that only supported the retired tests.
+- Kept current two-layer Gemini coverage in `tests/test_full_batch_analysis_two_layer_cli.py` as the active regression surface.
+
+Files changed:
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0034-delete-skipped-legacy-nested-pipeline-tests.md`
+
+Feedback:
+- Static search found the legacy skip decorator and removed CLI flags before deletion.
+- Static search after deletion found no `legacy_nested_cli_test`, no legacy skip reason, and no active test usage of `--ffmpeg-bin`, `--ocr-primary-bin`, `--ocr-fallback-bin`, or `--transcription-bin`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_batch_analysis_run -v` passed with 7 tests and 0 skipped.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 49 tests and 0 skipped.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest -q` could not run because `pytest` is not installed in the shared venv.
+
+Blockers or notes for the next iteration:
+- Issue `0035-remove-user-facing-daily-brief-final-output-references.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0035 Remove User-Facing Daily Brief Final Output References
+
+Task completed from `docs/issues/0035-remove-user-facing-daily-brief-final-output-references.md`.
+
+Key decisions made:
+- Reframed `nattome-daily-discovery` outputs as discovery and ideation handoffs rather than final production deliverables.
+- Kept the weekly `nattome-batch-analysis` workflow as the source of final production deliverables: the Top 5 Creative Production Report and Excel planning workbook.
+- Updated the daily discovery eval to expect a handoff markdown file and to assert that it is not framed as the final production report.
+- Made no behavior-code changes.
+
+Files changed:
+- `README.md`
+- `skills/nattome-daily-discovery/SKILL.md`
+- `skills/nattome-daily-discovery/evals/evals.json`
+- `progress.txt`
+- `docs/issues/done/0035-remove-user-facing-daily-brief-final-output-references.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m json.tool skills\nattome-daily-discovery\evals\evals.json` passed.
+- `git grep` found no current README or skill workflow wording that frames `daily_brief_YYYY-MM-DD.md` as the final production report; the only matching final-output wording is historical completed-issue text.
+- `git grep` confirmed `skills/nattome-batch-analysis/SKILL.md` still points to `top5_creative_production_report_YYYY-MM-DD.md` and `top5_angle_planning_sheet_YYYY-MM-DD.xlsx`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 49 tests and 0 skipped.
+
+Blockers or notes for the next iteration:
+- No more active issue files remain in `docs/issues/` after this slice.
+
+## 2026-05-07 - 0037 Bootstrap Local Dashboard Shell
+
+Task completed from `docs/issues/0037-bootstrap-local-dashboard-shell.md`.
+
+Key decisions made:
+- Built the dashboard foundation as a Python standard-library local web app so it can run in the current repo without adding dependency management.
+- Added a dashboard-owned SQLite store at `data/dashboard/dashboard.sqlite3`.
+- Initialized mutable dashboard-owned tables with the shared attribution convention: `created_by`, `updated_by`, `created_at`, and `updated_at`.
+- Kept the first Overview route independent of Apify, Gemini, raw scrapes, and Batch Analysis Run artifacts.
+- Wired placeholder navigation for Overview, Scraped Content, Run History, Scrape Settings, Recommendations, Pattern Library, Nattome POV Library, and Pipeline Architecture.
+
+Files changed:
+- `dashboard/__init__.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_shell.py`
+- `README.md`
+- `.gitignore`
+- `progress.txt`
+- `docs/issues/done/0037-bootstrap-local-dashboard-shell.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` failed first with `ModuleNotFoundError: No module named 'dashboard'`, then passed after adding the dashboard package.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` briefly failed on Windows temp SQLite cleanup because `sqlite3.Connection` context managers do not close connections; explicit close handling fixed it.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 52 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0038-index-pipeline-artifacts-into-sqlite.md` is next, but per user instruction only continue after the current issue passes. This slice is complete and green.
+
+## 2026-05-07 - 0038 Index Pipeline Artifacts Into SQLite
+
+Task completed from `docs/issues/0038-index-pipeline-artifacts-into-sqlite.md`.
+
+Key decisions made:
+- Added `dashboard.indexer.index_pipeline_artifacts(workspace)` as the public reindexing interface.
+- Added artifact-derived SQLite tables for raw videos, raw scrape sources, selected batches, Batch Analysis Runs, run outputs, and documentation records.
+- Kept artifact-derived reindex deletion scoped to derived tables so dashboard-owned curation, config versions, recommendations, approved patterns, and Nattome POV edits are preserved.
+- Normalized raw scraped videos as the primary content records and represented selected/analyzed state as `selection_status` on `raw_videos`.
+- Treated repeated TikTok IDs across raw scrape files as upserts into one dashboard record.
+- Indexed README, CONTEXT, PRDs, ADRs, and local skill docs as read-only documentation records.
+
+Files changed:
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_dashboard_artifact_indexer.py`
+- `README.md`
+- `progress.txt`
+- `docs/issues/done/0038-index-pipeline-artifacts-into-sqlite.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer` failed first with `ModuleNotFoundError: No module named 'dashboard.indexer'`, then passed after adding the indexer.
+- `C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"` initially failed on duplicate raw video IDs across scrape files, then passed after adding raw video upsert behavior.
+- Real-workspace index smoke result: `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 53 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0039-compute-scrape-quality-score.md` is next.
+
+## 2026-05-07 - 0039 Compute Scrape Quality Score
+
+Task completed from `docs/issues/0039-compute-scrape-quality-score.md`.
+
+Key decisions made:
+- Added `dashboard.quality.compute_scrape_quality_scores(workspace)` as the public scrape-only scoring interface for indexed Batch Analysis Runs.
+- Persisted score results in `scrape_quality_scores` with the requested component breakdown, quality drivers, score band, and `needs_attention` flag.
+- Used the PRD weighting: 25 candidate volume, 20 eligibility yield, 20 Nattome relevance, 15 freshness, 15 engagement strength, and 5 duplicate/noise control.
+- Kept claim safety, manual review burden, evidence extraction, output generation, and other downstream Pipeline Health signals out of the score.
+- Treated scores below 60 as an attention condition only; scoring does not mutate scrape settings or scheduled run behavior.
+
+Files changed:
+- `dashboard/quality.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_scrape_quality_score.py`
+- `progress.txt`
+- `docs/issues/done/0039-compute-scrape-quality-score.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_scrape_quality_score` passed with 4 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 57 tests.
+- Real-workspace smoke passed: artifact index summary was `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)` and both indexed runs scored `78` as `usable scrape`.
+
+Blockers or notes for the next iteration:
+- Issue `0040-summarize-pipeline-health.md` is next.
+
+## 2026-05-07 - 0040 Summarize Pipeline Health
+
+Task completed from `docs/issues/0040-summarize-pipeline-health.md`.
+
+Key decisions made:
+- Added `dashboard.health.compute_pipeline_health(workspace)` as the public operational-health summarizer for indexed Batch Analysis Runs.
+- Kept Pipeline Health separate from Scrape Quality by reading indexed artifacts, phase state, logs, and bundle files without feeding those signals into score components.
+- Represented health with severity levels `info`, `warning`, `error`, and `blocked`, plus marketer-first impact summaries and per-component technical drill-down.
+- Persisted summaries in `pipeline_health_summaries` so dashboard views can read a compact current snapshot.
+- Covered Apify scrape state, raw candidates, selected batches, source videos, Gemini evidence, report generation, spreadsheet output, Telegram delivery, and extra failed or blocked phases.
+
+Files changed:
+- `dashboard/health.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_pipeline_health.py`
+- `progress.txt`
+- `docs/issues/done/0040-summarize-pipeline-health.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_pipeline_health` first failed with `ModuleNotFoundError: No module named 'dashboard.health'`, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer tests.test_scrape_quality_score tests.test_pipeline_health` passed with 10 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 62 tests.
+- Real-workspace smoke passed: artifact index summary was `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)` and health summaries were `20260507T074346Z_default` as `blocked/blocked` and `20260507T074557Z_default` as `partial/warning`.
+
+Blockers or notes for the next iteration:
+- Issue `0041-build-latest-run-overview.md` is next.
+
+## 2026-05-07 - 0041 Build Latest Run Overview
+
+Task completed from `docs/issues/0041-build-latest-run-overview.md`.
+
+Key decisions made:
+- Wired the Overview route to rebuild the dashboard artifact index, compute Scrape Quality Scores, compute Pipeline Health, and render the latest indexed Batch Analysis Run from SQLite.
+- Kept Scrape Quality and Pipeline Health visually and conceptually separate on the marketer-facing screen.
+- Added primary action links for running scrapes and pipelines, editing scrape settings, viewing run history, and browsing scraped content.
+- Rendered current config version, next scheduled run information, top quality drivers, health drilldown, and top raw scraped videos with TikTok outbound links.
+- Preserved understandable empty-state copy when no runs or raw scrape artifacts exist.
+
+Files changed:
+- `dashboard/web.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0041-build-latest-run-overview.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` first failed with the expected static Overview output, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 64 tests.
+- Real-workspace smoke passed: `render_page("/", Path("."))` included Latest Run Overview, Scrape Quality Score, and Pipeline Health.
+
+Blockers or notes for the next iteration:
+- Issue `0042-browse-and-curate-raw-scraped-videos.md` is next.
+
+## 2026-05-07 - 0042 Browse And Curate Raw Scraped Videos
+
+Task completed from `docs/issues/0042-browse-and-curate-raw-scraped-videos.md`.
+
+Key decisions made:
+- Built `/scraped-content` around indexed `raw_videos` so marketers can browse raw, eligible, selected, and analyzed TikTok records without local video playback.
+- Added raw-video status derivation for scrape records that already carry eligible/selection metadata, while preserving selected and analyzed status from the artifact indexer.
+- Rendered author, caption, hashtags, source input, TikTok link, engagement, relevance, downloadability, run ID, config version, created date, freshness, and status.
+- Added form-based curation keyed by TikTok video ID with supported labels, short notes, and an Exclude Similar reason.
+- Added a small dashboard-store migration for `exclude_similar_reason` so existing local SQLite stores can keep working.
+
+Files changed:
+- `dashboard/web.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0042-browse-and-curate-raw-scraped-videos.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` first failed with the expected placeholder route and unimplemented POST response, then passed with 7 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 66 tests.
+- Real-workspace smoke passed: `render_page("/scraped-content", Path("."))` included Raw Scraped Videos and outbound TikTok links, and did not render a local `<video>` element.
+
+Blockers or notes for the next iteration:
+- Issue `0043-manage-scrape-settings-with-version-history.md` is next.
+
+## 2026-05-07 - 0043 Manage Scrape Settings With Version History
+
+Task completed from `docs/issues/0043-manage-scrape-settings-with-version-history.md`.
+
+Key decisions made:
+- Added `dashboard.settings` as the public scrape settings validation and config versioning module.
+- Normalized marketer-editable hashtags, keywords, competitor profiles, scope, volume settings, Minimum Eligibility Filter thresholds, downloadable-video requirement, and exclusion terms.
+- Kept API keys, Apify actor ID, Gemini model, output paths, cleanup deletion behavior, report schema, and scoring internals read-only in the dashboard MVP.
+- Required a save reason for production settings changes and recorded old settings, new settings, reason, user, timestamp, active version state, and rollback source.
+- Made rollback create a new active version instead of deleting or mutating existing history.
+- Wrote the active production scrape snapshot to dashboard state and `skills/nattome-daily-discovery/config.json` so the next scraper run can pick up marketer-edited settings.
+- Updated the daily scraper to honor config-backed defaults for scope, results per input, top N, daily selection size, and downloadable-video requirement.
+- Added candidate exclusion-term filtering through the existing Minimum Eligibility path.
+- Built the `/scrape-settings` dashboard route with validated forms, version history, read-only MVP settings, required save reason handling, and rollback controls.
+
+Files changed:
+- `dashboard/settings.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `skills/nattome-daily-discovery/scripts/scrape_tiktok.py`
+- `batch_analysis/candidates.py`
+- `tests/test_scrape_settings.py`
+- `tests/test_dashboard_shell.py`
+- `tests/test_daily_discovery_handoff.py`
+- `tests/test_candidate_selection.py`
+- `progress.txt`
+- `docs/issues/done/0043-manage-scrape-settings-with-version-history.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_scrape_settings` first failed with `ModuleNotFoundError: No module named 'dashboard.settings'`, then passed with 4 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell.DashboardWebShellTest.test_scrape_settings_route_saves_versions_and_rolls_back` first failed on the placeholder Scrape Settings route, then passed after the route and POST handlers were implemented.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_discovery_handoff` first failed because the scraper had no config-default resolver, then passed after adding `effective_scrape_options`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_candidate_selection.CandidateSelectionTest.test_exclusion_terms_filter_caption_hashtags_and_source_input` first failed because exclusion terms were not applied, then passed after adding the filter.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_scrape_settings tests.test_daily_discovery_handoff tests.test_candidate_selection` passed with 19 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 73 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0044-trigger-manual-runs-from-dashboard.md` is next, but per instruction this loop stops after the current completed issue instead of continuing further in this context.
+
+## 2026-05-07 - 0044 Trigger Manual Runs From Dashboard
+
+Task completed from `docs/issues/0044-trigger-manual-runs-from-dashboard.md`.
+
+Key decisions made:
+- Added `dashboard.manual_runs` as the public manual-run orchestration module with scrape-only and full-pipeline run types.
+- Manual runs use the active production scrape config, record `source_type=manual`, config version, triggered user, timestamp, command provenance, status, errors, and expected output paths.
+- Scrape-only runs launch the daily discovery scraper with top-30 raw scrape and top-5 handoff outputs.
+- Full-pipeline runs launch discovery first, then `scripts/run_batch_analysis.py --mode daily` against the generated top-5 handoff so selection, evidence analysis, reports, workbook generation, and delivery behavior stay on the existing pipeline path.
+- Output paths are timestamped and advanced by one second when an expected artifact path already exists, preventing manual runs from overwriting prior scheduled or manual artifacts.
+- Successful manual runs call the existing artifact indexer automatically so completed outputs are reflected in dashboard-derived records.
+- Replaced the Run History placeholder with manual run controls, estimated runtimes, expected outputs, and visible final status/history.
+
+Files changed:
+- `dashboard/manual_runs.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_manual_runs.py`
+- `progress.txt`
+- `docs/issues/done/0044-trigger-manual-runs-from-dashboard.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_manual_runs` first failed with `ModuleNotFoundError: No module named 'dashboard.manual_runs'`, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_scrape_settings` passed with 12 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 78 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue instead of continuing to issue `0045` in this context.
+
+## 2026-05-07 - 0045 Run History Trend Monitoring
+
+Task completed from `docs/issues/0045-run-history-trend-monitoring.md`.
+
+Key decisions made:
+- Added `dashboard.run_history` as the public read model for Run History rows, trend points, config overlays, and run drill-down detail.
+- Unified scheduled Batch Analysis Runs and manual dashboard runs into one Run History table while preserving manual run provenance, source type, triggered user, status, and output paths.
+- Scheduled run rows now expose config version, Scrape Quality Score, raw candidates, eligible candidates, selected count, average Nattome relevance, average engagement, freshness score, duplicate/noise score, Pipeline Health, top issue, and linked output artifacts.
+- Trend monitoring data is derived from scheduled runs in chronological order, with config overlays marking the first indexed run for each config version.
+- Run drill-down detail links raw content, selected content, quality drivers, pipeline phases, logs, Markdown reports, Excel workbooks, and other existing artifacts rather than replacing them.
+- Empty and partial-history states explain what data is missing before scheduled or manual runs have been indexed.
+
+Files changed:
+- `dashboard/run_history.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_run_history.py`
+- `progress.txt`
+- `docs/issues/done/0045-run-history-trend-monitoring.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_dashboard_run_history.py'` first failed with `ModuleNotFoundError: No module named 'dashboard.run_history'`, then passed with 2 tests after implementation.
+- `python -m unittest discover -s tests -p 'test_dashboard*.py'` first failed because the unified row did not render existing manual-run provenance text, then passed with 16 tests after restoring source and triggered-by details.
+- `python -m unittest discover -s tests` passed with 80 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the context window is past the requested threshold. The next available issue is `0046-generate-passive-scrape-recommendations.md`.
+
+## 2026-05-07 - 0046 Generate Passive Scrape Recommendations
+
+Task completed from `docs/issues/0046-generate-passive-scrape-recommendations.md`.
+
+Key decisions made:
+- Added `dashboard.recommendations` as the public advisory recommendation module.
+- Recommendations are generated from low Scrape Quality drivers for weak source input performance, low eligibility yield, stale videos, low relevance, low engagement, and duplicate/noise control.
+- Supporting evidence records link back to runs, videos, source inputs, curation labels/notes, and config versions where available.
+- Recommendation lifecycle states are restricted to `needs_more_data`, `accepted`, `ignored`, and `resolved`.
+- Lifecycle updates only mutate recommendation rows; they do not change scrape settings or recompute/mutate score rows.
+- Active config changes resolve stale recommendations whose evidence points at an older config version.
+- The dashboard `/recommendations` route now renders passive recommendations and supports lifecycle state updates through `/recommendations/status`.
+
+Files changed:
+- `dashboard/recommendations.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_recommendations.py`
+- `progress.txt`
+- `docs/issues/done/0046-generate-passive-scrape-recommendations.md`
+
+Feedback:
+- `python -m pytest tests/test_dashboard_recommendations.py -q` first failed with `ModuleNotFoundError: No module named 'dashboard.recommendations'`, then passed with 5 tests after implementation and web wiring.
+- `python -m pytest tests/test_dashboard_shell.py tests/test_scrape_quality_score.py tests/test_scrape_settings.py tests/test_dashboard_recommendations.py -q` passed with 21 tests and 6 subtests.
+- `python -m pytest -q` passed with 85 tests and 7 subtests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue. The next available issue is `0047-build-candidate-and-approved-pattern-library.md`.
+
+## 2026-05-07 - 0047 Build Candidate And Approved Pattern Library
+
+Task completed from `docs/issues/0047-build-candidate-and-approved-pattern-library.md`.
+
+Key decisions made:
+- Added `dashboard.pattern_library` as the public Pattern Library workflow module.
+- Candidate Patterns are generated deterministically from indexed eligible, selected, and analyzed videos with linked TikTok source URLs, source runs, inferred external mechanics, and performance evidence.
+- Candidate Patterns remain separate from Approved Patterns; approving a candidate creates a canonical Approved Pattern row without mutating the candidate.
+- Approved Patterns support draft, approved, and archived statuses plus the requested canonical fields: pattern name, hook type, format type, emotional trigger, source videos, why it works, Nattome adaptation notes, shoot difficulty, freshness, performance evidence, approval metadata, related POVs, avoid notes, and targeting.
+- Approved Pattern creates, edits, approvals, and archives preserve append-only version history with attribution and timestamps.
+- The `/pattern-library` dashboard route now renders Candidate Patterns, Approved Patterns, source links, version history, and forms for approve, create, edit, and archive actions.
+
+Files changed:
+- `dashboard/pattern_library.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_pattern_library.py`
+- `progress.txt`
+- `docs/issues/done/0047-build-candidate-and-approved-pattern-library.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_pattern_library` first failed with `ModuleNotFoundError: No module named 'dashboard.pattern_library'`, then passed with 2 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_dashboard*.py'` first failed because the append-only version history table was listed as a mutable table without standard attribution columns, then passed with 23 tests after keeping that audit table out of `MUTABLE_TABLES`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 87 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0048-build-nattome-pov-library.md`.
+
+## 2026-05-07 - 0048 Build Nattome POV Library
+
+Task completed from `docs/issues/0048-build-nattome-pov-library.md`.
+
+Key decisions made:
+- Added `dashboard.nattome_pov_library` as the public workflow module for Nattome-owned interpretations.
+- Nattome POV entries are separate from external Pattern Library mechanics and store brand-safe interpretation, adaptation rules, product, campaign, market, language, audience/avatar, symptom/occasion, channel, status, source links, and linked approved pattern IDs.
+- Defaults assume Nattome, Malaysia, mixed/English language, and TikTok when marketers leave those fields blank.
+- POV creates, edits, approvals via status changes, and archives preserve append-only version history with attribution and timestamps.
+- The `/nattome-pov-library` dashboard route now renders POV entries, approved pattern link context, source links, version history, and forms for create, edit, and archive actions.
+
+Files changed:
+- `dashboard/nattome_pov_library.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_nattome_pov_library.py`
+- `progress.txt`
+- `docs/issues/done/0048-build-nattome-pov-library.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_nattome_pov_library` first failed with `ModuleNotFoundError: No module named 'dashboard.nattome_pov_library'`, then passed with 2 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_pattern_library` passed with 2 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` passed with 8 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 89 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0049-build-pipeline-architecture-browser.md`.
+
+## 2026-05-07 - 0049 Build Pipeline Architecture Browser
+
+Task completed from `docs/issues/0049-build-pipeline-architecture-browser.md`.
+
+Key decisions made:
+- Added `dashboard.architecture` as a read-only view-model module for the Pipeline Architecture dashboard section.
+- The architecture view model reuses the existing artifact/documentation index instead of creating a separate docs scanner.
+- Pipeline Architecture exposes README, CONTEXT, PRDs, ADRs, skill docs, the high-level scrape-to-report flow, tool decisions, latest run phase statuses, file/output groups, and data lineage.
+- Tool decisions explicitly call out Apify discovery/download, Gemini evidence-first analysis, the local SQLite dashboard index, and durable markdown/JSON/XLSX/log outputs.
+- The `/pipeline-architecture` route renders read-only architecture content without POST forms or mutation actions.
+
+Files changed:
+- `dashboard/architecture.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_pipeline_architecture.py`
+- `progress.txt`
+- `docs/issues/done/0049-build-pipeline-architecture-browser.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_pipeline_architecture` first failed with `ModuleNotFoundError: No module named 'dashboard.architecture'`, then passed with 1 test after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer tests.test_dashboard_shell tests.test_dashboard_run_history tests.test_pipeline_health tests.test_dashboard_pipeline_architecture` passed with 17 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 90 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue because the current context is past the requested threshold. The next available issue is `0050-add-global-search-and-facets.md`.
+
+## 2026-05-07 - 0050 Add Global Search And Facets
+
+Task completed from `docs/issues/0050-add-global-search-and-facets.md`.
+
+Key decisions made:
+- Added `dashboard.search` as the public search service for indexed dashboard artifacts plus dashboard-owned mutable state.
+- Search records are typed as raw videos, runs, curation labels/notes, Candidate Patterns, Approved Patterns, Nattome POVs, reports, architecture docs, and pipeline phases.
+- Facets are derived from available record context instead of adding a new index table: run date, run type, config version, source input, video status, label, score band, relevance band, engagement band, freshness, author, hashtag/topic, pattern, POV, market, campaign, product, pipeline phase, and pipeline phase status.
+- Keyword search and facets compose through the same service, and the `/search` route renders the form, selected facets, typed results, links, and an empty-results message.
+
+Files changed:
+- `dashboard/search.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_global_search.py`
+- `progress.txt`
+- `docs/issues/done/0050-add-global-search-and-facets.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_global_search` first failed with `ModuleNotFoundError: No module named 'dashboard.search'`, then passed with 4 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 94 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue. The next available issue is `0051-add-mvp-dashboard-exports.md`.
+
+## 2026-05-07 - 0051 Add MVP Dashboard Exports
+
+Task completed from `docs/issues/0051-add-mvp-dashboard-exports.md`.
+
+Key decisions made:
+- Added `dashboard.exports` as the public export service for marketer-facing CSV and Markdown artifacts.
+- Raw video CSV exports support query-style filters, including selection status, label, free-text `q`, and exact metadata fields, while preserving source links, run/config context, curation labels, notes, status, counts, and source artifact paths.
+- Run summary CSV exports reuse the run history model so existing Markdown reports and Excel workbooks remain linked as source deliverables instead of being replaced.
+- Approved Pattern Markdown exports include only `approved` records; Nattome POV Markdown exports include non-archived POVs with status, version, campaign/product/market metadata, source links, and linked approved pattern IDs.
+- Dashboard routes now expose `/exports/raw-videos.csv`, `/exports/run-summaries.csv`, `/exports/approved-patterns.md`, and `/exports/nattome-povs.md`, with action links from the relevant dashboard sections.
+
+Files changed:
+- `dashboard/exports.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_exports.py`
+- `progress.txt`
+- `docs/issues/done/0051-add-mvp-dashboard-exports.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_exports` first failed with `ModuleNotFoundError: No module named 'dashboard.exports'`, then passed with 5 tests after implementation and route wiring.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 99 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue.
+
+## 2026-05-07 - 0053 Characterize Dashboard Architecture Behavior
+
+Task completed from `docs/issues/0053-characterize-dashboard-architecture-behavior.md`.
+
+Key decisions made:
+- Added characterization coverage only; no production dashboard code was refactored.
+- Locked the public `dashboard.web` export surface so later architecture changes can keep existing imports usable.
+- Characterized visible topbar output for the Nattome brand, Scrape Quality label, Pipeline ready status, dashboard database path, and shell ordering.
+- Characterized route-level store initialization through public HTTP requests instead of depending on private store implementation details.
+- Characterized lightweight route behavior for `/healthz` and unknown dashboard routes so they do not create dashboard SQLite state.
+
+Files changed:
+- `tests/test_dashboard_architecture_characterization.py`
+- `progress.txt`
+- `docs/issues/done/0053-characterize-dashboard-architecture-behavior.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_dashboard_global_search tests.test_dashboard_run_history tests.test_dashboard_manual_runs tests.test_dashboard_recommendations tests.test_dashboard_exports tests.test_dashboard_pattern_library tests.test_dashboard_nattome_pov_library tests.test_dashboard_pipeline_architecture tests.test_pipeline_health` passed with 42 tests before adding characterization coverage.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_architecture_characterization` passed with 5 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_architecture_characterization tests.test_dashboard_shell tests.test_dashboard_global_search tests.test_dashboard_run_history tests.test_dashboard_manual_runs tests.test_dashboard_recommendations tests.test_dashboard_exports tests.test_dashboard_pattern_library tests.test_dashboard_nattome_pov_library tests.test_dashboard_pipeline_architecture tests.test_pipeline_health` passed with 47 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 107 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+
+## 2026-05-07 - 0059 Simplify Dashboard Web Request Adapter
+
+Task completed from `docs/issues/0059-simplify-dashboard-web-request-adapter.md`.
+
+Key decisions made:
+- Replaced repeated dashboard GET export branching with `GET_EXPORT_ROUTES` dispatch entries that preserve export content types, filenames, and response bodies.
+- Replaced repeated POST form action branching with `POST_FORM_ACTIONS` dispatch plus a per-handler manual-run action closure for dependency injection.
+- Added shared request helpers for path/query parsing, body/form parsing, export sending, validation error handling, and redirects.
+- Kept the existing lightweight `http.server` dashboard and did not introduce any web framework.
+
+Files changed:
+- `dashboard/web_server.py`
+- `tests/test_dashboard_architecture_characterization.py`
+- `tests/test_dashboard_exports.py`
+- `progress.txt`
+- `docs/issues/done/0059-simplify-dashboard-web-request-adapter.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py` failed because `create_handler` still used repeated route branches instead of dispatch tables.
+- GREEN: `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py` passed with 12 tests.
+- `python -m pytest tests -k dashboard` passed with 54 selected tests and 63 deselected tests.
+- `python -m pytest` passed with 117 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0059 rather than starting issue 0060.
+- Continue with `docs/issues/0054-localize-store-access-for-small-dashboard-callers.md` next.
+
+## 2026-05-07 - 0054 Localize Store Access For Small Dashboard Callers
+
+Task completed from `docs/issues/0054-localize-store-access-for-small-dashboard-callers.md`.
+
+Key decisions made:
+- Added `connect_dashboard_store` to initialize dashboard SQLite state and return row-style access by default.
+- Added shared `load_json` and `dump_json` helpers with caller-provided fallbacks and deterministic ASCII, sorted-key output.
+- Migrated smaller dashboard callers through the store helpers: curation actions, scrape settings, manual runs, overview loading, and scraped-content loading.
+- Kept feature SQL in the owning feature modules and kept explicit commit/close behavior.
+- Did not add a connection context manager, table repository layer, or storage adapter abstraction.
+- Replaced the topbar SQLite path with operational status: `Pipeline ready` and `Local workspace`.
+
+Files changed:
+- `dashboard/store.py`
+- `dashboard/web_actions.py`
+- `dashboard/settings.py`
+- `dashboard/manual_runs.py`
+- `dashboard/web_overview.py`
+- `dashboard/web_scraped_content.py`
+- `dashboard/web_components.py`
+- `tests/test_dashboard_shell.py`
+- `tests/test_dashboard_architecture_characterization.py`
+- `progress.txt`
+- `docs/issues/done/0054-localize-store-access-for-small-dashboard-callers.md`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_dashboard_architecture_characterization` failed because `connect_dashboard_store` was missing and the topbar still showed the SQLite path.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_dashboard_architecture_characterization` passed with 19 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_architecture_characterization tests.test_dashboard_shell tests.test_dashboard_manual_runs tests.test_dashboard_global_search tests.test_dashboard_run_history tests.test_dashboard_recommendations tests.test_dashboard_exports tests.test_dashboard_pattern_library tests.test_dashboard_nattome_pov_library tests.test_dashboard_pipeline_architecture tests.test_pipeline_health` passed with 50 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 110 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Continue with `docs/issues/0055-localize-store-access-for-heavy-dashboard-callers.md` next if context allows.
+
+## 2026-05-07 - 0055 Localize Store Access For Heavy Dashboard Callers
+
+Task completed from `docs/issues/0055-localize-store-access-for-heavy-dashboard-callers.md`.
+
+Key decisions made:
+- Migrated heavier dashboard callers to `connect_dashboard_store` for store initialization and row-style SQLite access.
+- Kept feature-specific SQL in the owning feature modules and preserved explicit close/commit behavior.
+- Centralized deterministic JSON dumps through `store.dump_json` where the existing behavior matched exactly.
+- Left local JSON load helpers in place where fallback behavior or accepted input types differ by feature.
+- Did not introduce a table repository layer, storage adapter abstraction, or connection context manager.
+
+Files changed:
+- `dashboard/architecture.py`
+- `dashboard/exports.py`
+- `dashboard/health.py`
+- `dashboard/indexer.py`
+- `dashboard/nattome_pov_library.py`
+- `dashboard/pattern_library.py`
+- `dashboard/quality.py`
+- `dashboard/recommendations.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `tests/test_dashboard_architecture_characterization.py`
+- `progress.txt`
+- `docs/issues/done/0055-localize-store-access-for-heavy-dashboard-callers.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_architecture_characterization.py::DashboardArchitectureCharacterizationTest::test_heavy_dashboard_modules_use_store_connection_helper -q` failed across the targeted heavy modules because they still called `initialize_dashboard_store` and `sqlite3.connect` directly.
+- GREEN: `python -m pytest tests/test_dashboard_architecture_characterization.py::DashboardArchitectureCharacterizationTest::test_heavy_dashboard_modules_use_store_connection_helper -q` passed with 1 test and 10 subtests.
+- `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py tests/test_dashboard_global_search.py tests/test_dashboard_nattome_pov_library.py tests/test_dashboard_pattern_library.py tests/test_dashboard_pipeline_architecture.py tests/test_dashboard_recommendations.py tests/test_dashboard_run_history.py tests/test_pipeline_health.py tests/test_scrape_quality_score.py -q` passed with 36 tests and 28 subtests.
+- `python -m pytest -q` passed with 111 tests and 45 subtests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest ...` could not run because that virtualenv does not have `pytest`; the system `python -m pytest` runner was used for the red, green, and full-suite feedback loops.
+- Continue with `docs/issues/0056-centralize-dashboard-derived-refresh.md` next if context allows.
+
+## 2026-05-07 - 0056 Centralize Dashboard Derived Refresh
+
+Task completed from `docs/issues/0056-centralize-dashboard-derived-refresh.md`.
+
+Key decisions made:
+- Added `dashboard.refresh.refresh_dashboard_derivatives` as the shared orchestration point for artifact indexing, Scrape Quality recomputation, and Pipeline Health recomputation.
+- Added intent and scope parameters so callers can request `artifacts`, `quality`, or `all` without duplicating the refresh sequence.
+- Moved overview, search, run history, scraped content, architecture, pattern generation, recommendations, and manual-run completion refresh calls through the shared module.
+- Kept automatic local artifact-driven dashboard refresh behavior; no manual refresh step was introduced.
+- Kept primitive indexing/scoring/health modules as the only modules that directly own their compute functions.
+
+Files changed:
+- `dashboard/refresh.py`
+- `dashboard/architecture.py`
+- `dashboard/manual_runs.py`
+- `dashboard/pattern_library.py`
+- `dashboard/recommendations.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `dashboard/web_overview.py`
+- `dashboard/web_scraped_content.py`
+- `tests/test_dashboard_refresh.py`
+- `progress.txt`
+- `docs/issues/done/0056-centralize-dashboard-derived-refresh.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_refresh.py -q` failed because `dashboard.refresh` did not exist yet.
+- GREEN: `python -m pytest tests/test_dashboard_refresh.py -q` passed with 2 tests.
+- `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_shell.py tests/test_dashboard_global_search.py tests/test_dashboard_run_history.py tests/test_dashboard_recommendations.py tests/test_dashboard_artifact_indexer.py tests/test_scrape_quality_score.py tests/test_pipeline_health.py -q` passed with 41 tests and 44 subtests.
+- `python -m pytest -q` passed with 113 tests and 45 subtests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0056 rather than starting issue 0057.
+
+## 2026-05-07 - 0057 Centralize Nattome Scoring Vocabulary
+
+Task completed from `docs/issues/0057-centralize-nattome-scoring-vocabulary.md`.
+
+Key decisions made:
+- Added `dashboard.scoring` as the shared owner for Nattome relevance terms, relevance bands, weighted engagement, freshness behavior, score bands, and score/percent display text.
+- Migrated Scrape Quality, Run History, Search facets, and web-rendered score/engagement text to call the shared scoring module.
+- Kept existing dashboard behavior stable while removing duplicated scoring logic from page-specific modules.
+- Added scoring parity tests around representative raw TikTok records and Batch Analysis Run freshness behavior.
+
+Files changed:
+- `dashboard/scoring.py`
+- `dashboard/quality.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `dashboard/web_components.py`
+- `dashboard/web_run_history.py`
+- `tests/test_dashboard_scoring.py`
+- `progress.txt`
+- `docs/issues/done/0057-centralize-nattome-scoring-vocabulary.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_scoring.py` failed because `dashboard.scoring` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_scoring.py` passed with 2 tests.
+- `python -m pytest tests/test_dashboard_scoring.py tests/test_scrape_quality_score.py tests/test_dashboard_run_history.py tests/test_dashboard_global_search.py tests/test_dashboard_shell.py` passed with 26 tests.
+- `python -m pytest` passed with 115 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0057 rather than starting issue 0058.
+
+## 2026-05-07 - 0058 Extract Dashboard Theme Rendering
+
+Task completed from `docs/issues/0058-extract-dashboard-theme-rendering.md`.
+
+Key decisions made:
+- Added `dashboard.web_theme` as the shared owner for the dashboard inline theme CSS.
+- Kept `dashboard.web_layout` focused on page composition by calling `render_theme_styles()` inside the existing inline `<style>` block.
+- Preserved the self-contained local HTML response and avoided static asset serving or visual redesign.
+- Added a shell rendering test that verifies the theme module styles are inlined with expected layout markers without pinning every CSS rule.
+
+Files changed:
+- `dashboard/web_theme.py`
+- `dashboard/web_layout.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0058-extract-dashboard-theme-rendering.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_shell.py` failed because `dashboard.web_theme` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_shell.py` passed with 15 tests.
+- `python -m pytest tests/test_dashboard_shell.py tests/test_dashboard_global_search.py tests/test_dashboard_run_history.py tests/test_dashboard_exports.py tests/test_dashboard_manual_runs.py` passed with 31 tests.
+- `git diff --check` passed with line-ending warnings only.
+- `python -m pytest` passed with 116 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+
+## 2026-05-07 - 0060 Verify Dashboard Architecture Contract End To End
+
+Task completed from `docs/issues/0060-verify-dashboard-architecture-contract-end-to-end.md`.
+
+Key decisions made:
+- Added executable architecture contract checks that verify public imports, feature-oriented dashboard modules, no generic layer folders, no repository-per-table or fake storage abstractions, SQLite-only storage access, automatic refresh read paths, and lightweight `http.server` serving.
+- Added `docs/prd/dashboard-architecture-contract-verification.md` to trace the dashboard architecture PRD constraints to completed implementation slices `0053` through `0060`.
+- Kept the verification slice documentation-and-test-only; no dashboard runtime behavior changed.
+
+Files changed:
+- `tests/test_dashboard_architecture_characterization.py`
+- `docs/prd/dashboard-architecture-contract-verification.md`
+- `progress.txt`
+- `docs/issues/done/0060-verify-dashboard-architecture-contract-end-to-end.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_architecture_characterization.py` failed because the traceability verification document did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_architecture_characterization.py` passed with 11 tests.
+- `python -m pytest tests -k dashboard` passed with 58 selected tests and 63 deselected tests.
+- `python -m pytest` passed with 121 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Issue `0060` completes the dashboard architecture deepening verification pass. Continue to the next AFK issue only if requested.

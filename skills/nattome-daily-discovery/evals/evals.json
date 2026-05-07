@@ -4,10 +4,11 @@
     {
       "id": 1,
       "prompt": "Run the daily Nattome TikTok brief for today. Pull the top 5 viral videos in the digestive-health space, break down why each one works, and give me 3 angles per topic that I can shoot this week. Save the brief as a markdown file.",
-      "expected_output": "A daily_brief_YYYY-MM-DD.md file with 5 topics, each containing: source video link + stats, virality breakdown (hook/pacing/structure/emotional trigger/why it won), and 3 Nattome angles (hook, avatar, format, product, script outline). Brand voice rules followed (named clinical study, no overclaim, format choice justified).",
+      "expected_output": "A daily discovery handoff markdown file with 5 topics, each containing: source video link + stats, virality breakdown (hook/pacing/structure/emotional trigger/why it won), and 3 Nattome angles (hook, avatar, format, product, script outline). Brand voice rules followed (named clinical study, no overclaim, format choice justified). The handoff is framed as ideation input, not the final production report.",
       "files": [],
       "assertions": [
-        {"text": "Output is saved as a markdown file with date in the filename", "type": "file_check"},
+        {"text": "Output is saved as a dated daily discovery handoff markdown file", "type": "file_check"},
+        {"text": "Output is framed as ideation or handoff input, not the final production report", "type": "content_check"},
         {"text": "All 5 topics include a working TikTok URL", "type": "content_check"},
         {"text": "Each topic has a hook breakdown labeled by hook type (symptom recognition, counter-intuitive, POV, etc.)", "type": "content_check"},
         {"text": "Each topic has 3 Nattome angles", "type": "content_check"},

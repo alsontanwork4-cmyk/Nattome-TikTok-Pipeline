@@ -5,8 +5,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .evidence_io import read_json_object
-
 CLAIM_SAFETY_RULES = [
     {
         "category": "cure_claim",
@@ -80,43 +78,44 @@ CLAIM_SAFETY_RULES = [
     },
 ]
 
-def claim_evidence_sources(bundle_folder: Path) -> list[dict[str, Any]]:
+def claim_evidence_sources_from_gemini(gemini_evidence: dict[str, Any]) -> list[dict[str, Any]]:
     sources: list[dict[str, Any]] = []
-    ocr = read_json_object(bundle_folder / "ocr_evidence.json")
-    if isinstance(ocr, dict):
-        frames = ocr.get("frames")
-        if isinstance(frames, list):
-            for frame in frames:
-                if not isinstance(frame, dict):
-                    continue
-                text = str(frame.get("ocr_text") or "").strip()
-                if not text:
-                    continue
-                sources.append(
-                    {
-                        "source": "ocr_evidence",
-                        "timestamp_seconds": frame.get("timestamp_seconds"),
-                        "text": text,
-                    }
-                )
-
-    transcript = read_json_object(bundle_folder / "transcript_evidence.json")
-    if isinstance(transcript, dict):
-        segments = transcript.get("segments")
-        if isinstance(segments, list):
-            for segment in segments:
-                if not isinstance(segment, dict):
-                    continue
-                text = str(segment.get("text") or "").strip()
-                if not text:
-                    continue
-                sources.append(
-                    {
-                        "source": "transcript_evidence",
-                        "timestamp_seconds": segment.get("start_seconds"),
-                        "text": text,
-                    }
-                )
+    for item in gemini_evidence.get("claim_evidence", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_claim_evidence",
+                    "timestamp_seconds": item.get("timestamp_seconds"),
+                    "text": text,
+                }
+            )
+    for item in gemini_evidence.get("visible_text", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_visible_text",
+                    "timestamp_seconds": item.get("timestamp_seconds"),
+                    "text": text,
+                }
+            )
+    for item in gemini_evidence.get("spoken_content", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_spoken_content",
+                    "timestamp_seconds": item.get("start_seconds"),
+                    "text": text,
+                }
+            )
     return sources
 
 def first_matching_claim_text(text: str, patterns: list[str]) -> str | None:
@@ -126,9 +125,10 @@ def first_matching_claim_text(text: str, patterns: list[str]) -> str | None:
             return match.group(0).strip()
     return None
 
-def write_claim_safety_review(bundle_folder: Path) -> dict[str, Any]:
-    review_path = bundle_folder / "claim_safety_review.json"
-    sources = claim_evidence_sources(bundle_folder)
+def build_claim_safety_review_from_sources(
+    sources: list[dict[str, Any]],
+    source_artifacts: list[str],
+) -> dict[str, Any]:
     flagged_claims = []
     seen_categories = set()
 
@@ -155,9 +155,9 @@ def write_claim_safety_review(bundle_folder: Path) -> dict[str, Any]:
             )
             break
 
-    review = {
+    return {
         "status": "completed",
-        "source_artifacts": ["ocr_evidence.json", "transcript_evidence.json"],
+        "source_artifacts": source_artifacts,
         "flagged_claims": flagged_claims,
         "summary": {
             "flagged_count": len(flagged_claims),
@@ -166,12 +166,38 @@ def write_claim_safety_review(bundle_folder: Path) -> dict[str, Any]:
             ),
         },
     }
+
+
+def write_claim_safety_review_from_snapshot(
+    review_path: Path,
+    gemini_evidence: dict[str, Any],
+) -> dict[str, Any]:
+    sources = claim_evidence_sources_from_gemini(gemini_evidence)
+    review = build_claim_safety_review_from_sources(
+        sources,
+        ["gemini_claim_evidence", "gemini_visible_text", "gemini_spoken_content"],
+    )
+    if gemini_evidence.get("status") not in {"completed", "partial"}:
+        review["manual_review"] = {
+            "required": True,
+            "reason": gemini_evidence.get("reason") or "Gemini claim evidence is unavailable",
+        }
+    elif not sources:
+        review["manual_review"] = {
+            "required": True,
+            "reason": "Gemini claim, visible text, and spoken content evidence are empty",
+        }
+    else:
+        review["manual_review"] = {"required": False, "reason": None}
+
+    review_path.parent.mkdir(parents=True, exist_ok=True)
     review_path.write_text(
         json.dumps(review, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     return {
         "status": review["status"],
-        "flagged_count": len(flagged_claims),
+        "flagged_count": len(review["flagged_claims"]),
+        "manual_review_required": review["manual_review"]["required"],
     }
 

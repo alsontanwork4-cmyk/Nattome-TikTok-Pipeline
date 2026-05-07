@@ -1,0 +1,56 @@
+{
+  "status": "completed",
+  "candidate_id": "7634309648769764639",
+  "angles": [
+    {
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately presents the title 'FIX YOUR GUT FAST' and lists '3 SIMPLE DRINKS' with benefits like 'FLAT BELLY', 'DEBLOAT', and 'DIGESTION', capturing attention with health and wellness promises.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 23,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `FIX YOUR GUT FAST 3 SIMPLE DRINKS FLAT BELLY - Apple (1 medium) - Ginger (1 inch) - Lemon (1/2) - Water (1 cup) Blend with water DEBLOAT - Cucumber (1/2) - Mint (5-6 leaves) - Lime (1/2) - Water (1 cup) Blend with water DIGESTION - Papaya (1 cup) - Pineapple (1/2 cup) - Ginger (1 inch) - Water (1 cup) Blend with water DRINK IN THE MORNING` into a safer prompt about Fix Your Gut Fast With Simple Juice Blends Simple fruit and veggie drinks you can add to your morning routine for better hydration, digestion support, and cleaner daily nutrition. Save this so you can try one tomorrow. #nutritiontips #healthyhabits #guthealth #wellnesstips #healthydrinks.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 23,
+        "max_points": 30
+      }
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import inspect
 import json
 import tempfile
 import unittest
@@ -7,14 +8,17 @@ from batch_analysis.outputs import write_cross_video_pattern_summary
 
 
 class BatchOutputSetTest(unittest.TestCase):
+    def test_cross_video_pattern_summary_writer_has_no_markdown_option(self):
+        signature = inspect.signature(write_cross_video_pattern_summary)
+
+        self.assertNotIn("write_markdown", signature.parameters)
+
     def test_cross_video_pattern_summary_writes_priority_score_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
-            (run_folder / "batch_outputs" / "json").mkdir(parents=True)
-            (run_folder / "batch_outputs" / "markdown").mkdir(parents=True)
-            bundle_folder = run_folder / "evidence_bundles" / "001_output-video"
-            bundle_folder.mkdir(parents=True)
-            (bundle_folder / "evidence_quality.json").write_text(
+            (run_folder / "data").mkdir(parents=True)
+            (run_folder / "reports").mkdir(parents=True)
+            (run_folder / "data" / "001_output-video_evidence_quality.json").write_text(
                 json.dumps(
                     {
                         "evidence_quality_score": {"level": "high"},
@@ -23,15 +27,47 @@ class BatchOutputSetTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            (bundle_folder / "claim_safety_review.json").write_text(
+            (run_folder / "data" / "001_output-video_claim_safety_review.json").write_text(
                 json.dumps({"flagged_claims": []}),
                 encoding="utf-8",
             )
-            (bundle_folder / "baseline_audio_analysis.json").write_text(
+            (run_folder / "data" / "001_output-video_baseline_audio_analysis.json").write_text(
                 json.dumps(
                     {
                         "audio_format": "talking_head",
                         "hook_support": "spoken hook supports first three seconds",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_folder / "data" / "001_output-video_shootable_angles.json").write_text(
+                json.dumps(
+                    {
+                        "status": "completed",
+                        "angles": [
+                            {
+                                "angle_title": "Evidence-Led Bloating Routine",
+                                "hook": "Ask what changed after meals.",
+                                "avatar": "The Sufferer",
+                                "format": "Talking-head explainer with simple on-screen text.",
+                                "product_fit": "DH for daily digestive maintenance and routine support.",
+                                "recommendation": "Adapt the pain point with support language.",
+                                "claim_guardrails": "Avoid cure claims.",
+                                "source_evidence": ["hook_evidence"],
+                                "priority_score": {
+                                    "dimensions": {
+                                        "viral_strength": 4,
+                                        "nattome_relevance": 4,
+                                        "evidence_confidence": 5,
+                                        "brand_safety": 5,
+                                        "ease_of_production": 5,
+                                        "product_fit": 5,
+                                    },
+                                    "total": 28,
+                                    "max_points": 30,
+                                },
+                            }
+                        ],
                     }
                 ),
                 encoding="utf-8",
@@ -55,7 +91,21 @@ class BatchOutputSetTest(unittest.TestCase):
                 "bundles": [
                     {
                         "candidate_id": "output-video",
-                        "bundle_folder": "evidence_bundles/001_output-video",
+                        "prefix": "001_output-video",
+                        "artifacts": {
+                            "baseline_audio_analysis": {
+                                "path": "data/001_output-video_baseline_audio_analysis.json",
+                            },
+                            "claim_safety_review": {
+                                "path": "data/001_output-video_claim_safety_review.json",
+                            },
+                            "evidence_quality": {
+                                "path": "data/001_output-video_evidence_quality.json",
+                            },
+                            "shootable_angles": {
+                                "path": "data/001_output-video_shootable_angles.json",
+                            },
+                        },
                     }
                 ]
             }
@@ -64,19 +114,23 @@ class BatchOutputSetTest(unittest.TestCase):
 
             self.assertEqual(result["status"], "completed")
             summary = json.loads(
-                (run_folder / "batch_outputs" / "json" / "cross_video_pattern_summary.json").read_text(
+                (run_folder / "data" / "cross_video_pattern_summary.json").read_text(
                     encoding="utf-8"
                 )
             )
             top_angle = summary["top_priority_shootable_angles"][0]
             self.assertEqual(top_angle["candidate_id"], "output-video")
+            self.assertEqual(top_angle["angle_title"], "Evidence-Led Bloating Routine")
             self.assertEqual(top_angle["priority_score"]["max_points"], 30)
             self.assertEqual(
                 top_angle["priority_score"]["total"],
                 sum(top_angle["priority_score"]["dimensions"].values()),
             )
-            markdown = (
-                run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md"
-            ).read_text(encoding="utf-8")
-            self.assertIn("Nattome Priority Score", markdown)
-            self.assertIn("output-video", markdown)
+            self.assertIn("hooks", summary["pattern_comparison"])
+            self.assertEqual(
+                summary["recommendation"]["what_to_shoot_first"],
+                "Evidence-Led Bloating Routine",
+            )
+            self.assertFalse(
+                (run_folder / "reports" / "cross_video_pattern_summary.md").exists()
+            )

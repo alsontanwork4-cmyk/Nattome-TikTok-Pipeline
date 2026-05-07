@@ -1,0 +1,166 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A collage of three different drink recipes, each showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "A single drink recipe for 'DETOX', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 10,
+      "observation": "A single drink recipe for 'DIGESTION', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 15,
+      "observation": "A single drink recipe for 'IMMUNITY', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 20,
+      "observation": "A single drink recipe for 'GLOW SKIN', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 25,
+      "observation": "A single drink recipe for 'WEIGHT LOSS', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 30,
+      "observation": "A single drink recipe for 'DETOX CLEANSE', showing ingredients in a glass next to the blended drink, with text describing the benefit and ingredients, and a call to action.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "FIX YOUR GUT FAST\n3 SIMPLE DRINKS\nFLAT BELLY\n- Apple (1 medium)\n- Ginger (1 inch)\n- Lemon (1/2)\n- Water (1 cup)\nBlend with water\nDEBLOAT\n- Cucumber (1/2)\n- Mint (5-6 leaves)\n- Lime (1/2)\n- Water (1 cup)\nBlend with water\nDIGESTION\n- Papaya (1 cup)\n- Pineapple (1/2 cup)\n- Ginger (1 inch)\n- Water (1 cup)\nBlend with water\nDRINK IN THE MORNING",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 5,
+      "text": "DETOX\nHelps your body reset\n- Cucumber (1/2)\n- Mint (5-6 leaves)\n- Lime (1/2)\n- Water (1 cup)\nBlend with water\nDRINK IN THE MORNING",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 10,
+      "text": "DIGESTION\nSupports healthy digestion\n- Papaya (1 cup)\n- Pineapple (1/2 cup)\n- Ginger (1 inch)\n- Water (1 cup)\nBlend with water",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "IMMUNITY\nSupports your immune system\n- Orange (1)\n- Carrot (1)\n- Ginger (1 inch)\n- Water (1 cup)\nBlend with water",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 20,
+      "text": "GLOW SKIN\nFor clear, radiant skin\n- Strawberry (5-6)\n- Cucumber (1/2)\n- Blueberry (1/4 cup)\n- Mint (5-6 leaves)\n- Water (1 cup)\nBlend with water",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "WEIGHT LOSS\nBoost metabolism & burn fat\n- Cucumber (1/2)\n- Lemon (1/2)\n- Ginger (1 inch)\n- Mint (5-6 leaves)\n- Water (1 cup)\nBlend with water\nDRINK IN THE MORNING",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 30,
+      "text": "DETOX CLEANSE\nCleanse your body, feel your best\n- Cucumber (1/2)\n- Green apple (1)\n- Lemon (1/2)\n- Ginger (1 inch)\n- Spinach (1 cup)\n- Water (1 cup)\nBlend with water\nShare this video . Follow for more simple drinks",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Music playing throughout the video",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately presents the title 'FIX YOUR GUT FAST' and lists '3 SIMPLE DRINKS' with benefits like 'FLAT BELLY', 'DEBLOAT', and 'DIGESTION', capturing attention with health and wellness promises.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "FIX YOUR GUT FAST",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "FLAT BELLY",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "DEBLOAT",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "DIGESTION",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 5,
+      "text": "DETOX\nHelps your body reset",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 10,
+      "text": "DIGESTION\nSupports healthy digestion",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "IMMUNITY\nSupports your immune system",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 20,
+      "text": "GLOW SKIN\nFor clear, radiant skin",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "WEIGHT LOSS\nBoost metabolism & burn fat",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 30,
+      "text": "DETOX CLEANSE\nCleanse your body, feel your best",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": [
+    "spoken_content"
+  ]
+}

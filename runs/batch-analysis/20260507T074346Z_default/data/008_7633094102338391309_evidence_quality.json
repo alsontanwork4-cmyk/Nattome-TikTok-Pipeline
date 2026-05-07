@@ -1,0 +1,55 @@
+{
+  "status": "completed",
+  "evidence_quality_score": {
+    "level": "low",
+    "reason": "source video unavailable; HTTP Error 403: Forbidden; missing Gemini visual evidence"
+  },
+  "manual_review_flag": {
+    "required": true,
+    "reasons": [
+      "evidence_quality_low",
+      "gemini_evidence_unavailable",
+      "missing_gemini_visual_observations",
+      "missing_gemini_visible_text",
+      "missing_gemini_spoken_content",
+      "missing_gemini_audio_cues",
+      "missing_gemini_hook_evidence",
+      "missing_gemini_claim_evidence",
+      "first_three_second_hook_unclear"
+    ]
+  },
+  "checks": {
+    "source_video": {
+      "status": "failed",
+      "passed": false
+    },
+    "gemini_visual_evidence": {
+      "count": 0,
+      "passed": false
+    },
+    "gemini_visible_text": {
+      "count": 0,
+      "visible_text_expected": false,
+      "passed": true
+    },
+    "gemini_spoken_content": {
+      "count": 0,
+      "passed": false
+    },
+    "gemini_audio_cues": {
+      "count": 0,
+      "passed": false
+    },
+    "first_three_second_hook": {
+      "clear": false
+    },
+    "gemini_claim_evidence": {
+      "count": 0,
+      "passed": false
+    },
+    "claim_uncertainty": {
+      "status": "clear",
+      "flagged_count": 0
+    }
+  }
+}

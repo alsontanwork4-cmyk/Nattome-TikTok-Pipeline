@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": null
+  },
+  "audio_format": "voiceover",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video starts with a woman directly addressing the camera, stating, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This immediately sets the topic and promises a solution to a common health concern.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

@@ -15,13 +15,26 @@ from .config import (
     parse_run_timestamp,
     run_folder_name,
 )
-from .evidence import write_evidence_bundles
+from .evidence import write_snapshot_evidence_outputs
+from .evidence_io import EvidenceBundleStore
 from .outputs import (
     write_cross_video_pattern_summary,
     write_selected_batch,
-    write_structured_json_and_spreadsheet_summary,
+    write_structured_json_output,
+    write_top5_creative_production_report,
 )
+from .planning_workbook import write_top5_angle_planning_workbook
+from .run_manifest import build_run_manifest, write_batch_index_from_manifest, write_run_manifest
 from .telegram import deliver_telegram_brief
+from .tool_adapters import GeminiFlashAdapter
+
+
+def output_root_for_args(args: argparse.Namespace) -> Path:
+    explicit_output_root = getattr(args, "outputs_dir", None)
+    if explicit_output_root is not None:
+        return explicit_output_root
+    return args.runs_dir.parent / "outputs"
+
 
 def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]) -> dict[str, Any]:
     angles = cross_video_summary.get("top_priority_shootable_angles")
@@ -39,8 +52,8 @@ def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]
         },
         "multilingual_quality_improvements": {
             "status": "extension_point",
-            "source": "ocr_evidence and transcript_evidence",
-            "trigger": "Improve OCR/transcription where language detection, confidence, or mixed-language capture is weak.",
+            "source": "gemini_evidence",
+            "trigger": "Improve Gemini evidence capture where language detection, confidence, or mixed-language capture is weak.",
         },
         "full_script_generation": {
             "status": "extension_point",
@@ -53,7 +66,8 @@ def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]
             ],
         },
     }
-    hooks_path = run_folder / "batch_outputs" / "json" / "refinement_hooks.json"
+    hooks_path = run_folder / "data" / "refinement_hooks.json"
+    hooks_path.parent.mkdir(parents=True, exist_ok=True)
     hooks_path.write_text(
         json.dumps(hooks, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -66,16 +80,13 @@ def build_metadata(
     configuration: dict[str, Any],
     has_candidate_selection: bool,
     has_evidence_bundles: bool,
-    has_hybrid_timeline: bool,
-    has_ocr: bool,
-    has_transcription: bool,
+    has_gemini_evidence: bool,
     has_audio_music_trend_analysis: bool,
     has_claim_safety_review: bool,
     has_evidence_quality: bool,
     has_video_evidence_reports: bool,
     has_cross_video_pattern_summary: bool,
     has_structured_json_output: bool,
-    has_spreadsheet_summary: bool,
     has_telegram_delivery: bool,
     has_evidence_artifact_cleanup: bool,
     has_refinement_hooks: bool,
@@ -89,9 +100,7 @@ def build_metadata(
         "implementation_status": {
             "candidate_selection": "implemented" if has_candidate_selection else "not_implemented",
             "video_download": "implemented" if has_evidence_bundles else "not_implemented",
-            "hybrid_timeline": "implemented" if has_hybrid_timeline else "not_implemented",
-            "ocr": "implemented" if has_ocr else "not_implemented",
-            "transcription": "implemented" if has_transcription else "not_implemented",
+            "gemini_evidence": "implemented" if has_gemini_evidence else "not_implemented",
             "audio_music_trend_analysis": "implemented"
             if has_audio_music_trend_analysis
             else "not_implemented",
@@ -108,9 +117,6 @@ def build_metadata(
             "structured_json_output": "implemented"
             if has_structured_json_output
             else "not_implemented",
-            "spreadsheet_summary": "implemented"
-            if has_spreadsheet_summary
-            else "not_implemented",
             "telegram_delivery": "implemented" if has_telegram_delivery else "not_implemented",
             "evidence_artifact_cleanup": "implemented"
             if has_evidence_artifact_cleanup
@@ -122,95 +128,6 @@ def build_metadata(
             "Cross-video summaries compare only captured evidence and selected candidate metadata.",
         ],
     }
-
-def write_batch_index(
-    run_folder: Path,
-    metadata: dict[str, Any],
-    has_candidate_selection: bool,
-    has_evidence_bundles: bool,
-    has_cross_video_pattern_summary: bool,
-    has_structured_json_output: bool,
-    has_spreadsheet_summary: bool,
-    has_telegram_delivery: bool,
-    has_evidence_artifact_cleanup: bool,
-    has_refinement_hooks: bool,
-) -> None:
-    lines = [
-        "# Batch Analysis Run",
-        "",
-        f"- Run timestamp: {metadata['run_timestamp']}",
-        f"- Mode: {metadata['mode']}",
-        f"- Requested batch size: {metadata['requested_batch_size']}",
-        f"- Status: {'selected_batch_preview_created' if has_candidate_selection else 'skeleton_created'}",
-        "",
-        "## Output Folders",
-        "",
-    ]
-    for subdirectory in RUN_SUBDIRECTORIES:
-        lines.append(f"- `{subdirectory}`")
-    lines.extend(
-        [
-            "",
-            "## Selection",
-            "",
-        ]
-    )
-    if has_candidate_selection:
-        lines.extend(
-            [
-                "- JSON: `batch_outputs/json/selected_batch.json`",
-                "- Markdown: `batch_outputs/markdown/selected_batch.md`",
-            ]
-        )
-    else:
-        lines.append("- Candidate selection was not run because no candidate metadata file was provided.")
-    lines.extend(["", "## Evidence Bundles", ""])
-    if has_evidence_bundles:
-        lines.append("- Index: `evidence_bundles/index.json`")
-    else:
-        lines.append("- Evidence bundles were not created because no selected batch was available.")
-    lines.extend(["", "## Cross-Video Pattern Summary", ""])
-    if has_cross_video_pattern_summary:
-        lines.extend(
-            [
-                "- Markdown: `batch_outputs/markdown/cross_video_pattern_summary.md`",
-                "- JSON: `batch_outputs/json/cross_video_pattern_summary.json`",
-            ]
-        )
-    else:
-        lines.append("- Cross-video pattern summary was not created because no evidence bundles were available.")
-    lines.extend(["", "## Structured Outputs", ""])
-    if has_structured_json_output:
-        lines.append("- Structured JSON: `batch_outputs/json/structured_batch_analysis.json`")
-    else:
-        lines.append("- Structured JSON was not created because no evidence bundles were available.")
-    if has_spreadsheet_summary:
-        lines.append("- Spreadsheet summary: `batch_outputs/spreadsheets/spreadsheet_summary.csv`")
-    else:
-        lines.append("- Spreadsheet summary was not created because no evidence bundles were available.")
-    lines.extend(["", "## Telegram Delivery", ""])
-    if has_telegram_delivery:
-        lines.append("- Delivery log: `logs/telegram_delivery.json`")
-    else:
-        lines.append("- Telegram delivery was not attempted because required batch outputs were unavailable.")
-    lines.extend(["", "## Cleanup And Refinement", ""])
-    if has_evidence_artifact_cleanup:
-        lines.append("- Cleanup log: `logs/evidence_artifact_cleanup.json`")
-    else:
-        lines.append("- Evidence artifact cleanup was not evaluated because no evidence bundles were available.")
-    if has_refinement_hooks:
-        lines.append("- Refinement hooks: `batch_outputs/json/refinement_hooks.json`")
-    else:
-        lines.append("- Refinement hooks were not created because no cross-video summary was available.")
-    lines.extend(
-        [
-            "",
-            "## Not Implemented Yet",
-            "",
-            "Source video artifacts are only present when candidate metadata includes a downloadable video source.",
-        ]
-    )
-    (run_folder / "batch_index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 def create_run(args: argparse.Namespace) -> Path:
     if args.batch_size is not None and args.batch_size < 1:
@@ -229,6 +146,8 @@ def create_run(args: argparse.Namespace) -> Path:
         (run_folder / subdirectory).mkdir(parents=True, exist_ok=False)
 
     selected_batch = None
+    flat_evidence_index = None
+    gemini_evidence_statuses: list[dict[str, Any]] = []
     if candidates is not None:
         selected_batch = select_candidates(
             candidates,
@@ -236,57 +155,112 @@ def create_run(args: argparse.Namespace) -> Path:
             timestamp,
             batch_size,
             args.candidates,
+            preserve_order=args.mode == "daily",
         )
 
-    evidence_index = None
     if selected_batch is not None:
-        evidence_index = write_evidence_bundles(
-            run_folder,
-            selected_batch,
-            args.ffmpeg_bin,
-            args.ocr_primary_bin,
-            args.ocr_fallback_bin,
-            args.transcription_bin,
+        evidence_store = EvidenceBundleStore(run_folder)
+        evidence_store.write_source_snapshots(selected_batch["selected_candidates"])
+        tool_stack_config = configuration.get("tool_stack", {})
+        gemini_adapter = getattr(args, "gemini_adapter", None) or GeminiFlashAdapter(
+            model=tool_stack_config.get("gemini_model", "gemini-2.5-flash"),
+            api_key_env=tool_stack_config.get("gemini_api_key_env", "GEMINI_API_KEY"),
+        )
+        flat_index_entries = []
+        for candidate in selected_batch["selected_candidates"]:
+            snapshot = evidence_store.load_snapshot(candidate)
+            source_video = snapshot.get("source_video")
+            if isinstance(source_video, dict) and source_video.get("state") == "available":
+                evidence = gemini_adapter.analyze_source_video(
+                    run_folder / str(source_video["path"]),
+                    candidate,
+                )
+                snapshot = evidence_store.write_gemini_evidence(candidate, evidence)
+                gemini_evidence_statuses.append(
+                    {
+                        "candidate_id": snapshot.get("candidate_id"),
+                        "status": evidence.get("status"),
+                        "reason": evidence.get("reason"),
+                    }
+                )
+            else:
+                reason = (
+                    source_video.get("reason")
+                    if isinstance(source_video, dict)
+                    else "source video artifact is unavailable"
+                )
+                snapshot.setdefault("artifacts", {})
+                snapshot["artifacts"]["gemini_evidence"] = {
+                    "state": "missing",
+                    "path": None,
+                    "reason": reason,
+                    "missing_evidence": [
+                        "visual_observations",
+                        "visible_text",
+                        "spoken_content",
+                        "audio_cues",
+                        "hook_evidence",
+                        "claim_evidence",
+                    ],
+                }
+                snapshot_path = snapshot.get("snapshot_path")
+                if snapshot_path:
+                    (run_folder / str(snapshot_path)).write_text(
+                        json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8",
+                    )
+                gemini_evidence_statuses.append(
+                    {
+                        "candidate_id": snapshot.get("candidate_id"),
+                        "status": "missing",
+                        "reason": reason,
+                    }
+                )
+            write_snapshot_evidence_outputs(run_folder, candidate, snapshot)
+            flat_index_entries.append(evidence_store.load_snapshot(candidate))
+        flat_evidence_index = {
+            "created_at": selected_batch["selected_at"],
+            "bundle_count": len(flat_index_entries),
+            "bundles": flat_index_entries,
+        }
+        (run_folder / "data" / "evidence_bundle_index.json").write_text(
+            json.dumps(flat_evidence_index, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
         )
 
     cross_video_summary = None
-    if selected_batch is not None and evidence_index is not None:
+    if selected_batch is not None and flat_evidence_index is not None:
         cross_video_summary = write_cross_video_pattern_summary(
             run_folder,
             selected_batch,
-            evidence_index,
+            flat_evidence_index,
         )
 
-    has_hybrid_timeline = evidence_index is not None
-    has_ocr = evidence_index is not None
-    has_transcription = evidence_index is not None
-    has_audio_music_trend_analysis = evidence_index is not None
-    has_claim_safety_review = evidence_index is not None
-    has_evidence_quality = evidence_index is not None
-    has_video_evidence_reports = evidence_index is not None
+    has_gemini_evidence = flat_evidence_index is not None
+    has_audio_music_trend_analysis = flat_evidence_index is not None
+    has_claim_safety_review = flat_evidence_index is not None
+    has_evidence_quality = flat_evidence_index is not None
+    has_video_evidence_reports = flat_evidence_index is not None
     has_structured_outputs = (
         selected_batch is not None
-        and evidence_index is not None
+        and flat_evidence_index is not None
         and cross_video_summary is not None
     )
     has_telegram_delivery = has_structured_outputs
-    has_evidence_artifact_cleanup = evidence_index is not None
+    has_evidence_artifact_cleanup = flat_evidence_index is not None
     has_refinement_hooks = has_structured_outputs
     metadata = build_metadata(
         args,
         timestamp,
         configuration,
         selected_batch is not None,
-        evidence_index is not None,
-        has_hybrid_timeline,
-        has_ocr,
-        has_transcription,
+        flat_evidence_index is not None,
+        has_gemini_evidence,
         has_audio_music_trend_analysis,
         has_claim_safety_review,
         has_evidence_quality,
         has_video_evidence_reports,
         cross_video_summary is not None,
-        has_structured_outputs,
         has_structured_outputs,
         has_telegram_delivery,
         has_evidence_artifact_cleanup,
@@ -296,14 +270,58 @@ def create_run(args: argparse.Namespace) -> Path:
         json.dumps(metadata, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+    manifest = build_run_manifest(
+        args,
+        timestamp,
+        configuration,
+        has_candidate_selection=selected_batch is not None,
+        has_evidence_bundles=flat_evidence_index is not None,
+        has_cross_video_pattern_summary=cross_video_summary is not None,
+        has_structured_outputs=has_structured_outputs,
+        has_telegram_delivery=has_telegram_delivery,
+        has_evidence_artifact_cleanup=has_evidence_artifact_cleanup,
+        has_refinement_hooks=has_refinement_hooks,
+        gemini_evidence_statuses=gemini_evidence_statuses,
+    )
+    final_outputs: list[dict[str, Any]] = []
     if has_structured_outputs:
-        write_structured_json_and_spreadsheet_summary(
+        write_structured_json_output(
             run_folder,
             selected_batch,
-            evidence_index,
+            flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
         )
+        output_root = output_root_for_args(args)
+        report_status = write_top5_creative_production_report(
+            run_folder,
+            output_root,
+            selected_batch,
+            flat_evidence_index,
+            metadata["run_timestamp"],
+        )
+        workbook_status = write_top5_angle_planning_workbook(
+            run_folder,
+            output_root,
+            selected_batch,
+            flat_evidence_index,
+            metadata["run_timestamp"],
+        )
+        final_outputs = [
+            {
+                "label": "Top 5 Creative Production Report",
+                "kind": "markdown",
+                "path": report_status["path"],
+            },
+            {
+                "label": "Excel Planning Workbook",
+                "kind": "spreadsheet",
+                "path": workbook_status["path"],
+            },
+        ]
+        manifest["outputs"]["output_root"] = str(output_root)
+        manifest["outputs"]["final_outputs"] = final_outputs
+        write_run_manifest(run_folder, manifest)
         write_refinement_hooks(run_folder, cross_video_summary["summary"])
     if has_telegram_delivery:
         deliver_telegram_brief(
@@ -311,25 +329,15 @@ def create_run(args: argparse.Namespace) -> Path:
             metadata,
             cross_video_summary["summary"],
             configuration.get("telegram", {}),
+            final_outputs,
         )
     if has_evidence_artifact_cleanup:
         cleanup_evidence_artifacts(
             run_folder,
-            evidence_index,
+            flat_evidence_index,
             configuration.get("cleanup", {}),
         )
     if selected_batch is not None:
         write_selected_batch(run_folder, selected_batch)
-    write_batch_index(
-        run_folder,
-        metadata,
-        selected_batch is not None,
-        evidence_index is not None,
-        cross_video_summary is not None,
-        has_structured_outputs,
-        has_structured_outputs,
-        has_telegram_delivery,
-        has_evidence_artifact_cleanup,
-        has_refinement_hooks,
-    )
+    write_batch_index_from_manifest(run_folder, manifest)
     return run_folder
