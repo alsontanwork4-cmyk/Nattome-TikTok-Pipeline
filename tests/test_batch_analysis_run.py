@@ -1475,7 +1475,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             )
 
     @legacy_nested_cli_test
-    def test_batch_run_gets_structured_json_and_spreadsheet_summary(self):
+    def test_batch_run_gets_structured_json_without_csv_spreadsheet_summary(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             runs_dir = temp_path / "runs"
@@ -1547,7 +1547,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             structured_json = run_folder / "data" / "structured_batch_analysis.json"
             spreadsheet = run_folder / "data" / "spreadsheet_summary.csv"
             self.assertTrue(structured_json.is_file())
-            self.assertTrue(spreadsheet.is_file())
+            self.assertFalse(spreadsheet.exists())
             self.assertFalse((run_folder / "batch_outputs").exists())
 
             structured = json.loads(structured_json.read_text(encoding="utf-8"))
@@ -1572,33 +1572,19 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 self.assertIn(key, video)
             self.assertEqual(video["nattome_priority_score"]["max_points"], 30)
 
-            csv_text = spreadsheet.read_text(encoding="utf-8")
-            header = csv_text.splitlines()[0].split(",")
             self.assertEqual(
-                header,
-                [
-                    "link",
-                    "topic",
-                    "hook_type",
-                    "format",
-                    "emotional_trigger",
-                    "avatar",
-                    "product_fit",
-                    "priority_score",
-                    "evidence_quality",
-                    "recommended_angle",
-                ],
+                video["source_metadata"]["url"],
+                "https://www.tiktok.com/@creator/video/structured",
             )
-            self.assertIn("https://www.tiktok.com/@creator/video/structured", csv_text)
-            self.assertNotIn("Digestive Comfort Routine Check", csv_text)
+            self.assertNotIn("Digestive Comfort Routine Check", json.dumps(structured))
 
             batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
             self.assertIn("structured_batch_analysis.json", batch_index)
-            self.assertIn("spreadsheet_summary.csv", batch_index)
+            self.assertNotIn("spreadsheet_summary.csv", batch_index)
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["structured_json_output"], "implemented")
-            self.assertEqual(metadata["implementation_status"]["spreadsheet_summary"], "implemented")
+            self.assertEqual(metadata["implementation_status"]["spreadsheet_summary"], "not_implemented")
 
     def test_telegram_delivery_reports_missing_credentials_and_supports_fake_sender(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1803,9 +1789,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertTrue(
                 (run_folder / "data" / "structured_batch_analysis.json").is_file()
             )
-            self.assertTrue(
-                (run_folder / "data" / "spreadsheet_summary.csv").is_file()
-            )
+            self.assertFalse((run_folder / "data" / "spreadsheet_summary.csv").exists())
 
             cleanup_log = json.loads(
                 (run_folder / "logs" / "evidence_artifact_cleanup.json").read_text(

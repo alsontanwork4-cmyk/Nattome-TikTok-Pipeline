@@ -1,4 +1,4 @@
-import csv
+import inspect
 import json
 import tempfile
 import unittest
@@ -11,6 +11,11 @@ from batch_analysis.outputs import (
 
 
 class TwoLayerBatchOutputsTest(unittest.TestCase):
+    def test_structured_output_writer_has_no_spreadsheet_option(self):
+        signature = inspect.signature(write_structured_json_and_spreadsheet_summary)
+
+        self.assertNotIn("write_spreadsheet", signature.parameters)
+
     def test_batch_outputs_use_flat_run_layout_and_structured_angles(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
@@ -136,7 +141,7 @@ class TwoLayerBatchOutputsTest(unittest.TestCase):
             self.assertFalse((run_folder / "reports" / "cross_video_pattern_summary.md").exists())
             self.assertTrue((run_folder / "data" / "cross_video_pattern_summary.json").is_file())
             self.assertTrue((run_folder / "data" / "structured_batch_analysis.json").is_file())
-            self.assertTrue((run_folder / "data" / "spreadsheet_summary.csv").is_file())
+            self.assertFalse((run_folder / "data" / "spreadsheet_summary.csv").exists())
             self.assertFalse((run_folder / "batch_outputs").exists())
 
             summary = json.loads(
@@ -153,15 +158,18 @@ class TwoLayerBatchOutputsTest(unittest.TestCase):
                 "Evidence-Led Bloating Routine",
             )
 
-            with (run_folder / "data" / "spreadsheet_summary.csv").open(
-                newline="", encoding="utf-8"
-            ) as spreadsheet_file:
-                rows = list(csv.DictReader(spreadsheet_file))
-            self.assertEqual(len(rows), 1)
-            self.assertEqual(rows[0]["recommended_angle"], "Evidence-Led Bloating Routine")
+            structured = json.loads(
+                (run_folder / "data" / "structured_batch_analysis.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(len(structured["videos"]), 1)
+            self.assertEqual(
+                structured["videos"][0]["shootable_angles"][0]["angle_title"],
+                "Evidence-Led Bloating Routine",
+            )
             self.assertEqual(
                 structured_result["structured_json_path"], "data/structured_batch_analysis.json"
             )
-            self.assertEqual(
-                structured_result["spreadsheet_path"], "data/spreadsheet_summary.csv"
-            )
+            self.assertEqual(structured_result["row_count"], 1)
+            self.assertNotIn("spreadsheet_path", structured_result)

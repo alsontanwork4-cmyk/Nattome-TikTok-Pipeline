@@ -805,3 +805,35 @@ Feedback:
 Blockers or notes for the next iteration:
 - Issue `0031-remove-csv-spreadsheet-summary-output.md` is next.
 - Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0031 Remove CSV Spreadsheet Summary Output
+
+Task completed from `docs/issues/0031-remove-csv-spreadsheet-summary-output.md`.
+
+Key decisions made:
+- Removed the retired `spreadsheet_summary.csv` writer branch from `write_structured_json_and_spreadsheet_summary`.
+- Removed the `write_spreadsheet` option and the batch runner's obsolete `write_spreadsheet=False` call.
+- Kept structured JSON as the internal machine-readable output and the dated Excel planning workbook as the spreadsheet deliverable.
+- Reworked direct and CLI regressions to assert `data/spreadsheet_summary.csv` is absent while structured JSON still carries video, Shootable Angle, and priority score data.
+
+Files changed:
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0031-remove-csv-spreadsheet-summary-output.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p "test_batch_outputs_two_layer.py"` first failed on the old writer option and CSV file, then passed after the implementation change.
+- `python -m unittest discover -s tests -p "test_full_batch_analysis_two_layer_cli.py"` passed.
+- `python -m unittest discover -s tests -p "test_top5_angle_planning_workbook.py"` passed.
+- `python -m unittest discover -s tests -p "test_batch_analysis_run.py"` passed with 20 tests and 14 skipped.
+- `python -m unittest discover -s tests -p "test_cleanup.py"` passed.
+- `python -m unittest discover -s tests -p "test_telegram_delivery.py"` passed.
+- `python -m py_compile batch_analysis\outputs.py batch_analysis\run.py tests\test_batch_outputs_two_layer.py tests\test_batch_analysis_run.py` passed.
+- `python -m unittest discover -s tests` passed with 62 tests and 14 skipped.
+
+Blockers or notes for the next iteration:
+- Issue `0032-remove-obsolete-spreadsheet-summary-status-surface.md` is next.
+- Per user instruction, stop after this issue because the context window is high.

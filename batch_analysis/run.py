@@ -296,7 +296,6 @@ def create_run(args: argparse.Namespace) -> Path:
             flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
-            write_spreadsheet=False,
         )
         output_root = output_root_for_args(args)
         report_status = write_top5_creative_production_report(

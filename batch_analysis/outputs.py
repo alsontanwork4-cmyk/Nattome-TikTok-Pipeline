@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import csv
 import json
 import math
 from datetime import datetime, timezone
@@ -625,8 +624,6 @@ def write_structured_json_and_spreadsheet_summary(
     evidence_index: dict[str, Any],
     metadata: dict[str, Any],
     cross_video_summary: dict[str, Any],
-    *,
-    write_spreadsheet: bool = True,
 ) -> dict[str, Any]:
     candidates_by_id = {
         str(candidate.get("id")): candidate
@@ -635,7 +632,6 @@ def write_structured_json_and_spreadsheet_summary(
     }
     angles_by_candidate = first_angle_by_candidate(cross_video_summary)
     videos = []
-    spreadsheet_rows = []
 
     for bundle in evidence_index.get("bundles", []):
         if not isinstance(bundle, dict):
@@ -681,18 +677,6 @@ def write_structured_json_and_spreadsheet_summary(
             }
             priority_score["total"] = sum(priority_score["dimensions"].values())
 
-        hook_type = hook_pattern_from_quality(quality or {})
-        audio_format = "unknown"
-        if isinstance(audio_analysis, dict):
-            audio_format = str(audio_analysis.get("audio_format") or audio_format)
-        if audio_format == "unknown":
-            audio_format = str(candidate.get("audio_format_hint") or "unknown")
-
-        emotional_trigger = emotional_trigger_for_candidate(candidate)
-        product_fit = str(angle.get("product_fit") or product_tie_in_for_candidate(candidate))
-        recommended_angle = str(angle.get("angle_title") or "")
-        avatar = str(angle.get("avatar") or avatar_for_candidate(candidate))
-
         videos.append(
             {
                 "candidate_id": candidate_id,
@@ -713,22 +697,6 @@ def write_structured_json_and_spreadsheet_summary(
                 "nattome_priority_score": priority_score,
             }
         )
-        spreadsheet_rows.append(
-            {
-                "link": candidate.get("url") or "",
-                "topic": compact_markdown_text(candidate.get("caption")),
-                "hook_type": hook_type,
-                "format": audio_format,
-                "emotional_trigger": emotional_trigger,
-                "avatar": avatar,
-                "product_fit": product_fit,
-                "priority_score": priority_score["total"],
-                "evidence_quality": quality_score.get("level", "unknown")
-                if isinstance(quality_score, dict)
-                else "unknown",
-                "recommended_angle": recommended_angle,
-            }
-        )
 
     structured = {
         "batch_metadata": metadata,
@@ -746,27 +714,7 @@ def write_structured_json_and_spreadsheet_summary(
     result = {
         "status": "completed",
         "structured_json_path": relative_output_path(structured_path, run_folder),
-        "row_count": len(spreadsheet_rows),
+        "row_count": len(videos),
     }
-    if write_spreadsheet:
-        spreadsheet_path = output_json_path(run_folder, "spreadsheet_summary.csv")
-        fieldnames = [
-            "link",
-            "topic",
-            "hook_type",
-            "format",
-            "emotional_trigger",
-            "avatar",
-            "product_fit",
-            "priority_score",
-            "evidence_quality",
-            "recommended_angle",
-        ]
-        with spreadsheet_path.open("w", newline="", encoding="utf-8") as spreadsheet_file:
-            writer = csv.DictWriter(spreadsheet_file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(spreadsheet_rows)
-        result["spreadsheet_path"] = relative_output_path(spreadsheet_path, run_folder)
-
     return result
 
