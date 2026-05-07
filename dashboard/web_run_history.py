@@ -133,7 +133,7 @@ def _render_run_selector_row(row: RunHistoryRow, selected_run_id: str) -> str:
         <td>{row.selected_count}</td>
         <td>{_score_text(row.scrape_quality_score)}</td>
         <td>{html.escape(row.pipeline_health)}</td>
-        <td>{_render_output_links(row.output_links)}</td>
+        <td>{_render_output_links_compact(row.output_links)}</td>
       </tr>
     """
 
@@ -607,6 +607,17 @@ def _render_config_overlays(overlays: list[object]) -> str:
     return f'<ul class="compact-list">{"".join(items)}</ul>'
 
 
+_OUTPUT_PRIORITY: tuple[str, ...] = (
+    "report_markdown",
+    "excel_workbook",
+    "batch_index",
+    "selected_batch",
+    "manifest",
+    "metadata",
+    "log",
+)
+
+
 def _render_output_links(links: list[object]) -> str:
     if not links:
         return '<span class="muted">No output links</span>'
@@ -619,6 +630,39 @@ def _render_output_links(links: list[object]) -> str:
             f'<li><a href="{html.escape(path)}">{html.escape(label)}</a> <span class="muted">({html.escape(artifact_type)})</span></li>'
         )
     return f'<ul class="compact-list output-links">{"".join(items)}</ul>'
+
+
+def _render_output_links_compact(links: list[object]) -> str:
+    if not links:
+        return '<span class="muted">--</span>'
+
+    def _priority(link: object) -> int:
+        artifact_type = str(getattr(link, "artifact_type") or "")
+        try:
+            return _OUTPUT_PRIORITY.index(artifact_type)
+        except ValueError:
+            return len(_OUTPUT_PRIORITY)
+
+    sorted_links = sorted(links, key=_priority)
+    visible = sorted_links[:3]
+    extra = len(sorted_links) - len(visible)
+    chips: list[str] = []
+    for link in visible:
+        path = getattr(link, "path")
+        label = getattr(link, "label")
+        chips.append(
+            f'<a class="output-chip" href="{html.escape(path)}" title="{html.escape(path)}">{html.escape(_short_output_label(label))}</a>'
+        )
+    if extra > 0:
+        chips.append(f'<span class="output-chip more">+{extra} more</span>')
+    return f'<div class="output-chip-row">{"".join(chips)}</div>'
+
+
+def _short_output_label(label: str) -> str:
+    text = str(label or "")
+    if len(text) > 28:
+        return text[:27].rstrip() + "..."
+    return text
 
 
 def _render_risk_flags(flags: list[str]) -> str:

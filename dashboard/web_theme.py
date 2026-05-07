@@ -788,6 +788,107 @@ _THEME_STYLES = '''
       gap: 10px;
       margin-top: 12px;
     }
+    /* ---- Unified settings: readonly / edit toggle ---- */
+    .unified-settings-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .unified-settings-header h2 { margin-bottom: 2px; }
+    .edit-toggle-btn {
+      background: var(--panel) !important;
+      color: var(--accent) !important;
+      border: 1px solid var(--line-strong) !important;
+      border-radius: var(--r-md) !important;
+      padding: 8px 16px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s, color .15s;
+      box-shadow: var(--shadow-1) !important;
+      flex-shrink: 0;
+    }
+    .edit-toggle-btn:hover {
+      background: var(--accent-soft) !important;
+      border-color: var(--accent) !important;
+    }
+    .edit-toggle-btn.cancel-state {
+      color: var(--danger) !important;
+      border-color: var(--danger) !important;
+    }
+    .edit-toggle-btn.cancel-state:hover {
+      background: var(--danger-soft) !important;
+    }
+    .edit-toggle-btn svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+    /* Read-only mode: muted fields, hide save area & explain pills */
+    .unified-settings.readonly-mode .settings-save-area {
+      display: none;
+    }
+    .unified-settings.readonly-mode .setting-help-pill {
+      display: none;
+    }
+    .unified-settings.readonly-mode .setting-help summary {
+      pointer-events: none;
+    }
+    .unified-settings.readonly-mode .settings-field input[type="text"],
+    .unified-settings.readonly-mode .settings-field textarea,
+    .unified-settings.readonly-mode .settings-field select {
+      background: var(--bg-warm);
+      border-color: var(--line);
+      color: var(--ink-2);
+      cursor: default;
+      resize: none;
+    }
+    .unified-settings.readonly-mode .settings-field input[type="text"]:focus,
+    .unified-settings.readonly-mode .settings-field textarea:focus,
+    .unified-settings.readonly-mode .settings-field select:focus {
+      border-color: var(--line);
+      box-shadow: none;
+    }
+    .unified-settings.readonly-mode .check-label {
+      pointer-events: none;
+      opacity: .8;
+    }
+    /* Edit mode: white fields, show everything */
+    .unified-settings.edit-mode .settings-field input[type="text"],
+    .unified-settings.edit-mode .settings-field textarea,
+    .unified-settings.edit-mode .settings-field select {
+      background: var(--panel);
+      border-color: var(--line-strong);
+      cursor: text;
+    }
+    .unified-settings.edit-mode .settings-save-area {
+      display: grid;
+    }
+    .settings-save-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .cancel-edit-btn {
+      background: var(--panel) !important;
+      color: var(--ink-2) !important;
+      border: 1px solid var(--line-strong) !important;
+      box-shadow: var(--shadow-1) !important;
+    }
+    .cancel-edit-btn:hover {
+      background: var(--bg-warm) !important;
+      color: var(--ink) !important;
+    }
+    /* Edit-mode header button hidden (we show Cancel at bottom instead) */
+    .unified-settings.edit-mode .edit-toggle-btn {
+      display: none;
+    }
     .recommendation-list {
       display: grid;
       gap: 18px;
@@ -1109,9 +1210,36 @@ _THEME_STYLES = '''
       .overview-funnel { grid-template-columns: 1fr; }
     }
     /* ---- Run workbench (run history + tabs) ---- */
-    .run-selector-table tbody tr.run-selector-active td {
-      background: var(--accent-soft);
+    .run-selector-table tbody tr.run-selector-active td { background: var(--bg-warm); }
+    .run-selector-table tbody tr.run-selector-active td:first-child {
       box-shadow: inset 3px 0 0 var(--accent);
+    }
+    .output-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .output-chip {
+      display: inline-flex;
+      align-items: center;
+      max-width: 200px;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      background: var(--bg-warm);
+      border: 1px solid var(--line);
+      color: var(--accent-ink);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .output-chip:hover { background: var(--accent-soft); border-color: rgba(184,91,46,.3); }
+    .output-chip.more {
+      color: var(--muted);
+      background: transparent;
+      cursor: default;
     }
     .run-workbench { padding: 24px; margin-top: 18px; }
     .run-workbench-header {
