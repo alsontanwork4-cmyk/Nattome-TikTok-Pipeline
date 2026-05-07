@@ -12,7 +12,7 @@ from dashboard.store import (
     MUTABLE_TABLES,
     initialize_dashboard_store,
 )
-from dashboard.web import DashboardServer, create_handler, resolve_dashboard_workspace
+from dashboard.web import DashboardServer, NAV_ITEMS, create_handler, resolve_dashboard_workspace
 
 
 class DashboardStoreTest(unittest.TestCase):
@@ -74,6 +74,35 @@ class DashboardWebShellTest(unittest.TestCase):
             resolved = resolve_dashboard_workspace(dashboard_folder)
 
             self.assertEqual(resolved, workspace.resolve())
+
+    def test_handler_launched_from_dashboard_folder_uses_repo_workspace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            dashboard_folder = workspace / "dashboard"
+            dashboard_folder.mkdir()
+            (workspace / "runs" / "batch-analysis").mkdir(parents=True)
+
+            response, body = self._request(dashboard_folder, "GET", "/")
+
+            self.assertEqual(response.status, 200)
+            self.assertIn("Latest Run Overview", body)
+            self.assertTrue((workspace / DASHBOARD_DB_PATH).is_file())
+            self.assertFalse((dashboard_folder / DASHBOARD_DB_PATH).exists())
+
+    def test_all_navigation_routes_render_the_dashboard_shell(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            for label, route in NAV_ITEMS:
+                with self.subTest(route=route):
+                    response, body = self._request(workspace, "GET", route)
+
+                    self.assertEqual(response.status, 200)
+                    self.assertIn('<header class="topbar" role="banner">', body)
+                    self.assertIn('<aside class="sidebar"', body)
+                    self.assertIn("<main>", body)
+                    self.assertIn(f'href="{route}" aria-current="page"', body)
+                    self.assertIn(label, body)
 
     def test_overview_route_loads_without_pipeline_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
