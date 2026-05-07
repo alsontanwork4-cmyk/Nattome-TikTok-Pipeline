@@ -17,8 +17,13 @@ import dashboard.quality as dashboard_quality
 import dashboard.recommendations as dashboard_recommendations
 import dashboard.run_history as dashboard_run_history
 import dashboard.search as dashboard_search
+import dashboard.store as dashboard_store
 import dashboard.web as dashboard_web
+import dashboard.web_server as dashboard_web_server
 from dashboard.store import DASHBOARD_DB_PATH
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class DashboardArchitectureCharacterizationTest(unittest.TestCase):
@@ -141,6 +146,79 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
         self.assertLessEqual(source.count("if parsed_path =="), 2)
         self.assertNotIn('if parsed_path == "/exports/raw-videos.csv"', source)
         self.assertNotIn('if parsed_path == "/scraped-content/curation"', source)
+
+    def test_dashboard_architecture_contract_has_no_prohibited_abstractions(self):
+        dashboard_path = PROJECT_ROOT / "dashboard"
+        module_paths = sorted(dashboard_path.glob("*.py"))
+        combined_source = "\n".join(path.read_text(encoding="utf-8") for path in module_paths)
+        non_store_source = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in module_paths
+            if path.name != "store.py"
+        )
+
+        expected_feature_modules = {
+            "architecture.py",
+            "exports.py",
+            "health.py",
+            "manual_runs.py",
+            "nattome_pov_library.py",
+            "pattern_library.py",
+            "recommendations.py",
+            "run_history.py",
+            "search.py",
+            "settings.py",
+        }
+        self.assertTrue(expected_feature_modules.issubset({path.name for path in module_paths}))
+        for forbidden_folder in ["controllers", "repositories", "services", "adapters"]:
+            self.assertFalse((dashboard_path / forbidden_folder).exists(), forbidden_folder)
+
+        self.assertNotIn("sqlite3.connect(", non_store_source)
+        self.assertNotIn("class DashboardStore", combined_source)
+        self.assertNotIn("class InMemory", combined_source)
+        self.assertNotIn("Protocol", combined_source)
+        self.assertNotIn("Repository", combined_source)
+        self.assertEqual(inspect.getsource(dashboard_store).count("sqlite3.connect("), 2)
+
+    def test_dashboard_serving_contract_stays_lightweight_http_server(self):
+        source = inspect.getsource(dashboard_web_server)
+
+        self.assertIn("from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer", source)
+        self.assertIn("class DashboardServer(ThreadingHTTPServer)", source)
+        self.assertIn("BaseHTTPRequestHandler", source)
+        for forbidden_framework in ["flask", "fastapi", "django", "starlette", "uvicorn"]:
+            self.assertNotIn(forbidden_framework, source.lower())
+
+    def test_dashboard_read_paths_keep_automatic_refresh_contract(self):
+        read_path_modules = [
+            dashboard_architecture,
+            dashboard_pattern_library,
+            dashboard_recommendations,
+            dashboard_run_history,
+            dashboard_search,
+        ]
+        for module in read_path_modules:
+            with self.subTest(module=module.__name__):
+                self.assertIn("refresh_dashboard_derivatives", inspect.getsource(module))
+
+    def test_architecture_contract_verification_is_traceable_to_prd(self):
+        verification_path = PROJECT_ROOT / "docs" / "prd" / "dashboard-architecture-contract-verification.md"
+
+        self.assertTrue(verification_path.is_file())
+        body = verification_path.read_text(encoding="utf-8")
+        for issue_id in ["0053", "0054", "0055", "0056", "0057", "0058", "0059", "0060"]:
+            with self.subTest(issue=issue_id):
+                self.assertIn(issue_id, body)
+        for phrase in [
+            "Public dashboard imports remain stable",
+            "No broad folder-by-layer rewrite",
+            "SQLite remains the only dashboard store",
+            "Automatic refresh remains part of dashboard read paths",
+            "The local HTTP server remains the serving mechanism",
+            "Deferred follow-up work: None",
+        ]:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, body)
 
     def _request(self, workspace: Path, method: str, path: str):
         server = dashboard_web.DashboardServer(
