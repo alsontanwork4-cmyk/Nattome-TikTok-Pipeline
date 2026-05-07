@@ -373,9 +373,14 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 ).read_text(encoding="utf-8")
             )
             sent_messages = []
+            sent_documents = []
 
             def fake_sender(token, chat_id, text):
                 sent_messages.append((token, chat_id, text))
+                return {"ok": True}
+
+            def fake_document_sender(token, chat_id, document_path):
+                sent_documents.append((token, chat_id, Path(document_path).name))
                 return {"ok": True}
 
             send_status = deliver_telegram_brief(
@@ -389,21 +394,32 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 },
                 manifest["outputs"]["final_outputs"],
                 sender=fake_sender,
+                document_sender=fake_document_sender,
             )
 
             self.assertEqual(send_status["status"], "sent")
             self.assertEqual(len(sent_messages), 1)
+            self.assertEqual(len(sent_documents), 2)
             token, chat_id, message = sent_messages[0]
             self.assertEqual(token, "fake-token")
             self.assertEqual(chat_id, "fake-chat")
             self.assertLess(len(message), 1200)
-            self.assertIn("Nattome Batch Analysis Final Outputs", message)
-            self.assertIn("top5_creative_production_report_2026-05-06.md", message)
-            self.assertIn("top5_angle_planning_sheet_2026-05-06.xlsx", message)
-            self.assertNotIn("reports/cross_video_pattern_summary.md", message)
-            self.assertNotIn("data/spreadsheet_summary.csv", message)
-            self.assertIn("No shootable angles available.", message)
-            self.assertNotIn("## Cross-Video Pattern Comparison", message)
+            self.assertEqual(
+                message.splitlines(),
+                [
+                    "Nattome Batch Analysis Final Outputs",
+                    "Run: 2026-05-06T13:45:30Z",
+                    "Videos compared: 1",
+                    "Success or Fail: Success",
+                ],
+            )
+            self.assertEqual(
+                [document_name for _token, _chat_id, document_name in sent_documents],
+                [
+                    "top5_creative_production_report_2026-05-06.md",
+                    "top5_angle_planning_sheet_2026-05-06.xlsx",
+                ],
+            )
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["telegram_delivery"], "implemented")

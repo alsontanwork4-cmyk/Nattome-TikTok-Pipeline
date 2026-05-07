@@ -1,0 +1,61 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A person in a black crop top and unbuttoned blue jeans is shown from the side, revealing a visibly bloated stomach. They gently touch their stomach with both hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3,
+      "observation": "The person continues to touch and rub their bloated stomach, looking down at it.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 6,
+      "observation": "The person adjusts their unbuttoned jeans while still touching their stomach, then places a hand on their hip.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 9,
+      "observation": "The person continues to touch their stomach, then looks down at it, with a slight change in camera angle showing more of their upper body.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "the water I drank caught up with me",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Upbeat instrumental music",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "the water I drank caught up with me",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": [
+    "spoken_content"
+  ]
+}

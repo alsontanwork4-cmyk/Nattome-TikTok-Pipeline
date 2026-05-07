@@ -1,0 +1,132 @@
+{
+  "generated_at": "2026-05-07T17:44:00.765384+00:00",
+  "source_scrape": "data\\raw_scrapes\\manual_20260507T174329Z_budget1_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_count": 5,
+  "top": [
+    {
+      "id": "7637002506635201813",
+      "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+      "author_handle": "isaaarraa",
+      "author_followers": 17800,
+      "caption": "#ibs 😻",
+      "hashtags": [
+        "ibs"
+      ],
+      "duration_s": 8,
+      "music": {
+        "title": "original sound",
+        "author": "Cinematography",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-isaaarraa-20260507043026-7637002506635201813.mp4",
+      "play_count": 2089,
+      "like_count": 339,
+      "comment_count": 3,
+      "share_count": 18,
+      "created_at": "2026-05-07T04:30:26+00:00",
+      "source_input": null,
+      "virality_score": 0.8036
+    },
+    {
+      "id": "7637154901138672916",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+      "author_handle": "abbeyskitchen",
+      "author_followers": 1100000,
+      "caption": "Been there, done that… it’s the IBS life. But even without IBS, travel constipation is common because you’re drinking less water, eating less fiber, and sitting for long periods of time. Here’s what can help! #travel #constipation #ibstok #bloating #guthealth",
+      "hashtags": [
+        "travel",
+        "constipation",
+        "ibstok",
+        "bloating",
+        "guthealth"
+      ],
+      "duration_s": 148,
+      "music": {
+        "title": "original sound",
+        "author": "Abbey Sharp",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-abbeyskitc-20260507142135-7637154901138672916.mp4",
+      "play_count": 7908,
+      "like_count": 594,
+      "comment_count": 10,
+      "share_count": 14,
+      "created_at": "2026-05-07T14:21:35+00:00",
+      "source_input": null,
+      "virality_score": 0.3811
+    },
+    {
+      "id": "7633094102338391309",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7633094102338391309",
+      "author_handle": "thestomachdoc",
+      "author_followers": 2100000,
+      "caption": "Doctors tips to help with acid reflux and heartburn #refluxdiet #gerd #gastritis #heartburn #acidreflux",
+      "hashtags": [
+        "refluxdiet",
+        "gerd",
+        "gastritis",
+        "heartburn",
+        "acidreflux"
+      ],
+      "duration_s": 10,
+      "music": {
+        "title": "end of beginning",
+        "author": "overlays ⸆⸉",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-thestomach-20260426154403-7633094102338391309.mp4",
+      "play_count": 437900,
+      "like_count": 27400,
+      "comment_count": 366,
+      "share_count": 3766,
+      "created_at": "2026-04-26T15:44:03+00:00",
+      "source_input": null,
+      "virality_score": 0.2876
+    },
+    {
+      "id": "7637191036674034957",
+      "url": "https://www.tiktok.com/@callmedoctor.p/video/7637191036674034957",
+      "author_handle": "callmedoctor.p",
+      "author_followers": 1100000,
+      "caption": "Taking supplements is common.\n\nBut very few people are told that timing and pairing actually matter.\nYour digestive system uses specific transport pathways to absorb vitamins and minerals.\n\nWhen certain nutrients are taken together, they may compete for those same pathways.\n\nThat means even high-quality supplements can become less effective simply because of how they’re taken.\n\nFor example, minerals like iron, calcium, magnesium, and zinc often share similar absorption mechanisms in the gut. When large doses are taken at the same time, the body may prioritize one and limit the absorption of the others.\n\nThis is also why certain medications — like thyroid hormone — are recommended to be taken on an empty stomach and separated from minerals.\n\nSmall changes in timing can make a meaningful difference in how well your body uses what you’re taking.\nThink of supplements less like a “morning routine” and more like a schedule that supports absorption.\nIf you want a simple way to organize your supplements throughout the day so they work with your body instead of competing with each other, comment VITAMINS and I’ll share a simple guide.\n\nSave this for later — it’s one of those small details that can make a big difference.",
+      "hashtags": [],
+      "duration_s": 25,
+      "music": {
+        "title": "So Easy (To Fall In Love)",
+        "author": "Olivia Dean",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-callmedoct-20260507164200-7637191036674034957.mp4",
+      "play_count": 500,
+      "like_count": 37,
+      "comment_count": 2,
+      "share_count": 0,
+      "created_at": "2026-05-07T16:42:00+00:00",
+      "source_input": null,
+      "virality_score": 0.2527
+    },
+    {
+      "id": "7636961034028223775",
+      "url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+      "author_handle": "mynameisntmanny",
+      "author_followers": 389100,
+      "caption": "i slept like a baby ",
+      "hashtags": [],
+      "duration_s": 25,
+      "music": {
+        "title": "Eine Kleine Nachtmusik 1st movement(996517)",
+        "author": "East Valley Music",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-mynameisnt-20260507014931-7636961034028223775.mp4",
+      "play_count": 88900,
+      "like_count": 4160,
+      "comment_count": 4,
+      "share_count": 15,
+      "created_at": "2026-05-07T01:49:31+00:00",
+      "source_input": null,
+      "virality_score": 0.2257
+    }
+  ]
+}

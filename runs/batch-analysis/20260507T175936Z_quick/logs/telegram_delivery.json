@@ -1,0 +1,86 @@
+{
+  "status": "sent",
+  "telegram_response": {
+    "message": {
+      "ok": true,
+      "result": {
+        "message_id": 11,
+        "from": {
+          "id": 8632929005,
+          "is_bot": true,
+          "first_name": "Nattome TikTok Report",
+          "username": "Nattome_Tiktok_Report_Bot"
+        },
+        "chat": {
+          "id": 910681489,
+          "first_name": "清水断崖",
+          "username": "clmra1232",
+          "type": "private"
+        },
+        "date": 1778177610,
+        "text": "Nattome Batch Analysis Final Outputs\nRun: 2026-05-07T17:59:36Z\nVideos compared: 5\nSuccess or Fail: Success"
+      }
+    },
+    "documents": [
+      {
+        "path": "C:\\Users\\Alson\\Desktop\\Nattome TikTok Content Discovery Pipeliune\\outputs\\reports\\2026-05-07\\top5_creative_production_report_2026-05-07.md",
+        "response": {
+          "ok": true,
+          "result": {
+            "message_id": 12,
+            "from": {
+              "id": 8632929005,
+              "is_bot": true,
+              "first_name": "Nattome TikTok Report",
+              "username": "Nattome_Tiktok_Report_Bot"
+            },
+            "chat": {
+              "id": 910681489,
+              "first_name": "清水断崖",
+              "username": "clmra1232",
+              "type": "private"
+            },
+            "date": 1778177633,
+            "document": {
+              "file_name": "top5_creative_production_report_2026-05-07.md",
+              "file_id": "BQACAgUAAxkDAAMMafzWYTFwUMCo9UhRD7oxSevtEQEAAkYcAAIHjelXfjGEnzd7sfg7BA",
+              "file_unique_id": "AgADRhwAAgeN6Vc",
+              "file_size": 15144
+            }
+          }
+        }
+      },
+      {
+        "path": "C:\\Users\\Alson\\Desktop\\Nattome TikTok Content Discovery Pipeliune\\outputs\\reports\\2026-05-07\\top5_angle_planning_sheet_2026-05-07.xlsx",
+        "response": {
+          "ok": true,
+          "result": {
+            "message_id": 13,
+            "from": {
+              "id": 8632929005,
+              "is_bot": true,
+              "first_name": "Nattome TikTok Report",
+              "username": "Nattome_Tiktok_Report_Bot"
+            },
+            "chat": {
+              "id": 910681489,
+              "first_name": "清水断崖",
+              "username": "clmra1232",
+              "type": "private"
+            },
+            "date": 1778177655,
+            "document": {
+              "file_name": "top5_angle_planning_sheet_2026-05-07.xlsx",
+              "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "file_id": "BQACAgUAAxkDAAMNafzWd-nVSWTZ7tScLc2bOlmDy38AAkccAAIHjelXGjbMpp3eXnI7BA",
+              "file_unique_id": "AgADRxwAAgeN6Vc",
+              "file_size": 9239
+            }
+          }
+        }
+      }
+    ]
+  },
+  "message_character_count": 106,
+  "sent_document_count": 2
+}

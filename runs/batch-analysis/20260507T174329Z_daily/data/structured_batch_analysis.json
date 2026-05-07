@@ -1,0 +1,787 @@
+{
+  "batch_metadata": {
+    "run_timestamp": "2026-05-07T17:43:29Z",
+    "mode": "daily",
+    "requested_batch_size": 1,
+    "configuration": {
+      "selection": {
+        "minimum_views": 10000,
+        "maximum_age_days": 14,
+        "minimum_weighted_engagement_rate": 0.025,
+        "requires_tiktok_link": true,
+        "requires_downloadable_video": true,
+        "exclusion_terms": [
+          "weight loss"
+        ]
+      },
+      "outputs": {
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
+        "logs": "logs"
+      },
+      "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
+        "discovery_download": "Apify",
+        "evidence_extraction": "Gemini 2.5 Flash"
+      },
+      "telegram": {
+        "enabled": true,
+        "bot_token_env": "TELEGRAM_BOT_TOKEN",
+        "chat_id_env": "TELEGRAM_CHAT_ID"
+      },
+      "cleanup": {
+        "enabled": false,
+        "requires_report_approval": true,
+        "report_approved": false,
+        "remove_source_videos": true,
+        "remove_frames": true
+      },
+      "competitor_profiles": [
+        "gaviscon"
+      ],
+      "config_version": "v3",
+      "daily_selection_size": 5,
+      "hashtags": [
+        "guthealth",
+        "digestion"
+      ],
+      "keywords": [
+        "bloating",
+        "acid reflux"
+      ],
+      "results_per_input": 25,
+      "scope": "all",
+      "top_n": 30
+    },
+    "implementation_status": {
+      "candidate_selection": "implemented",
+      "video_download": "implemented",
+      "gemini_evidence": "implemented",
+      "audio_music_trend_analysis": "implemented",
+      "claim_safety_review": "implemented",
+      "evidence_quality": "implemented",
+      "video_evidence_reports": "implemented",
+      "cross_video_pattern_summary": "implemented",
+      "structured_json_output": "implemented",
+      "telegram_delivery": "implemented",
+      "evidence_artifact_cleanup": "implemented",
+      "refinement_hooks": "implemented"
+    },
+    "notes": [
+      "This run records missing setup or missing evidence instead of fabricating analysis.",
+      "Cross-video summaries compare only captured evidence and selected candidate metadata."
+    ]
+  },
+  "selection_decisions": {
+    "selected_at": "2026-05-07T17:43:29Z",
+    "candidate_source": "data\\daily_selections\\manual_20260507T174329Z_latest_top30.json",
+    "selection_strategy": "input_order",
+    "requested_batch_size": 1,
+    "input_candidate_count": 30,
+    "eligible_candidate_count": 4,
+    "selected_candidate_count": 1,
+    "minimum_eligibility_filter": {
+      "minimum_views": 10000,
+      "maximum_age_days": 14,
+      "minimum_weighted_engagement_rate": 0.025,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true,
+      "exclusion_terms": [
+        "weight loss"
+      ]
+    },
+    "selected_candidates": [
+      {
+        "rank": 1,
+        "id": "7636961034028223775",
+        "url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-mynameisnt-20260507014931-7636961034028223775.mp4",
+        "author_handle": "mynameisntmanny",
+        "caption": "i slept like a baby ",
+        "play_count": 88900,
+        "like_count": 4160,
+        "comment_count": 4,
+        "share_count": 15,
+        "created_at": "2026-05-07T01:49:31Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0487,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.2257
+      }
+    ],
+    "excluded_candidates": [
+      {
+        "id": "7637191036674034957",
+        "url": "https://www.tiktok.com/@callmedoctor.p/video/7637191036674034957",
+        "reason": "below minimum views (500 < 10000)"
+      },
+      {
+        "id": "7637154901138672916",
+        "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+        "reason": "below minimum views (7908 < 10000)"
+      },
+      {
+        "id": "7637002506635201813",
+        "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "reason": "below minimum views (2089 < 10000)"
+      },
+      {
+        "id": "7632050645712850177",
+        "url": "https://www.tiktok.com/@penguinshilajit/video/7632050645712850177",
+        "reason": "below minimum weighted engagement rate (0.0134 < 0.0250)"
+      },
+      {
+        "id": "7631381745484565790",
+        "url": "https://www.tiktok.com/@karinadrury/video/7631381745484565790",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7629394680022584597",
+        "url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7628876336194555158",
+        "url": "https://www.tiktok.com/@teagzzz6/video/7628876336194555158",
+        "reason": "below minimum views (3795 < 10000); older than 14 days"
+      },
+      {
+        "id": "7626719852019109123",
+        "url": "https://www.tiktok.com/@soulstoriestv/video/7626719852019109123",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0071 < 0.0250)"
+      },
+      {
+        "id": "7626464328371195150",
+        "url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7626452705774488863",
+        "url": "https://www.tiktok.com/@claire.elis/video/7626452705774488863",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7626449698324286733",
+        "url": "https://www.tiktok.com/@doctorsood/video/7626449698324286733",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7621740582498536735",
+        "url": "https://www.tiktok.com/@pet.cottage_1021/video/7621740582498536735",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7617997001774353671",
+        "url": "https://www.tiktok.com/@bellytest/video/7617997001774353671",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7616621057935412501",
+        "url": "https://www.tiktok.com/@digestivehealth260/video/7616621057935412501",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0030 < 0.0250)"
+      },
+      {
+        "id": "7613677930920578324",
+        "url": "https://www.tiktok.com/@digestive.healing2/video/7613677930920578324",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7613152698275220767",
+        "url": "https://www.tiktok.com/@drbergofficial/video/7613152698275220767",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7608744655752056094",
+        "url": "https://www.tiktok.com/@nutritition2/video/7608744655752056094",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0142 < 0.0250)"
+      },
+      {
+        "id": "7606726642009967903",
+        "url": "https://www.tiktok.com/@alex_adve1/video/7606726642009967903",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7597226697171242254",
+        "url": "https://www.tiktok.com/@doctorsood/video/7597226697171242254",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7594527320329800971",
+        "url": "https://www.tiktok.com/@healthglow123/video/7594527320329800971",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0069 < 0.0250)"
+      },
+      {
+        "id": "7585359061282000150",
+        "url": "https://www.tiktok.com/@aliceshawai/video/7585359061282000150",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0039 < 0.0250)"
+      },
+      {
+        "id": "7580798954258910478",
+        "url": "https://www.tiktok.com/@thestomachdoc/video/7580798954258910478",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7556763389498821910",
+        "url": "https://www.tiktok.com/@aliceshawai/video/7556763389498821910",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0103 < 0.0250)"
+      },
+      {
+        "id": "7555598292202114359",
+        "url": "https://www.tiktok.com/@elementcleanse/video/7555598292202114359",
+        "reason": "older than 14 days"
+      },
+      {
+        "id": "7519314419248155959",
+        "url": "https://www.tiktok.com/@gutgalz/video/7519314419248155959",
+        "reason": "older than 14 days; below minimum weighted engagement rate (0.0097 < 0.0250)"
+      },
+      {
+        "id": "7514708071084461358",
+        "url": "https://www.tiktok.com/@graceful.wellness/video/7514708071084461358",
+        "reason": "older than 14 days"
+      }
+    ]
+  },
+  "evidence_bundle_index": {
+    "created_at": "2026-05-07T17:43:29Z",
+    "bundle_count": 1,
+    "bundles": [
+      {
+        "candidate_id": "7636961034028223775",
+        "rank": 1,
+        "prefix": "001_7636961034028223775",
+        "snapshot_path": "data/001_7636961034028223775_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7636961034028223775_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7636961034028223775_source_video.mp4",
+          "bytes": 3695008,
+          "source": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-mynameisnt-20260507014931-7636961034028223775.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/001_7636961034028223775_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7636961034028223775_video_evidence_report.md"
+          }
+        }
+      }
+    ]
+  },
+  "cross_video_pattern_summary": {
+    "created_at": "2026-05-07T17:43:29Z",
+    "source_video_count": 1,
+    "priority_score_dimensions": [
+      "viral_strength",
+      "nattome_relevance",
+      "evidence_confidence",
+      "brand_safety",
+      "ease_of_production",
+      "product_fit"
+    ],
+    "pattern_comparison": {
+      "hooks": [
+        {
+          "pattern": "Clear first-three-second problem hook",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "pattern": "music_or_reused_sound",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ],
+      "emotional_triggers": [
+        {
+          "pattern": "Digestive-health curiosity",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ],
+      "audio_patterns": [
+        {
+          "pattern": "Gemini hook evidence: The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ],
+      "risky_claims": [
+        {
+          "pattern": "No risky claims flagged from available evidence",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ],
+      "nattome_opportunities": [
+        {
+          "pattern": "DH for daily digestive maintenance and routine support.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7636961034028223775"
+          ]
+        }
+      ]
+    },
+    "top_priority_shootable_angles": [
+      {
+        "candidate_id": "7636961034028223775",
+        "source_tiktok_url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 3,
+            "nattome_relevance": 1,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 19,
+          "max_points": 30
+        },
+        "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 1
+      },
+      {
+        "candidate_id": "7636961034028223775",
+        "source_tiktok_url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `get unready with me after my second bodybuilding competition (unfiltered)` into a safer prompt about i slept like a baby.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 3,
+            "nattome_relevance": 1,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 19,
+          "max_points": 30
+        },
+        "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 2
+      }
+    ],
+    "recommendation": {
+      "what_to_shoot_first": "Digestive Comfort Routine Check",
+      "candidate_id": "7636961034028223775",
+      "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+    }
+  },
+  "videos": [
+    {
+      "candidate_id": "7636961034028223775",
+      "source_metadata": {
+        "rank": 1,
+        "id": "7636961034028223775",
+        "url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-mynameisnt-20260507014931-7636961034028223775.mp4",
+        "author_handle": "mynameisntmanny",
+        "caption": "i slept like a baby ",
+        "play_count": 88900,
+        "like_count": 4160,
+        "comment_count": 4,
+        "share_count": 15,
+        "created_at": "2026-05-07T01:49:31Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0487,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.2257
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7636961034028223775",
+        "rank": 1,
+        "prefix": "001_7636961034028223775",
+        "snapshot_path": "data/001_7636961034028223775_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7636961034028223775_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7636961034028223775_source_video.mp4",
+          "bytes": 3695008,
+          "source": "https://api.apify.com/v2/key-value-stores/LqAGhbeC3gRq3Lwmy/records/video-mynameisnt-20260507014931-7636961034028223775.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/001_7636961034028223775_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7636961034028223775_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7636961034028223775_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman in a red bikini and a black robe is standing in front of a white door, looking at her stomach.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1,
+            "observation": "The woman is wearing a black robe over her red bikini, with a large gold medal around her neck. She is looking at the camera.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 3,
+            "observation": "The woman is holding the medal and looking at her stomach, which appears slightly distended.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The woman is holding the medal and looking at her stomach, which appears slightly distended, and then smiles at the camera.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 7,
+            "observation": "The woman is holding the medal up to her face and then looks at the camera.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 8,
+            "observation": "The woman is in a red bikini, tying her hair up with a red scrunchie.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 10,
+            "observation": "A hand turns on a shower faucet.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 11,
+            "observation": "A shot of feet standing in a shower with yellowish-brown water on the white tiled floor.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 13,
+            "observation": "The woman is wearing a black sports bra and black shorts/skirt, looking at her stomach.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 15,
+            "observation": "The woman is zipping up a grey hooded jacket.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 16,
+            "observation": "The woman is adjusting her hair, which is tied up with a red scrunchie.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 17,
+            "observation": "The woman is holding a silver and green serum bottle.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 18,
+            "observation": "The woman is applying serum to her face with a dropper.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 20,
+            "observation": "The woman is massaging the serum into her face.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 21,
+            "observation": "The woman is pouring lotion from a green bottle into her hand.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 22,
+            "observation": "The woman is applying lotion to her face.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 24,
+            "observation": "The woman is brushing her teeth.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "get unready with me after my second bodybuilding competition (unfiltered)",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "bloated af after fried chicken 😩",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 11,
+            "text": "ewww the color is crazy 😳",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Classical music",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 10,
+            "cue": "Sound of running water",
+            "confidence": null
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1,
+            "evidence": "The woman puts on a large gold medal, indicating an achievement from the competition, which can pique viewer interest.",
+            "source": null,
+            "confidence": 0.8
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 4,
+            "text": "bloated af after fried chicken 😩",
+            "source": null,
+            "confidence": 0.95
+          }
+        ],
+        "missing_evidence": [
+          "spoken_content"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 88900,
+        "weighted_engagement_rate": 0.0487,
+        "selection_score": 0.2257,
+        "nattome_relevance_score": 0.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7636961034028223775",
+          "source_tiktok_url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 3,
+              "nattome_relevance": 1,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 4
+            },
+            "total": 19,
+            "max_points": 30
+          },
+          "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 1
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      }
+    }
+  ]
+}

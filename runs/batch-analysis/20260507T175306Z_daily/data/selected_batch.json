@@ -1,0 +1,60 @@
+{
+  "selected_at": "2026-05-07T17:53:06Z",
+  "candidate_source": "data\\daily_selections\\nattome_daily_20260508_top5.json",
+  "selection_strategy": "input_order",
+  "requested_batch_size": 1,
+  "input_candidate_count": 5,
+  "eligible_candidate_count": 2,
+  "selected_candidate_count": 1,
+  "minimum_eligibility_filter": {
+    "minimum_views": 10000,
+    "maximum_age_days": 30,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true
+  },
+  "selected_candidates": [
+    {
+      "rank": 1,
+      "id": "7633461167788166413",
+      "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+      "author_handle": "onehealthygut",
+      "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+      "play_count": 660700,
+      "like_count": 67800,
+      "comment_count": 523,
+      "share_count": 9217,
+      "created_at": "2026-04-27T15:28:58Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.2461,
+      "nattome_relevance_score": 1.0,
+      "selection_score": 1.5268
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "7637002506635201813",
+      "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+      "reason": "below minimum views (2106 < 10000)"
+    },
+    {
+      "id": "7636847083210673421",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7636847083210673421",
+      "reason": "below minimum views (5489 < 10000)"
+    },
+    {
+      "id": "7637154901138672916",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+      "reason": "below minimum views (8002 < 10000)"
+    }
+  ]
+}

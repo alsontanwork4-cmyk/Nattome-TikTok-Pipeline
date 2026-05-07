@@ -1,0 +1,5331 @@
+{
+  "batch_metadata": {
+    "run_timestamp": "2026-05-07T17:59:36Z",
+    "mode": "quick",
+    "requested_batch_size": 5,
+    "configuration": {
+      "selection": {
+        "minimum_views": 10000,
+        "maximum_age_days": 30,
+        "minimum_weighted_engagement_rate": 0.03,
+        "requires_tiktok_link": true,
+        "requires_downloadable_video": true
+      },
+      "outputs": {
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
+        "logs": "logs"
+      },
+      "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
+        "discovery_download": "Apify",
+        "evidence_extraction": "Gemini 2.5 Flash"
+      },
+      "telegram": {
+        "enabled": true,
+        "bot_token_env": "TELEGRAM_BOT_TOKEN",
+        "chat_id_env": "TELEGRAM_CHAT_ID"
+      },
+      "cleanup": {
+        "enabled": false,
+        "requires_report_approval": true,
+        "report_approved": false,
+        "remove_source_videos": true,
+        "remove_frames": true
+      }
+    },
+    "implementation_status": {
+      "candidate_selection": "implemented",
+      "video_download": "implemented",
+      "gemini_evidence": "implemented",
+      "audio_music_trend_analysis": "implemented",
+      "claim_safety_review": "implemented",
+      "evidence_quality": "implemented",
+      "video_evidence_reports": "implemented",
+      "cross_video_pattern_summary": "implemented",
+      "structured_json_output": "implemented",
+      "telegram_delivery": "implemented",
+      "evidence_artifact_cleanup": "implemented",
+      "refinement_hooks": "implemented"
+    },
+    "notes": [
+      "This run records missing setup or missing evidence instead of fabricating analysis.",
+      "Cross-video summaries compare only captured evidence and selected candidate metadata."
+    ]
+  },
+  "selection_decisions": {
+    "selected_at": "2026-05-07T17:59:36Z",
+    "candidate_source": "data\\raw_scrapes\\nattome_raw_20260508_top30.json",
+    "selection_strategy": "viral_relevance_score",
+    "requested_batch_size": 5,
+    "input_candidate_count": 30,
+    "eligible_candidate_count": 15,
+    "selected_candidate_count": 5,
+    "minimum_eligibility_filter": {
+      "minimum_views": 10000,
+      "maximum_age_days": 30,
+      "minimum_weighted_engagement_rate": 0.03,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true
+    },
+    "selected_candidates": [
+      {
+        "rank": 1,
+        "id": "7633461167788166413",
+        "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+        "author_handle": "onehealthygut",
+        "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+        "play_count": 660700,
+        "like_count": 67800,
+        "comment_count": 523,
+        "share_count": 9217,
+        "created_at": "2026-04-27T15:28:58Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2461,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.5266
+      },
+      {
+        "rank": 2,
+        "id": "7630064907605609758",
+        "url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4",
+        "author_handle": "lilylasley17",
+        "caption": "Do not overuse this! It just helps clear your digestive system when it’s not moving things. But I do not recommend taking it a ton! Just wanted to show what glory it did for my stomach ache last night! #stomachproblems #magnesiumcitrate #digestionrelief #bloating ",
+        "play_count": 635900,
+        "like_count": 31900,
+        "comment_count": 103,
+        "share_count": 1023,
+        "created_at": "2026-04-18T11:49:54Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0671,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.0578
+      },
+      {
+        "rank": 3,
+        "id": "7629394680022584597",
+        "url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4",
+        "author_handle": "abbeyskitchen",
+        "caption": "As an IBS girly, I 100% understand choosing foods you know are gentle on your gut. But too often, I see “bloating” and “gut health” repackaged as “thinness”, when the two are not the same. Stay fueled, friends. #ibs #guthealth #bloating #whatieat #nutrition ",
+        "play_count": 545600,
+        "like_count": 32500,
+        "comment_count": 156,
+        "share_count": 183,
+        "created_at": "2026-04-16T16:28:01Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0644,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7959
+      },
+      {
+        "rank": 4,
+        "id": "7631996162110803213",
+        "url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4",
+        "author_handle": "notasianbelly",
+        "caption": "im so bloated right now it’s not even funny #bloating #bloatedstomach #bloated #pregnantbelly #fyp ",
+        "play_count": 198300,
+        "like_count": 4745,
+        "comment_count": 111,
+        "share_count": 101,
+        "created_at": "2026-04-23T16:43:15Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0318,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7919
+      },
+      {
+        "rank": 5,
+        "id": "7626464328371195150",
+        "url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4",
+        "author_handle": "thestomachdoc",
+        "caption": "This is a mystery condition that actually affects more people than classic heartburn — and most don’t realize it.\n\nIf you have constant throat clearing, a sour or bitter taste in your mouth, a chronic cough, or a persistent sensation of a lump in your throat that never seems to go away, these can be signs of laryngopharyngeal reflux (LPR). Unlike typical acid reflux, LPR often shows up without obvious heartburn, which is why it’s so commonly missed.\n\nDuet with @Nicole - Health Coach \n\n#MedicalStudent #Heartburn #GERD #AcidReflux #LPR",
+        "play_count": 349800,
+        "like_count": 8454,
+        "comment_count": 317,
+        "share_count": 1890,
+        "created_at": "2026-04-08T18:57:17Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0827,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7761
+      }
+    ],
+    "excluded_candidates": [
+      {
+        "id": "7637002506635201813",
+        "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "reason": "below minimum views (2106 < 10000)"
+      },
+      {
+        "id": "7636847083210673421",
+        "url": "https://www.tiktok.com/@drtoddstrong/video/7636847083210673421",
+        "reason": "below minimum views (5489 < 10000)"
+      },
+      {
+        "id": "7637154901138672916",
+        "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+        "reason": "below minimum views (8002 < 10000)"
+      },
+      {
+        "id": "7637191036674034957",
+        "url": "https://www.tiktok.com/@callmedoctor.p/video/7637191036674034957",
+        "reason": "below minimum views (524 < 10000)"
+      },
+      {
+        "id": "7637173314837941534",
+        "url": "https://www.tiktok.com/@lauramahachek/video/7637173314837941534",
+        "reason": "below minimum views (710 < 10000)"
+      },
+      {
+        "id": "7637126131446975757",
+        "url": "https://www.tiktok.com/@doctorsood/video/7637126131446975757",
+        "reason": "below minimum views (1968 < 10000)"
+      },
+      {
+        "id": "7635519575802580237",
+        "url": "https://www.tiktok.com/@doctormyro/video/7635519575802580237",
+        "reason": "below minimum weighted engagement rate (0.0251 < 0.0300)"
+      },
+      {
+        "id": "7636866665594096910",
+        "url": "https://www.tiktok.com/@homewithhaley_/video/7636866665594096910",
+        "reason": "below minimum weighted engagement rate (0.0204 < 0.0300)"
+      },
+      {
+        "id": "7632792202024111363",
+        "url": "https://www.tiktok.com/@doctorjohnhamm/video/7632792202024111363",
+        "reason": "below minimum views (4462 < 10000)"
+      },
+      {
+        "id": "7637082619984874783",
+        "url": "https://www.tiktok.com/@mamaeveweightloss/video/7637082619984874783",
+        "reason": "below minimum views (672 < 10000); below minimum weighted engagement rate (0.0193 < 0.0300)"
+      },
+      {
+        "id": "7637146898620632350",
+        "url": "https://www.tiktok.com/@emmamarschall/video/7637146898620632350",
+        "reason": "below minimum views (385 < 10000); below minimum weighted engagement rate (0.0156 < 0.0300)"
+      },
+      {
+        "id": "7623509579871030542",
+        "url": "https://www.tiktok.com/@dr.ryanmitchell/video/7623509579871030542",
+        "reason": "older than 30 days"
+      },
+      {
+        "id": "7632050645712850177",
+        "url": "https://www.tiktok.com/@penguinshilajit/video/7632050645712850177",
+        "reason": "below minimum weighted engagement rate (0.0134 < 0.0300)"
+      },
+      {
+        "id": "7628876336194555158",
+        "url": "https://www.tiktok.com/@teagzzz6/video/7628876336194555158",
+        "reason": "below minimum views (3795 < 10000)"
+      },
+      {
+        "id": "7623102200948067606",
+        "url": "https://www.tiktok.com/@yangzhion/video/7623102200948067606",
+        "reason": "older than 30 days"
+      }
+    ]
+  },
+  "evidence_bundle_index": {
+    "created_at": "2026-05-07T17:59:36Z",
+    "bundle_count": 5,
+    "bundles": [
+      {
+        "candidate_id": "7633461167788166413",
+        "rank": 1,
+        "prefix": "001_7633461167788166413",
+        "snapshot_path": "data/001_7633461167788166413_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7633461167788166413_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7633461167788166413_source_video.mp4",
+          "bytes": 28031052,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7633461167788166413_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7630064907605609758",
+        "rank": 2,
+        "prefix": "002_7630064907605609758",
+        "snapshot_path": "data/002_7630064907605609758_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7630064907605609758_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7630064907605609758_source_video.mp4",
+          "bytes": 1283008,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/002_7630064907605609758_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7630064907605609758_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7629394680022584597",
+        "rank": 3,
+        "prefix": "003_7629394680022584597",
+        "snapshot_path": "data/003_7629394680022584597_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7629394680022584597_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7629394680022584597_source_video.mp4",
+          "bytes": 27133810,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7629394680022584597_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7631996162110803213",
+        "rank": 4,
+        "prefix": "004_7631996162110803213",
+        "snapshot_path": "data/004_7631996162110803213_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7631996162110803213_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/004_7631996162110803213_source_video.mp4",
+          "bytes": 1983413,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/004_7631996162110803213_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7631996162110803213_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7626464328371195150",
+        "rank": 5,
+        "prefix": "005_7626464328371195150",
+        "snapshot_path": "data/005_7626464328371195150_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7626464328371195150_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7626464328371195150_source_video.mp4",
+          "bytes": 13892800,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7626464328371195150_video_evidence_report.md"
+          }
+        }
+      }
+    ]
+  },
+  "cross_video_pattern_summary": {
+    "created_at": "2026-05-07T17:59:36Z",
+    "source_video_count": 5,
+    "priority_score_dimensions": [
+      "viral_strength",
+      "nattome_relevance",
+      "evidence_confidence",
+      "brand_safety",
+      "ease_of_production",
+      "product_fit"
+    ],
+    "pattern_comparison": {
+      "hooks": [
+        {
+          "pattern": "Clear first-three-second problem hook",
+          "video_count": 5,
+          "candidate_ids": [
+            "7626464328371195150",
+            "7629394680022584597",
+            "7630064907605609758",
+            "7631996162110803213",
+            "7633461167788166413"
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "pattern": "voiceover",
+          "video_count": 3,
+          "candidate_ids": [
+            "7626464328371195150",
+            "7629394680022584597",
+            "7633461167788166413"
+          ]
+        },
+        {
+          "pattern": "music_or_reused_sound",
+          "video_count": 2,
+          "candidate_ids": [
+            "7630064907605609758",
+            "7631996162110803213"
+          ]
+        }
+      ],
+      "emotional_triggers": [
+        {
+          "pattern": "Digestive discomfort relief",
+          "video_count": 5,
+          "candidate_ids": [
+            "7626464328371195150",
+            "7629394680022584597",
+            "7630064907605609758",
+            "7631996162110803213",
+            "7633461167788166413"
+          ]
+        }
+      ],
+      "audio_patterns": [
+        {
+          "pattern": "Gemini hook evidence: The video immediately shows a 'before' state with visible text 'Before the magnesium citrate' and a person looking uncomfortable, setting up a clear comparison and problem statement within the first few seconds.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7630064907605609758"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7631996162110803213"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with a woman coughing and the on-screen text 'POV: you have acid reflux', immediately presenting a relatable health scenario.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7626464328371195150"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7629394680022584597"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+          "video_count": 1,
+          "candidate_ids": [
+            "7633461167788166413"
+          ]
+        }
+      ],
+      "risky_claims": [
+        {
+          "pattern": "No risky claims flagged from available evidence",
+          "video_count": 4,
+          "candidate_ids": [
+            "7626464328371195150",
+            "7629394680022584597",
+            "7630064907605609758",
+            "7631996162110803213"
+          ]
+        },
+        {
+          "pattern": "cure_claim",
+          "video_count": 1,
+          "candidate_ids": [
+            "7633461167788166413"
+          ]
+        }
+      ],
+      "nattome_opportunities": [
+        {
+          "pattern": "DH for daily digestive maintenance and routine support.",
+          "video_count": 4,
+          "candidate_ids": [
+            "7629394680022584597",
+            "7630064907605609758",
+            "7631996162110803213",
+            "7633461167788166413"
+          ]
+        },
+        {
+          "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7626464328371195150"
+          ]
+        }
+      ]
+    },
+    "top_priority_shootable_angles": [
+      {
+        "candidate_id": "7626464328371195150",
+        "source_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman coughing and the on-screen text 'POV: you have acid reflux', immediately presenting a relatable health scenario.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 1
+      },
+      {
+        "candidate_id": "7626464328371195150",
+        "source_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `POV: you have acid reflux` into a safer prompt about This is a mystery condition that actually affects more people than classic heartburn — and most don’t realize it. If you have constant throat clearing, a sour or bitter taste in your mouth, a chronic cough, or a persistent sensation of a lump in your throat that never seems to go away, these can be signs of laryngopharyngeal reflux (LPR). Unlike typical acid reflux, LPR often shows up without obvious heartburn, which is why it’s so commonly missed. Duet with @Nicole - Health Coach #MedicalStudent #Heartburn #GERD #AcidReflux #LPR.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 2
+      },
+      {
+        "candidate_id": "7626464328371195150",
+        "source_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: Coughing and throat clearing sounds.",
+        "avatar": "The Sufferer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Borrow the audio pacing cue `Coughing sound` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 3
+      },
+      {
+        "candidate_id": "7629394680022584597",
+        "source_tiktok_url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 4
+      },
+      {
+        "candidate_id": "7629394680022584597",
+        "source_tiktok_url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `*dietitian reacts*` into a safer prompt about As an IBS girly, I 100% understand choosing foods you know are gentle on your gut. But too often, I see “bloating” and “gut health” repackaged as “thinness”, when the two are not the same. Stay fueled, friends. #ibs #guthealth #bloating #whatieat #nutrition.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 5
+      },
+      {
+        "candidate_id": "7629394680022584597",
+        "source_tiktok_url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: Here's everything I eat in a day to feel snatched instead of bloated as a 25 year old.",
+        "avatar": "The Sufferer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `Voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 29,
+          "max_points": 30
+        },
+        "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 6
+      },
+      {
+        "candidate_id": "7630064907605609758",
+        "source_tiktok_url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a 'before' state with visible text 'Before the magnesium citrate' and a person looking uncomfortable, setting up a clear comparison and problem statement within the first few seconds.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 7
+      },
+      {
+        "candidate_id": "7630064907605609758",
+        "source_tiktok_url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `Before the magnesium citrate` into a safer prompt about Do not overuse this! It just helps clear your digestive system when it’s not moving things. But I do not recommend taking it a ton! Just wanted to show what glory it did for my stomach ache last night! #stomachproblems #magnesiumcitrate #digestionrelief #bloating.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 8
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 9
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `FOODS THAT HEALED MY GUT` into a safer prompt about food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 10
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+        "avatar": "The Sufferer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `Voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 11
+      },
+      {
+        "candidate_id": "7631996162110803213",
+        "source_tiktok_url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 4,
+            "nattome_relevance": 4,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 24,
+          "max_points": 30
+        },
+        "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 12
+      },
+      {
+        "candidate_id": "7631996162110803213",
+        "source_tiktok_url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `the water I drank caught up with me` into a safer prompt about im so bloated right now it’s not even funny #bloating #bloatedstomach #bloated #pregnantbelly #fyp.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 4,
+            "nattome_relevance": 4,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 24,
+          "max_points": 30
+        },
+        "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 13
+      }
+    ],
+    "recommendation": {
+      "what_to_shoot_first": "Digestive Comfort Routine Check",
+      "candidate_id": "7626464328371195150",
+      "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+    }
+  },
+  "videos": [
+    {
+      "candidate_id": "7633461167788166413",
+      "source_metadata": {
+        "rank": 1,
+        "id": "7633461167788166413",
+        "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+        "author_handle": "onehealthygut",
+        "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+        "play_count": 660700,
+        "like_count": 67800,
+        "comment_count": 523,
+        "share_count": 9217,
+        "created_at": "2026-04-27T15:28:58Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2461,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.5266
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7633461167788166413",
+        "rank": 1,
+        "prefix": "001_7633461167788166413",
+        "snapshot_path": "data/001_7633461167788166413_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7633461167788166413_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7633461167788166413_source_video.mp4",
+          "bytes": 28031052,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7633461167788166413_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7633461167788166413_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman is sitting in a car, looking at the camera and talking. She gestures with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "observation": "The woman is still in the car, driving, and talking to the camera. She gestures with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 37,
+            "observation": "The woman is driving and talking, gesturing with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 105,
+            "observation": "The woman is driving and talking, gesturing with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 129,
+            "observation": "The woman is driving and talking, gesturing with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 150,
+            "observation": "The woman is driving and talking, gesturing with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 235,
+            "observation": "The woman is driving and talking, then a white list of foods appears on screen, covering most of the frame.",
+            "confidence": 1.0
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "FOODS THAT HEALED MY GUT",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "Here's a list of foods I would start eating everyday",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "I'll explain why + a full list you can screenshot at the end!!",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "These foods specifically have gut healing properties",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 7,
+            "text": "and I'm gonna break down each one for you and explain why they help.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 9,
+            "text": "Get used to eating these things on a regular basis",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 12,
+            "text": "and watch bloating and constipation disappear.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "ENZYME RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 14,
+            "text": "Start with our enzyme rich foods.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "So enzymes are little proteins that help you to break down and digest food.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 20,
+            "text": "When you increase enzyme rich foods in your diet, you help your gut digest better.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "It'll stop bloating before it even happens.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 27,
+            "text": "My favourite enzyme rich foods to tell people to include are kiwis, papayas and pineapple.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 32,
+            "text": "There's actually a lot of research on two kiwis a day being one of the most helpful things that you can do to heal I B S.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "PROBIOTIC RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 37,
+            "text": "Now we're moving on to probiotic rich foods.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 40,
+            "text": "And probiotic rich foods can also be high in enzymes, like sauerkraut, kimchi or kefir.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "Only need about a tablespoon of these foods everyday, so don't overdo it, you can tolerate it.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 49,
+            "text": "I also really like a two yoghurt that's filled with probiotics for the gut.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 53,
+            "text": "So those probiotic rich foods are high in enzymes, but they're also high in probiotics, which is good bacteria for your gut.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 59,
+            "text": "Adding in good bacteria can help alleviate digestive symptoms, and you don't necessarily have to take a probiotic supplement to do that.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 107,
+            "text": "EAST TO DIGEST FIBER RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 105,
+            "text": "Now let's talk fibre rich foods.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 108,
+            "text": "You wanna include a lot of fibre, so That it feeds the good bacteria in your gut and it keeps things moving.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 112,
+            "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 115,
+            "text": "You kill two birds with one stone with kiwis.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 118,
+            "text": "Both a high enzyme food and also a high fibre food.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 121,
+            "text": "Some other high fibre foods that are easy to digest and generally well tolerated are sweet potatoes, oats, brown rice and quinoa.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 131,
+            "text": "GASTRIC JUICE PROMOTING FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 129,
+            "text": "We have our gastric juice promoting foods.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 132,
+            "text": "The more you can increase gastric juice production, the better your digestion is gonna be and the less bloating you're gonna have.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 139,
+            "text": "This is gonna be apple cider vinegar.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 141,
+            "text": "Bitter foods like kale, arugula, dandelion.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 144,
+            "text": "And no, you don't have to eat a whole salad of these things, but just chewing on them a little bit before you eat a meal is going to be super helpful.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 152,
+            "text": "ANTI-INFLAMMATORY/ SOOTHING FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 150,
+            "text": "And lastly, we have our anti inflammatory foods.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 153,
+            "text": "These are foods that actually soothe and repair the lining of the gut.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 157,
+            "text": "Bone broth is my number one.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 159,
+            "text": "You can get bone broth powders and drink them.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 163,
+            "text": "Uh, I know Costco has one. Just ingredients has one that I drink every single morning. I think it's delicious.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 168,
+            "text": "Make your own bone broth using a chicken carcass.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 171,
+            "text": "Anytime I make, like, a whole chicken or I buy a rotisserie chicken, I will make bone broth with that.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 175,
+            "text": "I also buy cartons of bone broth at Trader Joe's or Walmart.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 179,
+            "text": "Ginger, fennel and peppermint are my other favorite foods that actually help soothe and Stop bloating if you're actively bloated.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 185,
+            "text": "Those are foods I love to turn to.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 187,
+            "text": "You can drink these as teas, ginger you can obviously cook with, and fennel is great in like casseroles or soups,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "FOODS THAT HEAL YOUR GUT",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "Enzyme rich foods:",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Kiwis",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Pineapple",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Papaya",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "Probiotic rich foods:",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Sauerkraut",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Kimchi",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Kefir",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- A2 yogurt",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "Fiber rich foods:",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Sweet potatoes",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Oats",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Brown rice",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Quinoa",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "Gastric juice promoting foods:",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Apple cider vinegar",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Bitters (kale, arugula, dandelion, burdock, yarrow)",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "Healing/soothing foods:",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Bone broth (comment BONE BROTH and I'll send you my favorite drink!)",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Peppermint",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Fennel",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "- Ginger",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 240,
+            "text": "SCREENSHOT FOR LATER!",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 3,
+            "text": "Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 3,
+            "end_seconds": 9,
+            "text": "These foods specifically have gut healing properties and I'm gonna break down each one for you and explain why they help.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 9,
+            "end_seconds": 14,
+            "text": "Get used to eating these things on a regular basis and watch bloating and constipation disappear.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 14,
+            "end_seconds": 16,
+            "text": "Start with our enzyme rich foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 16,
+            "end_seconds": 20,
+            "text": "So enzymes are little proteins that help you to break down and digest food.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 26,
+            "text": "When you increase enzyme rich foods in your diet, you help your gut digest better. It'll stop bloating before it even happens.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 26,
+            "end_seconds": 32,
+            "text": "My favorite enzyme rich foods to tell people to include are kiwis, papayas and pineapple.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 32,
+            "end_seconds": 37,
+            "text": "There's actually a lot of research on two kiwis a day being one of the most helpful things that you can do to heal I B S.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 37,
+            "end_seconds": 40,
+            "text": "Now we're moving on to probiotic rich foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 40,
+            "end_seconds": 44,
+            "text": "And probiotic rich foods can also be high in enzymes, like sauerkraut, kimchi or kefir.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 44,
+            "end_seconds": 49,
+            "text": "Only need about a tablespoon of these foods every day, so don't overdo it, you can tolerate it.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 49,
+            "end_seconds": 53,
+            "text": "I also really like A2 yogurt that's filled with probiotics for the gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 53,
+            "end_seconds": 59,
+            "text": "So those probiotic rich foods are high in enzymes, but they're also high in probiotics, which is good bacteria for your gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 59,
+            "end_seconds": 105,
+            "text": "Adding in good bacteria can help alleviate digestive symptoms, and you don't necessarily have to take a probiotic supplement to do that. Now, let's talk fiber rich foods. You wanna include a lot of fiber so that it feeds the good bacteria in your gut and it keeps things moving. Stagnation in the gut breeds bloating, gas and constipation. You kill two birds with one stone with kiwis. Both a high enzyme food and also a high fiber food. Some other high fiber foods that are easy to digest and generally well tolerated are sweet potatoes, oats, brown rice and quinoa.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 129,
+            "end_seconds": 131,
+            "text": "We have our gastric juice promoting foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 131,
+            "end_seconds": 139,
+            "text": "The more you can increase gastric juice production, the better your digestion is gonna be and the less bloating you're gonna have.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 139,
+            "end_seconds": 141,
+            "text": "This is gonna be apple cider vinegar.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 141,
+            "end_seconds": 150,
+            "text": "Bitter foods like kale, arugula, dandelion. And no, you don't have to eat a whole salad of these things, but just chewing on them a little bit before you eat a meal is going to be super helpful.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 150,
+            "end_seconds": 153,
+            "text": "And lastly, we have our anti inflammatory foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 153,
+            "end_seconds": 157,
+            "text": "These are foods that actually soothe and repair the lining of the gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 157,
+            "end_seconds": 159,
+            "text": "Bone broth is my number one.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 159,
+            "end_seconds": 163,
+            "text": "You can get bone broth powders and drink them.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 163,
+            "end_seconds": 168,
+            "text": "Uh, I know Costco has one, just ingredients has one that I drink every single morning. I think it's delicious.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 168,
+            "end_seconds": 171,
+            "text": "Make your own bone broth using a chicken carcass.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 171,
+            "end_seconds": 175,
+            "text": "Anytime I make, like, a whole chicken or I buy a rotisserie chicken, I will make bone broth with that.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 175,
+            "end_seconds": 179,
+            "text": "Also buy cartons of bone broth at Trader Joe's or Walmart.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 179,
+            "end_seconds": 185,
+            "text": "Ginger, fennel and peppermint are my other favorite foods that actually help soothe and Stop bloating if you're actively bloated.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 185,
+            "end_seconds": 187,
+            "text": "Those are foods I love to turn to.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 187,
+            "end_seconds": 192,
+            "text": "You can drink these as teas, ginger you can obviously cook with, and fennel is great in like casseroles or soups,",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 235,
+            "end_seconds": 243,
+            "text": "but you can get any of them in tea form as well. Here's the full list of everything that I talked about if you want to screenshot it for later.",
+            "language": "English",
+            "confidence": 1.0
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 37,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 105,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 129,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 150,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 235,
+            "cue": "Voiceover",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 2,
+            "text": "heal my gut",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "gut healing properties",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 12,
+            "text": "watch bloating and constipation disappear",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "help your gut digest better",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "It'll stop bloating before it even happens.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 36,
+            "text": "heal I B S",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 52,
+            "text": "probiotics for the gut",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 58,
+            "text": "good bacteria for your gut",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 59,
+            "text": "Adding in good bacteria can help alleviate digestive symptoms",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 109,
+            "text": "feeds the good bacteria in your gut and it keeps things moving.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 112,
+            "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 135,
+            "text": "the better your digestion is gonna be and the less bloating you're gonna have.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 154,
+            "text": "foods that actually soothe and repair the lining of the gut.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 182,
+            "text": "help soothe and Stop bloating if you're actively bloated.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 236,
+            "text": "FOODS THAT HEAL YOUR GUT",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 660700,
+        "weighted_engagement_rate": 0.2461,
+        "selection_score": 1.5266,
+        "nattome_relevance_score": 1.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [
+          {
+            "category": "cure_claim",
+            "claim_text": "heal",
+            "evidence_source": {
+              "artifact": "gemini_claim_evidence",
+              "timestamp_seconds": 2
+            },
+            "guidance": {
+              "action": "avoid",
+              "reason": "Nattome should not reuse cure or disease-treatment promises.",
+              "nattome_safe_language": "Talk about supporting digestive comfort and daily gut routines."
+            }
+          }
+        ],
+        "summary": {
+          "flagged_count": 1,
+          "guidance_actions": [
+            "avoid"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "claim safety review flagged unsafe claims"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "claim_safety_review_flagged_claims"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7633461167788166413",
+          "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 5,
+              "evidence_confidence": 3,
+              "brand_safety": 3,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 26,
+            "max_points": 30
+          },
+          "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 9
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7630064907605609758",
+      "source_metadata": {
+        "rank": 2,
+        "id": "7630064907605609758",
+        "url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4",
+        "author_handle": "lilylasley17",
+        "caption": "Do not overuse this! It just helps clear your digestive system when it’s not moving things. But I do not recommend taking it a ton! Just wanted to show what glory it did for my stomach ache last night! #stomachproblems #magnesiumcitrate #digestionrelief #bloating ",
+        "play_count": 635900,
+        "like_count": 31900,
+        "comment_count": 103,
+        "share_count": 1023,
+        "created_at": "2026-04-18T11:49:54Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0671,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.0578
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7630064907605609758",
+        "rank": 2,
+        "prefix": "002_7630064907605609758",
+        "snapshot_path": "data/002_7630064907605609758_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7630064907605609758_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7630064907605609758_source_video.mp4",
+          "bytes": 1283008,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/002_7630064907605609758_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7630064907605609758_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7630064907605609758_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A young woman with blonde hair, wearing a black crop top and brown pants, stands in a room. She looks uncomfortable, holding her stomach and turning to show her midsection from different angles. Her stomach appears slightly bloated.",
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The same woman, now with styled blonde hair (some curlers still visible), wearing a light blue crop top and dark jeans, stands in the same room. She is smiling and appears happy, showing her midsection from different angles. Her stomach appears flatter.",
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 8,
+            "observation": "The woman makes an exaggerated surprised or impressed facial expression, looking at her stomach.",
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 9,
+            "observation": "A close-up shot of the woman's face, smiling.",
+            "confidence": 0.9
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Before the magnesium citrate",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "After ✨✨",
+            "confidence": 0.95,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Upbeat pop music plays throughout the video.",
+            "confidence": 0.9
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video immediately shows a 'before' state with visible text 'Before the magnesium citrate' and a person looking uncomfortable, setting up a clear comparison and problem statement within the first few seconds.",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Before the magnesium citrate",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "After ✨✨",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "The visual comparison of the woman's stomach from a 'bloated' appearance 'Before the magnesium citrate' to a 'flatter' appearance 'After' implies a claim that magnesium citrate helps with bloating or digestion.",
+            "source": null,
+            "confidence": 0.85
+          }
+        ],
+        "missing_evidence": [
+          "spoken_content"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video immediately shows a 'before' state with visible text 'Before the magnesium citrate' and a person looking uncomfortable, setting up a clear comparison and problem statement within the first few seconds.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 635900,
+        "weighted_engagement_rate": 0.0671,
+        "selection_score": 1.0578,
+        "nattome_relevance_score": 1.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7630064907605609758",
+          "source_tiktok_url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a 'before' state with visible text 'Before the magnesium citrate' and a person looking uncomfortable, setting up a clear comparison and problem statement within the first few seconds.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 5,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 5
+            },
+            "total": 26,
+            "max_points": 30
+          },
+          "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 7
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7629394680022584597",
+      "source_metadata": {
+        "rank": 3,
+        "id": "7629394680022584597",
+        "url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4",
+        "author_handle": "abbeyskitchen",
+        "caption": "As an IBS girly, I 100% understand choosing foods you know are gentle on your gut. But too often, I see “bloating” and “gut health” repackaged as “thinness”, when the two are not the same. Stay fueled, friends. #ibs #guthealth #bloating #whatieat #nutrition ",
+        "play_count": 545600,
+        "like_count": 32500,
+        "comment_count": 156,
+        "share_count": 183,
+        "created_at": "2026-04-16T16:28:01Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0644,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7959
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7629394680022584597",
+        "rank": 3,
+        "prefix": "003_7629394680022584597",
+        "snapshot_path": "data/003_7629394680022584597_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7629394680022584597_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7629394680022584597_source_video.mp4",
+          "bytes": 27133810,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7629394680022584597_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7629394680022584597_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman in a beige top lifts it to reveal her toned abdomen. A blonde woman (Abbey) is shown in a smaller inset, reacting.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.08,
+            "observation": "Abbey is speaking directly to the camera, holding a small microphone. She is wearing a light blue button-up shirt and jeans.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.25,
+            "observation": "A plate with scrambled eggs and two slices of sourdough toast is shown from an overhead view.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.26,
+            "observation": "Abbey is reacting to the image of the eggs and toast, gesturing with her hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.52,
+            "observation": "A bowl of cream of rice with a dollop of peanut butter on the side is shown from an overhead view.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.54,
+            "observation": "Abbey is speaking, gesturing with her hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.25,
+            "observation": "A research paper title and abstract are overlaid on the screen next to Abbey.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.34,
+            "observation": "Abbey holds up a package of 'neue theory' plant-based protein powder.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.37,
+            "observation": "Abbey holds up a bottle of Lactantia UltraPur milk.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.39,
+            "observation": "Abbey holds up a bottle of Ripple plant-based milk.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.4,
+            "observation": "Abbey holds up a carton of Silk protein milk and a bottle of Fairlife milk, alongside Ripple milk.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.43,
+            "observation": "A woman is assembling a burger with a lettuce wrap instead of a bun, adding cheese and a beef patty. A small container of salsa is next to it.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.48,
+            "observation": "Abbey is reacting to the lettuce-wrapped burger, gesturing with her hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2,
+            "observation": "Images of sweet potatoes and quinoa are displayed next to Abbey.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.03,
+            "observation": "A plate with ground beef, rice, and beans is shown from an overhead view.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.05,
+            "observation": "Abbey is reacting to the meal, gesturing with her hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.08,
+            "observation": "A graphic showing a triangle with 'HCC' in the center is overlaid, representing 'Hunger Crushing Combo'.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.29,
+            "observation": "A jar of 'neue theory DIGEST + DEBLOAT' is displayed next to Abbey.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.36,
+            "observation": "A hand holds a pint of Frönen mint chip dairy-free frozen dessert.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.38,
+            "observation": "Abbey is speaking, gesturing with her hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.43,
+            "observation": "The nutrition facts and ingredient list for Frönen mint chip ice cream are overlaid next to Abbey.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 3.04,
+            "observation": "A small inset of the original woman showing her abs is displayed while Abbey speaks.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "*dietitian reacts*",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "EVERYTH",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "to feel snatched instead of bloated as a 25 year old",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "HERE'S EVERYTHING I",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "DAY TO FEEL",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.03,
+            "text": "BLOATED.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.03,
+            "text": "BOY, UM,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.04,
+            "text": "NOT A WILDLY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.06,
+            "text": "OBVIOUS BODY CHECK,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.07,
+            "text": "I REALLY DO",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.09,
+            "text": "IS.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.09,
+            "text": "BUT HERE'S MY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.1,
+            "text": "FRIENDLY REMINDER TO ALL OF YOU",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.12,
+            "text": "FOLKS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.12,
+            "text": "THAT YOU CAN DO ALL THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.14,
+            "text": "SAME THINGS THAT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.15,
+            "text": "SHE DOES TO LOOK SNATCHED",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.17,
+            "text": "AND STILL NOT LOOK LIKE HER.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.18,
+            "text": "BUT I'M ABBEY SHARP, I'M THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.19,
+            "text": "INTERNET'S NO BS DIETITIAN.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.21,
+            "text": "LET'S TAKE A LOOK SEE AT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.23,
+            "text": "SOME OF THESE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.24,
+            "text": "HOT DIET TIPS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.24,
+            "text": "TO GET SNATCHED.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.25,
+            "text": "9:00am",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.25,
+            "text": "SOME EGGS AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.26,
+            "text": "SOURDOUGH TOAST.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.27,
+            "text": "LOTS OF PROTEIN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.28,
+            "text": "FROM THE EGG",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.29,
+            "text": "FIBRE FROM THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.31,
+            "text": "SOURDOUGH.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.31,
+            "text": "BOTH EGGS AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.32,
+            "text": "SOURDOUGH ARE VERY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.33,
+            "text": "GOOD OPTIONS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.34,
+            "text": "IF YOU ARE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.35,
+            "text": "FEELING BLOATED OR",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.36,
+            "text": "ARE SUSCEPTIBLE TO",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.37,
+            "text": "BLOATING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.37,
+            "text": "BECAUSE THEY ARE VERY GENTLE ON",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.38,
+            "text": "THE GUT.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.39,
+            "text": "BUT I WOULD",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.4,
+            "text": "HIGHLY RECOMMEND KEEPING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.41,
+            "text": "AT LEAST 1 OR 2 YOLKS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.43,
+            "text": "IN THAT EGG",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.44,
+            "text": "KIND OF SCRAMBLE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.45,
+            "text": "THAT'S GOING TO ADD",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.46,
+            "text": "SOME HEALTHY FATS,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.47,
+            "text": "SOME CHOLINE ANTIOXIDANTS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.49,
+            "text": "AND VITAMIN D",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.5,
+            "text": "AND ALSO NOT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.51,
+            "text": "LIKELY TO CAUSE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.51,
+            "text": "BLOATING.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.52,
+            "text": "11:00am",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.52,
+            "text": "CREAM OF RICE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.53,
+            "text": "SOME PEANUT BUTTER.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.54,
+            "text": "OKAY, SO CREAM OF WHEAT IS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.55,
+            "text": "ALSO A VERY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.56,
+            "text": "GENTLE SOOTHING MEAL",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.57,
+            "text": "FOR YOUR GUT,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.57,
+            "text": "BUT IT'S GENTLE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.59,
+            "text": "BECAUSE THERE'S NOT A WHOLE LOT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1,
+            "text": "GOING ON HERE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.01,
+            "text": "LIKE THERE'S ZERO",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.02,
+            "text": "FIBRE, ONLY 2",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.03,
+            "text": "GRAMS OF PROTEIN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.04,
+            "text": "AND ALSO IS VERY LOW CALORIE.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.06,
+            "text": "YES, BLOATING CAN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.07,
+            "text": "BE CAUSED BY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.08,
+            "text": "EXCESS FIBRE,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.09,
+            "text": "ESPECIALLY HIGH FODMAP",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.1,
+            "text": "FIBRE FOODS,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.12,
+            "text": "BUT A LOT OF THE TIME",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.14,
+            "text": "IT'S ACTUALLY FROM",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.14,
+            "text": "CONSTIPATION.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.16,
+            "text": "SO WE IDEALLY WANT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.17,
+            "text": "TO IDENTIFY THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.18,
+            "text": "PRECISE FODMAP TRIGGERS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.2,
+            "text": "WHILE STILL MEETING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.21,
+            "text": "OUR FIBRE NEEDS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.22,
+            "text": "FROM LESS TRIGGERING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.23,
+            "text": "SOURCES.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.24,
+            "text": "SO FOR EXAMPLE,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.25,
+            "text": "Randomized Controlled Trial",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.25,
+            "text": "Am J Gastroenterol. 2021 Jun 1;116(6):1304-1312.\ndoi: 10.14309/ajg.0000000000001149.\nExploratory Comparative Effectiveness Trial of\nGreen Kiwifruit, Psyllium, or Prunes in US\nPatients With Chronic Constipation\nSamuel W Chey 1, William D Chey 1, Kenya Jackson 1 2,\nShanti Eswaran 1\nAffiliations + expand\nPMID: 34074\nDOI: 10.14309/ajg.0000000000001149",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.25,
+            "text": "RESEARCH HAS FOUND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.27,
+            "text": "THAT KIWI FRUIT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.28,
+            "text": "NOT ONLY CAN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.29,
+            "text": "HELP WITH CONSTIPATION",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.3,
+            "text": "BUT CAN ALSO",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.31,
+            "text": "HELP WITH BLOATING.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.32,
+            "text": "YOU CAN ALSO",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.33,
+            "text": "UP THE PROTEIN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.34,
+            "text": "IN THIS MEAL",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.34,
+            "text": "BY ADDING A",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.35,
+            "text": "A GUT FRIENDLY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.36,
+            "text": "PROTEIN POWDER",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.37,
+            "text": "OR MAKING IT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.38,
+            "text": "WITH A HIGHER",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.38,
+            "text": "PROTEIN MILK LIKE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.4,
+            "text": "PEA, SOY, OR",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.41,
+            "text": "LACTOSE FREE COW'S",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.42,
+            "text": "MILK IF THAT'S",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.42,
+            "text": "TOLERATED.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.43,
+            "text": "3:00pm",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.43,
+            "text": "WAS CRAVING BEEF",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.44,
+            "text": "HAVE ANY GLUTEN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.45,
+            "text": "HOME",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.46,
+            "text": "HAD TO DO.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.47,
+            "text": "I ADDED SOME",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.48,
+            "text": "WE GOT LOTS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.49,
+            "text": "OF PROTEIN IN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.5,
+            "text": "THE EGG AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.5,
+            "text": "THE BURGER BUT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.51,
+            "text": "AGAIN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.52,
+            "text": "VERY LITTLE CARBS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.53,
+            "text": "AND FIBRE.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.54,
+            "text": "NOW GLUTEN IS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.55,
+            "text": "A CONCERN.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.56,
+            "text": "PAIRING THE BURGER",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.57,
+            "text": "WITH ANOTHER SOURCE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.58,
+            "text": "OF LIKE A",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1.59,
+            "text": "LOW FODMAP FIBRE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2,
+            "text": "LIKE SWEET POTATOES",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.01,
+            "text": "OR QUINOA WOULD",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.02,
+            "text": "BE A REALLY GREAT OPTION.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.03,
+            "text": "7:00pm",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.03,
+            "text": "GROUND BEEF WITH",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.04,
+            "text": "VEGGIES, RICE AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.05,
+            "text": "BEANS.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.05,
+            "text": "UH YUM. THIS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.06,
+            "text": "LOOKS LIKE AN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.07,
+            "text": "AMAZING HUNGER CRUSHING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.08,
+            "text": "HCC",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.09,
+            "text": "COMBO HERE.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.09,
+            "text": "WE GOT LOADS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.1,
+            "text": "OF PROTEIN IN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.11,
+            "text": "THE BEEF AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.11,
+            "text": "THE BEANS.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.12,
+            "text": "WE GOT A LITTLE BIT OF",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.13,
+            "text": "FIBRE IN THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.14,
+            "text": "BEANS AND THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.14,
+            "text": "VEGGIES",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.15,
+            "text": "AND PROBABLY SOME",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.16,
+            "text": "KIND OF HEALTHY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.16,
+            "text": "FATS MAYBE IN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.17,
+            "text": "THE COOKING OIL.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.18,
+            "text": "NOW BEANS CAN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.19,
+            "text": "BE A COMMON",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.2,
+            "text": "BLOATING TRIGGER",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.2,
+            "text": "BECAUSE THEY HAVE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.21,
+            "text": "DIGEST FIBRES.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.22,
+            "text": "SO USING LIKE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.23,
+            "text": "AN ALPHA GALACTOSIDASE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.24,
+            "text": "DIGESTIVE ENZYME CAN",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.25,
+            "text": "POTENTIALLY HELP",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.26,
+            "text": "IF YOU ARE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.27,
+            "text": "STRUGGLING WITH THAT.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.28,
+            "text": "AND PS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.29,
+            "text": "NEUE THEORIES DIGESTION",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.3,
+            "text": "BLOAT IS NOW",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.31,
+            "text": "60% OFF WHILE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.32,
+            "text": "SUPPLIES LAST.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.33,
+            "text": "SO JUST A",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.34,
+            "text": "SHAMELESS PLUG BECAUSE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.35,
+            "text": "THIS IS YOUR LAST CHANCE TO GET IT.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.36,
+            "text": "9:00pm",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.36,
+            "text": "COCONUT MILK MINT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.37,
+            "text": "ICE CREAM BEFORE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.38,
+            "text": "BED.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.38,
+            "text": "OKAY, I'VE NEVER",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.39,
+            "text": "HEARD OF THIS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.4,
+            "text": "BRAND, BUT IF YOU",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.41,
+            "text": "VALUE AN ICE CREAM",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.42,
+            "text": "VERY MINIMAL INGREDIENT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.43,
+            "text": "Dessert glacé sans produits laitiers - Chips\nde Menthe, 473 mL\nIngredients:\nCoconut cream*,\nHoney, Water, Cocoa\nliquor*, Coconut\nsugar*, Cocoa\nbutter*, Mint extract*\nOrganic. Contains:\nTree Nuts\nIngrédients: Crème\nde coco, Miel, Eau,\nLiqueur de cacao,\nSucre de coco*,\nBeurre de cacao*,\nExtrait de menthe*\nBiologique. Contient: Noix (noix\nde coco)\nNutrition Facts\nValeur nutritive\nServing size 1/3 cup (157.5 mL)\nPar 1/3 tasse (157.5 mL)\nCalories 230\nFat / Lipides 17 g\nSaturated / saturés 14 g\n+ Trans / trans 0.1 g\nCarbohydrate / Glucides 16 g\nFibre / Fibres 1 g\nSugars / Sucres 14 g\nProtein / Protéines 2 g\nCholesterol / Cholestérol 5 mg\nSodium 30 mg\nPotassium 100 mg\nCalcium 10 mg\nIron / Fer 0.5 mg\n*5% or less is a little, 15% or more is a lot\n*5% ou moins c'est peu, 15% ou plus c'est beaucoup\nProduct of USA / Produit de USA (Fronen Foods\nFRO-MNT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.43,
+            "text": "A REALLY GREAT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.45,
+            "text": "CHOICE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.45,
+            "text": "WITHOUT ANY KIND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.46,
+            "text": "OF SUGAR ALCOHOLS,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.47,
+            "text": "WHICH CAN BE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.48,
+            "text": "A MAJOR BLOATING",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.48,
+            "text": "CULPRIT FOR A",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.49,
+            "text": "LOT OF FOLKS.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.5,
+            "text": "FRIENDS, I HAVE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.51,
+            "text": "ZERO ISSUE WITH",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.52,
+            "text": "ANY OF THESE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.53,
+            "text": "MEALS LIKE THEY'RE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.54,
+            "text": "PROTEIN RICH,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.55,
+            "text": "THEY'RE NUTRIENT DENSE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.56,
+            "text": "AND FOR THE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.57,
+            "text": "MOST PART THEY'RE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.58,
+            "text": "TOTALLY VALID CHOICES",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2.59,
+            "text": "FOR SENSITIVE TUMMIES.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "BUT WHEN GUT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.01,
+            "text": "HEALING IS PACKAGED",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.02,
+            "text": "WITH A BODY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.04,
+            "text": "AND FRAMED AROUND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.05,
+            "text": "LOOKING SNATCHED,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.08,
+            "text": "IT TENDS TO BLUR",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.09,
+            "text": "THE LINE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.1,
+            "text": "BETWEEN HEALTH AND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.11,
+            "text": "AESTHETICS.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.12,
+            "text": "AND SPEAKING AS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.13,
+            "text": "SOMEONE WITH I",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.14,
+            "text": "BS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.15,
+            "text": "WITH VERY PAINFUL",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.16,
+            "text": "BLOATING FOR YEARS,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.17,
+            "text": "PEOPLE WITH I",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.18,
+            "text": "NEED REAL SOLUTIONS",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.2,
+            "text": "THAT ARE NOT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.21,
+            "text": "SNEAKILY WRAPPED UP",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.22,
+            "text": "IN DIET CULTURE.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.24,
+            "text": "SO LET'S NOT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.25,
+            "text": "CO OPT GUT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.26,
+            "text": "HEALTH LANGUAGE",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.27,
+            "text": "TO SELL WHAT",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.28,
+            "text": "MAY ACTUALLY JUST",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.29,
+            "text": "BE ANOTHER BODY",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.3,
+            "text": "IDEAL.",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.31,
+            "text": "STAY FUELED,",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3.32,
+            "text": "FRIENDS. NEXT.",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 3,
+            "text": "Here's everything I eat in a day to feel snatched instead of bloated as a 25 year old.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 3,
+            "end_seconds": 9,
+            "text": "Boy, um, if that is not a wildly obvious body check, I really do not know what is.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 9,
+            "end_seconds": 18,
+            "text": "But here's my friendly reminder to all of you folks, that you can do all the same things that she does to look snatched and still not look like her.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 18,
+            "end_seconds": 25,
+            "text": "But I'm Abbey Sharp, I'm the internet's no BS dietitian. Let's take a look see at some of these hot diet tips to get snatched.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 25,
+            "end_seconds": 26,
+            "text": "Some eggs and sourdough toast.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 26,
+            "end_seconds": 30,
+            "text": "Alright, so we got lots of protein from the egg whites and some fibre from the sourdough.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 30,
+            "end_seconds": 39,
+            "text": "Both eggs and sourdough are very good options if you are feeling bloated or are susceptible to bloating because they are very gentle on the gut.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 39,
+            "end_seconds": 52,
+            "text": "But I would highly recommend keeping at least one or two yolks in that egg kind of scramble. That's going to add some healthy fats, some choline, antioxidants, and vitamin D, and also not likely to cause bloating.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 52,
+            "end_seconds": 54,
+            "text": "Cream of rice and mix in some peanut butter.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 54,
+            "end_seconds": 105,
+            "text": "Okay, so cream of wheat is also a very gentle soothing meal for your gut, but it's gentle because there's not a whole lot going on here. Like there's zero fibre, only two grams of protein, and also is very low calorie.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 105,
+            "end_seconds": 115,
+            "text": "Yes, bloating can be caused by excess fibre, especially high FODMAP fibre foods, but a lot of the time it's actually from constipation.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 115,
+            "end_seconds": 124,
+            "text": "So we ideally want to identify the precise FODMAP triggers while still meeting our fibre needs from less triggering sources.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 124,
+            "end_seconds": 132,
+            "text": "So for example, research has found that kiwi fruit not only can help with constipation but can also help with bloating.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 132,
+            "end_seconds": 142,
+            "text": "You can also up the protein in this meal by adding a scoop of like a gut-friendly protein powder or making it with a higher protein milk like pea, soy, or a lactose-free cow's milk if that's tolerated.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 142,
+            "end_seconds": 148,
+            "text": "For lunch I was craving beef and I didn't have any gluten-free buns at home, so lettuce wraps had to do. I added some egg.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 148,
+            "end_seconds": 153,
+            "text": "Alright, we got lots of protein in the egg and the burger, but again, very little carbs and fibre.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 153,
+            "end_seconds": 202,
+            "text": "Now if gluten is a concern, pairing the burger with another source of like a low FODMAP fibre like sweet potatoes or quinoa would be a really great option.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 202,
+            "end_seconds": 205,
+            "text": "Ground beef with veggies, rice and beans.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 205,
+            "end_seconds": 217,
+            "text": "Uh yum. This looks like an amazing hunger crushing combo here. We got loads of protein in the beef and the beans. We got a little bit of fibre in the beans and the veggies and probably some kind of healthy fats maybe in the cooking oil.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 217,
+            "end_seconds": 235,
+            "text": "Now beans can be a common bloating trigger because they have these hard to digest fibres. So using like an alpha galactosidase digestive enzyme can potentially help if you are struggling with that. And PS, Neue Theories Digestion Bloat is now 60% off while supplies last. So just a shameless plug because this is your last chance to get it.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 235,
+            "end_seconds": 238,
+            "text": "Coconut milk mint ice cream before bed.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 238,
+            "end_seconds": 249,
+            "text": "Okay, I've never heard of this brand, but if you value an ice cream with a very minimal ingredient list, this looks like a really great choice that is sweetened without any kind of sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 249,
+            "end_seconds": 300,
+            "text": "Friends, I have zero issue with any of these meals, like they're protein rich, they're nutrient dense, and for the most part, they're totally valid choices for sensitive tummies.",
+            "language": "English",
+            "confidence": null
+          },
+          {
+            "start_seconds": 300,
+            "end_seconds": 333,
+            "text": "But when gut healing is packaged with a body check and framed around looking snatched, it tends to blur the line between health and aesthetics. And speaking as someone with IBS who has dealt with very painful bloating for years, people with IBS need real solutions that are not sneakily wrapped up in diet culture. So let's not co-opt gut health language to sell what may actually just be another body ideal. Stay fueled, friends. Next.",
+            "language": "English",
+            "confidence": null
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.03,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.09,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.18,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.25,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.26,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.3,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.39,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.52,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.54,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.05,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.15,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.24,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.32,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.42,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.48,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.53,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.02,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.05,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.17,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.35,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.38,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.49,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 3,
+            "cue": "Voiceover",
+            "confidence": null
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+            "source": null,
+            "confidence": null
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0.3,
+            "text": "Both eggs and sourdough are very good options if you are feeling bloated or are susceptible to bloating because they are very gentle on the gut.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 0.45,
+            "text": "That's going to add some healthy fats, some choline, antioxidants, and vitamin D, and also not likely to cause bloating.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 0.54,
+            "text": "Okay, so cream of wheat is also a very gentle soothing meal for your gut",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1.05,
+            "text": "Yes, bloating can be caused by excess fibre, especially high FODMAP fibre foods, but a lot of the time it's actually from constipation.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1.15,
+            "text": "So we ideally want to identify the precise FODMAP triggers while still meeting our fibre needs from less triggering sources.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1.24,
+            "text": "research has found that kiwi fruit not only can help with constipation but can also help with bloating.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1.32,
+            "text": "You can also up the protein in this meal by adding a scoop of like a gut-friendly protein powder or making it with a higher protein milk like pea, soy, or a lactose-free cow's milk if that's tolerated.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 1.56,
+            "text": "pairing the burger with another source of like a low FODMAP fibre like sweet potatoes or quinoa would be a really great option.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.05,
+            "text": "This looks like an amazing hunger crushing combo here. We got loads of protein in the beef and the beans. We got a little bit of fibre in the beans and the veggies and probably some kind of healthy fats maybe in the cooking oil.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.17,
+            "text": "Now beans can be a common bloating trigger because they have these hard to digest fibres.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.23,
+            "text": "So using like an alpha galactosidase digestive enzyme can potentially help if you are struggling with that.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.29,
+            "text": "Neue Theories Digestion Bloat is now 60% off while supplies last.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.43,
+            "text": "This looks like a really great choice that is sweetened without any kind of sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.47,
+            "text": "sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 2.53,
+            "text": "they're protein rich, they're nutrient dense, and for the most part, they're totally valid choices for sensitive tummies.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "But when gut healing is packaged with a body check and framed around looking snatched, it tends to blur the line between health and aesthetics.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 3.17,
+            "text": "people with IBS need real solutions that are not sneakily wrapped up in diet culture.",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 545600,
+        "weighted_engagement_rate": 0.0644,
+        "selection_score": 0.7959,
+        "nattome_relevance_score": 0.75
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "high",
+        "reason": "source video and Gemini evidence are complete"
+      },
+      "manual_review_flag": {
+        "required": false,
+        "reasons": []
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7629394680022584597",
+          "source_tiktok_url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "high",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 4,
+              "evidence_confidence": 5,
+              "brand_safety": 5,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 29,
+            "max_points": 30
+          },
+          "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 4
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 29,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7631996162110803213",
+      "source_metadata": {
+        "rank": 4,
+        "id": "7631996162110803213",
+        "url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4",
+        "author_handle": "notasianbelly",
+        "caption": "im so bloated right now it’s not even funny #bloating #bloatedstomach #bloated #pregnantbelly #fyp ",
+        "play_count": 198300,
+        "like_count": 4745,
+        "comment_count": 111,
+        "share_count": 101,
+        "created_at": "2026-04-23T16:43:15Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0318,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7919
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7631996162110803213",
+        "rank": 4,
+        "prefix": "004_7631996162110803213",
+        "snapshot_path": "data/004_7631996162110803213_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7631996162110803213_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/004_7631996162110803213_source_video.mp4",
+          "bytes": 1983413,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/004_7631996162110803213_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7631996162110803213_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7631996162110803213_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A person in a black crop top and unbuttoned blue jeans is shown from the side, revealing a visibly bloated stomach. They gently touch their stomach with both hands.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 3,
+            "observation": "The person continues to touch and rub their bloated stomach, looking down at it.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 6,
+            "observation": "The person adjusts their unbuttoned jeans while still touching their stomach, then places a hand on their hip.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 9,
+            "observation": "The person continues to touch their stomach, then looks down at it, with a slight change in camera angle showing more of their upper body.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "the water I drank caught up with me",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Upbeat instrumental music",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "the water I drank caught up with me",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": [
+          "spoken_content"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 198300,
+        "weighted_engagement_rate": 0.0318,
+        "selection_score": 0.7919,
+        "nattome_relevance_score": 0.75
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7631996162110803213",
+          "source_tiktok_url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a person with a visibly bloated stomach and on-screen text explaining the cause, which is visually striking and directly addresses a common physical experience.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 4,
+              "nattome_relevance": 4,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 5
+            },
+            "total": 24,
+            "max_points": 30
+          },
+          "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 12
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 4,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7626464328371195150",
+      "source_metadata": {
+        "rank": 5,
+        "id": "7626464328371195150",
+        "url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4",
+        "author_handle": "thestomachdoc",
+        "caption": "This is a mystery condition that actually affects more people than classic heartburn — and most don’t realize it.\n\nIf you have constant throat clearing, a sour or bitter taste in your mouth, a chronic cough, or a persistent sensation of a lump in your throat that never seems to go away, these can be signs of laryngopharyngeal reflux (LPR). Unlike typical acid reflux, LPR often shows up without obvious heartburn, which is why it’s so commonly missed.\n\nDuet with @Nicole - Health Coach \n\n#MedicalStudent #Heartburn #GERD #AcidReflux #LPR",
+        "play_count": 349800,
+        "like_count": 8454,
+        "comment_count": 317,
+        "share_count": 1890,
+        "created_at": "2026-04-08T18:57:17Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0827,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 0.7761
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7626464328371195150",
+        "rank": 5,
+        "prefix": "005_7626464328371195150",
+        "snapshot_path": "data/005_7626464328371195150_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7626464328371195150_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7626464328371195150_source_video.mp4",
+          "bytes": 13892800,
+          "source": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7626464328371195150_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7626464328371195150_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A blonde woman is coughing and clearing her throat, with a doctor's face superimposed at the bottom of the screen.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The blonde woman stops coughing and looks at the camera, while the doctor's face remains superimposed.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 8,
+            "observation": "A male doctor, wearing light blue scrubs and a stethoscope, is sitting in a car and speaking directly to the camera.",
+            "confidence": 1.0
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "POV: you have acid reflux",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "if this happens to you",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 7,
+            "text": "then you're not alone",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 8,
+            "text": "this is classic for a condition called LPR or laryngopharyngeal reflux",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 13,
+            "text": "and other symptoms of LPR include chronic throat clearing",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "a constant feeling of something in your throat",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 19,
+            "text": "hoarseness of your voice",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "and a chronic cough that just won't go away",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 22,
+            "text": "especially after you eat",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 24,
+            "text": "the reason this happens",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 26,
+            "text": "is that acid and pepsin travel from the stomach",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 28,
+            "text": "up the esophagus and hit your voice box",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 30,
+            "text": "which is extremely sensitive",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 32,
+            "text": "that irritation triggers chronic coughing and throat symptoms",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 35,
+            "text": "even if you don't have the typical symptoms of heartburn",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 37,
+            "text": "and that's why",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 38,
+            "text": "standard acid reflux medications",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "don't always work for this condition",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 41,
+            "text": "so the treatment focuses on reducing irritation",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 43,
+            "text": "and reflux exposure",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "so that means dietary modifications",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 47,
+            "text": "excluding common triggers like coffee, alcohol",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 50,
+            "text": "spicy foods acidic foods,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 51,
+            "text": "chocolate and mint",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 53,
+            "text": "avoiding late night meals",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 54,
+            "text": "following a low acid diet",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 56,
+            "text": "and if symptoms become persistent",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 58,
+            "text": "you can always try something called sodium alginate suspensions",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 60,
+            "text": "which form a protective barrier above the stomach acid",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 64,
+            "text": "you should always get evaluated by a gastroenterologist",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 68,
+            "text": "and an ENT physician if your symptoms just won't go away",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 73,
+            "text": "if you found these tips helpful",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 76,
+            "text": "hit that follow button and",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 77,
+            "text": "send this to someone that might have LPR",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 5,
+            "text": "Coughing and throat clearing sounds.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 5,
+            "end_seconds": 7,
+            "text": "If this happens to you,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 7,
+            "end_seconds": 8,
+            "text": "then you're not alone.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 8,
+            "end_seconds": 12,
+            "text": "This is classic for a condition called LPR or laryngopharyngeal reflux.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 12,
+            "end_seconds": 15,
+            "text": "And other symptoms of LPR include chronic throat clearing,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 16,
+            "end_seconds": 18,
+            "text": "a constant feeling of something in your throat,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 19,
+            "end_seconds": 20,
+            "text": "hoarseness of your voice,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 23,
+            "text": "and a chronic cough that just won't go away, especially after you eat.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 23,
+            "end_seconds": 24,
+            "text": "The reason this happens",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 25,
+            "end_seconds": 29,
+            "text": "is that acid and pepsin travel from the stomach up the esophagus and hit your voice box,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 29,
+            "end_seconds": 31,
+            "text": "which is extremely sensitive.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 31,
+            "end_seconds": 36,
+            "text": "That irritation triggers chronic coughing and throat symptoms, even if you don't have the typical symptoms of heartburn.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 36,
+            "end_seconds": 40,
+            "text": "And that's why standard acid reflux medications don't always work for this condition.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 40,
+            "end_seconds": 44,
+            "text": "So the treatment focuses on reducing irritation and reflux exposure.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 44,
+            "end_seconds": 46,
+            "text": "So that means dietary modifications,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 46,
+            "end_seconds": 51,
+            "text": "excluding common triggers like coffee, alcohol, spicy foods, acidic foods, chocolate and mint,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 52,
+            "end_seconds": 53,
+            "text": "avoiding late night meals,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 54,
+            "end_seconds": 55,
+            "text": "following a low acid diet.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 55,
+            "end_seconds": 59,
+            "text": "And if symptoms become persistent, you can always try something called sodium alginate suspensions,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 59,
+            "end_seconds": 62,
+            "text": "which form a protective barrier above the stomach acid.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 63,
+            "end_seconds": 67,
+            "text": "You should always get evaluated by a gastroenterologist",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 67,
+            "end_seconds": 70,
+            "text": "and an ENT physician if your symptoms just won't go away.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 71,
+            "end_seconds": 74,
+            "text": "If you found these tips helpful,",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 75,
+            "end_seconds": 78,
+            "text": "hit that follow button and send this to someone that might have LPR.",
+            "language": "English",
+            "confidence": 0.9
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Coughing sound",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 5,
+            "cue": "Voiceover by doctor",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with a woman coughing and the on-screen text 'POV: you have acid reflux', immediately presenting a relatable health scenario.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 8,
+            "text": "this is classic for a condition called LPR or laryngopharyngeal reflux",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 13,
+            "text": "and other symptoms of LPR include chronic throat clearing",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "a constant feeling of something in your throat",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 19,
+            "text": "hoarseness of your voice",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "and a chronic cough that just won't go away",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 26,
+            "text": "acid and pepsin travel from the stomach up the esophagus and hit your voice box",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 32,
+            "text": "that irritation triggers chronic coughing and throat symptoms even if you don't have the typical symptoms of heartburn",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "standard acid reflux medications don't always work for this condition",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 41,
+            "text": "the treatment focuses on reducing irritation and reflux exposure",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "dietary modifications",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 47,
+            "text": "excluding common triggers like coffee, alcohol, spicy foods, acidic foods, chocolate and mint",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 53,
+            "text": "avoiding late night meals",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 54,
+            "text": "following a low acid diet",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 58,
+            "text": "you can always try something called sodium alginate suspensions",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 60,
+            "text": "which form a protective barrier above the stomach acid",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 64,
+            "text": "you should always get evaluated by a gastroenterologist",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 68,
+            "text": "and an ENT physician if your symptoms just won't go away",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with a woman coughing and the on-screen text 'POV: you have acid reflux', immediately presenting a relatable health scenario.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 349800,
+        "weighted_engagement_rate": 0.0827,
+        "selection_score": 0.7761,
+        "nattome_relevance_score": 0.75
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "high",
+        "reason": "source video and Gemini evidence are complete"
+      },
+      "manual_review_flag": {
+        "required": false,
+        "reasons": []
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7626464328371195150",
+          "source_tiktok_url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman coughing and the on-screen text 'POV: you have acid reflux', immediately presenting a relatable health scenario.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "high",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 4,
+              "evidence_confidence": 5,
+              "brand_safety": 5,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 29,
+            "max_points": 30
+          },
+          "why": "29/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 1
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 29,
+        "max_points": 30
+      }
+    }
+  ]
+}

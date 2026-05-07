@@ -1,0 +1,813 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman is sitting in a car, looking at the camera and talking. She gestures with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 14,
+      "observation": "The woman is still in the car, driving, and talking to the camera. She gestures with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 37,
+      "observation": "The woman is driving and talking, gesturing with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 105,
+      "observation": "The woman is driving and talking, gesturing with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 129,
+      "observation": "The woman is driving and talking, gesturing with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 150,
+      "observation": "The woman is driving and talking, gesturing with her hands.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 235,
+      "observation": "The woman is driving and talking, then a white list of foods appears on screen, covering most of the frame.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "FOODS THAT HEALED MY GUT",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "Here's a list of foods I would start eating everyday",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3,
+      "text": "I'll explain why + a full list you can screenshot at the end!!",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "These foods specifically have gut healing properties",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 7,
+      "text": "and I'm gonna break down each one for you and explain why they help.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 9,
+      "text": "Get used to eating these things on a regular basis",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "and watch bloating and constipation disappear.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 16,
+      "text": "ENZYME RICH FOODS",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 14,
+      "text": "Start with our enzyme rich foods.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 16,
+      "text": "So enzymes are little proteins that help you to break down and digest food.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 20,
+      "text": "When you increase enzyme rich foods in your diet, you help your gut digest better.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "It'll stop bloating before it even happens.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 27,
+      "text": "My favourite enzyme rich foods to tell people to include are kiwis, papayas and pineapple.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 32,
+      "text": "There's actually a lot of research on two kiwis a day being one of the most helpful things that you can do to heal I B S.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 39,
+      "text": "PROBIOTIC RICH FOODS",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 37,
+      "text": "Now we're moving on to probiotic rich foods.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 40,
+      "text": "And probiotic rich foods can also be high in enzymes, like sauerkraut, kimchi or kefir.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 45,
+      "text": "Only need about a tablespoon of these foods everyday, so don't overdo it, you can tolerate it.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 49,
+      "text": "I also really like a two yoghurt that's filled with probiotics for the gut.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 53,
+      "text": "So those probiotic rich foods are high in enzymes, but they're also high in probiotics, which is good bacteria for your gut.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 59,
+      "text": "Adding in good bacteria can help alleviate digestive symptoms, and you don't necessarily have to take a probiotic supplement to do that.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 107,
+      "text": "EAST TO DIGEST FIBER RICH FOODS",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 105,
+      "text": "Now let's talk fibre rich foods.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 108,
+      "text": "You wanna include a lot of fibre, so That it feeds the good bacteria in your gut and it keeps things moving.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 112,
+      "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 115,
+      "text": "You kill two birds with one stone with kiwis.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 118,
+      "text": "Both a high enzyme food and also a high fibre food.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 121,
+      "text": "Some other high fibre foods that are easy to digest and generally well tolerated are sweet potatoes, oats, brown rice and quinoa.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 131,
+      "text": "GASTRIC JUICE PROMOTING FOODS",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 129,
+      "text": "We have our gastric juice promoting foods.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 132,
+      "text": "The more you can increase gastric juice production, the better your digestion is gonna be and the less bloating you're gonna have.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 139,
+      "text": "This is gonna be apple cider vinegar.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 141,
+      "text": "Bitter foods like kale, arugula, dandelion.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 144,
+      "text": "And no, you don't have to eat a whole salad of these things, but just chewing on them a little bit before you eat a meal is going to be super helpful.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 152,
+      "text": "ANTI-INFLAMMATORY/ SOOTHING FOODS",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 150,
+      "text": "And lastly, we have our anti inflammatory foods.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 153,
+      "text": "These are foods that actually soothe and repair the lining of the gut.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 157,
+      "text": "Bone broth is my number one.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 159,
+      "text": "You can get bone broth powders and drink them.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 163,
+      "text": "Uh, I know Costco has one. Just ingredients has one that I drink every single morning. I think it's delicious.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 168,
+      "text": "Make your own bone broth using a chicken carcass.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 171,
+      "text": "Anytime I make, like, a whole chicken or I buy a rotisserie chicken, I will make bone broth with that.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 175,
+      "text": "I also buy cartons of bone broth at Trader Joe's or Walmart.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 179,
+      "text": "Ginger, fennel and peppermint are my other favorite foods that actually help soothe and Stop bloating if you're actively bloated.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 185,
+      "text": "Those are foods I love to turn to.",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 187,
+      "text": "You can drink these as teas, ginger you can obviously cook with, and fennel is great in like casseroles or soups,",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "FOODS THAT HEAL YOUR GUT",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "Enzyme rich foods:",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Kiwis",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Pineapple",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Papaya",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "Probiotic rich foods:",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Sauerkraut",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Kimchi",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Kefir",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- A2 yogurt",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "Fiber rich foods:",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Sweet potatoes",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Oats",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Brown rice",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Quinoa",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "Gastric juice promoting foods:",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Apple cider vinegar",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Bitters (kale, arugula, dandelion, burdock, yarrow)",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "Healing/soothing foods:",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Bone broth (comment BONE BROTH and I'll send you my favorite drink!)",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Peppermint",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Fennel",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "- Ginger",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 240,
+      "text": "SCREENSHOT FOR LATER!",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 3,
+      "text": "Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 3,
+      "end_seconds": 9,
+      "text": "These foods specifically have gut healing properties and I'm gonna break down each one for you and explain why they help.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 14,
+      "text": "Get used to eating these things on a regular basis and watch bloating and constipation disappear.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 14,
+      "end_seconds": 16,
+      "text": "Start with our enzyme rich foods.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 16,
+      "end_seconds": 20,
+      "text": "So enzymes are little proteins that help you to break down and digest food.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 20,
+      "end_seconds": 26,
+      "text": "When you increase enzyme rich foods in your diet, you help your gut digest better. It'll stop bloating before it even happens.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 26,
+      "end_seconds": 32,
+      "text": "My favorite enzyme rich foods to tell people to include are kiwis, papayas and pineapple.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 32,
+      "end_seconds": 37,
+      "text": "There's actually a lot of research on two kiwis a day being one of the most helpful things that you can do to heal I B S.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 37,
+      "end_seconds": 40,
+      "text": "Now we're moving on to probiotic rich foods.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 40,
+      "end_seconds": 44,
+      "text": "And probiotic rich foods can also be high in enzymes, like sauerkraut, kimchi or kefir.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 44,
+      "end_seconds": 49,
+      "text": "Only need about a tablespoon of these foods every day, so don't overdo it, you can tolerate it.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 49,
+      "end_seconds": 53,
+      "text": "I also really like A2 yogurt that's filled with probiotics for the gut.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 53,
+      "end_seconds": 59,
+      "text": "So those probiotic rich foods are high in enzymes, but they're also high in probiotics, which is good bacteria for your gut.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 59,
+      "end_seconds": 105,
+      "text": "Adding in good bacteria can help alleviate digestive symptoms, and you don't necessarily have to take a probiotic supplement to do that. Now, let's talk fiber rich foods. You wanna include a lot of fiber so that it feeds the good bacteria in your gut and it keeps things moving. Stagnation in the gut breeds bloating, gas and constipation. You kill two birds with one stone with kiwis. Both a high enzyme food and also a high fiber food. Some other high fiber foods that are easy to digest and generally well tolerated are sweet potatoes, oats, brown rice and quinoa.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 129,
+      "end_seconds": 131,
+      "text": "We have our gastric juice promoting foods.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 131,
+      "end_seconds": 139,
+      "text": "The more you can increase gastric juice production, the better your digestion is gonna be and the less bloating you're gonna have.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 139,
+      "end_seconds": 141,
+      "text": "This is gonna be apple cider vinegar.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 141,
+      "end_seconds": 150,
+      "text": "Bitter foods like kale, arugula, dandelion. And no, you don't have to eat a whole salad of these things, but just chewing on them a little bit before you eat a meal is going to be super helpful.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 150,
+      "end_seconds": 153,
+      "text": "And lastly, we have our anti inflammatory foods.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 153,
+      "end_seconds": 157,
+      "text": "These are foods that actually soothe and repair the lining of the gut.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 157,
+      "end_seconds": 159,
+      "text": "Bone broth is my number one.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 159,
+      "end_seconds": 163,
+      "text": "You can get bone broth powders and drink them.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 163,
+      "end_seconds": 168,
+      "text": "Uh, I know Costco has one, just ingredients has one that I drink every single morning. I think it's delicious.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 168,
+      "end_seconds": 171,
+      "text": "Make your own bone broth using a chicken carcass.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 171,
+      "end_seconds": 175,
+      "text": "Anytime I make, like, a whole chicken or I buy a rotisserie chicken, I will make bone broth with that.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 175,
+      "end_seconds": 179,
+      "text": "Also buy cartons of bone broth at Trader Joe's or Walmart.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 179,
+      "end_seconds": 185,
+      "text": "Ginger, fennel and peppermint are my other favorite foods that actually help soothe and Stop bloating if you're actively bloated.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 185,
+      "end_seconds": 187,
+      "text": "Those are foods I love to turn to.",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 187,
+      "end_seconds": 192,
+      "text": "You can drink these as teas, ginger you can obviously cook with, and fennel is great in like casseroles or soups,",
+      "language": "English",
+      "confidence": 1.0
+    },
+    {
+      "start_seconds": 235,
+      "end_seconds": 243,
+      "text": "but you can get any of them in tea form as well. Here's the full list of everything that I talked about if you want to screenshot it for later.",
+      "language": "English",
+      "confidence": 1.0
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 14,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 37,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 105,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 129,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 150,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 235,
+      "cue": "Voiceover",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with the text 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating every day if I was trying to heal my gut.' This directly addresses a common health concern (gut health) and promises a solution (list of foods).",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 2,
+      "text": "heal my gut",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "gut healing properties",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "watch bloating and constipation disappear",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 21,
+      "text": "help your gut digest better",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "It'll stop bloating before it even happens.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 36,
+      "text": "heal I B S",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 52,
+      "text": "probiotics for the gut",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 58,
+      "text": "good bacteria for your gut",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 59,
+      "text": "Adding in good bacteria can help alleviate digestive symptoms",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 109,
+      "text": "feeds the good bacteria in your gut and it keeps things moving.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 112,
+      "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 135,
+      "text": "the better your digestion is gonna be and the less bloating you're gonna have.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 154,
+      "text": "foods that actually soothe and repair the lining of the gut.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 182,
+      "text": "help soothe and Stop bloating if you're actively bloated.",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 236,
+      "text": "FOODS THAT HEAL YOUR GUT",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": []
+}

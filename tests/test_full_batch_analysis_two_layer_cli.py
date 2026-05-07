@@ -191,12 +191,14 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
                 output_root
                 / "reports"
                 / "2026-05-06"
+                / "20260506T134530Z_debug"
                 / "top5_creative_production_report_2026-05-06.md"
             )
             final_workbook = (
                 output_root
                 / "reports"
                 / "2026-05-06"
+                / "20260506T134530Z_debug"
                 / "top5_angle_planning_sheet_2026-05-06.xlsx"
             )
             self.assertTrue(final_report.is_file())
@@ -211,8 +213,8 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
             self.assertEqual(
                 [output["path"] for output in final_outputs],
                 [
-                    "reports/2026-05-06/top5_creative_production_report_2026-05-06.md",
-                    "reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx",
+                    "reports/2026-05-06/20260506T134530Z_debug/top5_creative_production_report_2026-05-06.md",
+                    "reports/2026-05-06/20260506T134530Z_debug/top5_angle_planning_sheet_2026-05-06.xlsx",
                 ],
             )
             batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")

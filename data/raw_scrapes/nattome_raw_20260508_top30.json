@@ -1,0 +1,806 @@
+{
+  "generated_at": "2026-05-07T17:52:52.716087+00:00",
+  "scope": "all",
+  "inputs": {
+    "hashtags": [
+      "guthealth",
+      "digestion"
+    ],
+    "keywords": [
+      "bloating",
+      "acid reflux"
+    ],
+    "profiles": [
+      "gaviscon"
+    ]
+  },
+  "total_candidates": 99,
+  "top": [
+    {
+      "id": "7637002506635201813",
+      "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+      "author_handle": "isaaarraa",
+      "author_followers": 17800,
+      "caption": "#ibs 😻",
+      "hashtags": [
+        "ibs"
+      ],
+      "duration_s": 8,
+      "music": {
+        "title": "original sound",
+        "author": "Cinematography",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-isaaarraa-20260507043026-7637002506635201813.mp4",
+      "play_count": 2106,
+      "like_count": 342,
+      "comment_count": 3,
+      "share_count": 18,
+      "created_at": "2026-05-07T04:30:26+00:00",
+      "source_input": null,
+      "virality_score": 0.802
+    },
+    {
+      "id": "7636847083210673421",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7636847083210673421",
+      "author_handle": "drtoddstrong",
+      "author_followers": 95800,
+      "caption": "The Autoimmune Patient's Morning Routine That Prevents Daily Flares #autoimmune #gut #leakygut #nutrition #guthealth ",
+      "hashtags": [
+        "autoimmune",
+        "gut",
+        "leakygut",
+        "nutrition",
+        "guthealth"
+      ],
+      "duration_s": 183,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Strong",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-drtoddstro-20260506182742-7636847083210673421.mp4",
+      "play_count": 5489,
+      "like_count": 258,
+      "comment_count": 8,
+      "share_count": 62,
+      "created_at": "2026-05-06T18:27:42+00:00",
+      "source_input": null,
+      "virality_score": 0.5678
+    },
+    {
+      "id": "7633461167788166413",
+      "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "author_handle": "onehealthygut",
+      "author_followers": 102500,
+      "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+      "hashtags": [
+        "bloatingrelief",
+        "ibsrelief",
+        "bloatedstomach",
+        "bloatingtips",
+        "guthealthtips"
+      ],
+      "duration_s": 161,
+      "music": {
+        "title": "original sound",
+        "author": "Meg McDonald",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+      "play_count": 660700,
+      "like_count": 67800,
+      "comment_count": 523,
+      "share_count": 9217,
+      "created_at": "2026-04-27T15:28:58+00:00",
+      "source_input": null,
+      "virality_score": 0.5268
+    },
+    {
+      "id": "7633580497142156558",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7633580497142156558",
+      "author_handle": "drtoddstrong",
+      "author_followers": 95800,
+      "caption": "Do These 4 Things Every Morning and Watch Your Gut Start to Heal #gut #leakygut #nutrition #diabetes #guthealth ",
+      "hashtags": [
+        "gut",
+        "leakygut",
+        "nutrition",
+        "diabetes",
+        "guthealth"
+      ],
+      "duration_s": 169,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Strong",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-drtoddstro-20260427231136-7633580497142156558.mp4",
+      "play_count": 552300,
+      "like_count": 34000,
+      "comment_count": 544,
+      "share_count": 6450,
+      "created_at": "2026-04-27T23:11:36+00:00",
+      "source_input": null,
+      "virality_score": 0.3996
+    },
+    {
+      "id": "7637154901138672916",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+      "author_handle": "abbeyskitchen",
+      "author_followers": 1100000,
+      "caption": "Been there, done that… it’s the IBS life. But even without IBS, travel constipation is common because you’re drinking less water, eating less fiber, and sitting for long periods of time. Here’s what can help! #travel #constipation #ibstok #bloating #guthealth",
+      "hashtags": [
+        "travel",
+        "constipation",
+        "ibstok",
+        "bloating",
+        "guthealth"
+      ],
+      "duration_s": 148,
+      "music": {
+        "title": "original sound",
+        "author": "Abbey Sharp",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260507142135-7637154901138672916.mp4",
+      "play_count": 8002,
+      "like_count": 605,
+      "comment_count": 10,
+      "share_count": 14,
+      "created_at": "2026-05-07T14:21:35+00:00",
+      "source_input": null,
+      "virality_score": 0.3822
+    },
+    {
+      "id": "7635409312910806286",
+      "url": "https://www.tiktok.com/@jacoboestreichercoaching/video/7635409312910806286",
+      "author_handle": "jacoboestreichercoaching",
+      "author_followers": 855500,
+      "caption": "#letsgoletsgetjacked\n\n@ekkovision @Elev8.foods code “Striker”\n@PumpedDucks (my company) shirts are still live\nConsultation Call +  1$ day training teams with my PPL split in bio",
+      "hashtags": [
+        "letsgoletsgetjacked"
+      ],
+      "duration_s": 65,
+      "music": {
+        "title": "original sound",
+        "author": "Jacob Oestreicher",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-jacoboestr-20260502212816-7635409312910806286.mp4",
+      "play_count": 264300,
+      "like_count": 24000,
+      "comment_count": 218,
+      "share_count": 450,
+      "created_at": "2026-05-02T21:28:16+00:00",
+      "source_input": null,
+      "virality_score": 0.3755
+    },
+    {
+      "id": "7637191036674034957",
+      "url": "https://www.tiktok.com/@callmedoctor.p/video/7637191036674034957",
+      "author_handle": "callmedoctor.p",
+      "author_followers": 1100000,
+      "caption": "Taking supplements is common.\n\nBut very few people are told that timing and pairing actually matter.\nYour digestive system uses specific transport pathways to absorb vitamins and minerals.\n\nWhen certain nutrients are taken together, they may compete for those same pathways.\n\nThat means even high-quality supplements can become less effective simply because of how they’re taken.\n\nFor example, minerals like iron, calcium, magnesium, and zinc often share similar absorption mechanisms in the gut. When large doses are taken at the same time, the body may prioritize one and limit the absorption of the others.\n\nThis is also why certain medications — like thyroid hormone — are recommended to be taken on an empty stomach and separated from minerals.\n\nSmall changes in timing can make a meaningful difference in how well your body uses what you’re taking.\nThink of supplements less like a “morning routine” and more like a schedule that supports absorption.\nIf you want a simple way to organize your supplements throughout the day so they work with your body instead of competing with each other, comment VITAMINS and I’ll share a simple guide.\n\nSave this for later — it’s one of those small details that can make a big difference.",
+      "hashtags": [],
+      "duration_s": 25,
+      "music": {
+        "title": "So Easy (To Fall In Love)",
+        "author": "Olivia Dean",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-callmedoct-20260507164200-7637191036674034957.mp4",
+      "play_count": 524,
+      "like_count": 42,
+      "comment_count": 2,
+      "share_count": 0,
+      "created_at": "2026-05-07T16:42:00+00:00",
+      "source_input": null,
+      "virality_score": 0.2686
+    },
+    {
+      "id": "7637173314837941534",
+      "url": "https://www.tiktok.com/@lauramahachek/video/7637173314837941534",
+      "author_handle": "lauramahachek",
+      "author_followers": 87700,
+      "caption": "If I don’t feel like putting it on top of yogurt I will eat just 3 straight spoonfuls of it a day. It helps soooo much #chiaseeds #chiaseedpudding #fiber #digestion #healthyrecipe ",
+      "hashtags": [
+        "chiaseeds",
+        "chiaseedpudding",
+        "fiber",
+        "digestion",
+        "healthyrecipe"
+      ],
+      "duration_s": 34,
+      "music": {
+        "title": "original sound",
+        "author": "Laura Mahachek",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lauramahac-20260507153314-7637173314837941534.mp4",
+      "play_count": 710,
+      "like_count": 43,
+      "comment_count": 2,
+      "share_count": 1,
+      "created_at": "2026-05-07T15:33:14+00:00",
+      "source_input": null,
+      "virality_score": 0.2506
+    },
+    {
+      "id": "7636933003670834445",
+      "url": "https://www.tiktok.com/@doctorsethimd/video/7636933003670834445",
+      "author_handle": "doctorsethimd",
+      "author_followers": 545200,
+      "caption": "Rating fruits for fiber content 🍎\nNot all fruits are equal when it comes to fiber.\nSome might surprise you.\n#learnontiktok #todayilearned #didyouknow #GutHealth #FiberRichFoods",
+      "hashtags": [
+        "learnontiktok",
+        "todayilearned",
+        "didyouknow",
+        "guthealth",
+        "fiberrichfoods"
+      ],
+      "duration_s": 31,
+      "music": {
+        "title": "original sound",
+        "author": "Doctor Sethi ⚡️",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-doctorseth-20260507000050-7636933003670834445.mp4",
+      "play_count": 10900,
+      "like_count": 265,
+      "comment_count": 8,
+      "share_count": 39,
+      "created_at": "2026-05-07T00:00:50+00:00",
+      "source_input": null,
+      "virality_score": 0.2391
+    },
+    {
+      "id": "7634758036132842782",
+      "url": "https://www.tiktok.com/@notasianbelly/video/7634758036132842782",
+      "author_handle": "notasianbelly",
+      "author_followers": 15900,
+      "caption": "not pregnant just well fed and I have a food baby #fyp #notpregnant #bloated #muffintop #gainer ",
+      "hashtags": [
+        "fyp",
+        "notpregnant",
+        "bloated",
+        "muffintop",
+        "gainer"
+      ],
+      "duration_s": 9,
+      "music": {
+        "title": "original sound",
+        "author": "Emma Mei-Li",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260501032045-7634758036132842782.mp4",
+      "play_count": 92100,
+      "like_count": 6087,
+      "comment_count": 43,
+      "share_count": 187,
+      "created_at": "2026-05-01T03:20:45+00:00",
+      "source_input": null,
+      "virality_score": 0.229
+    },
+    {
+      "id": "7636961034028223775",
+      "url": "https://www.tiktok.com/@mynameisntmanny/video/7636961034028223775",
+      "author_handle": "mynameisntmanny",
+      "author_followers": 389100,
+      "caption": "i slept like a baby ",
+      "hashtags": [],
+      "duration_s": 25,
+      "music": {
+        "title": "Eine Kleine Nachtmusik 1st movement(996517)",
+        "author": "East Valley Music",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-mynameisnt-20260507014931-7636961034028223775.mp4",
+      "play_count": 90400,
+      "like_count": 4232,
+      "comment_count": 4,
+      "share_count": 15,
+      "created_at": "2026-05-07T01:49:31+00:00",
+      "source_input": null,
+      "virality_score": 0.2259
+    },
+    {
+      "id": "7636557193529085197",
+      "url": "https://www.tiktok.com/@aikowpop/video/7636557193529085197",
+      "author_handle": "aikowpop",
+      "author_followers": 21100,
+      "caption": "This is what happens when you can’t say no to grandma\n\n#bigbelly #foodbaby #stuffed #bloating #bigbellies ",
+      "hashtags": [
+        "bigbelly",
+        "foodbaby",
+        "stuffed",
+        "bloating",
+        "bigbellies"
+      ],
+      "duration_s": 6,
+      "music": {
+        "title": "original sound",
+        "author": "BellyPopAiko",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-aikowpop-20260505234228-7636557193529085197.mp4",
+      "play_count": 38000,
+      "like_count": 1040,
+      "comment_count": 14,
+      "share_count": 14,
+      "created_at": "2026-05-05T23:42:28+00:00",
+      "source_input": null,
+      "virality_score": 0.1266
+    },
+    {
+      "id": "7628388611758624031",
+      "url": "https://www.tiktok.com/@bearenger/video/7628388611758624031",
+      "author_handle": "bearenger",
+      "author_followers": 1500000,
+      "caption": "Hormone Happy Kitchen Ep 2 - Pineapple Ginger Gut Healing Gummies 🍍✨\n\nIngredients\n- 1½ cups pineapple juice (simmered 5 minutes, then cooled)\n- ¼ cup ginger juice\n- 1–2 tbsp raw honey\n- Pinch of sea salt\n- 2 tbsp grass-fed gelatin (3 if you want a firmer gummy)\n\nInstructions\n1. Simmer pineapple juice for 5 minutes to break down the bromelain, then let it cool slightly.\n2. In a saucepan, combine pineapple juice, ginger juice, honey, and sea salt.\n3. Sprinkle gelatin evenly over the top and let it bloom for 5 minutes.\n4. Place on low heat and stir gently until fully dissolved and smooth.\n5. Pour into a glass dish or silicone molds.\n6. Refrigerate for a few hours or overnight, until fully set.\n7. Cut into cubes if needed and enjoy.\n\n#healthyrecipes #hormonehealth #womenswellness #easyrecipe",
+      "hashtags": [
+        "healthyrecipes",
+        "hormonehealth",
+        "womenswellness",
+        "easyrecipe"
+      ],
+      "duration_s": 41,
+      "music": {
+        "title": "Bar Mediterraneo",
+        "author": "Nu Genea",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-bearenger-20260413232404-7628388611758624031.mp4",
+      "play_count": 443700,
+      "like_count": 47400,
+      "comment_count": 216,
+      "share_count": 5581,
+      "created_at": "2026-04-13T23:24:04+00:00",
+      "source_input": null,
+      "virality_score": 0.1261
+    },
+    {
+      "id": "7637126131446975757",
+      "url": "https://www.tiktok.com/@doctorsood/video/7637126131446975757",
+      "author_handle": "doctorsood",
+      "author_followers": 2700000,
+      "caption": "Constipation relief ⬇️\n🌾 Psyllium husk\nPsyllium is a soluble, gel-forming fiber that holds water in the stool, increasing stool softness and bulk. This makes bowel movements easier to pass and can reduce straining. Studies show psyllium is one of the better-supported fiber supplements for chronic constipation, especially when taken consistently with enough water (PMID: 35816465; 30669509).\n💧 Magnesium citrate\nMagnesium citrate acts as an osmotic laxative, pulling water into the intestines and softening stool. This increases bowel movement frequency, but excessive use can cause cramping, diarrhea, dehydration, or electrolyte imbalance, especially in people with kidney disease.\n🦠 Probiotics\nCertain probiotic strains may improve stool frequency, consistency, and transit time. Proposed mechanisms include changes in fermentation, short-chain fatty acid production, and gut motility. Effects vary significantly depending on the strain and the individual (PMID: 25099542; 36570175).\n🥝 Kiwi\nKiwi has surprisingly strong evidence for constipation support. Studies show two green kiwis daily can improve stool frequency and abdominal comfort in people with constipation or IBS-C. Benefits likely come from a combination of fiber, water content, and bioactive compounds (PMID: 36537785; 36247043).\n🍵 Ginger tea\nGinger is better supported for upper GI motility and digestive comfort than constipation itself. It may help gastric emptying and reduce bloating, but the strongest constipation effects are likely coming from fiber and stool-softening strategies (PMID: 18403946; 30680163).\n💡 Takeaway\nRegular bowel movements often improve when stool hydration, fiber bulk, motility, and gut microbiome support work together rather than relying on one single fix.\nFollow @doctorsoood to improve your health IQ and for similar content.\n#GutHealth #ConstipationRelief #DigestiveHealth #Medical #Health",
+      "hashtags": [
+        "guthealth",
+        "constipationrelief",
+        "digestivehealth",
+        "medical",
+        "health"
+      ],
+      "duration_s": 7,
+      "music": {
+        "title": "original sound",
+        "author": "DoctorSood, M.D.",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-doctorsood-20260507123005-7637126131446975757.mp4",
+      "play_count": 1968,
+      "like_count": 63,
+      "comment_count": 2,
+      "share_count": 0,
+      "created_at": "2026-05-07T12:30:05+00:00",
+      "source_input": null,
+      "virality_score": 0.1195
+    },
+    {
+      "id": "7635519575802580237",
+      "url": "https://www.tiktok.com/@doctormyro/video/7635519575802580237",
+      "author_handle": "doctormyro",
+      "author_followers": 1100000,
+      "caption": "Do you get acid reflux at night?\n\n#sleephealth #heartburn #acidreflux #learnontiktok #tiktoklearningcampaign",
+      "hashtags": [
+        "sleephealth",
+        "heartburn",
+        "acidreflux",
+        "tiktoklearningcampaign"
+      ],
+      "duration_s": 29,
+      "music": {
+        "title": "original sound - Dr. Myro Figura, MD",
+        "author": "Dr. Myro Figura, MD",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-doctormyro-20260504130000-7635519575802580237.mp4",
+      "play_count": 1100000,
+      "like_count": 13300,
+      "comment_count": 250,
+      "share_count": 1311,
+      "created_at": "2026-05-04T13:00:00+00:00",
+      "source_input": null,
+      "virality_score": 0.1106
+    },
+    {
+      "id": "7636866665594096910",
+      "url": "https://www.tiktok.com/@homewithhaley_/video/7636866665594096910",
+      "author_handle": "homewithhaley_",
+      "author_followers": 7219,
+      "caption": "Better digestion is so simple. adding these Digestive Enzymes to my routine has been such a game changer. 💪💊\n\n#digestivehealth  #digestion  #gut  #guthealth  #guthealthmatters ",
+      "hashtags": [
+        "digestivehealth",
+        "digestion",
+        "gut",
+        "guthealth",
+        "guthealthmatters"
+      ],
+      "duration_s": 26,
+      "music": {
+        "title": "Soft Sunlight",
+        "author": "LoFi Siberinyan",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-homewithha-20260506194340-7636866665594096910.mp4",
+      "play_count": 716700,
+      "like_count": 6282,
+      "comment_count": 130,
+      "share_count": 767,
+      "created_at": "2026-05-06T19:43:40+00:00",
+      "source_input": null,
+      "virality_score": 0.1089
+    },
+    {
+      "id": "7631381745484565790",
+      "url": "https://www.tiktok.com/@karinadrury/video/7631381745484565790",
+      "author_handle": "karinadrury",
+      "author_followers": 1400000,
+      "caption": "i wish this was a joke",
+      "hashtags": [],
+      "duration_s": 9,
+      "music": {
+        "title": "Coconut Mall from Mario Kart Wii",
+        "author": "MarioKart Audios",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-karinadrur-20260422005902-7631381745484565790.mp4",
+      "play_count": 161900,
+      "like_count": 8785,
+      "comment_count": 34,
+      "share_count": 355,
+      "created_at": "2026-04-22T00:59:02+00:00",
+      "source_input": null,
+      "virality_score": 0.085
+    },
+    {
+      "id": "7632792202024111363",
+      "url": "https://www.tiktok.com/@doctorjohnhamm/video/7632792202024111363",
+      "author_handle": "doctorjohnhamm",
+      "author_followers": 71200,
+      "caption": "This small home made natural remedy can cure your piles and digestive health..!! #piles #digestivehealth #naturalremedies #healthtips #healthyliving #wellness #healthylifestyle",
+      "hashtags": [
+        "piles",
+        "digestivehealth",
+        "naturalremedies",
+        "healthtips",
+        "healthyliving",
+        "wellness",
+        "healthylifestyle"
+      ],
+      "duration_s": 61,
+      "music": {
+        "title": "original sound - Doctor John Hamm",
+        "author": "Doctor John Hamm",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-doctorjohn-20260425204500-7632792202024111363.mp4",
+      "play_count": 4462,
+      "like_count": 70,
+      "comment_count": 2,
+      "share_count": 19,
+      "created_at": "2026-04-25T20:45:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0681
+    },
+    {
+      "id": "7630064907605609758",
+      "url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+      "author_handle": "lilylasley17",
+      "author_followers": 2545,
+      "caption": "Do not overuse this! It just helps clear your digestive system when it’s not moving things. But I do not recommend taking it a ton! Just wanted to show what glory it did for my stomach ache last night! #stomachproblems #magnesiumcitrate #digestionrelief #bloating ",
+      "hashtags": [
+        "stomachproblems",
+        "magnesiumcitrate",
+        "digestionrelief",
+        "bloating"
+      ],
+      "duration_s": 10,
+      "music": {
+        "title": "original sound",
+        "author": "🇫🇯",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4",
+      "play_count": 635900,
+      "like_count": 31900,
+      "comment_count": 103,
+      "share_count": 1023,
+      "created_at": "2026-04-18T11:49:54+00:00",
+      "source_input": null,
+      "virality_score": 0.0578
+    },
+    {
+      "id": "7637082619984874783",
+      "url": "https://www.tiktok.com/@mamaeveweightloss/video/7637082619984874783",
+      "author_handle": "mamaeveweightloss",
+      "author_followers": 59500,
+      "caption": "Please do not give up hope!!! #digestivehealth #supplementsthatwork #womenover40 #momsover30 ",
+      "hashtags": [
+        "digestivehealth",
+        "supplementsthatwork",
+        "womenover40",
+        "momsover30"
+      ],
+      "duration_s": 121,
+      "music": {
+        "title": "original sound",
+        "author": "Mama’s Weight Loss 💕",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-mamaevewei-20260507094121-7637082619984874783.mp4",
+      "play_count": 672,
+      "like_count": 8,
+      "comment_count": 1,
+      "share_count": 0,
+      "created_at": "2026-05-07T09:41:21+00:00",
+      "source_input": null,
+      "virality_score": 0.0529
+    },
+    {
+      "id": "7629394680022584597",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+      "author_handle": "abbeyskitchen",
+      "author_followers": 1100000,
+      "caption": "As an IBS girly, I 100% understand choosing foods you know are gentle on your gut. But too often, I see “bloating” and “gut health” repackaged as “thinness”, when the two are not the same. Stay fueled, friends. #ibs #guthealth #bloating #whatieat #nutrition ",
+      "hashtags": [
+        "ibs",
+        "guthealth",
+        "bloating",
+        "whatieat",
+        "nutrition"
+      ],
+      "duration_s": 212,
+      "music": {
+        "title": "original sound",
+        "author": "Abbey Sharp",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4",
+      "play_count": 545600,
+      "like_count": 32500,
+      "comment_count": 156,
+      "share_count": 183,
+      "created_at": "2026-04-16T16:28:01+00:00",
+      "source_input": null,
+      "virality_score": 0.0459
+    },
+    {
+      "id": "7626452705774488863",
+      "url": "https://www.tiktok.com/@claire.elis/video/7626452705774488863",
+      "author_handle": "claire.elis",
+      "author_followers": 233400,
+      "caption": "never letting gut issues back into my life #guthealth #sibo #bloating ",
+      "hashtags": [
+        "guthealth",
+        "sibo",
+        "bloating"
+      ],
+      "duration_s": 134,
+      "music": {
+        "title": "original sound",
+        "author": "claire elisabeth",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-claireelis-20260408181200-7626452705774488863.mp4",
+      "play_count": 245600,
+      "like_count": 24700,
+      "comment_count": 174,
+      "share_count": 939,
+      "created_at": "2026-04-08T18:12:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0435
+    },
+    {
+      "id": "7631996162110803213",
+      "url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+      "author_handle": "notasianbelly",
+      "author_followers": 15900,
+      "caption": "im so bloated right now it’s not even funny #bloating #bloatedstomach #bloated #pregnantbelly #fyp ",
+      "hashtags": [
+        "bloating",
+        "bloatedstomach",
+        "bloated",
+        "pregnantbelly",
+        "fyp"
+      ],
+      "duration_s": 12,
+      "music": {
+        "title": "Careless Whisper",
+        "author": "George Michael",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4",
+      "play_count": 198300,
+      "like_count": 4745,
+      "comment_count": 111,
+      "share_count": 101,
+      "created_at": "2026-04-23T16:43:15+00:00",
+      "source_input": null,
+      "virality_score": 0.0419
+    },
+    {
+      "id": "7637146898620632350",
+      "url": "https://www.tiktok.com/@emmamarschall/video/7637146898620632350",
+      "author_handle": "emmamarschall",
+      "author_followers": 341800,
+      "caption": "@BIOptimizers savin lives out here #guthealth #naturalliving #healingtiktok ",
+      "hashtags": [
+        "guthealth",
+        "naturalliving",
+        "healingtiktok"
+      ],
+      "duration_s": 69,
+      "music": {
+        "title": "original sound",
+        "author": "Emma Marschall",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-emmamarsch-20260507135041-7637146898620632350.mp4",
+      "play_count": 385,
+      "like_count": 6,
+      "comment_count": 0,
+      "share_count": 0,
+      "created_at": "2026-05-07T13:50:41+00:00",
+      "source_input": null,
+      "virality_score": 0.0396
+    },
+    {
+      "id": "7631363133046574357",
+      "url": "https://www.tiktok.com/@karinairby/video/7631363133046574357",
+      "author_handle": "karinairby",
+      "author_followers": 643300,
+      "caption": "Girlies I have our bloated days sorted!\n\nKARINA15 for $15 off @SMILE \n\n#bloated #smile #smlgirl #activewear",
+      "hashtags": [
+        "bloated",
+        "smile",
+        "smlgirl",
+        "activewear"
+      ],
+      "duration_s": 57,
+      "music": {
+        "title": "original sound",
+        "author": "KARINA IRBY",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-karinairby-20260421234646-7631363133046574357.mp4",
+      "play_count": 10400,
+      "like_count": 249,
+      "comment_count": 5,
+      "share_count": 6,
+      "created_at": "2026-04-21T23:46:46+00:00",
+      "source_input": null,
+      "virality_score": 0.0271
+    },
+    {
+      "id": "7623509579871030542",
+      "url": "https://www.tiktok.com/@dr.ryanmitchell/video/7623509579871030542",
+      "author_handle": "dr.ryanmitchell",
+      "author_followers": 9022,
+      "caption": "Stop Acid Reflux & Stomach Pain With This Simple Natural Remedy 🤯\n#AcidRefluxRelief #guthealthtips ",
+      "hashtags": [
+        "acidrefluxrelief",
+        "guthealthtips"
+      ],
+      "duration_s": 65,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Ryan Mitchell",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-drryanmitc-20260331195115-7623509579871030542.mp4",
+      "play_count": 690100,
+      "like_count": 24400,
+      "comment_count": 197,
+      "share_count": 9709,
+      "created_at": "2026-03-31T19:51:15+00:00",
+      "source_input": null,
+      "virality_score": 0.0268
+    },
+    {
+      "id": "7626464328371195150",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+      "author_handle": "thestomachdoc",
+      "author_followers": 2100000,
+      "caption": "This is a mystery condition that actually affects more people than classic heartburn — and most don’t realize it.\n\nIf you have constant throat clearing, a sour or bitter taste in your mouth, a chronic cough, or a persistent sensation of a lump in your throat that never seems to go away, these can be signs of laryngopharyngeal reflux (LPR). Unlike typical acid reflux, LPR often shows up without obvious heartburn, which is why it’s so commonly missed.\n\nDuet with @Nicole - Health Coach \n\n#MedicalStudent #Heartburn #GERD #AcidReflux #LPR",
+      "hashtags": [
+        "medicalstudent",
+        "heartburn",
+        "gerd",
+        "acidreflux",
+        "lpr"
+      ],
+      "duration_s": 75,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Joseph Salhab",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4",
+      "play_count": 349800,
+      "like_count": 8454,
+      "comment_count": 317,
+      "share_count": 1890,
+      "created_at": "2026-04-08T18:57:17+00:00",
+      "source_input": null,
+      "virality_score": 0.0261
+    },
+    {
+      "id": "7632050645712850177",
+      "url": "https://www.tiktok.com/@penguinshilajit/video/7632050645712850177",
+      "author_handle": "penguinshilajit",
+      "author_followers": 109300,
+      "caption": "Clean Your Gut Fast! Foods to Avoid vs Foods to Eat for Better Digestion",
+      "hashtags": [],
+      "duration_s": 5,
+      "music": {
+        "title": "original sound - Penguin Wellness",
+        "author": "Penguin Wellness",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-penguinshi-20260423201442-7632050645712850177.mp4",
+      "play_count": 1100000,
+      "like_count": 5093,
+      "comment_count": 71,
+      "share_count": 924,
+      "created_at": "2026-04-23T20:14:42+00:00",
+      "source_input": null,
+      "virality_score": 0.0204
+    },
+    {
+      "id": "7628876336194555158",
+      "url": "https://www.tiktok.com/@teagzzz6/video/7628876336194555158",
+      "author_handle": "teagzzz6",
+      "author_followers": 1118,
+      "caption": "I’m very bloated 🤣🤣",
+      "hashtags": [],
+      "duration_s": 124,
+      "music": {
+        "title": "original sound",
+        "author": "Teagzzz",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-teagzzz6-20260415065633-7628876336194555158.mp4",
+      "play_count": 3795,
+      "like_count": 144,
+      "comment_count": 9,
+      "share_count": 1,
+      "created_at": "2026-04-15T06:56:33+00:00",
+      "source_input": null,
+      "virality_score": 0.0203
+    },
+    {
+      "id": "7623102200948067606",
+      "url": "https://www.tiktok.com/@yangzhion/video/7623102200948067606",
+      "author_handle": "yangzhion",
+      "author_followers": 93100,
+      "caption": "Your bloating is not normal. Your gut is asking for help. This is the only supplement I trust to answer it 🌿",
+      "hashtags": [],
+      "duration_s": 116,
+      "music": {
+        "title": "original sound",
+        "author": "Yang Zhion",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-yangzhion-20260330172958-7623102200948067606.mp4",
+      "play_count": 425200,
+      "like_count": 8847,
+      "comment_count": 182,
+      "share_count": 2082,
+      "created_at": "2026-03-30T17:29:58+00:00",
+      "source_input": null,
+      "virality_score": 0.0094
+    }
+  ]
+}

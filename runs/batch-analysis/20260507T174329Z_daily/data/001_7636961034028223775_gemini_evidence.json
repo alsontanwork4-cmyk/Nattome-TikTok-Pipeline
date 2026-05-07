@@ -1,0 +1,149 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman in a red bikini and a black robe is standing in front of a white door, looking at her stomach.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1,
+      "observation": "The woman is wearing a black robe over her red bikini, with a large gold medal around her neck. She is looking at the camera.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3,
+      "observation": "The woman is holding the medal and looking at her stomach, which appears slightly distended.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "The woman is holding the medal and looking at her stomach, which appears slightly distended, and then smiles at the camera.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 7,
+      "observation": "The woman is holding the medal up to her face and then looks at the camera.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 8,
+      "observation": "The woman is in a red bikini, tying her hair up with a red scrunchie.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 10,
+      "observation": "A hand turns on a shower faucet.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 11,
+      "observation": "A shot of feet standing in a shower with yellowish-brown water on the white tiled floor.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 13,
+      "observation": "The woman is wearing a black sports bra and black shorts/skirt, looking at her stomach.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 15,
+      "observation": "The woman is zipping up a grey hooded jacket.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 16,
+      "observation": "The woman is adjusting her hair, which is tied up with a red scrunchie.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 17,
+      "observation": "The woman is holding a silver and green serum bottle.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 18,
+      "observation": "The woman is applying serum to her face with a dropper.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 20,
+      "observation": "The woman is massaging the serum into her face.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 21,
+      "observation": "The woman is pouring lotion from a green bottle into her hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 22,
+      "observation": "The woman is applying lotion to her face.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 24,
+      "observation": "The woman is brushing her teeth.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "get unready with me after my second bodybuilding competition (unfiltered)",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "bloated af after fried chicken 😩",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 11,
+      "text": "ewww the color is crazy 😳",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Classical music",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 10,
+      "cue": "Sound of running water",
+      "confidence": null
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with a woman in a red bikini and a black robe, with text overlaying 'get unready with me after my second bodybuilding competition (unfiltered)', immediately setting the context and inviting viewers to see a behind-the-scenes process.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1,
+      "evidence": "The woman puts on a large gold medal, indicating an achievement from the competition, which can pique viewer interest.",
+      "source": null,
+      "confidence": 0.8
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 4,
+      "text": "bloated af after fried chicken 😩",
+      "source": null,
+      "confidence": 0.95
+    }
+  ],
+  "missing_evidence": [
+    "spoken_content"
+  ]
+}

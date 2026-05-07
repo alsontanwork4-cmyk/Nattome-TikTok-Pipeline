@@ -1,0 +1,1849 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman in a beige top lifts it to reveal her toned abdomen. A blonde woman (Abbey) is shown in a smaller inset, reacting.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.08,
+      "observation": "Abbey is speaking directly to the camera, holding a small microphone. She is wearing a light blue button-up shirt and jeans.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "observation": "A plate with scrambled eggs and two slices of sourdough toast is shown from an overhead view.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "observation": "Abbey is reacting to the image of the eggs and toast, gesturing with her hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.52,
+      "observation": "A bowl of cream of rice with a dollop of peanut butter on the side is shown from an overhead view.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.54,
+      "observation": "Abbey is speaking, gesturing with her hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.25,
+      "observation": "A research paper title and abstract are overlaid on the screen next to Abbey.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.34,
+      "observation": "Abbey holds up a package of 'neue theory' plant-based protein powder.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.37,
+      "observation": "Abbey holds up a bottle of Lactantia UltraPur milk.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.39,
+      "observation": "Abbey holds up a bottle of Ripple plant-based milk.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.4,
+      "observation": "Abbey holds up a carton of Silk protein milk and a bottle of Fairlife milk, alongside Ripple milk.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.43,
+      "observation": "A woman is assembling a burger with a lettuce wrap instead of a bun, adding cheese and a beef patty. A small container of salsa is next to it.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.48,
+      "observation": "Abbey is reacting to the lettuce-wrapped burger, gesturing with her hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2,
+      "observation": "Images of sweet potatoes and quinoa are displayed next to Abbey.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.03,
+      "observation": "A plate with ground beef, rice, and beans is shown from an overhead view.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.05,
+      "observation": "Abbey is reacting to the meal, gesturing with her hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.08,
+      "observation": "A graphic showing a triangle with 'HCC' in the center is overlaid, representing 'Hunger Crushing Combo'.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.29,
+      "observation": "A jar of 'neue theory DIGEST + DEBLOAT' is displayed next to Abbey.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.36,
+      "observation": "A hand holds a pint of Frönen mint chip dairy-free frozen dessert.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.38,
+      "observation": "Abbey is speaking, gesturing with her hands.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.43,
+      "observation": "The nutrition facts and ingredient list for Frönen mint chip ice cream are overlaid next to Abbey.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3.04,
+      "observation": "A small inset of the original woman showing her abs is displayed while Abbey speaks.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "*dietitian reacts*",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "EVERYTH",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "to feel snatched instead of bloated as a 25 year old",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "HERE'S EVERYTHING I",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "DAY TO FEEL",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.03,
+      "text": "BLOATED.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.03,
+      "text": "BOY, UM,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.04,
+      "text": "NOT A WILDLY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.06,
+      "text": "OBVIOUS BODY CHECK,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.07,
+      "text": "I REALLY DO",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "text": "IS.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "text": "BUT HERE'S MY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.1,
+      "text": "FRIENDLY REMINDER TO ALL OF YOU",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.12,
+      "text": "FOLKS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.12,
+      "text": "THAT YOU CAN DO ALL THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.14,
+      "text": "SAME THINGS THAT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.15,
+      "text": "SHE DOES TO LOOK SNATCHED",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.17,
+      "text": "AND STILL NOT LOOK LIKE HER.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.18,
+      "text": "BUT I'M ABBEY SHARP, I'M THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.19,
+      "text": "INTERNET'S NO BS DIETITIAN.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.21,
+      "text": "LET'S TAKE A LOOK SEE AT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.23,
+      "text": "SOME OF THESE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.24,
+      "text": "HOT DIET TIPS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.24,
+      "text": "TO GET SNATCHED.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "text": "9:00am",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "text": "SOME EGGS AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "text": "SOURDOUGH TOAST.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.27,
+      "text": "LOTS OF PROTEIN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.28,
+      "text": "FROM THE EGG",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.29,
+      "text": "FIBRE FROM THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.31,
+      "text": "SOURDOUGH.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.31,
+      "text": "BOTH EGGS AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.32,
+      "text": "SOURDOUGH ARE VERY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.33,
+      "text": "GOOD OPTIONS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.34,
+      "text": "IF YOU ARE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.35,
+      "text": "FEELING BLOATED OR",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.36,
+      "text": "ARE SUSCEPTIBLE TO",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.37,
+      "text": "BLOATING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.37,
+      "text": "BECAUSE THEY ARE VERY GENTLE ON",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.38,
+      "text": "THE GUT.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.39,
+      "text": "BUT I WOULD",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.4,
+      "text": "HIGHLY RECOMMEND KEEPING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.41,
+      "text": "AT LEAST 1 OR 2 YOLKS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.43,
+      "text": "IN THAT EGG",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.44,
+      "text": "KIND OF SCRAMBLE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.45,
+      "text": "THAT'S GOING TO ADD",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.46,
+      "text": "SOME HEALTHY FATS,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.47,
+      "text": "SOME CHOLINE ANTIOXIDANTS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.49,
+      "text": "AND VITAMIN D",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.5,
+      "text": "AND ALSO NOT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.51,
+      "text": "LIKELY TO CAUSE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.51,
+      "text": "BLOATING.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.52,
+      "text": "11:00am",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.52,
+      "text": "CREAM OF RICE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.53,
+      "text": "SOME PEANUT BUTTER.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.54,
+      "text": "OKAY, SO CREAM OF WHEAT IS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.55,
+      "text": "ALSO A VERY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.56,
+      "text": "GENTLE SOOTHING MEAL",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.57,
+      "text": "FOR YOUR GUT,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.57,
+      "text": "BUT IT'S GENTLE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.59,
+      "text": "BECAUSE THERE'S NOT A WHOLE LOT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1,
+      "text": "GOING ON HERE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.01,
+      "text": "LIKE THERE'S ZERO",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.02,
+      "text": "FIBRE, ONLY 2",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.03,
+      "text": "GRAMS OF PROTEIN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.04,
+      "text": "AND ALSO IS VERY LOW CALORIE.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.06,
+      "text": "YES, BLOATING CAN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.07,
+      "text": "BE CAUSED BY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.08,
+      "text": "EXCESS FIBRE,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.09,
+      "text": "ESPECIALLY HIGH FODMAP",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.1,
+      "text": "FIBRE FOODS,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.12,
+      "text": "BUT A LOT OF THE TIME",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.14,
+      "text": "IT'S ACTUALLY FROM",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.14,
+      "text": "CONSTIPATION.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.16,
+      "text": "SO WE IDEALLY WANT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.17,
+      "text": "TO IDENTIFY THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.18,
+      "text": "PRECISE FODMAP TRIGGERS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.2,
+      "text": "WHILE STILL MEETING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.21,
+      "text": "OUR FIBRE NEEDS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.22,
+      "text": "FROM LESS TRIGGERING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.23,
+      "text": "SOURCES.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.24,
+      "text": "SO FOR EXAMPLE,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.25,
+      "text": "Randomized Controlled Trial",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.25,
+      "text": "Am J Gastroenterol. 2021 Jun 1;116(6):1304-1312.\ndoi: 10.14309/ajg.0000000000001149.\nExploratory Comparative Effectiveness Trial of\nGreen Kiwifruit, Psyllium, or Prunes in US\nPatients With Chronic Constipation\nSamuel W Chey 1, William D Chey 1, Kenya Jackson 1 2,\nShanti Eswaran 1\nAffiliations + expand\nPMID: 34074\nDOI: 10.14309/ajg.0000000000001149",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.25,
+      "text": "RESEARCH HAS FOUND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.27,
+      "text": "THAT KIWI FRUIT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.28,
+      "text": "NOT ONLY CAN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.29,
+      "text": "HELP WITH CONSTIPATION",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.3,
+      "text": "BUT CAN ALSO",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.31,
+      "text": "HELP WITH BLOATING.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.32,
+      "text": "YOU CAN ALSO",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.33,
+      "text": "UP THE PROTEIN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.34,
+      "text": "IN THIS MEAL",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.34,
+      "text": "BY ADDING A",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.35,
+      "text": "A GUT FRIENDLY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.36,
+      "text": "PROTEIN POWDER",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.37,
+      "text": "OR MAKING IT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.38,
+      "text": "WITH A HIGHER",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.38,
+      "text": "PROTEIN MILK LIKE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.4,
+      "text": "PEA, SOY, OR",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.41,
+      "text": "LACTOSE FREE COW'S",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.42,
+      "text": "MILK IF THAT'S",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.42,
+      "text": "TOLERATED.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.43,
+      "text": "3:00pm",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.43,
+      "text": "WAS CRAVING BEEF",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.44,
+      "text": "HAVE ANY GLUTEN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.45,
+      "text": "HOME",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.46,
+      "text": "HAD TO DO.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.47,
+      "text": "I ADDED SOME",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.48,
+      "text": "WE GOT LOTS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.49,
+      "text": "OF PROTEIN IN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.5,
+      "text": "THE EGG AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.5,
+      "text": "THE BURGER BUT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.51,
+      "text": "AGAIN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.52,
+      "text": "VERY LITTLE CARBS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.53,
+      "text": "AND FIBRE.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.54,
+      "text": "NOW GLUTEN IS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.55,
+      "text": "A CONCERN.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.56,
+      "text": "PAIRING THE BURGER",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.57,
+      "text": "WITH ANOTHER SOURCE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.58,
+      "text": "OF LIKE A",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1.59,
+      "text": "LOW FODMAP FIBRE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2,
+      "text": "LIKE SWEET POTATOES",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.01,
+      "text": "OR QUINOA WOULD",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.02,
+      "text": "BE A REALLY GREAT OPTION.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.03,
+      "text": "7:00pm",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.03,
+      "text": "GROUND BEEF WITH",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.04,
+      "text": "VEGGIES, RICE AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.05,
+      "text": "BEANS.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.05,
+      "text": "UH YUM. THIS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.06,
+      "text": "LOOKS LIKE AN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.07,
+      "text": "AMAZING HUNGER CRUSHING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.08,
+      "text": "HCC",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.09,
+      "text": "COMBO HERE.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.09,
+      "text": "WE GOT LOADS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.1,
+      "text": "OF PROTEIN IN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.11,
+      "text": "THE BEEF AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.11,
+      "text": "THE BEANS.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.12,
+      "text": "WE GOT A LITTLE BIT OF",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.13,
+      "text": "FIBRE IN THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.14,
+      "text": "BEANS AND THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.14,
+      "text": "VEGGIES",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.15,
+      "text": "AND PROBABLY SOME",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.16,
+      "text": "KIND OF HEALTHY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.16,
+      "text": "FATS MAYBE IN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.17,
+      "text": "THE COOKING OIL.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.18,
+      "text": "NOW BEANS CAN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.19,
+      "text": "BE A COMMON",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.2,
+      "text": "BLOATING TRIGGER",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.2,
+      "text": "BECAUSE THEY HAVE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.21,
+      "text": "DIGEST FIBRES.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.22,
+      "text": "SO USING LIKE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.23,
+      "text": "AN ALPHA GALACTOSIDASE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.24,
+      "text": "DIGESTIVE ENZYME CAN",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.25,
+      "text": "POTENTIALLY HELP",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.26,
+      "text": "IF YOU ARE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.27,
+      "text": "STRUGGLING WITH THAT.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.28,
+      "text": "AND PS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.29,
+      "text": "NEUE THEORIES DIGESTION",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.3,
+      "text": "BLOAT IS NOW",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.31,
+      "text": "60% OFF WHILE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.32,
+      "text": "SUPPLIES LAST.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.33,
+      "text": "SO JUST A",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.34,
+      "text": "SHAMELESS PLUG BECAUSE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.35,
+      "text": "THIS IS YOUR LAST CHANCE TO GET IT.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.36,
+      "text": "9:00pm",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.36,
+      "text": "COCONUT MILK MINT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.37,
+      "text": "ICE CREAM BEFORE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.38,
+      "text": "BED.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.38,
+      "text": "OKAY, I'VE NEVER",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.39,
+      "text": "HEARD OF THIS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.4,
+      "text": "BRAND, BUT IF YOU",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.41,
+      "text": "VALUE AN ICE CREAM",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.42,
+      "text": "VERY MINIMAL INGREDIENT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.43,
+      "text": "Dessert glacé sans produits laitiers - Chips\nde Menthe, 473 mL\nIngredients:\nCoconut cream*,\nHoney, Water, Cocoa\nliquor*, Coconut\nsugar*, Cocoa\nbutter*, Mint extract*\nOrganic. Contains:\nTree Nuts\nIngrédients: Crème\nde coco, Miel, Eau,\nLiqueur de cacao,\nSucre de coco*,\nBeurre de cacao*,\nExtrait de menthe*\nBiologique. Contient: Noix (noix\nde coco)\nNutrition Facts\nValeur nutritive\nServing size 1/3 cup (157.5 mL)\nPar 1/3 tasse (157.5 mL)\nCalories 230\nFat / Lipides 17 g\nSaturated / saturés 14 g\n+ Trans / trans 0.1 g\nCarbohydrate / Glucides 16 g\nFibre / Fibres 1 g\nSugars / Sucres 14 g\nProtein / Protéines 2 g\nCholesterol / Cholestérol 5 mg\nSodium 30 mg\nPotassium 100 mg\nCalcium 10 mg\nIron / Fer 0.5 mg\n*5% or less is a little, 15% or more is a lot\n*5% ou moins c'est peu, 15% ou plus c'est beaucoup\nProduct of USA / Produit de USA (Fronen Foods\nFRO-MNT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.43,
+      "text": "A REALLY GREAT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.45,
+      "text": "CHOICE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.45,
+      "text": "WITHOUT ANY KIND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.46,
+      "text": "OF SUGAR ALCOHOLS,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.47,
+      "text": "WHICH CAN BE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.48,
+      "text": "A MAJOR BLOATING",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.48,
+      "text": "CULPRIT FOR A",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.49,
+      "text": "LOT OF FOLKS.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.5,
+      "text": "FRIENDS, I HAVE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.51,
+      "text": "ZERO ISSUE WITH",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.52,
+      "text": "ANY OF THESE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.53,
+      "text": "MEALS LIKE THEY'RE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.54,
+      "text": "PROTEIN RICH,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.55,
+      "text": "THEY'RE NUTRIENT DENSE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.56,
+      "text": "AND FOR THE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.57,
+      "text": "MOST PART THEY'RE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.58,
+      "text": "TOTALLY VALID CHOICES",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2.59,
+      "text": "FOR SENSITIVE TUMMIES.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3,
+      "text": "BUT WHEN GUT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.01,
+      "text": "HEALING IS PACKAGED",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.02,
+      "text": "WITH A BODY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.04,
+      "text": "AND FRAMED AROUND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.05,
+      "text": "LOOKING SNATCHED,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.08,
+      "text": "IT TENDS TO BLUR",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.09,
+      "text": "THE LINE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.1,
+      "text": "BETWEEN HEALTH AND",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.11,
+      "text": "AESTHETICS.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.12,
+      "text": "AND SPEAKING AS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.13,
+      "text": "SOMEONE WITH I",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.14,
+      "text": "BS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.15,
+      "text": "WITH VERY PAINFUL",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.16,
+      "text": "BLOATING FOR YEARS,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.17,
+      "text": "PEOPLE WITH I",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.18,
+      "text": "NEED REAL SOLUTIONS",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.2,
+      "text": "THAT ARE NOT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.21,
+      "text": "SNEAKILY WRAPPED UP",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.22,
+      "text": "IN DIET CULTURE.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.24,
+      "text": "SO LET'S NOT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.25,
+      "text": "CO OPT GUT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.26,
+      "text": "HEALTH LANGUAGE",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.27,
+      "text": "TO SELL WHAT",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.28,
+      "text": "MAY ACTUALLY JUST",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.29,
+      "text": "BE ANOTHER BODY",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.3,
+      "text": "IDEAL.",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.31,
+      "text": "STAY FUELED,",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3.32,
+      "text": "FRIENDS. NEXT.",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 3,
+      "text": "Here's everything I eat in a day to feel snatched instead of bloated as a 25 year old.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 3,
+      "end_seconds": 9,
+      "text": "Boy, um, if that is not a wildly obvious body check, I really do not know what is.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 18,
+      "text": "But here's my friendly reminder to all of you folks, that you can do all the same things that she does to look snatched and still not look like her.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 18,
+      "end_seconds": 25,
+      "text": "But I'm Abbey Sharp, I'm the internet's no BS dietitian. Let's take a look see at some of these hot diet tips to get snatched.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 25,
+      "end_seconds": 26,
+      "text": "Some eggs and sourdough toast.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 26,
+      "end_seconds": 30,
+      "text": "Alright, so we got lots of protein from the egg whites and some fibre from the sourdough.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 30,
+      "end_seconds": 39,
+      "text": "Both eggs and sourdough are very good options if you are feeling bloated or are susceptible to bloating because they are very gentle on the gut.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 39,
+      "end_seconds": 52,
+      "text": "But I would highly recommend keeping at least one or two yolks in that egg kind of scramble. That's going to add some healthy fats, some choline, antioxidants, and vitamin D, and also not likely to cause bloating.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 52,
+      "end_seconds": 54,
+      "text": "Cream of rice and mix in some peanut butter.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 54,
+      "end_seconds": 105,
+      "text": "Okay, so cream of wheat is also a very gentle soothing meal for your gut, but it's gentle because there's not a whole lot going on here. Like there's zero fibre, only two grams of protein, and also is very low calorie.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 105,
+      "end_seconds": 115,
+      "text": "Yes, bloating can be caused by excess fibre, especially high FODMAP fibre foods, but a lot of the time it's actually from constipation.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 115,
+      "end_seconds": 124,
+      "text": "So we ideally want to identify the precise FODMAP triggers while still meeting our fibre needs from less triggering sources.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 124,
+      "end_seconds": 132,
+      "text": "So for example, research has found that kiwi fruit not only can help with constipation but can also help with bloating.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 132,
+      "end_seconds": 142,
+      "text": "You can also up the protein in this meal by adding a scoop of like a gut-friendly protein powder or making it with a higher protein milk like pea, soy, or a lactose-free cow's milk if that's tolerated.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 142,
+      "end_seconds": 148,
+      "text": "For lunch I was craving beef and I didn't have any gluten-free buns at home, so lettuce wraps had to do. I added some egg.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 148,
+      "end_seconds": 153,
+      "text": "Alright, we got lots of protein in the egg and the burger, but again, very little carbs and fibre.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 153,
+      "end_seconds": 202,
+      "text": "Now if gluten is a concern, pairing the burger with another source of like a low FODMAP fibre like sweet potatoes or quinoa would be a really great option.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 202,
+      "end_seconds": 205,
+      "text": "Ground beef with veggies, rice and beans.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 205,
+      "end_seconds": 217,
+      "text": "Uh yum. This looks like an amazing hunger crushing combo here. We got loads of protein in the beef and the beans. We got a little bit of fibre in the beans and the veggies and probably some kind of healthy fats maybe in the cooking oil.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 217,
+      "end_seconds": 235,
+      "text": "Now beans can be a common bloating trigger because they have these hard to digest fibres. So using like an alpha galactosidase digestive enzyme can potentially help if you are struggling with that. And PS, Neue Theories Digestion Bloat is now 60% off while supplies last. So just a shameless plug because this is your last chance to get it.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 235,
+      "end_seconds": 238,
+      "text": "Coconut milk mint ice cream before bed.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 238,
+      "end_seconds": 249,
+      "text": "Okay, I've never heard of this brand, but if you value an ice cream with a very minimal ingredient list, this looks like a really great choice that is sweetened without any kind of sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 249,
+      "end_seconds": 300,
+      "text": "Friends, I have zero issue with any of these meals, like they're protein rich, they're nutrient dense, and for the most part, they're totally valid choices for sensitive tummies.",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 300,
+      "end_seconds": 333,
+      "text": "But when gut healing is packaged with a body check and framed around looking snatched, it tends to blur the line between health and aesthetics. And speaking as someone with IBS who has dealt with very painful bloating for years, people with IBS need real solutions that are not sneakily wrapped up in diet culture. So let's not co-opt gut health language to sell what may actually just be another body ideal. Stay fueled, friends. Next.",
+      "language": "English",
+      "confidence": null
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.03,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.18,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.25,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.3,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.39,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.52,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.54,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.05,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.15,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.24,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.32,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.42,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.48,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.53,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.02,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.05,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.17,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.35,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.38,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.49,
+      "cue": "Voiceover",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3,
+      "cue": "Voiceover",
+      "confidence": null
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with a woman lifting her shirt to show her abs, with text \"to feel snatched instead of bloated as a 25 year old\" and \"*dietitian reacts*\", immediately grabbing attention with a body check and a promise of expert reaction to a common aesthetic goal.",
+      "source": null,
+      "confidence": null
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0.3,
+      "text": "Both eggs and sourdough are very good options if you are feeling bloated or are susceptible to bloating because they are very gentle on the gut.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 0.45,
+      "text": "That's going to add some healthy fats, some choline, antioxidants, and vitamin D, and also not likely to cause bloating.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 0.54,
+      "text": "Okay, so cream of wheat is also a very gentle soothing meal for your gut",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1.05,
+      "text": "Yes, bloating can be caused by excess fibre, especially high FODMAP fibre foods, but a lot of the time it's actually from constipation.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1.15,
+      "text": "So we ideally want to identify the precise FODMAP triggers while still meeting our fibre needs from less triggering sources.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1.24,
+      "text": "research has found that kiwi fruit not only can help with constipation but can also help with bloating.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1.32,
+      "text": "You can also up the protein in this meal by adding a scoop of like a gut-friendly protein powder or making it with a higher protein milk like pea, soy, or a lactose-free cow's milk if that's tolerated.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 1.56,
+      "text": "pairing the burger with another source of like a low FODMAP fibre like sweet potatoes or quinoa would be a really great option.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.05,
+      "text": "This looks like an amazing hunger crushing combo here. We got loads of protein in the beef and the beans. We got a little bit of fibre in the beans and the veggies and probably some kind of healthy fats maybe in the cooking oil.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.17,
+      "text": "Now beans can be a common bloating trigger because they have these hard to digest fibres.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.23,
+      "text": "So using like an alpha galactosidase digestive enzyme can potentially help if you are struggling with that.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.29,
+      "text": "Neue Theories Digestion Bloat is now 60% off while supplies last.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.43,
+      "text": "This looks like a really great choice that is sweetened without any kind of sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.47,
+      "text": "sugar alcohols, which can be a major bloating culprit for a lot of folks.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 2.53,
+      "text": "they're protein rich, they're nutrient dense, and for the most part, they're totally valid choices for sensitive tummies.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 3,
+      "text": "But when gut healing is packaged with a body check and framed around looking snatched, it tends to blur the line between health and aesthetics.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 3.17,
+      "text": "people with IBS need real solutions that are not sneakily wrapped up in diet culture.",
+      "source": null,
+      "confidence": 0.9
+    }
+  ],
+  "missing_evidence": []
+}

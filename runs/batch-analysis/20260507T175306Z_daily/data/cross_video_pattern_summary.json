@@ -1,0 +1,165 @@
+{
+  "created_at": "2026-05-07T17:53:06Z",
+  "source_video_count": 1,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Clear first-three-second problem hook",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "voiceover",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive discomfort relief",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "Gemini hook evidence: The video starts with a clear title 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating everyday if I was trying to heal my gut.' This directly addresses a common health concern and promises a solution.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "cure_claim",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a clear title 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating everyday if I was trying to heal my gut.' This directly addresses a common health concern and promises a solution.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `FOODS THAT HEALED MY GUT` into a safer prompt about food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+      "avatar": "The Sufferer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7633461167788166413",
+    "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

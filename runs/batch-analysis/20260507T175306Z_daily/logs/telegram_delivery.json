@@ -1,0 +1,24 @@
+{
+  "status": "sent",
+  "telegram_response": {
+    "ok": true,
+    "result": {
+      "message_id": 6,
+      "from": {
+        "id": 8632929005,
+        "is_bot": true,
+        "first_name": "Nattome TikTok Report",
+        "username": "Nattome_Tiktok_Report_Bot"
+      },
+      "chat": {
+        "id": 910681489,
+        "first_name": "清水断崖",
+        "username": "clmra1232",
+        "type": "private"
+      },
+      "date": 1778176461,
+      "text": "Nattome Batch Analysis Final Outputs\nRun: 2026-05-07T17:53:06Z (daily)\nVideos compared: 1\nShoot first: Digestive Comfort Routine Check (7633461167788166413)\n\nTop priority Shootable Angles:\n1. 7633461167788166413 - Digestive Comfort Routine Check - 26/30\n2. 7633461167788166413 - On-Screen Claim Rewrite - 26/30\n3. 7633461167788166413 - Voiceover Pattern Adaptation - 26/30\n\nOutputs:\nTop 5 Creative Production Report: reports/2026-05-07/top5_creative_production_report_2026-05-07.md\nExcel Planning Workbook: reports/2026-05-07/top5_angle_planning_sheet_2026-05-07.xlsx\nRun folder: runs\\batch-analysis\\20260507T175306Z_daily"
+    }
+  },
+  "message_character_count": 622
+}

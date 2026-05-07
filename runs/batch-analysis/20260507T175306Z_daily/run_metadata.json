@@ -1,0 +1,58 @@
+{
+  "run_timestamp": "2026-05-07T17:53:06Z",
+  "mode": "daily",
+  "requested_batch_size": 1,
+  "configuration": {
+    "selection": {
+      "minimum_views": 10000,
+      "maximum_age_days": 30,
+      "minimum_weighted_engagement_rate": 0.03,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true
+    },
+    "outputs": {
+      "markdown": "reports",
+      "json": "data",
+      "spreadsheet": "data",
+      "evidence_bundles": "data/evidence_bundle_index.json",
+      "logs": "logs"
+    },
+    "tool_stack": {
+      "primary_adapter": "gemini_2_5_flash",
+      "gemini_model": "gemini-2.5-flash",
+      "gemini_api_key_env": "GEMINI_API_KEY",
+      "discovery_download": "Apify",
+      "evidence_extraction": "Gemini 2.5 Flash"
+    },
+    "telegram": {
+      "enabled": true,
+      "bot_token_env": "TELEGRAM_BOT_TOKEN",
+      "chat_id_env": "TELEGRAM_CHAT_ID"
+    },
+    "cleanup": {
+      "enabled": false,
+      "requires_report_approval": true,
+      "report_approved": false,
+      "remove_source_videos": true,
+      "remove_frames": true
+    }
+  },
+  "implementation_status": {
+    "candidate_selection": "implemented",
+    "video_download": "implemented",
+    "gemini_evidence": "implemented",
+    "audio_music_trend_analysis": "implemented",
+    "claim_safety_review": "implemented",
+    "evidence_quality": "implemented",
+    "video_evidence_reports": "implemented",
+    "cross_video_pattern_summary": "implemented",
+    "structured_json_output": "implemented",
+    "telegram_delivery": "implemented",
+    "evidence_artifact_cleanup": "implemented",
+    "refinement_hooks": "implemented"
+  },
+  "notes": [
+    "This run records missing setup or missing evidence instead of fabricating analysis.",
+    "Cross-video summaries compare only captured evidence and selected candidate metadata."
+  ]
+}

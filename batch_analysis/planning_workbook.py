@@ -18,6 +18,7 @@ from .outputs import (
     shootable_angles_for_bundle,
     source_creator,
 )
+from .report_dates import report_output_path
 from .reports import product_tie_in_for_candidate
 
 
@@ -399,13 +400,14 @@ def write_top5_angle_planning_workbook(
     selected_batch: dict[str, Any],
     evidence_index: dict[str, Any],
     timestamp: str,
+    run_id: str = "",
 ) -> dict[str, Any]:
     report_date = output_report_date(timestamp)
-    workbook_path = (
-        output_root
-        / "reports"
-        / report_date
-        / f"top5_angle_planning_sheet_{report_date}.xlsx"
+    workbook_path = report_output_path(
+        output_root,
+        report_date,
+        f"top5_angle_planning_sheet_{report_date}.xlsx",
+        run_id,
     )
     angle_rows, source_rows = build_planning_workbook_rows(
         run_folder,

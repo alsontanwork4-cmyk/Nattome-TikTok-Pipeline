@@ -1,0 +1,144 @@
+{
+  "generated_at": "2026-05-07T17:52:52.716087+00:00",
+  "source_scrape": "data\\raw_scrapes\\nattome_raw_20260508_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_count": 5,
+  "top": [
+    {
+      "id": "7637002506635201813",
+      "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+      "author_handle": "isaaarraa",
+      "author_followers": 17800,
+      "caption": "#ibs 😻",
+      "hashtags": [
+        "ibs"
+      ],
+      "duration_s": 8,
+      "music": {
+        "title": "original sound",
+        "author": "Cinematography",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-isaaarraa-20260507043026-7637002506635201813.mp4",
+      "play_count": 2106,
+      "like_count": 342,
+      "comment_count": 3,
+      "share_count": 18,
+      "created_at": "2026-05-07T04:30:26+00:00",
+      "source_input": null,
+      "virality_score": 0.802
+    },
+    {
+      "id": "7636847083210673421",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7636847083210673421",
+      "author_handle": "drtoddstrong",
+      "author_followers": 95800,
+      "caption": "The Autoimmune Patient's Morning Routine That Prevents Daily Flares #autoimmune #gut #leakygut #nutrition #guthealth ",
+      "hashtags": [
+        "autoimmune",
+        "gut",
+        "leakygut",
+        "nutrition",
+        "guthealth"
+      ],
+      "duration_s": 183,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Strong",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-drtoddstro-20260506182742-7636847083210673421.mp4",
+      "play_count": 5489,
+      "like_count": 258,
+      "comment_count": 8,
+      "share_count": 62,
+      "created_at": "2026-05-06T18:27:42+00:00",
+      "source_input": null,
+      "virality_score": 0.5678
+    },
+    {
+      "id": "7633461167788166413",
+      "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "author_handle": "onehealthygut",
+      "author_followers": 102500,
+      "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+      "hashtags": [
+        "bloatingrelief",
+        "ibsrelief",
+        "bloatedstomach",
+        "bloatingtips",
+        "guthealthtips"
+      ],
+      "duration_s": 161,
+      "music": {
+        "title": "original sound",
+        "author": "Meg McDonald",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+      "play_count": 660700,
+      "like_count": 67800,
+      "comment_count": 523,
+      "share_count": 9217,
+      "created_at": "2026-04-27T15:28:58+00:00",
+      "source_input": null,
+      "virality_score": 0.5268
+    },
+    {
+      "id": "7633580497142156558",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7633580497142156558",
+      "author_handle": "drtoddstrong",
+      "author_followers": 95800,
+      "caption": "Do These 4 Things Every Morning and Watch Your Gut Start to Heal #gut #leakygut #nutrition #diabetes #guthealth ",
+      "hashtags": [
+        "gut",
+        "leakygut",
+        "nutrition",
+        "diabetes",
+        "guthealth"
+      ],
+      "duration_s": 169,
+      "music": {
+        "title": "original sound",
+        "author": "Dr. Strong",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-drtoddstro-20260427231136-7633580497142156558.mp4",
+      "play_count": 552300,
+      "like_count": 34000,
+      "comment_count": 544,
+      "share_count": 6450,
+      "created_at": "2026-04-27T23:11:36+00:00",
+      "source_input": null,
+      "virality_score": 0.3996
+    },
+    {
+      "id": "7637154901138672916",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+      "author_handle": "abbeyskitchen",
+      "author_followers": 1100000,
+      "caption": "Been there, done that… it’s the IBS life. But even without IBS, travel constipation is common because you’re drinking less water, eating less fiber, and sitting for long periods of time. Here’s what can help! #travel #constipation #ibstok #bloating #guthealth",
+      "hashtags": [
+        "travel",
+        "constipation",
+        "ibstok",
+        "bloating",
+        "guthealth"
+      ],
+      "duration_s": 148,
+      "music": {
+        "title": "original sound",
+        "author": "Abbey Sharp",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260507142135-7637154901138672916.mp4",
+      "play_count": 8002,
+      "like_count": 605,
+      "comment_count": 10,
+      "share_count": 14,
+      "created_at": "2026-05-07T14:21:35+00:00",
+      "source_input": null,
+      "virality_score": 0.3822
+    }
+  ]
+}

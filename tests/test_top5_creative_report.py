@@ -206,6 +206,7 @@ class Top5CreativeReportTest(unittest.TestCase):
                 output_root
                 / "reports"
                 / "2026-05-07"
+                / "20260507T080000Z_daily"
                 / "top5_creative_production_report_2026-05-07.md"
             )
             self.assertTrue(report_path.is_file())

@@ -1,0 +1,220 @@
+{
+  "selected_at": "2026-05-07T17:59:36Z",
+  "candidate_source": "data\\raw_scrapes\\nattome_raw_20260508_top30.json",
+  "selection_strategy": "viral_relevance_score",
+  "requested_batch_size": 5,
+  "input_candidate_count": 30,
+  "eligible_candidate_count": 15,
+  "selected_candidate_count": 5,
+  "minimum_eligibility_filter": {
+    "minimum_views": 10000,
+    "maximum_age_days": 30,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true
+  },
+  "selected_candidates": [
+    {
+      "rank": 1,
+      "id": "7633461167788166413",
+      "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+      "author_handle": "onehealthygut",
+      "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+      "play_count": 660700,
+      "like_count": 67800,
+      "comment_count": 523,
+      "share_count": 9217,
+      "created_at": "2026-04-27T15:28:58Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.2461,
+      "nattome_relevance_score": 1.0,
+      "selection_score": 1.5266
+    },
+    {
+      "rank": 2,
+      "id": "7630064907605609758",
+      "url": "https://www.tiktok.com/@lilylasley17/video/7630064907605609758",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-lilylasley-20260418114954-7630064907605609758.mp4",
+      "author_handle": "lilylasley17",
+      "caption": "Do not overuse this! It just helps clear your digestive system when it’s not moving things. But I do not recommend taking it a ton! Just wanted to show what glory it did for my stomach ache last night! #stomachproblems #magnesiumcitrate #digestionrelief #bloating ",
+      "play_count": 635900,
+      "like_count": 31900,
+      "comment_count": 103,
+      "share_count": 1023,
+      "created_at": "2026-04-18T11:49:54Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0671,
+      "nattome_relevance_score": 1.0,
+      "selection_score": 1.0578
+    },
+    {
+      "rank": 3,
+      "id": "7629394680022584597",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7629394680022584597",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-abbeyskitc-20260416162801-7629394680022584597.mp4",
+      "author_handle": "abbeyskitchen",
+      "caption": "As an IBS girly, I 100% understand choosing foods you know are gentle on your gut. But too often, I see “bloating” and “gut health” repackaged as “thinness”, when the two are not the same. Stay fueled, friends. #ibs #guthealth #bloating #whatieat #nutrition ",
+      "play_count": 545600,
+      "like_count": 32500,
+      "comment_count": 156,
+      "share_count": 183,
+      "created_at": "2026-04-16T16:28:01Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0644,
+      "nattome_relevance_score": 0.75,
+      "selection_score": 0.7959
+    },
+    {
+      "rank": 4,
+      "id": "7631996162110803213",
+      "url": "https://www.tiktok.com/@notasianbelly/video/7631996162110803213",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-notasianbe-20260423164315-7631996162110803213.mp4",
+      "author_handle": "notasianbelly",
+      "caption": "im so bloated right now it’s not even funny #bloating #bloatedstomach #bloated #pregnantbelly #fyp ",
+      "play_count": 198300,
+      "like_count": 4745,
+      "comment_count": 111,
+      "share_count": 101,
+      "created_at": "2026-04-23T16:43:15Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0318,
+      "nattome_relevance_score": 0.75,
+      "selection_score": 0.7919
+    },
+    {
+      "rank": 5,
+      "id": "7626464328371195150",
+      "url": "https://www.tiktok.com/@thestomachdoc/video/7626464328371195150",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/jJQb2z7bxLXvIwaN5/records/video-thestomach-20260408185717-7626464328371195150.mp4",
+      "author_handle": "thestomachdoc",
+      "caption": "This is a mystery condition that actually affects more people than classic heartburn — and most don’t realize it.\n\nIf you have constant throat clearing, a sour or bitter taste in your mouth, a chronic cough, or a persistent sensation of a lump in your throat that never seems to go away, these can be signs of laryngopharyngeal reflux (LPR). Unlike typical acid reflux, LPR often shows up without obvious heartburn, which is why it’s so commonly missed.\n\nDuet with @Nicole - Health Coach \n\n#MedicalStudent #Heartburn #GERD #AcidReflux #LPR",
+      "play_count": 349800,
+      "like_count": 8454,
+      "comment_count": 317,
+      "share_count": 1890,
+      "created_at": "2026-04-08T18:57:17Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0827,
+      "nattome_relevance_score": 0.75,
+      "selection_score": 0.7761
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "7637002506635201813",
+      "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+      "reason": "below minimum views (2106 < 10000)"
+    },
+    {
+      "id": "7636847083210673421",
+      "url": "https://www.tiktok.com/@drtoddstrong/video/7636847083210673421",
+      "reason": "below minimum views (5489 < 10000)"
+    },
+    {
+      "id": "7637154901138672916",
+      "url": "https://www.tiktok.com/@abbeyskitchen/video/7637154901138672916",
+      "reason": "below minimum views (8002 < 10000)"
+    },
+    {
+      "id": "7637191036674034957",
+      "url": "https://www.tiktok.com/@callmedoctor.p/video/7637191036674034957",
+      "reason": "below minimum views (524 < 10000)"
+    },
+    {
+      "id": "7637173314837941534",
+      "url": "https://www.tiktok.com/@lauramahachek/video/7637173314837941534",
+      "reason": "below minimum views (710 < 10000)"
+    },
+    {
+      "id": "7637126131446975757",
+      "url": "https://www.tiktok.com/@doctorsood/video/7637126131446975757",
+      "reason": "below minimum views (1968 < 10000)"
+    },
+    {
+      "id": "7635519575802580237",
+      "url": "https://www.tiktok.com/@doctormyro/video/7635519575802580237",
+      "reason": "below minimum weighted engagement rate (0.0251 < 0.0300)"
+    },
+    {
+      "id": "7636866665594096910",
+      "url": "https://www.tiktok.com/@homewithhaley_/video/7636866665594096910",
+      "reason": "below minimum weighted engagement rate (0.0204 < 0.0300)"
+    },
+    {
+      "id": "7632792202024111363",
+      "url": "https://www.tiktok.com/@doctorjohnhamm/video/7632792202024111363",
+      "reason": "below minimum views (4462 < 10000)"
+    },
+    {
+      "id": "7637082619984874783",
+      "url": "https://www.tiktok.com/@mamaeveweightloss/video/7637082619984874783",
+      "reason": "below minimum views (672 < 10000); below minimum weighted engagement rate (0.0193 < 0.0300)"
+    },
+    {
+      "id": "7637146898620632350",
+      "url": "https://www.tiktok.com/@emmamarschall/video/7637146898620632350",
+      "reason": "below minimum views (385 < 10000); below minimum weighted engagement rate (0.0156 < 0.0300)"
+    },
+    {
+      "id": "7623509579871030542",
+      "url": "https://www.tiktok.com/@dr.ryanmitchell/video/7623509579871030542",
+      "reason": "older than 30 days"
+    },
+    {
+      "id": "7632050645712850177",
+      "url": "https://www.tiktok.com/@penguinshilajit/video/7632050645712850177",
+      "reason": "below minimum weighted engagement rate (0.0134 < 0.0300)"
+    },
+    {
+      "id": "7628876336194555158",
+      "url": "https://www.tiktok.com/@teagzzz6/video/7628876336194555158",
+      "reason": "below minimum views (3795 < 10000)"
+    },
+    {
+      "id": "7623102200948067606",
+      "url": "https://www.tiktok.com/@yangzhion/video/7623102200948067606",
+      "reason": "older than 30 days"
+    }
+  ]
+}

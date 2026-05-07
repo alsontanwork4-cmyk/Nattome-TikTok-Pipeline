@@ -258,6 +258,7 @@ class Top5AnglePlanningWorkbookTest(unittest.TestCase):
                 output_root
                 / "reports"
                 / "2026-05-07"
+                / "20260507T080000Z_daily"
                 / "top5_angle_planning_sheet_2026-05-07.xlsx"
             )
             self.assertTrue(workbook_path.is_file())

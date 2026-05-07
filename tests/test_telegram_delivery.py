@@ -7,7 +7,7 @@ from batch_analysis.telegram import build_telegram_brief_message, deliver_telegr
 
 
 class TelegramDeliveryTest(unittest.TestCase):
-    def test_default_message_points_to_new_final_output_set(self):
+    def test_default_message_is_minimal_status_summary(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
 
@@ -17,20 +17,19 @@ class TelegramDeliveryTest(unittest.TestCase):
                 {"source_video_count": 1, "top_priority_shootable_angles": []},
             )
 
-            self.assertIn("Top 5 Creative Production Report", message)
             self.assertIn("Nattome Batch Analysis Final Outputs", message)
-            self.assertNotIn("Weekly Evidence Brief", message)
-            self.assertIn(
-                "reports/2026-05-06/top5_creative_production_report_2026-05-06.md",
-                message,
+            self.assertIn("Run: 2026-05-06T13:45:30Z", message)
+            self.assertIn("Videos compared: 1", message)
+            self.assertIn("Success or Fail: Success", message)
+            self.assertEqual(
+                message.splitlines(),
+                [
+                    "Nattome Batch Analysis Final Outputs",
+                    "Run: 2026-05-06T13:45:30Z",
+                    "Videos compared: 1",
+                    "Success or Fail: Success",
+                ],
             )
-            self.assertIn("Excel Planning Workbook", message)
-            self.assertIn(
-                "reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx",
-                message,
-            )
-            self.assertNotIn("reports/cross_video_pattern_summary.md", message)
-            self.assertNotIn("data/spreadsheet_summary.csv", message)
 
     def test_missing_credentials_are_logged_as_skipped_delivery(self):
         with tempfile.TemporaryDirectory() as temp_dir:
