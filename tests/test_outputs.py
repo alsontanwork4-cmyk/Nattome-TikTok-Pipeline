@@ -1,0 +1,82 @@
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from batch_analysis.outputs import write_cross_video_pattern_summary
+
+
+class BatchOutputSetTest(unittest.TestCase):
+    def test_cross_video_pattern_summary_writes_priority_score_outputs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            run_folder = Path(temp_dir)
+            (run_folder / "batch_outputs" / "json").mkdir(parents=True)
+            (run_folder / "batch_outputs" / "markdown").mkdir(parents=True)
+            bundle_folder = run_folder / "evidence_bundles" / "001_output-video"
+            bundle_folder.mkdir(parents=True)
+            (bundle_folder / "evidence_quality.json").write_text(
+                json.dumps(
+                    {
+                        "evidence_quality_score": {"level": "high"},
+                        "checks": {"first_three_second_hook": {"clear": True}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (bundle_folder / "claim_safety_review.json").write_text(
+                json.dumps({"flagged_claims": []}),
+                encoding="utf-8",
+            )
+            (bundle_folder / "baseline_audio_analysis.json").write_text(
+                json.dumps(
+                    {
+                        "audio_format": "talking_head",
+                        "hook_support": "spoken hook supports first three seconds",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            selected_batch = {
+                "selected_at": "2026-05-06T13:45:30Z",
+                "selected_candidates": [
+                    {
+                        "id": "output-video",
+                        "url": "https://www.tiktok.com/@creator/video/output",
+                        "caption": "Bloating after meals routine",
+                        "play_count": 120000,
+                        "weighted_engagement_rate": 0.12,
+                        "nattome_relevance_score": 0.75,
+                        "audio_format_hint": "talking_head",
+                    }
+                ],
+            }
+            evidence_index = {
+                "bundles": [
+                    {
+                        "candidate_id": "output-video",
+                        "bundle_folder": "evidence_bundles/001_output-video",
+                    }
+                ]
+            }
+
+            result = write_cross_video_pattern_summary(run_folder, selected_batch, evidence_index)
+
+            self.assertEqual(result["status"], "completed")
+            summary = json.loads(
+                (run_folder / "batch_outputs" / "json" / "cross_video_pattern_summary.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            top_angle = summary["top_priority_shootable_angles"][0]
+            self.assertEqual(top_angle["candidate_id"], "output-video")
+            self.assertEqual(top_angle["priority_score"]["max_points"], 30)
+            self.assertEqual(
+                top_angle["priority_score"]["total"],
+                sum(top_angle["priority_score"]["dimensions"].values()),
+            )
+            markdown = (
+                run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("Nattome Priority Score", markdown)
+            self.assertIn("output-video", markdown)
