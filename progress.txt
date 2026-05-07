@@ -501,3 +501,33 @@ Feedback:
 Blockers or notes for the next iteration:
 - This slice adds the adapter contract and persistence path, but does not yet make the full batch run call live Gemini.
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+
+## 2026-05-07 - 0021 Render Video Evidence Reports From Gemini Evidence Snapshots
+
+Task completed from `docs/issues/0021-render-video-evidence-reports-from-gemini-evidence-snapshots.md`.
+
+Key decisions made:
+- Added snapshot-facing output generation so Video Evidence Reports, Evidence Quality, Baseline Audio Analysis, and Claim Safety Review consume Evidence Bundle snapshots with Gemini evidence.
+- Flat snapshot outputs are written under `reports/` and `data/` using the stable Evidence Bundle prefix.
+- Missing or unavailable Gemini evidence now renders explicit uncertainty and manual review states instead of inferred visual, text, spoken, audio, hook, or claim details.
+- Legacy bundle-folder output functions remain in place for existing tests and historical writer compatibility while the migration continues.
+
+Files changed:
+- `batch_analysis/claim_safety.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/evidence_io.py`
+- `batch_analysis/evidence_quality.py`
+- `batch_analysis/reports.py`
+- `batch_analysis/run.py`
+- `tests/test_snapshot_evidence_outputs.py`
+- `progress.txt`
+- `docs/issues/done/0021-render-video-evidence-reports-from-gemini-evidence-snapshots.md`
+
+Feedback:
+- `python -m pytest tests\test_snapshot_evidence_outputs.py -q` failed before implementation, then passed.
+- `python -m pytest tests\test_reports.py tests\test_evidence_quality.py tests\test_claim_safety.py tests\test_evidence_bundle_reader_writer.py tests\test_snapshot_evidence_outputs.py -q` passed.
+- `python -m pytest -q` passed with 40 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The full run still keeps the legacy nested bundle writer until the later architecture migration issue removes old layout writes.

@@ -32,6 +32,72 @@ def relative_path(path: Path, run_folder: Path) -> str:
     return str(path.relative_to(run_folder)).replace("\\", "/")
 
 
+def prefixed_data_artifact_path(
+    run_folder: Path,
+    snapshot: dict[str, Any],
+    artifact_name: str,
+) -> Path:
+    return run_folder / "data" / f"{snapshot['prefix']}_{artifact_name}.json"
+
+
+def prefixed_report_path(
+    run_folder: Path,
+    snapshot: dict[str, Any],
+    report_name: str,
+) -> Path:
+    return run_folder / "reports" / f"{snapshot['prefix']}_{report_name}.md"
+
+
+def gemini_evidence_from_snapshot(
+    run_folder: Path,
+    snapshot: dict[str, Any],
+) -> dict[str, Any]:
+    artifact = snapshot.get("artifacts", {}).get("gemini_evidence")
+    if isinstance(artifact, dict):
+        artifact_path = artifact.get("path")
+        if artifact_path:
+            loaded = read_json_object(run_folder / str(artifact_path))
+            if isinstance(loaded, dict):
+                return loaded
+        status = str(artifact.get("state") or "missing")
+        return {
+            "status": status,
+            "reason": artifact.get("reason") or "Gemini evidence is missing from the Evidence Bundle snapshot",
+            "visual_observations": [],
+            "visible_text": [],
+            "spoken_content": [],
+            "audio_cues": [],
+            "hook_evidence": [],
+            "claim_evidence": [],
+            "missing_evidence": artifact.get("missing_evidence") or [
+                "visual_observations",
+                "visible_text",
+                "spoken_content",
+                "audio_cues",
+                "hook_evidence",
+                "claim_evidence",
+            ],
+        }
+    return {
+        "status": "missing",
+        "reason": "Gemini evidence state is missing from the Evidence Bundle snapshot",
+        "visual_observations": [],
+        "visible_text": [],
+        "spoken_content": [],
+        "audio_cues": [],
+        "hook_evidence": [],
+        "claim_evidence": [],
+        "missing_evidence": [
+            "visual_observations",
+            "visible_text",
+            "spoken_content",
+            "audio_cues",
+            "hook_evidence",
+            "claim_evidence",
+        ],
+    }
+
+
 class EvidenceBundleStore:
     def __init__(self, run_folder: Path):
         self.run_folder = run_folder

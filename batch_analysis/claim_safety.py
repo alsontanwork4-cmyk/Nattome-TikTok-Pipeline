@@ -119,6 +119,47 @@ def claim_evidence_sources(bundle_folder: Path) -> list[dict[str, Any]]:
                 )
     return sources
 
+
+def claim_evidence_sources_from_gemini(gemini_evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    sources: list[dict[str, Any]] = []
+    for item in gemini_evidence.get("claim_evidence", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_claim_evidence",
+                    "timestamp_seconds": item.get("timestamp_seconds"),
+                    "text": text,
+                }
+            )
+    for item in gemini_evidence.get("visible_text", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_visible_text",
+                    "timestamp_seconds": item.get("timestamp_seconds"),
+                    "text": text,
+                }
+            )
+    for item in gemini_evidence.get("spoken_content", []):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if text:
+            sources.append(
+                {
+                    "source": "gemini_spoken_content",
+                    "timestamp_seconds": item.get("start_seconds"),
+                    "text": text,
+                }
+            )
+    return sources
+
 def first_matching_claim_text(text: str, patterns: list[str]) -> str | None:
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.IGNORECASE)
@@ -173,5 +214,82 @@ def write_claim_safety_review(bundle_folder: Path) -> dict[str, Any]:
     return {
         "status": review["status"],
         "flagged_count": len(flagged_claims),
+    }
+
+
+def build_claim_safety_review_from_sources(
+    sources: list[dict[str, Any]],
+    source_artifacts: list[str],
+) -> dict[str, Any]:
+    flagged_claims = []
+    seen_categories = set()
+
+    for rule in CLAIM_SAFETY_RULES:
+        for source in sources:
+            claim_text = first_matching_claim_text(source["text"], rule["patterns"])
+            if not claim_text or rule["category"] in seen_categories:
+                continue
+            seen_categories.add(rule["category"])
+            flagged_claims.append(
+                {
+                    "category": rule["category"],
+                    "claim_text": claim_text,
+                    "evidence_source": {
+                        "artifact": source["source"],
+                        "timestamp_seconds": source["timestamp_seconds"],
+                    },
+                    "guidance": {
+                        "action": rule["action"],
+                        "reason": rule["reason"],
+                        "nattome_safe_language": rule["nattome_safe_language"],
+                    },
+                }
+            )
+            break
+
+    return {
+        "status": "completed",
+        "source_artifacts": source_artifacts,
+        "flagged_claims": flagged_claims,
+        "summary": {
+            "flagged_count": len(flagged_claims),
+            "guidance_actions": sorted(
+                {claim["guidance"]["action"] for claim in flagged_claims}
+            ),
+        },
+    }
+
+
+def write_claim_safety_review_from_snapshot(
+    review_path: Path,
+    gemini_evidence: dict[str, Any],
+) -> dict[str, Any]:
+    sources = claim_evidence_sources_from_gemini(gemini_evidence)
+    review = build_claim_safety_review_from_sources(
+        sources,
+        ["gemini_claim_evidence", "gemini_visible_text", "gemini_spoken_content"],
+    )
+    if gemini_evidence.get("status") not in {"completed", "partial"}:
+        review["manual_review"] = {
+            "required": True,
+            "reason": gemini_evidence.get("reason") or "Gemini claim evidence is unavailable",
+        }
+    elif not sources:
+        review["manual_review"] = {
+            "required": True,
+            "reason": "Gemini claim, visible text, and spoken content evidence are empty",
+        }
+    else:
+        review["manual_review"] = {"required": False, "reason": None}
+
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(
+        json.dumps(review, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "status": review["status"],
+        "flagged_count": len(review["flagged_claims"]),
+        "manual_review_required": review["manual_review"]["required"],
     }
 
