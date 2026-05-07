@@ -42,8 +42,8 @@ def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]
         },
         "multilingual_quality_improvements": {
             "status": "extension_point",
-            "source": "ocr_evidence and transcript_evidence",
-            "trigger": "Improve OCR/transcription where language detection, confidence, or mixed-language capture is weak.",
+            "source": "gemini_evidence",
+            "trigger": "Improve Gemini evidence capture where language detection, confidence, or mixed-language capture is weak.",
         },
         "full_script_generation": {
             "status": "extension_point",
@@ -70,9 +70,7 @@ def build_metadata(
     configuration: dict[str, Any],
     has_candidate_selection: bool,
     has_evidence_bundles: bool,
-    has_hybrid_timeline: bool,
-    has_ocr: bool,
-    has_transcription: bool,
+    has_gemini_evidence: bool,
     has_audio_music_trend_analysis: bool,
     has_claim_safety_review: bool,
     has_evidence_quality: bool,
@@ -93,9 +91,7 @@ def build_metadata(
         "implementation_status": {
             "candidate_selection": "implemented" if has_candidate_selection else "not_implemented",
             "video_download": "implemented" if has_evidence_bundles else "not_implemented",
-            "hybrid_timeline": "implemented" if has_hybrid_timeline else "not_implemented",
-            "ocr": "implemented" if has_ocr else "not_implemented",
-            "transcription": "implemented" if has_transcription else "not_implemented",
+            "gemini_evidence": "implemented" if has_gemini_evidence else "not_implemented",
             "audio_music_trend_analysis": "implemented"
             if has_audio_music_trend_analysis
             else "not_implemented",
@@ -126,95 +122,6 @@ def build_metadata(
             "Cross-video summaries compare only captured evidence and selected candidate metadata.",
         ],
     }
-
-def write_batch_index(
-    run_folder: Path,
-    metadata: dict[str, Any],
-    has_candidate_selection: bool,
-    has_evidence_bundles: bool,
-    has_cross_video_pattern_summary: bool,
-    has_structured_json_output: bool,
-    has_spreadsheet_summary: bool,
-    has_telegram_delivery: bool,
-    has_evidence_artifact_cleanup: bool,
-    has_refinement_hooks: bool,
-) -> None:
-    lines = [
-        "# Batch Analysis Run",
-        "",
-        f"- Run timestamp: {metadata['run_timestamp']}",
-        f"- Mode: {metadata['mode']}",
-        f"- Requested batch size: {metadata['requested_batch_size']}",
-        f"- Status: {'selected_batch_preview_created' if has_candidate_selection else 'skeleton_created'}",
-        "",
-        "## Output Folders",
-        "",
-    ]
-    for subdirectory in RUN_SUBDIRECTORIES:
-        lines.append(f"- `{subdirectory}`")
-    lines.extend(
-        [
-            "",
-            "## Selection",
-            "",
-        ]
-    )
-    if has_candidate_selection:
-        lines.extend(
-            [
-                "- JSON: `data/selected_batch.json`",
-                "- Markdown: `reports/selected_batch.md`",
-            ]
-        )
-    else:
-        lines.append("- Candidate selection was not run because no candidate metadata file was provided.")
-    lines.extend(["", "## Evidence Bundles", ""])
-    if has_evidence_bundles:
-        lines.append("- Index: `evidence_bundles/index.json`")
-    else:
-        lines.append("- Evidence bundles were not created because no selected batch was available.")
-    lines.extend(["", "## Cross-Video Pattern Summary", ""])
-    if has_cross_video_pattern_summary:
-        lines.extend(
-            [
-                "- Markdown: `reports/cross_video_pattern_summary.md`",
-                "- JSON: `data/cross_video_pattern_summary.json`",
-            ]
-        )
-    else:
-        lines.append("- Cross-video pattern summary was not created because no evidence bundles were available.")
-    lines.extend(["", "## Structured Outputs", ""])
-    if has_structured_json_output:
-        lines.append("- Structured JSON: `data/structured_batch_analysis.json`")
-    else:
-        lines.append("- Structured JSON was not created because no evidence bundles were available.")
-    if has_spreadsheet_summary:
-        lines.append("- Spreadsheet summary: `data/spreadsheet_summary.csv`")
-    else:
-        lines.append("- Spreadsheet summary was not created because no evidence bundles were available.")
-    lines.extend(["", "## Telegram Delivery", ""])
-    if has_telegram_delivery:
-        lines.append("- Delivery log: `logs/telegram_delivery.json`")
-    else:
-        lines.append("- Telegram delivery was not attempted because required batch outputs were unavailable.")
-    lines.extend(["", "## Cleanup And Refinement", ""])
-    if has_evidence_artifact_cleanup:
-        lines.append("- Cleanup log: `logs/evidence_artifact_cleanup.json`")
-    else:
-        lines.append("- Evidence artifact cleanup was not evaluated because no evidence bundles were available.")
-    if has_refinement_hooks:
-        lines.append("- Refinement hooks: `data/refinement_hooks.json`")
-    else:
-        lines.append("- Refinement hooks were not created because no cross-video summary was available.")
-    lines.extend(
-        [
-            "",
-            "## Not Implemented Yet",
-            "",
-            "Source video artifacts are only present when candidate metadata includes a downloadable video source.",
-        ]
-    )
-    (run_folder / "batch_index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 def create_run(args: argparse.Namespace) -> Path:
     if args.batch_size is not None and args.batch_size < 1:
@@ -322,9 +229,7 @@ def create_run(args: argparse.Namespace) -> Path:
             flat_evidence_index,
         )
 
-    has_hybrid_timeline = flat_evidence_index is not None
-    has_ocr = flat_evidence_index is not None
-    has_transcription = flat_evidence_index is not None
+    has_gemini_evidence = flat_evidence_index is not None
     has_audio_music_trend_analysis = flat_evidence_index is not None
     has_claim_safety_review = flat_evidence_index is not None
     has_evidence_quality = flat_evidence_index is not None
@@ -343,9 +248,7 @@ def create_run(args: argparse.Namespace) -> Path:
         configuration,
         selected_batch is not None,
         flat_evidence_index is not None,
-        has_hybrid_timeline,
-        has_ocr,
-        has_transcription,
+        has_gemini_evidence,
         has_audio_music_trend_analysis,
         has_claim_safety_review,
         has_evidence_quality,

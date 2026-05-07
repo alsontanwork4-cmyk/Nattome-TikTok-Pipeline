@@ -50,26 +50,6 @@ def parse_args() -> argparse.Namespace:
         "--timestamp",
         help="UTC timestamp for deterministic runs or tests, for example 2026-05-06T13:45:30Z.",
     )
-    parser.add_argument(
-        "--ffmpeg-bin",
-        default="ffmpeg",
-        help="FFmpeg executable used for Hybrid Timeline frame extraction.",
-    )
-    parser.add_argument(
-        "--ocr-primary-bin",
-        default="paddleocr",
-        help="Primary OCR executable used for frame text extraction.",
-    )
-    parser.add_argument(
-        "--ocr-fallback-bin",
-        default="tesseract",
-        help="Fallback OCR executable used when the primary OCR path is unavailable.",
-    )
-    parser.add_argument(
-        "--transcription-bin",
-        default="whisper",
-        help="Whisper-style executable used for multilingual speech transcription.",
-    )
     return parser.parse_args()
 
 

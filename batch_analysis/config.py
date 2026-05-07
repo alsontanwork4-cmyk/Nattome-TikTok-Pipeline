@@ -19,14 +19,6 @@ RUN_SUBDIRECTORIES = [
     "logs",
 ]
 
-LEGACY_OUTPUT_SUBDIRECTORIES = [
-    "batch_outputs/markdown",
-    "batch_outputs/json",
-    "batch_outputs/spreadsheets",
-    "evidence_bundles",
-    "logs",
-]
-
 DEFAULT_CONFIG: dict[str, Any] = {
     "selection": {
         "minimum_views": 10000,
@@ -47,10 +39,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "gemini_model": "gemini-2.5-flash",
         "gemini_api_key_env": "GEMINI_API_KEY",
         "discovery_download": "Apify",
-        "video_processing": "FFmpeg",
-        "ocr_primary": "PaddleOCR",
-        "ocr_fallback": "Tesseract",
-        "transcription": "Whisper-style multilingual transcription",
+        "evidence_extraction": "Gemini 2.5 Flash",
     },
     "telegram": {
         "enabled": True,

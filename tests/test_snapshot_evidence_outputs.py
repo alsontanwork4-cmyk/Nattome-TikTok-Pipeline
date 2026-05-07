@@ -176,10 +176,6 @@ class SnapshotEvidenceOutputsTest(unittest.TestCase):
                     config=None,
                     candidates=candidates_path,
                     timestamp="2026-05-06T13:45:30Z",
-                    ffmpeg_bin="missing-ffmpeg",
-                    ocr_primary_bin="missing-ocr",
-                    ocr_fallback_bin="missing-ocr",
-                    transcription_bin="missing-transcriber",
                 )
             )
 

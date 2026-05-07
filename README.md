@@ -40,10 +40,11 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 | Variable | Required for | Notes |
 |---|---|---|
 | `APIFY_TOKEN` | Both skills | Apify API token. Without it, no scraping. |
+| `GEMINI_API_KEY` | Weekly batch analysis | Gemini key used for source-video evidence extraction. |
 | `TELEGRAM_BOT_TOKEN` | Optional | Telegram bot token. Skip silently if unset. |
 | `TELEGRAM_CHAT_ID` | Optional | Target chat. Both must be set together. |
 
-External tools used by the weekly batch analysis (must be on `PATH` or passed via CLI flags): `ffmpeg`, `paddleocr` (or `tesseract` fallback), `whisper`.
+The weekly batch analysis no longer shells out to local video/OCR/transcription tools. Gemini analyzes the source video and returns timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence.
 
 ## Weekly Batch Architecture
 
@@ -55,8 +56,9 @@ Implementation logic lives in `batch_analysis/`:
 |---|---|
 | `config.py` | Defaults, run timestamps, run folder naming, config loading, mode batch sizes. |
 | `candidates.py` | Candidate JSON loading, normalization, scoring, filtering, and selection. |
-| `tool_adapters.py` | FFmpeg, OCR, transcription, and video download/copy adapters. |
-| `evidence.py` | Evidence Bundle orchestration: frames, OCR, transcript, audio baseline, and timeline outputs. |
+| `tool_adapters.py` | Gemini evidence extraction adapter plus source video copy/download helpers. |
+| `evidence_io.py` | Flat Evidence Bundle snapshot paths, source video state, and Gemini evidence files. |
+| `evidence.py` | Snapshot-derived evidence outputs: audio baseline, claim review, quality, shootable angles, and reports. |
 | `claim_safety.py` | Claim safety review rules and report writing. |
 | `evidence_quality.py` | Evidence Quality Score and manual review flag logic. |
 | `reports.py` | Per-video Video Evidence Report generation. |
@@ -104,7 +106,7 @@ Manage these via `/anthropic-skills:schedule` (create / list / update / run).
 ## Key Reading Order For New Contributors
 
 1. `CONTEXT.md` — what every domain term means
-2. `docs/prd/nattome-tiktok-ocr-video-evidence-pipeline-prd.md` — the full spec
+2. `docs/prd/gemini-two-layer-evidence-pipeline-architecture-prd.md` — current Gemini/two-layer architecture
 3. `skills/nattome-daily-discovery/SKILL.md` — daily workflow
 4. `skills/nattome-batch-analysis/SKILL.md` — weekly workflow
 5. `skills/nattome-daily-discovery/references/nattome_brand.md` — voice + claim guardrails (shared)

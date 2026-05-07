@@ -35,32 +35,28 @@ def bundle_artifact_path(
     run_folder: Path,
     bundle: dict[str, Any],
     artifact_name: str,
-    legacy_filename: str,
+    artifact_filename: str,
 ) -> Path:
     artifacts = bundle.get("artifacts") if isinstance(bundle.get("artifacts"), dict) else {}
     artifact = artifacts.get(artifact_name) if isinstance(artifacts, dict) else None
     if isinstance(artifact, dict) and artifact.get("path"):
         return run_folder / str(artifact["path"])
 
-    bundle_folder = bundle.get("bundle_folder")
-    if bundle_folder:
-        return run_folder / str(bundle_folder) / legacy_filename
-
     prefix = bundle.get("prefix")
     if prefix:
-        return run_folder / "data" / f"{prefix}_{legacy_filename}"
+        return run_folder / "data" / f"{prefix}_{artifact_filename}"
 
-    return run_folder / legacy_filename
+    return run_folder / artifact_filename
 
 
 def read_bundle_artifact(
     run_folder: Path,
     bundle: dict[str, Any],
     artifact_name: str,
-    legacy_filename: str,
+    artifact_filename: str,
 ) -> dict[str, Any] | None:
     return read_json_object(
-        bundle_artifact_path(run_folder, bundle, artifact_name, legacy_filename)
+        bundle_artifact_path(run_folder, bundle, artifact_name, artifact_filename)
     )
 
 
@@ -77,10 +73,6 @@ def source_metadata_for_bundle(
         loaded = read_json_object(run_folder / source_metadata)
         return loaded or candidate
 
-    bundle_folder = bundle.get("bundle_folder")
-    if bundle_folder:
-        loaded = read_json_object(run_folder / str(bundle_folder) / "source_metadata.json")
-        return loaded or candidate
     return candidate
 
 
@@ -147,13 +139,6 @@ PRIORITY_SCORE_DIMENSIONS = [
     "product_fit",
 ]
 
-def priority_score_points(candidate: dict[str, Any], bundle_folder: Path) -> dict[str, int]:
-    quality = read_json_object(bundle_folder / "evidence_quality.json") or {}
-    claim_review = read_json_object(bundle_folder / "claim_safety_review.json") or {}
-    audio_analysis = read_json_object(bundle_folder / "baseline_audio_analysis.json") or {}
-    return priority_score_points_from_artifacts(candidate, quality, claim_review, audio_analysis)
-
-
 def priority_score_points_from_artifacts(
     candidate: dict[str, Any],
     quality: dict[str, Any] | None,
@@ -209,11 +194,6 @@ def priority_score_points_from_artifacts(
         "ease_of_production": ease_of_production,
         "product_fit": product_fit,
     }
-
-def hook_pattern_for_bundle(bundle_folder: Path) -> str:
-    quality = read_json_object(bundle_folder / "evidence_quality.json") or {}
-    return hook_pattern_from_quality(quality)
-
 
 def hook_pattern_from_quality(quality: dict[str, Any]) -> str:
     checks = quality.get("checks") if isinstance(quality, dict) else {}
@@ -514,11 +494,6 @@ def write_structured_json_and_spreadsheet_summary(
         if not isinstance(candidate, dict):
             continue
 
-        timeline = read_bundle_artifact(run_folder, bundle, "hybrid_timeline", "hybrid_timeline.json")
-        ocr = read_bundle_artifact(run_folder, bundle, "ocr_evidence", "ocr_evidence.json")
-        transcript = read_bundle_artifact(
-            run_folder, bundle, "transcript_evidence", "transcript_evidence.json"
-        )
         audio_analysis = read_bundle_artifact(
             run_folder,
             bundle,
@@ -573,9 +548,6 @@ def write_structured_json_and_spreadsheet_summary(
                 "source_metadata": source_metadata_for_bundle(run_folder, bundle, candidate),
                 "evidence_bundle_index": bundle,
                 "gemini_evidence": gemini_evidence,
-                "hybrid_timeline": timeline,
-                "ocr_evidence": ocr,
-                "transcript_evidence": transcript,
                 "audio_analysis": audio_analysis,
                 "virality_analysis": {
                     "views": candidate.get("play_count", 0),

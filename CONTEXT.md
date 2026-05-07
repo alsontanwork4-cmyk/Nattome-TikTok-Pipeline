@@ -69,8 +69,8 @@ The timestamped folder containing one **Batch Output Set** and all per-video **E
 _Avoid_: loose output files, shared evidence folder
 
 **Multilingual Evidence Capture**:
-OCR and transcription support for English, Malay, Mandarin Chinese, Simplified Chinese, Traditional Chinese, and Manglish or code-mixed English-Malay-Chinese TikTok content.
-_Avoid_: English-only OCR, English-only transcript
+Gemini evidence extraction support for visible text and spoken content in English, Malay, Mandarin Chinese, Simplified Chinese, Traditional Chinese, and Manglish or code-mixed English-Malay-Chinese TikTok content.
+_Avoid_: English-only evidence capture, metadata-only language inference
 
 **Manual Review Flag**:
 A marker on a **Video Evidence Report** showing that a human should inspect the video because OCR, transcript, hook detection, language detection, audio analysis, or claim interpretation may be unreliable.
@@ -93,7 +93,7 @@ A downloaded or generated source file used to support analysis, such as video, f
 _Avoid_: marketing asset, final creative asset
 
 **Implementation Phase**:
-A staged delivery slice for building the batch evidence pipeline without trying to implement downloading, OCR, transcription, reporting, and refinement all at once.
+A staged delivery slice for building the batch evidence pipeline without trying to implement source video capture, Gemini evidence extraction, reporting, and refinement all at once.
 _Avoid_: big-bang implementation
 
 **Evidence-First Analysis**:
@@ -101,7 +101,7 @@ Creative analysis generated from downloaded video evidence, OCR, transcript, aud
 _Avoid_: metadata-only inference, pretending to watch the video
 
 **Tool Stack**:
-The replaceable technical tool set used by the pipeline: Apify for TikTok discovery/download, FFmpeg for video processing, PaddleOCR as primary OCR, Tesseract as fallback OCR, Whisper-style multilingual transcription, markdown/JSON/XLSX outputs, and LLM-assisted analysis over the **Evidence Bundle**.
+The replaceable technical tool set used by the pipeline: Apify for TikTok discovery/download, Gemini 2.5 Flash for source-video evidence extraction, markdown/JSON/XLSX outputs, and local Nattome analysis over the **Evidence Bundle**.
 _Avoid_: hard-wired vendor lock-in
 
 **Scheduled Analysis Run**:
@@ -181,7 +181,7 @@ _Avoid_: optional internal dump
 - Phase 4 adds **Deep Sound Research**, multilingual improvements, evidence cleanup, and full-script generation for selected **Shootable Angles**.
 - The pipeline uses **Evidence-First Analysis** for all creative recommendations.
 - **Evidence-First Analysis** depends on an **Evidence Bundle**, not metadata alone.
-- The default **Tool Stack** uses Apify, FFmpeg, PaddleOCR, Tesseract fallback, Whisper-style multilingual transcription, markdown, JSON, XLSX, and LLM-assisted analysis.
+- The default **Tool Stack** uses Apify, Gemini 2.5 Flash evidence extraction, markdown, JSON, XLSX, and local Nattome analysis.
 - A **Scheduled Analysis Run** runs a **Batch Analysis Run** on a recurring schedule.
 - A **Weekly Evidence Brief** is produced by a weekly **Scheduled Analysis Run**.
 - **Telegram Delivery** sends the **Weekly Evidence Brief** summary, report links, and priority **Shootable Angles** after the run completes.
@@ -282,6 +282,6 @@ _Avoid_: optional internal dump
 - Batch prioritization was resolved as a **Nattome Priority Score** with six dimensions and a 30-point total.
 - Downloaded videos, frames, subtitles, OCR, transcripts, and audio outputs were resolved as **Evidence Artifacts**, with optional cleanup after report approval.
 - Implementation was resolved as four phases: Download + Run Folder, Evidence Extraction, Report Generation, and Refinement.
-- Tooling was resolved as Apify, FFmpeg, PaddleOCR, Tesseract fallback, Whisper-style multilingual transcription, markdown, JSON, XLSX, and LLM-assisted **Evidence-First Analysis**.
+- Tooling was resolved as Apify, Gemini 2.5 Flash evidence extraction, markdown, JSON, XLSX, and local **Evidence-First Analysis**.
 - Recurring delivery was added as a **Scheduled Analysis Run** with **Telegram Delivery** for a **Weekly Evidence Brief**.
 - Output was resolved as required markdown reports, required structured JSON, and a required spreadsheet summary.

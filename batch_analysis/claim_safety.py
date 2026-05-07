@@ -5,8 +5,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .evidence_io import read_json_object
-
 CLAIM_SAFETY_RULES = [
     {
         "category": "cure_claim",
@@ -80,46 +78,6 @@ CLAIM_SAFETY_RULES = [
     },
 ]
 
-def claim_evidence_sources(bundle_folder: Path) -> list[dict[str, Any]]:
-    sources: list[dict[str, Any]] = []
-    ocr = read_json_object(bundle_folder / "ocr_evidence.json")
-    if isinstance(ocr, dict):
-        frames = ocr.get("frames")
-        if isinstance(frames, list):
-            for frame in frames:
-                if not isinstance(frame, dict):
-                    continue
-                text = str(frame.get("ocr_text") or "").strip()
-                if not text:
-                    continue
-                sources.append(
-                    {
-                        "source": "ocr_evidence",
-                        "timestamp_seconds": frame.get("timestamp_seconds"),
-                        "text": text,
-                    }
-                )
-
-    transcript = read_json_object(bundle_folder / "transcript_evidence.json")
-    if isinstance(transcript, dict):
-        segments = transcript.get("segments")
-        if isinstance(segments, list):
-            for segment in segments:
-                if not isinstance(segment, dict):
-                    continue
-                text = str(segment.get("text") or "").strip()
-                if not text:
-                    continue
-                sources.append(
-                    {
-                        "source": "transcript_evidence",
-                        "timestamp_seconds": segment.get("start_seconds"),
-                        "text": text,
-                    }
-                )
-    return sources
-
-
 def claim_evidence_sources_from_gemini(gemini_evidence: dict[str, Any]) -> list[dict[str, Any]]:
     sources: list[dict[str, Any]] = []
     for item in gemini_evidence.get("claim_evidence", []):
@@ -166,56 +124,6 @@ def first_matching_claim_text(text: str, patterns: list[str]) -> str | None:
         if match:
             return match.group(0).strip()
     return None
-
-def write_claim_safety_review(bundle_folder: Path) -> dict[str, Any]:
-    review_path = bundle_folder / "claim_safety_review.json"
-    sources = claim_evidence_sources(bundle_folder)
-    flagged_claims = []
-    seen_categories = set()
-
-    for rule in CLAIM_SAFETY_RULES:
-        for source in sources:
-            claim_text = first_matching_claim_text(source["text"], rule["patterns"])
-            if not claim_text or rule["category"] in seen_categories:
-                continue
-            seen_categories.add(rule["category"])
-            flagged_claims.append(
-                {
-                    "category": rule["category"],
-                    "claim_text": claim_text,
-                    "evidence_source": {
-                        "artifact": source["source"],
-                        "timestamp_seconds": source["timestamp_seconds"],
-                    },
-                    "guidance": {
-                        "action": rule["action"],
-                        "reason": rule["reason"],
-                        "nattome_safe_language": rule["nattome_safe_language"],
-                    },
-                }
-            )
-            break
-
-    review = {
-        "status": "completed",
-        "source_artifacts": ["ocr_evidence.json", "transcript_evidence.json"],
-        "flagged_claims": flagged_claims,
-        "summary": {
-            "flagged_count": len(flagged_claims),
-            "guidance_actions": sorted(
-                {claim["guidance"]["action"] for claim in flagged_claims}
-            ),
-        },
-    }
-    review_path.write_text(
-        json.dumps(review, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
-    return {
-        "status": review["status"],
-        "flagged_count": len(flagged_claims),
-    }
-
 
 def build_claim_safety_review_from_sources(
     sources: list[dict[str, Any]],

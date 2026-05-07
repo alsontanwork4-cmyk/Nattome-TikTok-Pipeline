@@ -28,21 +28,13 @@ def remove_artifact(path: Path, run_folder: Path, removed: list[dict[str, Any]])
         }
     )
 
-def durable_outputs_exist(run_folder: Path, bundle_folder: Path) -> bool:
-    flat_required = [
+def durable_outputs_exist(run_folder: Path) -> bool:
+    required = [
         run_folder / "reports" / "cross_video_pattern_summary.md",
         run_folder / "data" / "structured_batch_analysis.json",
         run_folder / "data" / "spreadsheet_summary.csv",
     ]
-    legacy_required = [
-        bundle_folder / "video_evidence_report.md",
-        run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md",
-        run_folder / "batch_outputs" / "json" / "structured_batch_analysis.json",
-        run_folder / "batch_outputs" / "spreadsheets" / "spreadsheet_summary.csv",
-    ]
-    return all(path.exists() for path in flat_required) or all(
-        path.exists() for path in legacy_required
-    )
+    return all(path.exists() for path in required)
 
 def cleanup_evidence_artifacts(
     run_folder: Path,
@@ -76,7 +68,6 @@ def cleanup_evidence_artifacts(
     for bundle in evidence_index.get("bundles", []):
         if not isinstance(bundle, dict):
             continue
-        bundle_folder = run_folder / str(bundle.get("bundle_folder"))
         removed: list[dict[str, Any]] = []
         if cleanup_config.get("remove_source_videos", True):
             source_video = bundle.get("artifacts", {}).get("source_video", {})
@@ -84,13 +75,11 @@ def cleanup_evidence_artifacts(
                 source_video = bundle.get("source_video", {})
             if isinstance(source_video, dict) and source_video.get("path"):
                 remove_artifact(run_folder / str(source_video["path"]), run_folder, removed)
-        if cleanup_config.get("remove_frames", True):
-            remove_artifact(bundle_folder / "artifacts" / "frames", run_folder, removed)
         bundle_logs.append(
             {
                 "candidate_id": bundle.get("candidate_id"),
                 "removed_artifacts": removed,
-                "preserved_outputs": durable_outputs_exist(run_folder, bundle_folder),
+                "preserved_outputs": durable_outputs_exist(run_folder),
             }
         )
 

@@ -10,11 +10,9 @@ class BatchOutputSetTest(unittest.TestCase):
     def test_cross_video_pattern_summary_writes_priority_score_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             run_folder = Path(temp_dir)
-            (run_folder / "batch_outputs" / "json").mkdir(parents=True)
-            (run_folder / "batch_outputs" / "markdown").mkdir(parents=True)
-            bundle_folder = run_folder / "evidence_bundles" / "001_output-video"
-            bundle_folder.mkdir(parents=True)
-            (bundle_folder / "evidence_quality.json").write_text(
+            (run_folder / "data").mkdir(parents=True)
+            (run_folder / "reports").mkdir(parents=True)
+            (run_folder / "data" / "001_output-video_evidence_quality.json").write_text(
                 json.dumps(
                     {
                         "evidence_quality_score": {"level": "high"},
@@ -23,11 +21,11 @@ class BatchOutputSetTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            (bundle_folder / "claim_safety_review.json").write_text(
+            (run_folder / "data" / "001_output-video_claim_safety_review.json").write_text(
                 json.dumps({"flagged_claims": []}),
                 encoding="utf-8",
             )
-            (bundle_folder / "baseline_audio_analysis.json").write_text(
+            (run_folder / "data" / "001_output-video_baseline_audio_analysis.json").write_text(
                 json.dumps(
                     {
                         "audio_format": "talking_head",
@@ -36,7 +34,7 @@ class BatchOutputSetTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            (bundle_folder / "shootable_angles.json").write_text(
+            (run_folder / "data" / "001_output-video_shootable_angles.json").write_text(
                 json.dumps(
                     {
                         "status": "completed",
@@ -87,7 +85,21 @@ class BatchOutputSetTest(unittest.TestCase):
                 "bundles": [
                     {
                         "candidate_id": "output-video",
-                        "bundle_folder": "evidence_bundles/001_output-video",
+                        "prefix": "001_output-video",
+                        "artifacts": {
+                            "baseline_audio_analysis": {
+                                "path": "data/001_output-video_baseline_audio_analysis.json",
+                            },
+                            "claim_safety_review": {
+                                "path": "data/001_output-video_claim_safety_review.json",
+                            },
+                            "evidence_quality": {
+                                "path": "data/001_output-video_evidence_quality.json",
+                            },
+                            "shootable_angles": {
+                                "path": "data/001_output-video_shootable_angles.json",
+                            },
+                        },
                     }
                 ]
             }

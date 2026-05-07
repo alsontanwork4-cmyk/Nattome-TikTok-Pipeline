@@ -101,10 +101,6 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
                     config=None,
                     candidates=candidates_path,
                     timestamp="2026-05-06T13:45:30Z",
-                    ffmpeg_bin="unused-ffmpeg",
-                    ocr_primary_bin="unused-ocr",
-                    ocr_fallback_bin="unused-ocr",
-                    transcription_bin="unused-transcriber",
                     gemini_adapter=adapter,
                 )
             )
@@ -224,10 +220,6 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
                     config=None,
                     candidates=candidates_path,
                     timestamp="2026-05-06T13:45:30Z",
-                    ffmpeg_bin="unused-ffmpeg",
-                    ocr_primary_bin="unused-ocr",
-                    ocr_fallback_bin="unused-ocr",
-                    transcription_bin="unused-transcriber",
                     gemini_adapter=adapter,
                 )
             )
