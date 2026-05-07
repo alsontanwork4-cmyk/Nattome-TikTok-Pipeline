@@ -152,6 +152,19 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
         """
     )
     connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS nattome_pov_versions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pov_id INTEGER NOT NULL,
+            version INTEGER NOT NULL,
+            change_type TEXT NOT NULL,
+            pov_json TEXT NOT NULL DEFAULT '{}',
+            changed_by TEXT NOT NULL DEFAULT 'local',
+            changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS manual_runs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
