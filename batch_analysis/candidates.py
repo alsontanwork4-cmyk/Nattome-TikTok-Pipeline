@@ -203,6 +203,9 @@ def exclusion_reasons(
     if selection.get("requires_tiktok_link", True) and not usable_tiktok_link(candidate):
         reasons.append("missing usable TikTok link")
 
+    if selection.get("requires_downloadable_video", True) and not downloadable_video_source(candidate):
+        reasons.append("missing downloadable video source")
+
     return reasons
 
 def select_candidates(

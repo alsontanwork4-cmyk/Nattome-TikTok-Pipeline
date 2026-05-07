@@ -392,3 +392,29 @@ Feedback:
 Blockers or notes for the next iteration:
 - This workspace is not a git repository, so no commit could be created.
 - `0014` remains open because it is marked HITL and needs human review of schedule, runner, and credential setup before implementation.
+
+## 2026-05-07 - 0017 Enforce Evidence-Ready Candidate Selection
+
+Task completed from `docs/issues/0017-enforce-evidence-ready-candidate-selection.md`.
+
+Key decisions made:
+- The Minimum Eligibility Filter now enforces downloadable video source presence by default using candidate source-field presence only.
+- Missing downloadable video source is reported as its own exclusion reason.
+- The existing `selection.requires_downloadable_video` configuration key is the explicit metadata-only/debug preview override.
+- Existing downstream tests that intentionally inspect missing-video artifacts now opt into the override, while normal selection fixtures provide local video sources.
+
+Files changed:
+- `batch_analysis/candidates.py`
+- `tests/test_candidate_selection.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0017-enforce-evidence-ready-candidate-selection.md`
+
+Feedback:
+- `python -m pytest tests\test_candidate_selection.py -q` passed.
+- `python -m pytest tests\test_batch_analysis_run.py -q` passed.
+- `python -m pytest -q` passed with 28 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- Python had to be run outside the sandbox because the sandboxed WindowsApps `python.exe` launcher could not be accessed.
+- The pytest run still emits an existing `RequestsDependencyWarning` about the local `urllib3`/charset dependency versions.

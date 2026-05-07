@@ -31,6 +31,14 @@ def run_cli(*args, cwd=WORKSPACE):
 
 
 class BatchAnalysisRunCliTest(unittest.TestCase):
+    def write_metadata_preview_config(self, temp_path):
+        config_path = temp_path / "metadata_preview_config.json"
+        config_path.write_text(
+            json.dumps({"selection": {"requires_downloadable_video": False}}),
+            encoding="utf-8",
+        )
+        return config_path
+
     def test_batch_analysis_run_is_callable_from_importable_module(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             runs_dir = Path(temp_dir) / "runs"
@@ -126,6 +134,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             runs_dir = temp_path / "runs"
+            source_video = temp_path / "source.mp4"
+            source_video.write_bytes(b"fake mp4 bytes")
             candidates_path = temp_path / "candidates.json"
             candidates_path.write_text(
                 json.dumps(
@@ -175,6 +185,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                             {
                                 "id": "good-relevant",
                                 "url": "https://www.tiktok.com/@creator/video/goodrelevant",
+                                "video_download_url": str(source_video),
                                 "caption": "Acid reflux and bloating routine for gut health",
                                 "play_count": 90000,
                                 "like_count": 7000,
@@ -185,6 +196,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                             {
                                 "id": "good-higher-views-less-relevant",
                                 "url": "https://www.tiktok.com/@creator/video/highviews",
+                                "video_download_url": str(source_video),
                                 "caption": "Morning recipe with peas",
                                 "play_count": 300000,
                                 "like_count": 9000,
@@ -246,6 +258,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             runs_dir = temp_path / "runs"
             source_video = temp_path / "source.mp4"
             source_video.write_bytes(b"fake mp4 bytes")
+            config_path = self.write_metadata_preview_config(temp_path)
             candidates_path = temp_path / "candidates.json"
             candidates_path.write_text(
                 json.dumps(
@@ -287,6 +300,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 str(runs_dir),
                 "--timestamp",
                 "2026-05-06T13:45:30Z",
+                "--config",
+                str(config_path),
                 "--candidates",
                 str(candidates_path),
             )
@@ -823,6 +838,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             runs_dir = temp_path / "runs"
             source_video = temp_path / "source.mp4"
             source_video.write_bytes(b"fake mp4 bytes")
+            config_path = self.write_metadata_preview_config(temp_path)
             fake_ffmpeg = self.write_fake_ffmpeg(temp_path)
             fake_ocr = self.write_fake_ocr(temp_path, "Visible gut health hook")
             fake_transcriber = self.write_fake_transcriber(
@@ -882,6 +898,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 str(runs_dir),
                 "--timestamp",
                 "2026-05-06T13:45:30Z",
+                "--config",
+                str(config_path),
                 "--candidates",
                 str(candidates_path),
                 "--ffmpeg-bin",
@@ -1146,6 +1164,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             runs_dir = temp_path / "runs"
             source_video = temp_path / "source.mp4"
             source_video.write_bytes(b"fake mp4 bytes")
+            config_path = self.write_metadata_preview_config(temp_path)
             fake_ffmpeg = self.write_fake_ffmpeg(temp_path)
             fake_ocr = self.write_fake_ocr(temp_path, "Bloating after meals hook")
             fake_transcriber = self.write_fake_transcriber(
@@ -1206,6 +1225,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 str(runs_dir),
                 "--timestamp",
                 "2026-05-06T13:45:30Z",
+                "--config",
+                str(config_path),
                 "--candidates",
                 str(candidates_path),
                 "--ffmpeg-bin",
@@ -1312,6 +1333,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                             {
                                 "id": "reflux-tip",
                                 "url": "https://www.tiktok.com/@creator/video/reflux",
+                                "video_download_url": str(source_video),
                                 "caption": "Acid reflux stomach tip",
                                 "play_count": 80000,
                                 "like_count": 6000,
@@ -1532,6 +1554,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             runs_dir = temp_path / "runs"
+            source_video = temp_path / "source.mp4"
+            source_video.write_bytes(b"fake mp4 bytes")
             candidates_path = temp_path / "candidates.json"
             candidates_path.write_text(
                 json.dumps(
@@ -1540,6 +1564,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                             {
                                 "id": "telegram-video",
                                 "url": "https://www.tiktok.com/@creator/video/telegram",
+                                "video_download_url": str(source_video),
                                 "caption": "Acid reflux stomach tip",
                                 "play_count": 90000,
                                 "like_count": 9000,
