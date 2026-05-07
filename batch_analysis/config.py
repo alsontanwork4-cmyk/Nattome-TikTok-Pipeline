@@ -36,10 +36,10 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "requires_downloadable_video": True,
     },
     "outputs": {
-        "markdown": "batch_outputs/markdown",
-        "json": "batch_outputs/json",
-        "spreadsheet": "batch_outputs/spreadsheets",
-        "evidence_bundles": "evidence_bundles",
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
         "logs": "logs",
     },
     "tool_stack": {

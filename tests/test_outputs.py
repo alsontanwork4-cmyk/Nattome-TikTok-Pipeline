@@ -36,6 +36,38 @@ class BatchOutputSetTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
+            (bundle_folder / "shootable_angles.json").write_text(
+                json.dumps(
+                    {
+                        "status": "completed",
+                        "angles": [
+                            {
+                                "angle_title": "Evidence-Led Bloating Routine",
+                                "hook": "Ask what changed after meals.",
+                                "avatar": "The Sufferer",
+                                "format": "Talking-head explainer with simple on-screen text.",
+                                "product_fit": "DH for daily digestive maintenance and routine support.",
+                                "recommendation": "Adapt the pain point with support language.",
+                                "claim_guardrails": "Avoid cure claims.",
+                                "source_evidence": ["hook_evidence"],
+                                "priority_score": {
+                                    "dimensions": {
+                                        "viral_strength": 4,
+                                        "nattome_relevance": 4,
+                                        "evidence_confidence": 5,
+                                        "brand_safety": 5,
+                                        "ease_of_production": 5,
+                                        "product_fit": 5,
+                                    },
+                                    "total": 28,
+                                    "max_points": 30,
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
 
             selected_batch = {
                 "selected_at": "2026-05-06T13:45:30Z",
@@ -64,19 +96,20 @@ class BatchOutputSetTest(unittest.TestCase):
 
             self.assertEqual(result["status"], "completed")
             summary = json.loads(
-                (run_folder / "batch_outputs" / "json" / "cross_video_pattern_summary.json").read_text(
+                (run_folder / "data" / "cross_video_pattern_summary.json").read_text(
                     encoding="utf-8"
                 )
             )
             top_angle = summary["top_priority_shootable_angles"][0]
             self.assertEqual(top_angle["candidate_id"], "output-video")
+            self.assertEqual(top_angle["angle_title"], "Evidence-Led Bloating Routine")
             self.assertEqual(top_angle["priority_score"]["max_points"], 30)
             self.assertEqual(
                 top_angle["priority_score"]["total"],
                 sum(top_angle["priority_score"]["dimensions"].values()),
             )
             markdown = (
-                run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md"
+                run_folder / "reports" / "cross_video_pattern_summary.md"
             ).read_text(encoding="utf-8")
             self.assertIn("Nattome Priority Score", markdown)
             self.assertIn("output-video", markdown)

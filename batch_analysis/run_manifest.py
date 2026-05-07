@@ -81,8 +81,8 @@ def build_run_manifest(
             "completed" if has_candidate_selection else "skipped",
             inputs={"candidates_path": candidates_path, "requested_batch_size": batch_size},
             outputs={
-                "json": "batch_outputs/json/selected_batch.json",
-                "markdown": "batch_outputs/markdown/selected_batch.md",
+                "json": "data/selected_batch.json",
+                "markdown": "reports/selected_batch.md",
             }
             if has_candidate_selection
             else {},
@@ -91,7 +91,7 @@ def build_run_manifest(
         phase_record(
             "evidence_bundles",
             "completed" if has_evidence_bundles else "skipped",
-            outputs={"index": "evidence_bundles/index.json"} if has_evidence_bundles else {},
+            outputs={"index": "data/evidence_bundle_index.json"} if has_evidence_bundles else {},
             notes=[] if has_evidence_bundles else ["Evidence bundles require a selected batch."],
         ),
         phase_record(
@@ -110,8 +110,8 @@ def build_run_manifest(
             "cross_video_pattern_summary",
             "completed" if has_cross_video_pattern_summary else "skipped",
             outputs={
-                "markdown": "batch_outputs/markdown/cross_video_pattern_summary.md",
-                "json": "batch_outputs/json/cross_video_pattern_summary.json",
+                "markdown": "reports/cross_video_pattern_summary.md",
+                "json": "data/cross_video_pattern_summary.json",
             }
             if has_cross_video_pattern_summary
             else {},
@@ -120,8 +120,8 @@ def build_run_manifest(
             "structured_outputs",
             "completed" if has_structured_outputs else "skipped",
             outputs={
-                "json": "batch_outputs/json/structured_batch_analysis.json",
-                "spreadsheet": "batch_outputs/spreadsheets/spreadsheet_summary.csv",
+                "json": "data/structured_batch_analysis.json",
+                "spreadsheet": "data/spreadsheet_summary.csv",
             }
             if has_structured_outputs
             else {},
@@ -141,7 +141,7 @@ def build_run_manifest(
         phase_record(
             "refinement_hooks",
             "completed" if has_refinement_hooks else "skipped",
-            outputs={"json": "batch_outputs/json/refinement_hooks.json"}
+            outputs={"json": "data/refinement_hooks.json"}
             if has_refinement_hooks
             else {},
         ),

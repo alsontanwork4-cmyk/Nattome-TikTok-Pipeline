@@ -91,7 +91,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 self.assertEqual(metadata["run_timestamp"], "2026-05-06T13:45:30Z")
                 self.assertEqual(metadata["mode"], "debug")
                 self.assertEqual(metadata["requested_batch_size"], 1)
-                self.assertEqual(metadata["configuration"]["outputs"]["markdown"], "batch_outputs/markdown")
+                self.assertEqual(metadata["configuration"]["outputs"]["markdown"], "reports")
                 self.assertEqual(metadata["implementation_status"]["video_download"], "not_implemented")
                 self.assertEqual(metadata["implementation_status"]["ocr"], "not_implemented")
                 self.assertEqual(metadata["implementation_status"]["transcription"], "not_implemented")
@@ -281,7 +281,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             run_folder = runs_dir / "20260506T134530Z_quick"
             selected = json.loads(
-                (run_folder / "batch_outputs" / "json" / "selected_batch.json").read_text(
+                (run_folder / "data" / "selected_batch.json").read_text(
                     encoding="utf-8"
                 )
             )
@@ -298,7 +298,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertIn("missing usable TikTok link", excluded["missing-link"])
 
             preview = (
-                run_folder / "batch_outputs" / "markdown" / "selected_batch.md"
+                run_folder / "reports" / "selected_batch.md"
             ).read_text(encoding="utf-8")
             self.assertIn("good-relevant", preview)
             self.assertIn("good-higher-views-less-relevant", preview)
@@ -1425,10 +1425,10 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             run_folder = runs_dir / "20260506T134530Z_quick"
             summary_markdown = (
-                run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md"
+                run_folder / "reports" / "cross_video_pattern_summary.md"
             )
             summary_json = (
-                run_folder / "batch_outputs" / "json" / "cross_video_pattern_summary.json"
+                run_folder / "data" / "cross_video_pattern_summary.json"
             )
             self.assertTrue(summary_markdown.is_file())
             self.assertTrue(summary_json.is_file())
@@ -1446,13 +1446,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                     "product_fit",
                 ],
             )
-            top_angle = summary["top_priority_shootable_angles"][0]
-            self.assertEqual(top_angle["priority_score"]["max_points"], 30)
-            self.assertEqual(
-                top_angle["priority_score"]["total"],
-                sum(top_angle["priority_score"]["dimensions"].values()),
-            )
-            self.assertLessEqual(top_angle["priority_score"]["total"], 30)
+            self.assertEqual(summary["top_priority_shootable_angles"], [])
             self.assertIn("what_to_shoot_first", summary["recommendation"])
 
             markdown = summary_markdown.read_text(encoding="utf-8")
@@ -1469,6 +1463,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             ]:
                 self.assertIn(section, markdown)
             self.assertIn("Nattome Priority Score", markdown)
+            self.assertIn("No shootable angles were available.", markdown)
             self.assertIn("bloating-routine", markdown)
 
             batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
@@ -1549,10 +1544,11 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
 
             run_folder = runs_dir / "20260506T134530Z_debug"
-            structured_json = run_folder / "batch_outputs" / "json" / "structured_batch_analysis.json"
-            spreadsheet = run_folder / "batch_outputs" / "spreadsheets" / "spreadsheet_summary.csv"
+            structured_json = run_folder / "data" / "structured_batch_analysis.json"
+            spreadsheet = run_folder / "data" / "spreadsheet_summary.csv"
             self.assertTrue(structured_json.is_file())
             self.assertTrue(spreadsheet.is_file())
+            self.assertFalse((run_folder / "batch_outputs").exists())
 
             structured = json.loads(structured_json.read_text(encoding="utf-8"))
             self.assertIn("batch_metadata", structured)
@@ -1594,7 +1590,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 ],
             )
             self.assertIn("https://www.tiktok.com/@creator/video/structured", csv_text)
-            self.assertIn("Digestive Comfort Routine Check", csv_text)
+            self.assertNotIn("Digestive Comfort Routine Check", csv_text)
 
             batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
             self.assertIn("structured_batch_analysis.json", batch_index)
@@ -1673,8 +1669,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             cross_summary = json.loads(
                 (
                     run_folder
-                    / "batch_outputs"
-                    / "json"
+                    / "data"
                     / "cross_video_pattern_summary.json"
                 ).read_text(encoding="utf-8")
             )
@@ -1703,10 +1698,10 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(chat_id, "fake-chat")
             self.assertLess(len(message), 1200)
             self.assertIn("Weekly Evidence Brief", message)
-            self.assertIn("batch_outputs/markdown/cross_video_pattern_summary.md", message)
-            self.assertIn("batch_outputs/json/structured_batch_analysis.json", message)
-            self.assertIn("batch_outputs/spreadsheets/spreadsheet_summary.csv", message)
-            self.assertIn("telegram-video", message)
+            self.assertIn("reports/cross_video_pattern_summary.md", message)
+            self.assertIn("data/structured_batch_analysis.json", message)
+            self.assertIn("data/spreadsheet_summary.csv", message)
+            self.assertIn("No shootable angles available.", message)
             self.assertNotIn("## Cross-Video Pattern Comparison", message)
 
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
@@ -1802,10 +1797,10 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertFalse((bundle_folder / "artifacts" / "frames").exists())
             self.assertTrue((bundle_folder / "video_evidence_report.md").is_file())
             self.assertTrue(
-                (run_folder / "batch_outputs" / "json" / "structured_batch_analysis.json").is_file()
+                (run_folder / "data" / "structured_batch_analysis.json").is_file()
             )
             self.assertTrue(
-                (run_folder / "batch_outputs" / "spreadsheets" / "spreadsheet_summary.csv").is_file()
+                (run_folder / "data" / "spreadsheet_summary.csv").is_file()
             )
 
             cleanup_log = json.loads(
@@ -1820,8 +1815,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             hooks = json.loads(
                 (
                     run_folder
-                    / "batch_outputs"
-                    / "json"
+                    / "data"
                     / "refinement_hooks.json"
                 ).read_text(encoding="utf-8")
             )

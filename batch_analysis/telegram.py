@@ -62,9 +62,9 @@ def build_telegram_brief_message(
         [
             "",
             "Outputs:",
-            "Markdown: batch_outputs/markdown/cross_video_pattern_summary.md",
-            "JSON: batch_outputs/json/structured_batch_analysis.json",
-            "Spreadsheet: batch_outputs/spreadsheets/spreadsheet_summary.csv",
+            "Markdown: reports/cross_video_pattern_summary.md",
+            "JSON: data/structured_batch_analysis.json",
+            "Spreadsheet: data/spreadsheet_summary.csv",
             f"Run folder: {run_folder}",
         ]
     )

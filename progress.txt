@@ -561,3 +561,37 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - Batch-level cross-video outputs still use the legacy single-angle path until the next output migration slice.
+
+## 2026-05-07 - 0023 Produce Batch Outputs And Delivery Logs From The Manifest
+
+Task completed from `docs/issues/0023-produce-batch-outputs-and-delivery-logs-from-the-manifest.md`.
+
+Key decisions made:
+- Batch-level selected batch, Cross-Video Pattern Summary, Structured JSON, spreadsheet, and refinement hook outputs now write to flat `reports/` and `data/` paths instead of `batch_outputs/`.
+- Snapshot-generated Shootable Angles are persisted as structured `data/<prefix>_shootable_angles.json` artifacts and registered on each Evidence Bundle snapshot.
+- Cross-Video Pattern Summary consumes persisted Shootable Angle data and leaves the angle list empty when no evidence-backed angles exist, instead of inventing a default angle while rendering.
+- The Run Manifest and batch index now register flat output paths for selected batch, evidence index, cross-video summary, structured outputs, Telegram delivery, cleanup, and refinement hooks.
+- Telegram messages now reference flat report/data output paths, and cleanup preservation checks understand the flat Batch Output Set while retaining compatibility with legacy bundle cleanup.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/outputs.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/telegram.py`
+- `batch_analysis/cleanup.py`
+- `tests/test_batch_outputs_two_layer.py`
+- `tests/test_outputs.py`
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0023-produce-batch-outputs-and-delivery-logs-from-the-manifest.md`
+
+Feedback:
+- `python -m unittest discover -s tests -p 'test_batch_outputs_two_layer.py'` failed before implementation, then passed.
+- `python -m unittest discover -s tests` passed with 45 tests.
+- `python -m pytest -q` passed with 45 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The legacy nested per-video Evidence Bundle writer is still present for compatibility; issue 0024 can migrate the full batch run off that remaining legacy architecture.

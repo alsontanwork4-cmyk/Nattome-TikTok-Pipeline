@@ -56,7 +56,8 @@ def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]
             ],
         },
     }
-    hooks_path = run_folder / "batch_outputs" / "json" / "refinement_hooks.json"
+    hooks_path = run_folder / "data" / "refinement_hooks.json"
+    hooks_path.parent.mkdir(parents=True, exist_ok=True)
     hooks_path.write_text(
         json.dumps(hooks, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -161,8 +162,8 @@ def write_batch_index(
     if has_candidate_selection:
         lines.extend(
             [
-                "- JSON: `batch_outputs/json/selected_batch.json`",
-                "- Markdown: `batch_outputs/markdown/selected_batch.md`",
+                "- JSON: `data/selected_batch.json`",
+                "- Markdown: `reports/selected_batch.md`",
             ]
         )
     else:
@@ -176,19 +177,19 @@ def write_batch_index(
     if has_cross_video_pattern_summary:
         lines.extend(
             [
-                "- Markdown: `batch_outputs/markdown/cross_video_pattern_summary.md`",
-                "- JSON: `batch_outputs/json/cross_video_pattern_summary.json`",
+                "- Markdown: `reports/cross_video_pattern_summary.md`",
+                "- JSON: `data/cross_video_pattern_summary.json`",
             ]
         )
     else:
         lines.append("- Cross-video pattern summary was not created because no evidence bundles were available.")
     lines.extend(["", "## Structured Outputs", ""])
     if has_structured_json_output:
-        lines.append("- Structured JSON: `batch_outputs/json/structured_batch_analysis.json`")
+        lines.append("- Structured JSON: `data/structured_batch_analysis.json`")
     else:
         lines.append("- Structured JSON was not created because no evidence bundles were available.")
     if has_spreadsheet_summary:
-        lines.append("- Spreadsheet summary: `batch_outputs/spreadsheets/spreadsheet_summary.csv`")
+        lines.append("- Spreadsheet summary: `data/spreadsheet_summary.csv`")
     else:
         lines.append("- Spreadsheet summary was not created because no evidence bundles were available.")
     lines.extend(["", "## Telegram Delivery", ""])
@@ -202,7 +203,7 @@ def write_batch_index(
     else:
         lines.append("- Evidence artifact cleanup was not evaluated because no evidence bundles were available.")
     if has_refinement_hooks:
-        lines.append("- Refinement hooks: `batch_outputs/json/refinement_hooks.json`")
+        lines.append("- Refinement hooks: `data/refinement_hooks.json`")
     else:
         lines.append("- Refinement hooks were not created because no cross-video summary was available.")
     lines.extend(
@@ -232,9 +233,9 @@ def create_run(args: argparse.Namespace) -> Path:
         (run_folder / subdirectory).mkdir(parents=True, exist_ok=False)
 
     selected_batch = None
+    flat_evidence_index = None
+    legacy_evidence_index = None
     if candidates is not None:
-        for subdirectory in LEGACY_OUTPUT_SUBDIRECTORIES:
-            (run_folder / subdirectory).mkdir(parents=True, exist_ok=True)
         selected_batch = select_candidates(
             candidates,
             configuration,
@@ -243,14 +244,28 @@ def create_run(args: argparse.Namespace) -> Path:
             args.candidates,
         )
 
-    evidence_index = None
     if selected_batch is not None:
         evidence_store = EvidenceBundleStore(run_folder)
         evidence_store.write_source_snapshots(selected_batch["selected_candidates"])
+        flat_index_entries = []
         for candidate in selected_batch["selected_candidates"]:
             snapshot = evidence_store.load_snapshot(candidate)
             write_snapshot_evidence_outputs(run_folder, candidate, snapshot)
-        evidence_index = write_evidence_bundles(
+            flat_index_entries.append(evidence_store.load_snapshot(candidate))
+        flat_evidence_index = {
+            "created_at": selected_batch["selected_at"],
+            "bundle_count": len(flat_index_entries),
+            "bundles": flat_index_entries,
+        }
+        (run_folder / "data" / "evidence_bundle_index.json").write_text(
+            json.dumps(flat_evidence_index, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
+        for subdirectory in LEGACY_OUTPUT_SUBDIRECTORIES:
+            if not subdirectory.startswith("batch_outputs"):
+                (run_folder / subdirectory).mkdir(parents=True, exist_ok=True)
+        legacy_evidence_index = write_evidence_bundles(
             run_folder,
             selected_batch,
             args.ffmpeg_bin,
@@ -260,34 +275,34 @@ def create_run(args: argparse.Namespace) -> Path:
         )
 
     cross_video_summary = None
-    if selected_batch is not None and evidence_index is not None:
+    if selected_batch is not None and flat_evidence_index is not None:
         cross_video_summary = write_cross_video_pattern_summary(
             run_folder,
             selected_batch,
-            evidence_index,
+            flat_evidence_index,
         )
 
-    has_hybrid_timeline = evidence_index is not None
-    has_ocr = evidence_index is not None
-    has_transcription = evidence_index is not None
-    has_audio_music_trend_analysis = evidence_index is not None
-    has_claim_safety_review = evidence_index is not None
-    has_evidence_quality = evidence_index is not None
-    has_video_evidence_reports = evidence_index is not None
+    has_hybrid_timeline = flat_evidence_index is not None
+    has_ocr = flat_evidence_index is not None
+    has_transcription = flat_evidence_index is not None
+    has_audio_music_trend_analysis = flat_evidence_index is not None
+    has_claim_safety_review = flat_evidence_index is not None
+    has_evidence_quality = flat_evidence_index is not None
+    has_video_evidence_reports = flat_evidence_index is not None
     has_structured_outputs = (
         selected_batch is not None
-        and evidence_index is not None
+        and flat_evidence_index is not None
         and cross_video_summary is not None
     )
     has_telegram_delivery = has_structured_outputs
-    has_evidence_artifact_cleanup = evidence_index is not None
+    has_evidence_artifact_cleanup = flat_evidence_index is not None
     has_refinement_hooks = has_structured_outputs
     metadata = build_metadata(
         args,
         timestamp,
         configuration,
         selected_batch is not None,
-        evidence_index is not None,
+        flat_evidence_index is not None,
         has_hybrid_timeline,
         has_ocr,
         has_transcription,
@@ -311,7 +326,7 @@ def create_run(args: argparse.Namespace) -> Path:
         timestamp,
         configuration,
         has_candidate_selection=selected_batch is not None,
-        has_evidence_bundles=evidence_index is not None,
+        has_evidence_bundles=flat_evidence_index is not None,
         has_cross_video_pattern_summary=cross_video_summary is not None,
         has_structured_outputs=has_structured_outputs,
         has_telegram_delivery=has_telegram_delivery,
@@ -322,7 +337,7 @@ def create_run(args: argparse.Namespace) -> Path:
         write_structured_json_and_spreadsheet_summary(
             run_folder,
             selected_batch,
-            evidence_index,
+            flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
         )
@@ -337,7 +352,7 @@ def create_run(args: argparse.Namespace) -> Path:
     if has_evidence_artifact_cleanup:
         cleanup_evidence_artifacts(
             run_folder,
-            evidence_index,
+            legacy_evidence_index or flat_evidence_index,
             configuration.get("cleanup", {}),
         )
     if selected_batch is not None:

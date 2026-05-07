@@ -14,8 +14,94 @@ from .reports import (
     product_tie_in_for_candidate,
 )
 
+
+def output_json_path(run_folder: Path, filename: str) -> Path:
+    path = run_folder / "data" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def output_report_path(run_folder: Path, filename: str) -> Path:
+    path = run_folder / "reports" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def relative_output_path(path: Path, run_folder: Path) -> str:
+    return str(path.relative_to(run_folder)).replace("\\", "/")
+
+
+def bundle_artifact_path(
+    run_folder: Path,
+    bundle: dict[str, Any],
+    artifact_name: str,
+    legacy_filename: str,
+) -> Path:
+    artifacts = bundle.get("artifacts") if isinstance(bundle.get("artifacts"), dict) else {}
+    artifact = artifacts.get(artifact_name) if isinstance(artifacts, dict) else None
+    if isinstance(artifact, dict) and artifact.get("path"):
+        return run_folder / str(artifact["path"])
+
+    bundle_folder = bundle.get("bundle_folder")
+    if bundle_folder:
+        return run_folder / str(bundle_folder) / legacy_filename
+
+    prefix = bundle.get("prefix")
+    if prefix:
+        return run_folder / "data" / f"{prefix}_{legacy_filename}"
+
+    return run_folder / legacy_filename
+
+
+def read_bundle_artifact(
+    run_folder: Path,
+    bundle: dict[str, Any],
+    artifact_name: str,
+    legacy_filename: str,
+) -> dict[str, Any] | None:
+    return read_json_object(
+        bundle_artifact_path(run_folder, bundle, artifact_name, legacy_filename)
+    )
+
+
+def source_metadata_for_bundle(
+    run_folder: Path,
+    bundle: dict[str, Any],
+    candidate: dict[str, Any],
+) -> dict[str, Any]:
+    source_metadata = bundle.get("source_metadata")
+    if isinstance(source_metadata, dict) and source_metadata.get("path"):
+        loaded = read_json_object(run_folder / str(source_metadata["path"]))
+        return loaded or candidate
+    if isinstance(source_metadata, str):
+        loaded = read_json_object(run_folder / source_metadata)
+        return loaded or candidate
+
+    bundle_folder = bundle.get("bundle_folder")
+    if bundle_folder:
+        loaded = read_json_object(run_folder / str(bundle_folder) / "source_metadata.json")
+        return loaded or candidate
+    return candidate
+
+
+def shootable_angles_for_bundle(
+    run_folder: Path,
+    bundle: dict[str, Any],
+) -> list[dict[str, Any]]:
+    loaded = read_bundle_artifact(
+        run_folder,
+        bundle,
+        "shootable_angles",
+        "shootable_angles.json",
+    )
+    angles = loaded.get("angles") if isinstance(loaded, dict) else []
+    if not isinstance(angles, list):
+        return []
+    return [angle for angle in angles if isinstance(angle, dict)]
+
+
 def write_selected_batch(run_folder: Path, selected_batch: dict[str, Any]) -> None:
-    json_path = run_folder / "batch_outputs" / "json" / "selected_batch.json"
+    json_path = output_json_path(run_folder, "selected_batch.json")
     json_path.write_text(
         json.dumps(selected_batch, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -49,7 +135,7 @@ def write_selected_batch(run_folder: Path, selected_batch: dict[str, Any]) -> No
     for candidate in selected_batch["excluded_candidates"]:
         lines.append(f"- `{candidate['id']}`: {candidate['reason']}")
 
-    markdown_path = run_folder / "batch_outputs" / "markdown" / "selected_batch.md"
+    markdown_path = output_report_path(run_folder, "selected_batch.md")
     markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 PRIORITY_SCORE_DIMENSIONS = [
@@ -65,6 +151,18 @@ def priority_score_points(candidate: dict[str, Any], bundle_folder: Path) -> dic
     quality = read_json_object(bundle_folder / "evidence_quality.json") or {}
     claim_review = read_json_object(bundle_folder / "claim_safety_review.json") or {}
     audio_analysis = read_json_object(bundle_folder / "baseline_audio_analysis.json") or {}
+    return priority_score_points_from_artifacts(candidate, quality, claim_review, audio_analysis)
+
+
+def priority_score_points_from_artifacts(
+    candidate: dict[str, Any],
+    quality: dict[str, Any] | None,
+    claim_review: dict[str, Any] | None,
+    audio_analysis: dict[str, Any] | None,
+) -> dict[str, int]:
+    quality = quality or {}
+    claim_review = claim_review or {}
+    audio_analysis = audio_analysis or {}
 
     views = int(candidate.get("play_count") or 0)
     engagement = float(candidate.get("weighted_engagement_rate") or 0)
@@ -114,6 +212,10 @@ def priority_score_points(candidate: dict[str, Any], bundle_folder: Path) -> dic
 
 def hook_pattern_for_bundle(bundle_folder: Path) -> str:
     quality = read_json_object(bundle_folder / "evidence_quality.json") or {}
+    return hook_pattern_from_quality(quality)
+
+
+def hook_pattern_from_quality(quality: dict[str, Any]) -> str:
     checks = quality.get("checks") if isinstance(quality, dict) else {}
     hook_check = checks.get("first_three_second_hook") if isinstance(checks, dict) else {}
     if isinstance(hook_check, dict) and hook_check.get("clear"):
@@ -172,15 +274,38 @@ def write_cross_video_pattern_summary(
         if not isinstance(candidate, dict):
             continue
 
-        bundle_folder = run_folder / str(bundle.get("bundle_folder"))
-        audio_analysis = read_json_object(bundle_folder / "baseline_audio_analysis.json") or {}
-        claim_review = read_json_object(bundle_folder / "claim_safety_review.json") or {}
-        quality = read_json_object(bundle_folder / "evidence_quality.json") or {}
+        audio_analysis = (
+            read_bundle_artifact(
+                run_folder,
+                bundle,
+                "baseline_audio_analysis",
+                "baseline_audio_analysis.json",
+            )
+            or {}
+        )
+        claim_review = (
+            read_bundle_artifact(
+                run_folder,
+                bundle,
+                "claim_safety_review",
+                "claim_safety_review.json",
+            )
+            or {}
+        )
+        quality = (
+            read_bundle_artifact(
+                run_folder,
+                bundle,
+                "evidence_quality",
+                "evidence_quality.json",
+            )
+            or {}
+        )
 
         audio_format = str(
             audio_analysis.get("audio_format") or candidate.get("audio_format_hint") or "unknown"
         )
-        hook_pattern = hook_pattern_for_bundle(bundle_folder)
+        hook_pattern = hook_pattern_from_quality(quality)
         emotional_trigger = emotional_trigger_for_candidate(candidate)
         opportunity = product_tie_in_for_candidate(candidate)
         add_pattern(hooks, hook_pattern, candidate_id)
@@ -201,36 +326,52 @@ def write_cross_video_pattern_summary(
         else:
             add_pattern(risky_claims, "No risky claims flagged from available evidence", candidate_id)
 
-        dimensions = priority_score_points(candidate, bundle_folder)
-        total = sum(dimensions.values())
         quality_score = quality.get("evidence_quality_score") if isinstance(quality, dict) else {}
-        angle_rows.append(
-            {
+        for angle in shootable_angles_for_bundle(run_folder, bundle):
+            priority_score = angle.get("priority_score") if isinstance(angle.get("priority_score"), dict) else {}
+            dimensions = priority_score.get("dimensions") if isinstance(priority_score, dict) else {}
+            if not isinstance(dimensions, dict) or not dimensions:
+                dimensions = priority_score_points_from_artifacts(
+                    candidate,
+                    quality,
+                    claim_review,
+                    audio_analysis,
+                )
+            total = priority_score.get("total") if isinstance(priority_score, dict) else None
+            if not isinstance(total, int):
+                total = sum(value for value in dimensions.values() if isinstance(value, int))
+            angle_rows.append(
+                {
                 "candidate_id": candidate_id,
                 "source_tiktok_url": candidate.get("url"),
-                "angle_title": "Digestive Comfort Routine Check",
-                "hook": f"Turn this creator topic into a safe question: {compact_markdown_text(candidate.get('caption'))}",
-                "avatar": avatar_for_candidate(candidate),
-                "format": "Talking-head explainer with simple on-screen text.",
-                "product_fit": opportunity,
-                "recommended_angle": (
-                    "Adapt the pain point and structure, then keep the product role to support language."
-                ),
-                "claim_guardrails": claim_guardrails(claim_review),
+                "angle_title": angle.get("angle_title") or "Shootable Angle",
+                "hook": angle.get("hook") or "",
+                "avatar": angle.get("avatar") or avatar_for_candidate(candidate),
+                "format": angle.get("format") or "",
+                "product_fit": angle.get("product_fit") or opportunity,
+                "recommended_angle": angle.get("recommendation")
+                or angle.get("recommended_angle")
+                or "",
+                "claim_guardrails": angle.get("claim_guardrails") or claim_guardrails(claim_review),
+                "source_evidence": angle.get("source_evidence")
+                if isinstance(angle.get("source_evidence"), list)
+                else [],
                 "evidence_quality": quality_score.get("level", "unknown")
                 if isinstance(quality_score, dict)
                 else "unknown",
                 "priority_score": {
                     "dimensions": dimensions,
                     "total": total,
-                    "max_points": 30,
+                    "max_points": priority_score.get("max_points", 30)
+                    if isinstance(priority_score, dict)
+                    else 30,
                 },
                 "why": (
                     f"{total}/30 score balances viral signal, Nattome fit, evidence confidence, "
                     "brand safety, and production ease."
                 ),
-            }
-        )
+                }
+            )
 
     angle_rows.sort(
         key=lambda row: (
@@ -264,7 +405,7 @@ def write_cross_video_pattern_summary(
         "recommendation": recommendation,
     }
 
-    json_path = run_folder / "batch_outputs" / "json" / "cross_video_pattern_summary.json"
+    json_path = output_json_path(run_folder, "cross_video_pattern_summary.json")
     json_path.write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -332,7 +473,7 @@ def write_cross_video_pattern_summary(
         ]
     )
 
-    markdown_path = run_folder / "batch_outputs" / "markdown" / "cross_video_pattern_summary.md"
+    markdown_path = output_report_path(run_folder, "cross_video_pattern_summary.md")
     markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return {"status": "completed", "top_angle_count": len(angle_rows), "summary": summary}
 
@@ -373,26 +514,48 @@ def write_structured_json_and_spreadsheet_summary(
         if not isinstance(candidate, dict):
             continue
 
-        bundle_folder = run_folder / str(bundle.get("bundle_folder"))
-        timeline = read_json_object(bundle_folder / "hybrid_timeline.json")
-        ocr = read_json_object(bundle_folder / "ocr_evidence.json")
-        transcript = read_json_object(bundle_folder / "transcript_evidence.json")
-        audio_analysis = read_json_object(bundle_folder / "baseline_audio_analysis.json")
-        claim_review = read_json_object(bundle_folder / "claim_safety_review.json")
-        quality = read_json_object(bundle_folder / "evidence_quality.json")
+        timeline = read_bundle_artifact(run_folder, bundle, "hybrid_timeline", "hybrid_timeline.json")
+        ocr = read_bundle_artifact(run_folder, bundle, "ocr_evidence", "ocr_evidence.json")
+        transcript = read_bundle_artifact(
+            run_folder, bundle, "transcript_evidence", "transcript_evidence.json"
+        )
+        audio_analysis = read_bundle_artifact(
+            run_folder,
+            bundle,
+            "baseline_audio_analysis",
+            "baseline_audio_analysis.json",
+        )
+        claim_review = read_bundle_artifact(
+            run_folder,
+            bundle,
+            "claim_safety_review",
+            "claim_safety_review.json",
+        )
+        quality = read_bundle_artifact(run_folder, bundle, "evidence_quality", "evidence_quality.json")
+        gemini_evidence = read_bundle_artifact(
+            run_folder,
+            bundle,
+            "gemini_evidence",
+            "gemini_evidence.json",
+        )
         angle = angles_by_candidate.get(candidate_id, {})
         quality_score = quality.get("evidence_quality_score") if isinstance(quality, dict) else {}
         manual_review = quality.get("manual_review_flag") if isinstance(quality, dict) else {}
         priority_score = angle.get("priority_score") if isinstance(angle, dict) else None
         if not isinstance(priority_score, dict):
-            dimensions = priority_score_points(candidate, bundle_folder)
             priority_score = {
-                "dimensions": dimensions,
-                "total": sum(dimensions.values()),
+                "dimensions": priority_score_points_from_artifacts(
+                    candidate,
+                    quality,
+                    claim_review,
+                    audio_analysis,
+                ),
+                "total": 0,
                 "max_points": 30,
             }
+            priority_score["total"] = sum(priority_score["dimensions"].values())
 
-        hook_type = hook_pattern_for_bundle(bundle_folder)
+        hook_type = hook_pattern_from_quality(quality or {})
         audio_format = "unknown"
         if isinstance(audio_analysis, dict):
             audio_format = str(audio_analysis.get("audio_format") or audio_format)
@@ -401,14 +564,15 @@ def write_structured_json_and_spreadsheet_summary(
 
         emotional_trigger = emotional_trigger_for_candidate(candidate)
         product_fit = str(angle.get("product_fit") or product_tie_in_for_candidate(candidate))
-        recommended_angle = str(angle.get("angle_title") or "Digestive Comfort Routine Check")
+        recommended_angle = str(angle.get("angle_title") or "")
         avatar = str(angle.get("avatar") or avatar_for_candidate(candidate))
 
         videos.append(
             {
                 "candidate_id": candidate_id,
-                "source_metadata": read_json_object(bundle_folder / "source_metadata.json") or candidate,
+                "source_metadata": source_metadata_for_bundle(run_folder, bundle, candidate),
                 "evidence_bundle_index": bundle,
+                "gemini_evidence": gemini_evidence,
                 "hybrid_timeline": timeline,
                 "ocr_evidence": ocr,
                 "transcript_evidence": transcript,
@@ -450,13 +614,13 @@ def write_structured_json_and_spreadsheet_summary(
         "cross_video_pattern_summary": cross_video_summary,
         "videos": videos,
     }
-    structured_path = run_folder / "batch_outputs" / "json" / "structured_batch_analysis.json"
+    structured_path = output_json_path(run_folder, "structured_batch_analysis.json")
     structured_path.write_text(
         json.dumps(structured, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
-    spreadsheet_path = run_folder / "batch_outputs" / "spreadsheets" / "spreadsheet_summary.csv"
+    spreadsheet_path = output_json_path(run_folder, "spreadsheet_summary.csv")
     fieldnames = [
         "link",
         "topic",
@@ -476,8 +640,8 @@ def write_structured_json_and_spreadsheet_summary(
 
     return {
         "status": "completed",
-        "structured_json_path": str(structured_path.relative_to(run_folder)),
-        "spreadsheet_path": str(spreadsheet_path.relative_to(run_folder)),
+        "structured_json_path": relative_output_path(structured_path, run_folder),
+        "spreadsheet_path": relative_output_path(spreadsheet_path, run_folder),
         "row_count": len(spreadsheet_rows),
     }
 

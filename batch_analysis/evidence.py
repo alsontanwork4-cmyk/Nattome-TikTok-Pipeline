@@ -749,6 +749,20 @@ def write_snapshot_evidence_outputs(
         claim_safety_review=claim_review,
         evidence_quality=quality,
     )
+    angles_path = prefixed_data_artifact_path(run_folder, snapshot, "shootable_angles")
+    angles_path.write_text(
+        json.dumps(
+            {
+                "status": "completed",
+                "candidate_id": snapshot.get("candidate_id"),
+                "angles": shootable_angles,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     report_path = prefixed_report_path(run_folder, snapshot, "video_evidence_report")
     write_video_evidence_report_from_snapshot(
@@ -767,6 +781,7 @@ def write_snapshot_evidence_outputs(
         "baseline_audio_analysis": audio_path,
         "claim_safety_review": claim_path,
         "evidence_quality": quality_path,
+        "shootable_angles": angles_path,
         "video_evidence_report": report_path,
     }.items():
         snapshot["artifacts"][artifact_name] = {
@@ -787,6 +802,7 @@ def write_snapshot_evidence_outputs(
         "quality_path": relative_path(quality_path, run_folder),
         "claim_safety_review_path": relative_path(claim_path, run_folder),
         "baseline_audio_analysis_path": relative_path(audio_path, run_folder),
+        "shootable_angles_path": relative_path(angles_path, run_folder),
     }
 
 
