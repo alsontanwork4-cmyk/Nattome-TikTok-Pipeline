@@ -48,7 +48,7 @@ Read `references/nattome_brand.md` for the full voice/style guide and the do/don
 2. RANK       -> score by virality (views, engagement rate, recency)
 3. ANALYZE    -> break down WHY the top 5 worked (use references/virality_framework.md)
 4. IDEATE     -> generate 3 Nattome angles per top topic, with format + avatar + script outline
-5. DELIVER    -> write daily_brief_YYYY-MM-DD.md, optionally push to Telegram
+5. HANDOFF    -> write daily_brief_YYYY-MM-DD.md as an ideation/handoff brief, optionally push to Telegram
 ```
 
 The whole run should take 3-8 minutes depending on Apify response time.
@@ -123,7 +123,7 @@ For each viral topic, produce **3 angles** that Nattome could actually shoot. Ea
 - Do not overuse scare tactics like "stomach cancer is waiting for you."
 - If the trend itself does not fit Nattome's voice, for example crude, mocking, or fearmongering, say so and either reframe sincerely or recommend skipping it.
 
-### Step 4 - Write The Daily Brief
+### Step 4 - Write The Daily Discovery Handoff
 
 Use the template at `skills/nattome-daily-discovery/assets/daily_brief_template.md`. Save to:
 
@@ -131,7 +131,9 @@ Use the template at `skills/nattome-daily-discovery/assets/daily_brief_template.
 outputs/daily_briefs/daily_brief_YYYY-MM-DD.md
 ```
 
-The brief is the deliverable. Make it scannable. The marketing team is reading this on a phone over coffee. Use tables for the angle grids, short paragraphs for analysis, and links to original TikToks.
+The brief is a discovery and ideation handoff, not the current final production report. Make it scannable so the marketing team can quickly decide what to explore next. Use tables for the angle grids, short paragraphs for analysis, and links to original TikToks.
+
+For final production-ready outputs, use `nattome-batch-analysis`, which writes the Top 5 Creative Production Report and Excel planning workbook under `outputs/reports/YYYY-MM-DD/`.
 
 ### Step 5 - Optional Telegram Delivery
 

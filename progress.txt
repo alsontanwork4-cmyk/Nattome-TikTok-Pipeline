@@ -920,3 +920,29 @@ Feedback:
 Blockers or notes for the next iteration:
 - Issue `0035-remove-user-facing-daily-brief-final-output-references.md` is next.
 - Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0035 Remove User-Facing Daily Brief Final Output References
+
+Task completed from `docs/issues/0035-remove-user-facing-daily-brief-final-output-references.md`.
+
+Key decisions made:
+- Reframed `nattome-daily-discovery` outputs as discovery and ideation handoffs rather than final production deliverables.
+- Kept the weekly `nattome-batch-analysis` workflow as the source of final production deliverables: the Top 5 Creative Production Report and Excel planning workbook.
+- Updated the daily discovery eval to expect a handoff markdown file and to assert that it is not framed as the final production report.
+- Made no behavior-code changes.
+
+Files changed:
+- `README.md`
+- `skills/nattome-daily-discovery/SKILL.md`
+- `skills/nattome-daily-discovery/evals/evals.json`
+- `progress.txt`
+- `docs/issues/done/0035-remove-user-facing-daily-brief-final-output-references.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m json.tool skills\nattome-daily-discovery\evals\evals.json` passed.
+- `git grep` found no current README or skill workflow wording that frames `daily_brief_YYYY-MM-DD.md` as the final production report; the only matching final-output wording is historical completed-issue text.
+- `git grep` confirmed `skills/nattome-batch-analysis/SKILL.md` still points to `top5_creative_production_report_YYYY-MM-DD.md` and `top5_angle_planning_sheet_YYYY-MM-DD.xlsx`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 49 tests and 0 skipped.
+
+Blockers or notes for the next iteration:
+- No more active issue files remain in `docs/issues/` after this slice.

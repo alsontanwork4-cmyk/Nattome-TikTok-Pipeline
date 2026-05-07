@@ -4,10 +4,10 @@ Two-tier content intelligence pipeline for **Nattome** (Atomic Group's flagship 
 
 ## What This Project Is
 
-| Cadence | Skill | Output | Runtime |
+| Cadence | Skill | Purpose / artifact | Runtime |
 |---|---|---|---|
-| **Daily** | `nattome-daily-discovery` | `outputs/daily_briefs/daily_brief_<date>.md` (top 5 viral videos + 3 Nattome angles each) | 3–8 min |
-| **Weekly** | `nattome-batch-analysis` | `outputs/reports/<date>/top5_creative_production_report_<date>.md` + `top5_angle_planning_sheet_<date>.xlsx` | 15–30 min |
+| **Daily** | `nattome-daily-discovery` | Discovery and ideation handoff: `outputs/daily_briefs/daily_brief_<date>.md` plus `data/daily_selections/nattome_daily_<date>_top5.json` | 3–8 min |
+| **Weekly** | `nattome-batch-analysis` | Final production deliverables: `outputs/reports/<date>/top5_creative_production_report_<date>.md` + `top5_angle_planning_sheet_<date>.xlsx` | 15–30 min |
 
 Both skills live under `skills/` and are loaded automatically by Claude Code via `.claude/settings.json`.
 
@@ -31,8 +31,8 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 │   ├── adr/                       ← architecture decisions
 │   └── issues/{,done/}            ← implementation tickets
 ├── data/raw_scrapes/              ← raw Apify TikTok scrapes (input to batch run)
-├── outputs/daily_briefs/          ← daily brief deliverables
-├── outputs/reports/               ← weekly final report + Excel workbook deliverables
+├── outputs/daily_briefs/          ← daily discovery and ideation handoffs
+├── outputs/reports/               ← final production report + Excel workbook deliverables
 └── runs/batch-analysis/           ← timestamped weekly run folders
 ```
 
