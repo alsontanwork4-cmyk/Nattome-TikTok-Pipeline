@@ -128,14 +128,28 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
         f"""
         CREATE TABLE IF NOT EXISTS manual_runs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT,
             run_type TEXT NOT NULL,
+            source_type TEXT NOT NULL DEFAULT 'manual',
             status TEXT NOT NULL DEFAULT 'queued',
+            config_version TEXT NOT NULL DEFAULT 'v0',
             triggered_by TEXT NOT NULL DEFAULT 'local',
+            triggered_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            command_json TEXT NOT NULL DEFAULT '[]',
             output_path TEXT,
+            output_paths_json TEXT NOT NULL DEFAULT '{{}}',
+            error_text TEXT NOT NULL DEFAULT '',
             {ATTRIBUTION_COLUMNS}
         )
         """
     )
+    _ensure_column(connection, "manual_runs", "run_id", "TEXT")
+    _ensure_column(connection, "manual_runs", "source_type", "TEXT NOT NULL DEFAULT 'manual'")
+    _ensure_column(connection, "manual_runs", "config_version", "TEXT NOT NULL DEFAULT 'v0'")
+    _ensure_column(connection, "manual_runs", "triggered_at", "TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    _ensure_column(connection, "manual_runs", "command_json", "TEXT NOT NULL DEFAULT '[]'")
+    _ensure_column(connection, "manual_runs", "output_paths_json", "TEXT NOT NULL DEFAULT '{}'")
+    _ensure_column(connection, "manual_runs", "error_text", "TEXT NOT NULL DEFAULT ''")
     _create_artifact_tables(connection)
 
 

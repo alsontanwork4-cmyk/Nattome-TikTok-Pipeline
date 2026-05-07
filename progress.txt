@@ -1150,3 +1150,32 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0044-trigger-manual-runs-from-dashboard.md` is next, but per instruction this loop stops after the current completed issue instead of continuing further in this context.
+
+## 2026-05-07 - 0044 Trigger Manual Runs From Dashboard
+
+Task completed from `docs/issues/0044-trigger-manual-runs-from-dashboard.md`.
+
+Key decisions made:
+- Added `dashboard.manual_runs` as the public manual-run orchestration module with scrape-only and full-pipeline run types.
+- Manual runs use the active production scrape config, record `source_type=manual`, config version, triggered user, timestamp, command provenance, status, errors, and expected output paths.
+- Scrape-only runs launch the daily discovery scraper with top-30 raw scrape and top-5 handoff outputs.
+- Full-pipeline runs launch discovery first, then `scripts/run_batch_analysis.py --mode daily` against the generated top-5 handoff so selection, evidence analysis, reports, workbook generation, and delivery behavior stay on the existing pipeline path.
+- Output paths are timestamped and advanced by one second when an expected artifact path already exists, preventing manual runs from overwriting prior scheduled or manual artifacts.
+- Successful manual runs call the existing artifact indexer automatically so completed outputs are reflected in dashboard-derived records.
+- Replaced the Run History placeholder with manual run controls, estimated runtimes, expected outputs, and visible final status/history.
+
+Files changed:
+- `dashboard/manual_runs.py`
+- `dashboard/store.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_manual_runs.py`
+- `progress.txt`
+- `docs/issues/done/0044-trigger-manual-runs-from-dashboard.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_manual_runs` first failed with `ModuleNotFoundError: No module named 'dashboard.manual_runs'`, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell tests.test_scrape_settings` passed with 12 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 78 tests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue instead of continuing to issue `0045` in this context.
