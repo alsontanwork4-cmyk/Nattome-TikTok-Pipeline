@@ -595,3 +595,31 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - The legacy nested per-video Evidence Bundle writer is still present for compatibility; issue 0024 can migrate the full batch run off that remaining legacy architecture.
+
+## 2026-05-07 - 0024 Migrate Full Batch Analysis Run To The New Architecture
+
+Task completed from `docs/issues/0024-migrate-full-batch-analysis-run-to-the-new-architecture.md`.
+
+Key decisions made:
+- The normal Batch Analysis Run path now uses the two-layer Run Folder layout exclusively for new selected runs.
+- `create_run` writes source snapshots, invokes the Gemini 2.5 Flash Tool Stack Adapter seam, writes Gemini evidence back through the Evidence Bundle snapshot store, and renders downstream report, review, quality, Shootable Angle, summary, structured, spreadsheet, Telegram, cleanup, refinement, manifest, and batch index outputs from the flat snapshot index.
+- The legacy nested `evidence_bundles/` and `batch_outputs/` writer path was removed from the normal workflow; historical runs are not migrated or touched.
+- Missing Gemini credentials and per-video Gemini failures are recorded in snapshot artifacts and surfaced in the Run Manifest while the batch still writes durable downstream outputs with manual-review uncertainty.
+- Obsolete CLI tests for the retired nested layout are explicitly skipped, with replacement regressions covering success, missing Gemini evidence, and partial Gemini failure behavior in the new architecture.
+
+Files changed:
+- `batch_analysis/run.py`
+- `batch_analysis/run_manifest.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_full_batch_analysis_two_layer_cli.py`
+- `progress.txt`
+- `docs/issues/done/0024-migrate-full-batch-analysis-run-to-the-new-architecture.md`
+
+Feedback:
+- `python -m pytest tests\test_full_batch_analysis_two_layer_cli.py::FullBatchAnalysisTwoLayerCliTest::test_create_run_uses_two_layer_snapshots_gemini_adapter_and_manifest_outputs -q` failed first, then passed.
+- `python -m pytest tests\test_full_batch_analysis_two_layer_cli.py -q` passed.
+- `python -m pytest -q` passed with 36 tests, 12 skipped retired legacy nested CLI tests, and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- The legacy nested writer remains available as a compatibility helper, but it is no longer used by the normal Batch Analysis Run workflow.

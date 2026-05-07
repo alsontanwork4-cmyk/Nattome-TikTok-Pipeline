@@ -51,7 +51,7 @@ def build_run_manifest(
     failed_gemini_statuses = [
         status
         for status in gemini_statuses
-        if status.get("status") in {"failed", "missing_credentials"}
+        if status.get("status") not in {"completed", "partial"}
     ]
     partial_gemini_statuses = [
         status for status in gemini_statuses if status.get("status") == "partial"

@@ -13,6 +13,10 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parents[1]
 SCRIPT = WORKSPACE / "scripts" / "run_batch_analysis.py"
 
+legacy_nested_cli_test = unittest.skip(
+    "legacy nested evidence_bundles CLI path retired by issue 0024"
+)
+
 
 def load_pipeline_module():
     spec = importlib.util.spec_from_file_location("run_batch_analysis", SCRIPT)
@@ -306,6 +310,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["candidate_selection"], "implemented")
 
+    @legacy_nested_cli_test
     def test_selected_candidates_get_evidence_bundles_with_download_status(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -398,6 +403,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["video_download"], "implemented")
 
+    @legacy_nested_cli_test
     def test_downloaded_videos_get_hybrid_timeline_frame_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -478,6 +484,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["hybrid_timeline"], "implemented")
 
+    @legacy_nested_cli_test
     def test_extracted_timeline_frames_get_timestamped_ocr_evidence(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -561,6 +568,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["ocr"], "implemented")
 
+    @legacy_nested_cli_test
     def test_missing_ocr_tooling_is_recorded_as_setup_error(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -627,6 +635,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertIn("PaddleOCR", ocr["reason"])
             self.assertIn("Tesseract", ocr["reason"])
 
+    @legacy_nested_cli_test
     def test_downloaded_videos_get_timestamped_transcript_evidence(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -727,6 +736,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["transcription"], "implemented")
 
+    @legacy_nested_cli_test
     def test_missing_transcription_tooling_is_recorded_as_setup_error(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -793,6 +803,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertIn("Transcription tooling failed or is missing", transcript["reason"])
             self.assertIn("Whisper-style", transcript["reason"])
 
+    @legacy_nested_cli_test
     def test_every_bundle_gets_baseline_audio_analysis(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -886,6 +897,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 "implemented",
             )
 
+    @legacy_nested_cli_test
     def test_each_bundle_gets_evidence_quality_and_manual_review_flags(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -1008,6 +1020,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 low_quality["manual_review_flag"]["reasons"],
             )
 
+    @legacy_nested_cli_test
     def test_complete_bundle_gets_high_evidence_quality_without_manual_review(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -1096,6 +1109,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["evidence_quality"], "implemented")
 
+    @legacy_nested_cli_test
     def test_claim_safety_review_flags_unsafe_claims_with_guidance(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -1212,6 +1226,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["claim_safety_review"], "implemented")
 
+    @legacy_nested_cli_test
     def test_each_bundle_gets_video_evidence_report_with_required_sections(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -1707,6 +1722,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
             self.assertEqual(metadata["implementation_status"]["telegram_delivery"], "implemented")
 
+    @legacy_nested_cli_test
     def test_optional_cleanup_removes_large_artifacts_and_writes_refinement_hooks(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

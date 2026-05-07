@@ -8,7 +8,6 @@ from typing import Any
 from .candidates import load_candidates, select_candidates
 from .cleanup import cleanup_evidence_artifacts
 from .config import (
-    LEGACY_OUTPUT_SUBDIRECTORIES,
     MODE_DEFAULT_BATCH_SIZE,
     RUN_SUBDIRECTORIES,
     isoformat_z,
@@ -16,7 +15,7 @@ from .config import (
     parse_run_timestamp,
     run_folder_name,
 )
-from .evidence import write_evidence_bundles, write_snapshot_evidence_outputs
+from .evidence import write_snapshot_evidence_outputs
 from .evidence_io import EvidenceBundleStore
 from .outputs import (
     write_cross_video_pattern_summary,
@@ -25,6 +24,7 @@ from .outputs import (
 )
 from .run_manifest import build_run_manifest, write_batch_index_from_manifest
 from .telegram import deliver_telegram_brief
+from .tool_adapters import GeminiFlashAdapter
 
 def write_refinement_hooks(run_folder: Path, cross_video_summary: dict[str, Any]) -> dict[str, Any]:
     angles = cross_video_summary.get("top_priority_shootable_angles")
@@ -234,7 +234,7 @@ def create_run(args: argparse.Namespace) -> Path:
 
     selected_batch = None
     flat_evidence_index = None
-    legacy_evidence_index = None
+    gemini_evidence_statuses: list[dict[str, Any]] = []
     if candidates is not None:
         selected_batch = select_candidates(
             candidates,
@@ -247,9 +247,61 @@ def create_run(args: argparse.Namespace) -> Path:
     if selected_batch is not None:
         evidence_store = EvidenceBundleStore(run_folder)
         evidence_store.write_source_snapshots(selected_batch["selected_candidates"])
+        tool_stack_config = configuration.get("tool_stack", {})
+        gemini_adapter = getattr(args, "gemini_adapter", None) or GeminiFlashAdapter(
+            model=tool_stack_config.get("gemini_model", "gemini-2.5-flash"),
+            api_key_env=tool_stack_config.get("gemini_api_key_env", "GEMINI_API_KEY"),
+        )
         flat_index_entries = []
         for candidate in selected_batch["selected_candidates"]:
             snapshot = evidence_store.load_snapshot(candidate)
+            source_video = snapshot.get("source_video")
+            if isinstance(source_video, dict) and source_video.get("state") == "available":
+                evidence = gemini_adapter.analyze_source_video(
+                    run_folder / str(source_video["path"]),
+                    candidate,
+                )
+                snapshot = evidence_store.write_gemini_evidence(candidate, evidence)
+                gemini_evidence_statuses.append(
+                    {
+                        "candidate_id": snapshot.get("candidate_id"),
+                        "status": evidence.get("status"),
+                        "reason": evidence.get("reason"),
+                    }
+                )
+            else:
+                reason = (
+                    source_video.get("reason")
+                    if isinstance(source_video, dict)
+                    else "source video artifact is unavailable"
+                )
+                snapshot.setdefault("artifacts", {})
+                snapshot["artifacts"]["gemini_evidence"] = {
+                    "state": "missing",
+                    "path": None,
+                    "reason": reason,
+                    "missing_evidence": [
+                        "visual_observations",
+                        "visible_text",
+                        "spoken_content",
+                        "audio_cues",
+                        "hook_evidence",
+                        "claim_evidence",
+                    ],
+                }
+                snapshot_path = snapshot.get("snapshot_path")
+                if snapshot_path:
+                    (run_folder / str(snapshot_path)).write_text(
+                        json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8",
+                    )
+                gemini_evidence_statuses.append(
+                    {
+                        "candidate_id": snapshot.get("candidate_id"),
+                        "status": "missing",
+                        "reason": reason,
+                    }
+                )
             write_snapshot_evidence_outputs(run_folder, candidate, snapshot)
             flat_index_entries.append(evidence_store.load_snapshot(candidate))
         flat_evidence_index = {
@@ -260,18 +312,6 @@ def create_run(args: argparse.Namespace) -> Path:
         (run_folder / "data" / "evidence_bundle_index.json").write_text(
             json.dumps(flat_evidence_index, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
-        )
-
-        for subdirectory in LEGACY_OUTPUT_SUBDIRECTORIES:
-            if not subdirectory.startswith("batch_outputs"):
-                (run_folder / subdirectory).mkdir(parents=True, exist_ok=True)
-        legacy_evidence_index = write_evidence_bundles(
-            run_folder,
-            selected_batch,
-            args.ffmpeg_bin,
-            args.ocr_primary_bin,
-            args.ocr_fallback_bin,
-            args.transcription_bin,
         )
 
     cross_video_summary = None
@@ -332,6 +372,7 @@ def create_run(args: argparse.Namespace) -> Path:
         has_telegram_delivery=has_telegram_delivery,
         has_evidence_artifact_cleanup=has_evidence_artifact_cleanup,
         has_refinement_hooks=has_refinement_hooks,
+        gemini_evidence_statuses=gemini_evidence_statuses,
     )
     if has_structured_outputs:
         write_structured_json_and_spreadsheet_summary(
@@ -352,7 +393,7 @@ def create_run(args: argparse.Namespace) -> Path:
     if has_evidence_artifact_cleanup:
         cleanup_evidence_artifacts(
             run_folder,
-            legacy_evidence_index or flat_evidence_index,
+            flat_evidence_index,
             configuration.get("cleanup", {}),
         )
     if selected_batch is not None:
