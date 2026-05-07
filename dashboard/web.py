@@ -13,6 +13,11 @@ from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .manual_runs import trigger_manual_run
 from .quality import compute_scrape_quality_scores
+from .recommendations import (
+    VALID_RECOMMENDATION_STATUSES,
+    generate_recommendations,
+    update_recommendation_status,
+)
 from .run_history import load_run_history, load_run_history_detail
 from .settings import (
     READ_ONLY_SETTINGS,
@@ -125,6 +130,17 @@ def create_handler(
                     return
                 self._redirect("/run-history")
                 return
+            if parsed_path == "/recommendations/status":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                try:
+                    _update_recommendation_status(workspace_path, parse_qs(body))
+                except ValueError as exc:
+                    self._send_error_page(400, str(exc))
+                    return
+                self._redirect("/recommendations")
+                return
             self.send_error(404, "Dashboard route not found")
 
         def log_message(self, format: str, *args: object) -> None:
@@ -183,6 +199,8 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
         overview = _render_scrape_settings(workspace)
     elif active_path == "/run-history":
         overview = _render_run_history(workspace, run_history_run_id=run_history_run_id)
+    elif active_path == "/recommendations":
+        overview = _render_recommendations(workspace)
     else:
         overview = _render_placeholder(title)
     return f"""<!doctype html>
@@ -520,6 +538,50 @@ def render_page(active_path: str, workspace: Path, *, run_history_run_id: str = 
       display: grid;
       gap: 8px;
       margin-top: 10px;
+    }}
+    .recommendation-list {{
+      display: grid;
+      gap: 16px;
+    }}
+    .recommendation-header {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }}
+    .status-pill {{
+      background: #eef1ec;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 7px 9px;
+      white-space: nowrap;
+    }}
+    .recommendation-form {{
+      align-items: end;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }}
+    .recommendation-form select,
+    .recommendation-form input {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      font: inherit;
+      padding: 9px 10px;
+    }}
+    .recommendation-form button {{
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      padding: 10px 12px;
     }}
     code {{
       background: #eef1ec;
@@ -1414,6 +1476,120 @@ def _rollback_scrape_settings(workspace: Path, form: dict[str, list[str]]) -> No
         reason=_first_form_value(form, "reason"),
         user=_first_form_value(form, "user") or "local",
     )
+
+
+def _render_recommendations(workspace: Path) -> str:
+    recommendations = generate_recommendations(workspace)
+    if not recommendations:
+        return """
+      <h1>Passive Recommendations</h1>
+      <p class="lede">No scrape-quality recommendations need attention.</p>
+      <section class="panel">
+        <h2>Recommendations</h2>
+        <p class="muted">The current indexed scrape data does not have advisory recommendations.</p>
+      </section>
+    """
+    return f"""
+      <h1>Passive Recommendations</h1>
+      <p class="lede">Advisory scrape-quality recommendations with supporting runs, videos, source inputs, labels, and config versions. Settings are never changed automatically.</p>
+      <section class="recommendation-list" aria-label="Passive recommendations">
+        {"".join(_render_recommendation(recommendation) for recommendation in recommendations)}
+      </section>
+    """
+
+
+def _render_recommendation(recommendation: object) -> str:
+    title = str(getattr(recommendation, "recommendation_type")).replace("_", " ").title()
+    status = _display_recommendation_status(str(getattr(recommendation, "status")))
+    return f"""
+        <article class="panel">
+          <div class="recommendation-header">
+            <div>
+              <h2>{html.escape(title)}</h2>
+              <p>{html.escape(str(getattr(recommendation, "summary")))}</p>
+            </div>
+            <span class="status-pill">{html.escape(status)}</span>
+          </div>
+          {_render_recommendation_evidence(getattr(recommendation, "supporting_evidence"))}
+          {_render_recommendation_status_form(getattr(recommendation, "id"), str(getattr(recommendation, "status")))}
+        </article>
+    """
+
+
+def _render_recommendation_evidence(evidence: object) -> str:
+    if not isinstance(evidence, list) or not evidence:
+        return '<p class="muted">No supporting evidence recorded.</p>'
+    items = []
+    for item in evidence[:10]:
+        if not isinstance(item, dict):
+            continue
+        items.append(f"<li>{html.escape(_evidence_text(item))}</li>")
+    return f"""
+      <h3>Supporting evidence</h3>
+      <ul class="compact-list">{"".join(items)}</ul>
+    """
+
+
+def _evidence_text(item: dict[str, object]) -> str:
+    entity_type = str(item.get("entity_type") or "evidence")
+    if entity_type == "run":
+        return f"Run {item.get('run_id')} scored {item.get('score')}: {item.get('message')}"
+    if entity_type == "video":
+        source = f" from {item.get('source_input')}" if item.get("source_input") else ""
+        return f"Video {item.get('video_id')}{source}: {item.get('caption')}"
+    if entity_type == "source_input":
+        return (
+            f"Source input {item.get('source_input')}: "
+            f"{item.get('candidate_count')} candidates, {item.get('eligible_count')} eligible"
+        )
+    if entity_type == "label":
+        note = f" Note: {item.get('note')}" if item.get("note") else ""
+        exclude_reason = (
+            f" Exclude similar reason: {item.get('exclude_similar_reason')}"
+            if item.get("exclude_similar_reason")
+            else ""
+        )
+        return f"Label {item.get('label')} on video {item.get('video_id')}.{note}{exclude_reason}"
+    if entity_type == "config_version":
+        return f"Config version {item.get('version')} used by run {item.get('run_id')}"
+    return json.dumps(item, ensure_ascii=True, sort_keys=True)
+
+
+def _render_recommendation_status_form(recommendation_id: int, active_status: str) -> str:
+    options = []
+    for status in sorted(VALID_RECOMMENDATION_STATUSES):
+        selected = " selected" if status == active_status else ""
+        options.append(
+            f'<option value="{html.escape(status)}"{selected}>{html.escape(_display_recommendation_status(status))}</option>'
+        )
+    return f"""
+      <form class="recommendation-form" method="post" action="/recommendations/status">
+        <input type="hidden" name="recommendation_id" value="{recommendation_id}">
+        <label class="field-label">
+          Lifecycle state
+          <select name="status">{"".join(options)}</select>
+        </label>
+        <label class="field-label">
+          User
+          <input type="text" name="user" value="local" maxlength="120">
+        </label>
+        <button type="submit">Update state</button>
+      </form>
+    """
+
+
+def _update_recommendation_status(workspace: Path, form: dict[str, list[str]]) -> None:
+    recommendation_id = int(_first_form_value(form, "recommendation_id") or "0")
+    update_recommendation_status(
+        workspace,
+        recommendation_id,
+        _first_form_value(form, "status"),
+        user=_first_form_value(form, "user") or "local",
+    )
+
+
+def _display_recommendation_status(status: str) -> str:
+    return status.replace("_", " ")
 
 
 def _settings_form_payload(form: dict[str, list[str]]) -> dict[str, object]:

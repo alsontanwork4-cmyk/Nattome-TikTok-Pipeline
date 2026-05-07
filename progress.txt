@@ -1206,3 +1206,31 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Per instruction, this loop stops after completing the current issue because the context window is past the requested threshold. The next available issue is `0046-generate-passive-scrape-recommendations.md`.
+
+## 2026-05-07 - 0046 Generate Passive Scrape Recommendations
+
+Task completed from `docs/issues/0046-generate-passive-scrape-recommendations.md`.
+
+Key decisions made:
+- Added `dashboard.recommendations` as the public advisory recommendation module.
+- Recommendations are generated from low Scrape Quality drivers for weak source input performance, low eligibility yield, stale videos, low relevance, low engagement, and duplicate/noise control.
+- Supporting evidence records link back to runs, videos, source inputs, curation labels/notes, and config versions where available.
+- Recommendation lifecycle states are restricted to `needs_more_data`, `accepted`, `ignored`, and `resolved`.
+- Lifecycle updates only mutate recommendation rows; they do not change scrape settings or recompute/mutate score rows.
+- Active config changes resolve stale recommendations whose evidence points at an older config version.
+- The dashboard `/recommendations` route now renders passive recommendations and supports lifecycle state updates through `/recommendations/status`.
+
+Files changed:
+- `dashboard/recommendations.py`
+- `dashboard/web.py`
+- `tests/test_dashboard_recommendations.py`
+- `progress.txt`
+- `docs/issues/done/0046-generate-passive-scrape-recommendations.md`
+
+Feedback:
+- `python -m pytest tests/test_dashboard_recommendations.py -q` first failed with `ModuleNotFoundError: No module named 'dashboard.recommendations'`, then passed with 5 tests after implementation and web wiring.
+- `python -m pytest tests/test_dashboard_shell.py tests/test_scrape_quality_score.py tests/test_scrape_settings.py tests/test_dashboard_recommendations.py -q` passed with 21 tests and 6 subtests.
+- `python -m pytest -q` passed with 85 tests and 7 subtests.
+
+Blockers or notes for the next iteration:
+- Per instruction, this loop stops after completing the current issue. The next available issue is `0047-build-candidate-and-approved-pattern-library.md`.
