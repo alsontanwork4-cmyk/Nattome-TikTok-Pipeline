@@ -18,6 +18,7 @@ DERIVED_TABLES = (
     "batch_runs",
     "run_outputs",
     "documentation_records",
+    "pipeline_health_summaries",
 )
 
 

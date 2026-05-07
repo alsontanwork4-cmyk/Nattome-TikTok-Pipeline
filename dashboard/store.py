@@ -236,3 +236,15 @@ def _create_artifact_tables(connection: sqlite3.Connection) -> None:
         )
         """
     )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS pipeline_health_summaries (
+            run_id TEXT PRIMARY KEY,
+            severity TEXT NOT NULL,
+            status TEXT NOT NULL,
+            impact_summary TEXT NOT NULL,
+            items_json TEXT NOT NULL DEFAULT '[]',
+            computed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )

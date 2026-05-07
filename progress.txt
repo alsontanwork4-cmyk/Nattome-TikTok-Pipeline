@@ -1031,3 +1031,31 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0040-summarize-pipeline-health.md` is next.
+
+## 2026-05-07 - 0040 Summarize Pipeline Health
+
+Task completed from `docs/issues/0040-summarize-pipeline-health.md`.
+
+Key decisions made:
+- Added `dashboard.health.compute_pipeline_health(workspace)` as the public operational-health summarizer for indexed Batch Analysis Runs.
+- Kept Pipeline Health separate from Scrape Quality by reading indexed artifacts, phase state, logs, and bundle files without feeding those signals into score components.
+- Represented health with severity levels `info`, `warning`, `error`, and `blocked`, plus marketer-first impact summaries and per-component technical drill-down.
+- Persisted summaries in `pipeline_health_summaries` so dashboard views can read a compact current snapshot.
+- Covered Apify scrape state, raw candidates, selected batches, source videos, Gemini evidence, report generation, spreadsheet output, Telegram delivery, and extra failed or blocked phases.
+
+Files changed:
+- `dashboard/health.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_pipeline_health.py`
+- `progress.txt`
+- `docs/issues/done/0040-summarize-pipeline-health.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_pipeline_health` first failed with `ModuleNotFoundError: No module named 'dashboard.health'`, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer tests.test_scrape_quality_score tests.test_pipeline_health` passed with 10 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 62 tests.
+- Real-workspace smoke passed: artifact index summary was `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)` and health summaries were `20260507T074346Z_default` as `blocked/blocked` and `20260507T074557Z_default` as `partial/warning`.
+
+Blockers or notes for the next iteration:
+- Issue `0041-build-latest-run-overview.md` is next.
