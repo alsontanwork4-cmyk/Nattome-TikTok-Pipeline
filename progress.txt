@@ -894,3 +894,29 @@ Feedback:
 Blockers or notes for the next iteration:
 - Issue `0034-delete-skipped-legacy-nested-pipeline-tests.md` is next.
 - Per user instruction, stop after this issue because the context window is high.
+
+## 2026-05-07 - 0034 Delete Skipped Legacy Nested Pipeline Tests
+
+Task completed from `docs/issues/0034-delete-skipped-legacy-nested-pipeline-tests.md`.
+
+Key decisions made:
+- Deleted the `legacy_nested_cli_test` skip decorator instead of re-enabling retired tests.
+- Deleted the skipped legacy nested evidence-bundle CLI tests from `tests/test_batch_analysis_run.py`.
+- Removed local fake FFmpeg/OCR/transcription helper methods that only supported the retired tests.
+- Kept current two-layer Gemini coverage in `tests/test_full_batch_analysis_two_layer_cli.py` as the active regression surface.
+
+Files changed:
+- `tests/test_batch_analysis_run.py`
+- `progress.txt`
+- `docs/issues/done/0034-delete-skipped-legacy-nested-pipeline-tests.md`
+
+Feedback:
+- Static search found the legacy skip decorator and removed CLI flags before deletion.
+- Static search after deletion found no `legacy_nested_cli_test`, no legacy skip reason, and no active test usage of `--ffmpeg-bin`, `--ocr-primary-bin`, `--ocr-fallback-bin`, or `--transcription-bin`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_batch_analysis_run -v` passed with 7 tests and 0 skipped.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 49 tests and 0 skipped.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest -q` could not run because `pytest` is not installed in the shared venv.
+
+Blockers or notes for the next iteration:
+- Issue `0035-remove-user-facing-daily-brief-final-output-references.md` is next.
+- Per user instruction, stop after this issue because the context window is high.
