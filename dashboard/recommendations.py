@@ -9,7 +9,7 @@ from typing import Any
 from .indexer import index_pipeline_artifacts
 from .quality import compute_scrape_quality_scores
 from .settings import get_active_settings_version
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 VALID_RECOMMENDATION_STATUSES = {"needs_more_data", "accepted", "ignored", "resolved"}
@@ -57,11 +57,9 @@ def generate_recommendations(workspace: Path | str = ".") -> list[Recommendation
     workspace_path = Path(workspace)
     index_pipeline_artifacts(workspace_path)
     compute_scrape_quality_scores(workspace_path)
-    db_path = initialize_dashboard_store(workspace_path)
     active_config = _active_config_label(workspace_path)
 
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         _ensure_recommendation_columns(connection)
         if active_config:
@@ -88,9 +86,7 @@ def generate_recommendations(workspace: Path | str = ".") -> list[Recommendation
 
 
 def list_recommendations(workspace: Path | str = ".") -> list[Recommendation]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_recommendation_columns(connection)
         return _list_recommendations(connection)
@@ -110,9 +106,7 @@ def update_recommendation_status(
             "recommendation status must be one of: "
             + ", ".join(sorted(VALID_RECOMMENDATION_STATUSES))
         )
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_recommendation_columns(connection)
         resolved_sql = ", resolved_at = CURRENT_TIMESTAMP" if status == "resolved" else ""
@@ -341,7 +335,7 @@ def _insert_recommendation_if_missing(
         (
             recommendation_type,
             summary,
-            json.dumps(evidence, ensure_ascii=True, sort_keys=True),
+            dump_json(evidence),
             fingerprint,
         ),
     )

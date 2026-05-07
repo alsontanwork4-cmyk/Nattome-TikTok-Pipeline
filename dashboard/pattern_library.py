@@ -8,7 +8,7 @@ from statistics import median
 from typing import Any
 
 from .indexer import index_pipeline_artifacts
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 APPROVED_PATTERN_STATUSES = {"draft", "approved", "archived"}
@@ -70,9 +70,7 @@ def generate_candidate_patterns(
 ) -> list[CandidatePattern]:
     workspace_path = Path(workspace)
     index_pipeline_artifacts(workspace_path)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         videos = _load_pattern_source_videos(connection)
         if not videos:
@@ -112,9 +110,7 @@ def generate_candidate_patterns(
 
 
 def list_candidate_patterns(workspace: Path | str = ".") -> list[CandidatePattern]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         return _fetch_candidate_patterns(connection)
     finally:
@@ -128,9 +124,7 @@ def approve_candidate_pattern(
     user: str = "local",
     notes: str = "",
 ) -> ApprovedPattern:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         candidate = _candidate_by_id(connection, candidate_id)
         if candidate is None:
@@ -174,9 +168,7 @@ def create_approved_pattern(
 ) -> ApprovedPattern:
     if status not in APPROVED_PATTERN_STATUSES:
         raise ValueError(f"Invalid pattern status: {status}")
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         payload = _approved_payload(fields)
         cursor = connection.execute(
@@ -215,9 +207,7 @@ def update_approved_pattern(
     *,
     user: str = "local",
 ) -> ApprovedPattern:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         current = _approved_by_id(connection, pattern_id)
         merged = _approved_payload({**_approved_to_payload(current), **fields})
@@ -259,9 +249,7 @@ def archive_approved_pattern(
     *,
     user: str = "local",
 ) -> ApprovedPattern:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         current = _approved_by_id(connection, pattern_id)
         version = current.version + 1
@@ -285,9 +273,7 @@ def archive_approved_pattern(
 
 
 def list_approved_patterns(workspace: Path | str = ".") -> list[ApprovedPattern]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         rows = connection.execute(
             """
@@ -305,9 +291,7 @@ def list_pattern_versions(
     workspace: Path | str,
     pattern_id: int,
 ) -> list[PatternVersion]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         rows = connection.execute(
             """
@@ -706,4 +690,4 @@ def _json_loads(value: object) -> dict[str, object]:
 
 
 def _json_dumps(value: object) -> str:
-    return json.dumps(value, ensure_ascii=True, sort_keys=True)
+    return dump_json(value)

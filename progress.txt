@@ -1426,3 +1426,40 @@ Feedback:
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - Continue with `docs/issues/0055-localize-store-access-for-heavy-dashboard-callers.md` next if context allows.
+
+## 2026-05-07 - 0055 Localize Store Access For Heavy Dashboard Callers
+
+Task completed from `docs/issues/0055-localize-store-access-for-heavy-dashboard-callers.md`.
+
+Key decisions made:
+- Migrated heavier dashboard callers to `connect_dashboard_store` for store initialization and row-style SQLite access.
+- Kept feature-specific SQL in the owning feature modules and preserved explicit close/commit behavior.
+- Centralized deterministic JSON dumps through `store.dump_json` where the existing behavior matched exactly.
+- Left local JSON load helpers in place where fallback behavior or accepted input types differ by feature.
+- Did not introduce a table repository layer, storage adapter abstraction, or connection context manager.
+
+Files changed:
+- `dashboard/architecture.py`
+- `dashboard/exports.py`
+- `dashboard/health.py`
+- `dashboard/indexer.py`
+- `dashboard/nattome_pov_library.py`
+- `dashboard/pattern_library.py`
+- `dashboard/quality.py`
+- `dashboard/recommendations.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `tests/test_dashboard_architecture_characterization.py`
+- `progress.txt`
+- `docs/issues/done/0055-localize-store-access-for-heavy-dashboard-callers.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_architecture_characterization.py::DashboardArchitectureCharacterizationTest::test_heavy_dashboard_modules_use_store_connection_helper -q` failed across the targeted heavy modules because they still called `initialize_dashboard_store` and `sqlite3.connect` directly.
+- GREEN: `python -m pytest tests/test_dashboard_architecture_characterization.py::DashboardArchitectureCharacterizationTest::test_heavy_dashboard_modules_use_store_connection_helper -q` passed with 1 test and 10 subtests.
+- `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py tests/test_dashboard_global_search.py tests/test_dashboard_nattome_pov_library.py tests/test_dashboard_pattern_library.py tests/test_dashboard_pipeline_architecture.py tests/test_dashboard_recommendations.py tests/test_dashboard_run_history.py tests/test_pipeline_health.py tests/test_scrape_quality_score.py -q` passed with 36 tests and 28 subtests.
+- `python -m pytest -q` passed with 111 tests and 45 subtests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m pytest ...` could not run because that virtualenv does not have `pytest`; the system `python -m pytest` runner was used for the red, green, and full-suite feedback loops.
+- Continue with `docs/issues/0056-centralize-dashboard-derived-refresh.md` next if context allows.

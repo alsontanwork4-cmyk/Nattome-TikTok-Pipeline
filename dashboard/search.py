@@ -9,7 +9,7 @@ from typing import Any
 
 from .indexer import index_pipeline_artifacts
 from .quality import NATTOME_TERMS, compute_scrape_quality_scores
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store
 
 
 @dataclass(frozen=True)
@@ -60,9 +60,7 @@ def search_dashboard_records(
 
 
 def _collect_records(workspace: Path) -> list[SearchResult]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         run_context = _run_context(connection)
         records: list[SearchResult] = []

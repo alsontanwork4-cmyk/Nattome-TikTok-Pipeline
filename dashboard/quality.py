@@ -7,7 +7,7 @@ from pathlib import Path
 import sqlite3
 from typing import Any
 
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 COMPONENT_WEIGHTS = {
@@ -50,9 +50,7 @@ class ScrapeQualityScore:
 def compute_scrape_quality_scores(workspace: Path | str = ".") -> list[ScrapeQualityScore]:
     """Compute and persist scrape-only quality scores for indexed Batch Analysis Runs."""
     workspace_path = Path(workspace)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         connection.execute("DELETE FROM scrape_quality_scores")
         scores = [
@@ -165,7 +163,7 @@ def _persist_score(connection: sqlite3.Connection, score: ScrapeQualityScore) ->
             score.components["freshness"],
             score.components["engagement_strength"],
             score.components["duplicate_noise_control"],
-            json.dumps(score.drivers, ensure_ascii=True, sort_keys=True),
+            dump_json(score.drivers),
         ),
     )
 

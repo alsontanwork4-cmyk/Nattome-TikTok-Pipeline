@@ -7,7 +7,7 @@ from sqlite3 import Connection
 import sqlite3
 from typing import Any, Iterable
 
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 DERIVED_TABLES = (
@@ -33,8 +33,7 @@ class IndexSummary:
 
 def index_pipeline_artifacts(workspace: Path | str = ".") -> IndexSummary:
     workspace_path = Path(workspace)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
+    connection = connect_dashboard_store(workspace_path)
     try:
         _clear_derived_records(connection)
         _index_raw_scrapes(connection, workspace_path)
@@ -509,7 +508,7 @@ def _normalize_path_text(path: object) -> str:
 
 
 def _json_dumps(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=True, sort_keys=True)
+    return dump_json(value)
 
 
 def _int_or_none(value: Any) -> int | None:

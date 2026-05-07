@@ -5,7 +5,7 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 NATTOME_POV_STATUSES = {"draft", "approved", "archived"}
@@ -53,9 +53,7 @@ def create_nattome_pov(
 ) -> NattomePov:
     if status not in NATTOME_POV_STATUSES:
         raise ValueError(f"Invalid Nattome POV status: {status}")
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_pov_version_table(connection)
         payload = _pov_payload(fields)
@@ -95,9 +93,7 @@ def update_nattome_pov(
     *,
     user: str = "local",
 ) -> NattomePov:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_pov_version_table(connection)
         current = _pov_by_id(connection, pov_id)
@@ -140,9 +136,7 @@ def archive_nattome_pov(
     *,
     user: str = "local",
 ) -> NattomePov:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_pov_version_table(connection)
         current = _pov_by_id(connection, pov_id)
@@ -167,9 +161,7 @@ def archive_nattome_pov(
 
 
 def list_nattome_povs(workspace: Path | str = ".") -> list[NattomePov]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_pov_version_table(connection)
         rows = connection.execute(
@@ -188,9 +180,7 @@ def list_nattome_pov_versions(
     workspace: Path | str,
     pov_id: int,
 ) -> list[NattomePovVersion]:
-    db_path = initialize_dashboard_store(workspace)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace)
     try:
         _ensure_pov_version_table(connection)
         rows = connection.execute(
@@ -386,4 +376,4 @@ def _json_loads(value: object) -> dict[str, object]:
 
 
 def _json_dumps(value: object) -> str:
-    return json.dumps(value, ensure_ascii=True, sort_keys=True)
+    return dump_json(value)

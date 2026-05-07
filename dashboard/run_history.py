@@ -10,7 +10,7 @@ from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
 from .manual_runs import list_manual_runs
 from .quality import NATTOME_TERMS, compute_scrape_quality_scores
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store
 
 
 @dataclass(frozen=True)
@@ -91,9 +91,7 @@ class RunHistory:
 def load_run_history(workspace: Path | str = ".") -> RunHistory:
     workspace_path = Path(workspace)
     _refresh_derived_dashboard_data(workspace_path)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         scheduled_rows = [
             _scheduled_run_row(connection, row)
@@ -127,8 +125,7 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
     row = next((candidate for candidate in history.rows if candidate.run_id == run_id), None)
     if row is None:
         raise ValueError(f"run not found: {run_id}")
-    connection = sqlite3.connect(workspace_path / DASHBOARD_DB_PATH)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         run = connection.execute("SELECT * FROM batch_runs WHERE run_id = ?", (run_id,)).fetchone()
         if run is None:

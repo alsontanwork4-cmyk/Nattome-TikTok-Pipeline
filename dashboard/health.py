@@ -6,7 +6,7 @@ from pathlib import Path
 import sqlite3
 from typing import Any
 
-from .store import initialize_dashboard_store
+from .store import connect_dashboard_store, dump_json
 
 
 SEVERITY_ORDER = {
@@ -38,9 +38,7 @@ class PipelineHealthSummary:
 def compute_pipeline_health(workspace: Path | str = ".") -> list[PipelineHealthSummary]:
     """Summarize operational health for indexed Batch Analysis Runs."""
     workspace_path = Path(workspace)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         connection.execute("DELETE FROM pipeline_health_summaries")
         summaries = [
@@ -553,7 +551,7 @@ def _persist_summary(connection: sqlite3.Connection, summary: PipelineHealthSumm
             summary.severity,
             summary.status,
             summary.impact_summary,
-            json.dumps([asdict(item) for item in summary.items], ensure_ascii=True, sort_keys=True),
+            dump_json([asdict(item) for item in summary.items]),
         ),
     )
 

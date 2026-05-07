@@ -10,7 +10,7 @@ from typing import Any
 from .nattome_pov_library import list_nattome_povs
 from .pattern_library import list_approved_patterns
 from .run_history import load_run_history
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store
 
 
 RAW_VIDEO_CSV_COLUMNS = [
@@ -63,9 +63,7 @@ def export_raw_videos_csv(
     filters: dict[str, str] | None = None,
 ) -> str:
     workspace_path = Path(workspace)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         run_config_versions = _run_config_versions(connection)
         rows = [

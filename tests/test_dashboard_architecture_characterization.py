@@ -1,16 +1,48 @@
 import html
 import http.client
+import inspect
 import sqlite3
 import tempfile
 import threading
 import unittest
 from pathlib import Path
 
+import dashboard.architecture as dashboard_architecture
+import dashboard.exports as dashboard_exports
+import dashboard.health as dashboard_health
+import dashboard.indexer as dashboard_indexer
+import dashboard.nattome_pov_library as dashboard_nattome_pov_library
+import dashboard.pattern_library as dashboard_pattern_library
+import dashboard.quality as dashboard_quality
+import dashboard.recommendations as dashboard_recommendations
+import dashboard.run_history as dashboard_run_history
+import dashboard.search as dashboard_search
 import dashboard.web as dashboard_web
 from dashboard.store import DASHBOARD_DB_PATH
 
 
 class DashboardArchitectureCharacterizationTest(unittest.TestCase):
+    def test_heavy_dashboard_modules_use_store_connection_helper(self):
+        modules = [
+            dashboard_architecture,
+            dashboard_exports,
+            dashboard_health,
+            dashboard_indexer,
+            dashboard_nattome_pov_library,
+            dashboard_pattern_library,
+            dashboard_quality,
+            dashboard_recommendations,
+            dashboard_run_history,
+            dashboard_search,
+        ]
+
+        for module in modules:
+            with self.subTest(module=module.__name__):
+                source = inspect.getsource(module)
+
+                self.assertNotIn("initialize_dashboard_store(", source)
+                self.assertNotIn("sqlite3.connect(", source)
+
     def test_public_dashboard_web_imports_remain_usable(self):
         namespace: dict[str, object] = {}
 

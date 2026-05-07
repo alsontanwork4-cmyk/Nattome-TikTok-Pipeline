@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .indexer import index_pipeline_artifacts
-from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
+from .store import connect_dashboard_store
 
 
 @dataclass(frozen=True)
@@ -59,9 +59,7 @@ def load_pipeline_architecture(workspace: Path | str = ".") -> PipelineArchitect
     """Build a read-only architecture view model from indexed pipeline artifacts."""
     workspace_path = Path(workspace)
     index_pipeline_artifacts(workspace_path)
-    db_path = initialize_dashboard_store(workspace_path)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    connection = connect_dashboard_store(workspace_path)
     try:
         latest_run = _latest_run(connection)
         documents = _documents(connection)
