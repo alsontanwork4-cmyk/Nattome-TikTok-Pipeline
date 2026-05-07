@@ -119,6 +119,12 @@ C:\Users\Alson\.venv\Scripts\python.exe -m dashboard.web
 
 The app runs at `http://127.0.0.1:8765` by default and initializes its dashboard-owned SQLite state at `data/dashboard/dashboard.sqlite3`. The initial shell includes navigation for Overview, Scraped Content, Run History, Scrape Settings, Recommendations, Pattern Library, Nattome POV Library, and Pipeline Architecture. The Overview route loads without Apify, Gemini, or existing run artifacts.
 
+Rebuild the dashboard's artifact-derived SQLite index from existing repo files:
+
+```powershell
+C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"
+```
+
 ## Running On a Schedule
 
 The two skills are wired to run via the `anthropic-skills:schedule` skill. Each schedule entry is just a prompt — the prompt's wording triggers the matching skill via its `description:` field.

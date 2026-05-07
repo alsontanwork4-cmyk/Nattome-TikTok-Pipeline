@@ -128,3 +128,93 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
         )
         """
     )
+    _create_artifact_tables(connection)
+
+
+def _create_artifact_tables(connection: sqlite3.Connection) -> None:
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS artifact_sources (
+            path TEXT PRIMARY KEY,
+            artifact_type TEXT NOT NULL,
+            generated_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS raw_videos (
+            video_id TEXT PRIMARY KEY,
+            source_artifact_path TEXT NOT NULL,
+            tiktok_url TEXT,
+            author_handle TEXT,
+            caption TEXT,
+            hashtags_json TEXT NOT NULL DEFAULT '[]',
+            source_input TEXT,
+            play_count INTEGER,
+            like_count INTEGER,
+            comment_count INTEGER,
+            share_count INTEGER,
+            created_at TEXT,
+            is_downloadable INTEGER NOT NULL DEFAULT 0,
+            run_id TEXT,
+            config_version TEXT,
+            selection_status TEXT NOT NULL DEFAULT 'raw',
+            raw_json TEXT NOT NULL DEFAULT '{}',
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS selected_batches (
+            path TEXT PRIMARY KEY,
+            run_id TEXT NOT NULL,
+            selected_at TEXT,
+            candidate_source TEXT,
+            selected_candidate_count INTEGER NOT NULL DEFAULT 0,
+            raw_json TEXT NOT NULL DEFAULT '{}',
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS batch_runs (
+            run_id TEXT PRIMARY KEY,
+            run_folder TEXT NOT NULL,
+            run_timestamp TEXT,
+            mode TEXT,
+            requested_batch_size INTEGER,
+            manifest_path TEXT,
+            metadata_path TEXT,
+            raw_json TEXT NOT NULL DEFAULT '{}',
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS run_outputs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT NOT NULL,
+            artifact_path TEXT NOT NULL,
+            artifact_type TEXT NOT NULL,
+            label TEXT NOT NULL,
+            exists_on_disk INTEGER NOT NULL DEFAULT 0,
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS documentation_records (
+            path TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            doc_type TEXT NOT NULL,
+            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )

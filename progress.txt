@@ -975,3 +975,32 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0038-index-pipeline-artifacts-into-sqlite.md` is next, but per user instruction only continue after the current issue passes. This slice is complete and green.
+
+## 2026-05-07 - 0038 Index Pipeline Artifacts Into SQLite
+
+Task completed from `docs/issues/0038-index-pipeline-artifacts-into-sqlite.md`.
+
+Key decisions made:
+- Added `dashboard.indexer.index_pipeline_artifacts(workspace)` as the public reindexing interface.
+- Added artifact-derived SQLite tables for raw videos, raw scrape sources, selected batches, Batch Analysis Runs, run outputs, and documentation records.
+- Kept artifact-derived reindex deletion scoped to derived tables so dashboard-owned curation, config versions, recommendations, approved patterns, and Nattome POV edits are preserved.
+- Normalized raw scraped videos as the primary content records and represented selected/analyzed state as `selection_status` on `raw_videos`.
+- Treated repeated TikTok IDs across raw scrape files as upserts into one dashboard record.
+- Indexed README, CONTEXT, PRDs, ADRs, and local skill docs as read-only documentation records.
+
+Files changed:
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_dashboard_artifact_indexer.py`
+- `README.md`
+- `progress.txt`
+- `docs/issues/done/0038-index-pipeline-artifacts-into-sqlite.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_artifact_indexer` failed first with `ModuleNotFoundError: No module named 'dashboard.indexer'`, then passed after adding the indexer.
+- `C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"` initially failed on duplicate raw video IDs across scrape files, then passed after adding raw video upsert behavior.
+- Real-workspace index smoke result: `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 53 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0039-compute-scrape-quality-score.md` is next.
