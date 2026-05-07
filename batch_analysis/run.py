@@ -17,6 +17,7 @@ from .config import (
     run_folder_name,
 )
 from .evidence import write_evidence_bundles
+from .evidence_io import EvidenceBundleStore
 from .outputs import (
     write_cross_video_pattern_summary,
     write_selected_batch,
@@ -244,6 +245,9 @@ def create_run(args: argparse.Namespace) -> Path:
 
     evidence_index = None
     if selected_batch is not None:
+        EvidenceBundleStore(run_folder).write_source_snapshots(
+            selected_batch["selected_candidates"],
+        )
         evidence_index = write_evidence_bundles(
             run_folder,
             selected_batch,
