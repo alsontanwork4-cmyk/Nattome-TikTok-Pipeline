@@ -321,7 +321,7 @@ def create_run(args: argparse.Namespace) -> Path:
                 "path": report_status["path"],
             },
             {
-                "label": "Top 5 Angle Planning Workbook",
+                "label": "Excel Planning Workbook",
                 "kind": "spreadsheet",
                 "path": workbook_status["path"],
             },

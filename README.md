@@ -7,7 +7,7 @@ Two-tier content intelligence pipeline for **Nattome** (Atomic Group's flagship 
 | Cadence | Skill | Output | Runtime |
 |---|---|---|---|
 | **Daily** | `nattome-daily-discovery` | `outputs/daily_briefs/daily_brief_<date>.md` (top 5 viral videos + 3 Nattome angles each) | 3–8 min |
-| **Weekly** | `nattome-batch-analysis` | `runs/batch-analysis/<ts>_default/` — per-video Video Evidence Reports, Cross-Video Pattern Summary, JSON, CSV | 15–30 min |
+| **Weekly** | `nattome-batch-analysis` | `outputs/reports/<date>/top5_creative_production_report_<date>.md` + `top5_angle_planning_sheet_<date>.xlsx` | 15–30 min |
 
 Both skills live under `skills/` and are loaded automatically by Claude Code via `.claude/settings.json`.
 
@@ -32,6 +32,7 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 │   └── issues/{,done/}            ← implementation tickets
 ├── data/raw_scrapes/              ← raw Apify TikTok scrapes (input to batch run)
 ├── outputs/daily_briefs/          ← daily brief deliverables
+├── outputs/reports/               ← weekly final report + Excel workbook deliverables
 └── runs/batch-analysis/           ← timestamped weekly run folders
 ```
 
@@ -62,7 +63,8 @@ Implementation logic lives in `batch_analysis/`:
 | `claim_safety.py` | Claim safety review rules and report writing. |
 | `evidence_quality.py` | Evidence Quality Score and manual review flag logic. |
 | `reports.py` | Per-video Video Evidence Report generation. |
-| `outputs.py` | Batch-level summaries, JSON output, CSV spreadsheet, and priority scoring. |
+| `outputs.py` | Internal structured summaries plus the Top 5 Creative Production Report. |
+| `planning_workbook.py` | Excel angle planning workbook generation. |
 | `telegram.py` | Optional Telegram delivery. |
 | `cleanup.py` | Optional evidence artifact cleanup. |
 | `run.py` | End-to-end weekly batch orchestration. |
@@ -102,6 +104,8 @@ python scripts/run_batch_analysis.py `
 ```
 
 The CLI interface is preserved for compatibility. Use it from Codex, Claude Code, schedules, or PowerShell exactly as before.
+
+Completed weekly runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
 
 Or ask Claude Code: *"Run the Nattome weekly batch evidence analysis on this week's top candidates."*
 

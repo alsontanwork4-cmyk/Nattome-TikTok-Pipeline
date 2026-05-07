@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
@@ -19,6 +20,32 @@ def telegram_credentials(telegram_config: dict[str, Any]) -> tuple[str | None, s
         missing.append(chat_id_env)
     return str(token) if token else None, str(chat_id) if chat_id else None, missing
 
+def report_date_from_metadata(metadata: dict[str, Any]) -> str:
+    run_timestamp = str(metadata.get("run_timestamp") or "")
+    try:
+        return datetime.fromisoformat(run_timestamp.replace("Z", "+00:00")).date().isoformat()
+    except ValueError:
+        return "unknown-date"
+
+def default_final_outputs(metadata: dict[str, Any]) -> list[dict[str, str]]:
+    report_date = report_date_from_metadata(metadata)
+    return [
+        {
+            "label": "Top 5 Creative Production Report",
+            "path": (
+                f"reports/{report_date}/"
+                f"top5_creative_production_report_{report_date}.md"
+            ),
+        },
+        {
+            "label": "Excel Planning Workbook",
+            "path": (
+                f"reports/{report_date}/"
+                f"top5_angle_planning_sheet_{report_date}.xlsx"
+            ),
+        },
+    ]
+
 def build_telegram_brief_message(
     run_folder: Path,
     metadata: dict[str, Any],
@@ -32,7 +59,7 @@ def build_telegram_brief_message(
         recommendation = {}
 
     lines = [
-        "Nattome Weekly Evidence Brief",
+        "Nattome Batch Analysis Final Outputs",
         f"Run: {metadata.get('run_timestamp', 'unknown')} ({metadata.get('mode', 'unknown')})",
         f"Videos compared: {cross_video_summary.get('source_video_count', 0)}",
         (
@@ -60,21 +87,13 @@ def build_telegram_brief_message(
         lines.append("No shootable angles available.")
 
     lines.extend(["", "Outputs:"])
-    if final_outputs:
-        for output in final_outputs:
-            if not isinstance(output, dict):
-                continue
-            label = output.get("label", "Output")
-            path = output.get("path", "")
-            lines.append(f"{label}: {path}")
-    else:
-        lines.extend(
-            [
-                "Markdown: reports/cross_video_pattern_summary.md",
-                "JSON: data/structured_batch_analysis.json",
-                "Spreadsheet: data/spreadsheet_summary.csv",
-            ]
-        )
+    outputs = final_outputs if final_outputs else default_final_outputs(metadata)
+    for output in outputs:
+        if not isinstance(output, dict):
+            continue
+        label = output.get("label", "Output")
+        path = output.get("path", "")
+        lines.append(f"{label}: {path}")
     lines.append(f"Run folder: {run_folder}")
     return "\n".join(lines)
 

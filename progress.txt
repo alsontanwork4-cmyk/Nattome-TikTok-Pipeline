@@ -740,3 +740,37 @@ Blockers or notes for the next iteration:
 - The current sandbox cannot run the project tests through normal `tempfile.TemporaryDirectory`; the stdlib temp folders are created without usable write access, so verification used a workspace temp-directory harness.
 - The bundled Python runtime does not include `pytest`, and the shared `python.exe`/venv launchers are inaccessible in this sandbox.
 - Per user instruction, stop after this issue because the context window is high; issue 0029 remains next.
+
+## 2026-05-07 - 0029 Update Delivery Cleanup Docs And Skills For New Output Set
+
+Task completed from `docs/issues/0029-update-delivery-cleanup-docs-and-skills-for-new-output-set.md`.
+
+Key decisions made:
+- Telegram delivery now labels the message as `Nattome Batch Analysis Final Outputs` and defaults to the dated Top 5 Creative Production Report plus Excel Planning Workbook paths when an explicit final output list is not supplied.
+- Completed run manifests now use the user-facing `Excel Planning Workbook` label for the workbook final output.
+- Cleanup regression coverage verifies that manifest-registered final report and workbook files are preserved while source video artifacts are removed.
+- README and the Nattome batch analysis skill now describe the weekly final output set as `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md` and `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx`; old Cross-Video Markdown and CSV final-output language was removed from current-facing instructions.
+
+Files changed:
+- `README.md`
+- `batch_analysis/run.py`
+- `batch_analysis/telegram.py`
+- `skills/nattome-batch-analysis/SKILL.md`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_cleanup.py`
+- `tests/test_telegram_delivery.py`
+- `progress.txt`
+- `docs/issues/done/0029-update-delivery-cleanup-docs-and-skills-for-new-output-set.md`
+
+Feedback:
+- `python -m unittest tests.test_telegram_delivery tests.test_cleanup -v` could not run through the Windows Store `python.exe` shim.
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m unittest tests.test_telegram_delivery tests.test_cleanup -v` showed the intended Telegram fallback failure first, then exposed the existing sandbox `tempfile.TemporaryDirectory` ACL problem.
+- Workspace temp-directory harness for `tests.test_telegram_delivery` failed first on the stale `Weekly Evidence Brief` heading, then passed after the Telegram title update.
+- Workspace temp-directory harness for `tests.test_telegram_delivery` and `tests.test_cleanup` passed.
+- Workspace temp-directory harness for the CLI Telegram regression, full two-layer CLI tests, Top 5 report tests, and workbook tests passed after correcting one local test selector typo.
+- Workspace temp-directory harness for `unittest discover -s tests` passed with 60 tests and 14 skipped legacy nested-layout tests.
+- `C:\Users\Alson\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m py_compile batch_analysis\telegram.py batch_analysis\run.py tests\test_telegram_delivery.py tests\test_cleanup.py tests\test_batch_analysis_run.py` passed.
+
+Blockers or notes for the next iteration:
+- No `0030` issue file exists under `docs/issues`; after moving `0029`, there are no active AFK issue files left in `docs/issues`.
+- The sandbox still cannot use normal `tempfile.TemporaryDirectory`; continue using a workspace temp-directory harness for full unittest verification.

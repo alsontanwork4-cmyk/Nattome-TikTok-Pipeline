@@ -1716,7 +1716,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(token, "fake-token")
             self.assertEqual(chat_id, "fake-chat")
             self.assertLess(len(message), 1200)
-            self.assertIn("Weekly Evidence Brief", message)
+            self.assertIn("Nattome Batch Analysis Final Outputs", message)
             self.assertIn("top5_creative_production_report_2026-05-06.md", message)
             self.assertIn("top5_angle_planning_sheet_2026-05-06.xlsx", message)
             self.assertNotIn("reports/cross_video_pattern_summary.md", message)

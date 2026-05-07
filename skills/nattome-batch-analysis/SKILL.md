@@ -1,6 +1,6 @@
 ---
 name: nattome-batch-analysis
-description: Weekly Gemini evidence-first TikTok video analysis pipeline for Nattome. Selects viral TikTok candidates via the Minimum Eligibility Filter and Viral Relevance Selection, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates per-video Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, Shootable Angles, a Cross-Video Pattern Summary with 30-point Nattome Priority Scores, structured JSON, CSV exports, Run Manifest, and optional Telegram delivery. Use whenever the user asks to run weekly batch analysis, produce video evidence reports, run batch evidence analysis, analyze a batch of TikToks, create a cross-video pattern summary, review claim safety, or invokes `run_batch_analysis.py`. Use `nattome-daily-discovery` instead for fast daily ideation briefs without video evidence extraction.
+description: Weekly Gemini evidence-first TikTok video analysis pipeline for Nattome. Selects viral TikTok candidates via the Minimum Eligibility Filter and Viral Relevance Selection, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates per-video Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, Shootable Angles, internal structured JSON, a Top 5 Creative Production Report, an Excel angle planning workbook, Run Manifest, and optional Telegram delivery. Use whenever the user asks to run weekly batch analysis, produce video evidence reports, run batch evidence analysis, analyze a batch of TikToks, create a Top 5 Creative Production Report, review claim safety, or invokes `run_batch_analysis.py`. Use `nattome-daily-discovery` instead for fast daily ideation briefs without video evidence extraction.
 user-invocable: true
 ---
 
@@ -8,7 +8,7 @@ user-invocable: true
 
 You are running Nattome's weekly **Batch Analysis Run**. The deliverable is **evidence-first strategic research**: every claim about why a video worked must be backed by source-video evidence captured by Gemini 2.5 Flash, not metadata guesswork.
 
-Read `CONTEXT.md` at the project root before producing reports. It is the terminology dictionary for **Video Evidence Report**, **Evidence Bundle**, **Run Folder**, **Cross-Video Pattern Summary**, **Evidence Quality Score**, **Claim Safety Review**, **Shootable Angle**, and **Nattome Priority Score**.
+Read `CONTEXT.md` at the project root before producing reports. It is the terminology dictionary for **Video Evidence Report**, **Evidence Bundle**, **Run Folder**, **Top 5 Creative Production Report**, **Evidence Quality Score**, **Claim Safety Review**, **Shootable Angle**, and **Nattome Priority Score**.
 
 This skill is for the heavier weekly workflow. If the user wants a fast daily content brief without source-video evidence extraction, use `nattome-daily-discovery` instead.
 
@@ -24,11 +24,15 @@ The pipeline now uses the Gemini two-layer Evidence Bundle layout:
 
 ## What This Pipeline Produces
 
-For one Batch Analysis Run, in `runs/batch-analysis/<timestamp>_<mode>/`:
+For one completed Batch Analysis Run, the marketer-facing final deliverables are:
+
+- `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md`
+- `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx`
+
+The Run Folder, `runs/batch-analysis/<timestamp>_<mode>/`, remains the audit and debug record:
 
 - `reports/selected_batch.md`
 - `reports/<rank>_<video-id>_video_evidence_report.md`
-- `reports/cross_video_pattern_summary.md`
 - `data/selected_batch.json`
 - `data/evidence_bundle_index.json`
 - `data/<rank>_<video-id>_source_metadata.json`
@@ -40,7 +44,6 @@ For one Batch Analysis Run, in `runs/batch-analysis/<timestamp>_<mode>/`:
 - `data/<rank>_<video-id>_shootable_angles.json`
 - `data/cross_video_pattern_summary.json`
 - `data/structured_batch_analysis.json`
-- `data/spreadsheet_summary.csv`
 - `evidence/<rank>_<video-id>_source_video.<ext>`
 - `logs/telegram_delivery.json`
 - `logs/evidence_artifact_cleanup.json`
@@ -62,7 +65,7 @@ Before launching the run, verify these. Stop and tell the user honestly if a req
 | `GEMINI_API_KEY` env var | `$env:GEMINI_API_KEY` in PowerShell. | Ask the user to set it. Without it, the run records missing Gemini evidence rather than fabricating analysis. |
 | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | Env vars. | Optional. Skip Telegram silently if either is missing. |
 
-Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/writes for candidate JSON, reports, CSV exports, manifests, and Telegram logs so Unicode captions do not fail on Windows `cp1252`.
+Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/writes for candidate JSON, reports, workbook-adjacent structured data, manifests, and Telegram logs so Unicode captions do not fail on Windows `cp1252`.
 
 `APIFY_TOKEN` is needed only if you must run fresh discovery first. A Batch Analysis Run can use an existing candidates JSON without calling Apify.
 
@@ -111,13 +114,14 @@ Stream the CLI output to the user as it runs. Preserve missing-evidence signals 
 
 ## After The Run
 
-1. Read `runs/batch-analysis/<latest>/reports/cross_video_pattern_summary.md`.
-2. Read the top per-video reports from `runs/batch-analysis/<latest>/reports/*_video_evidence_report.md`.
-3. Quote the **Nattome Priority Score** out of 30 for the top 3 available Shootable Angles.
-4. Surface **Manual Review Flags** from `data/*_evidence_quality.json`.
-5. Surface **Claim Safety Review** findings from `data/*_claim_safety_review.json`.
-6. Confirm `logs/telegram_delivery.json` if Telegram delivery was configured.
-7. Tell the user the Run Folder path.
+1. Read `outputs/reports/YYYY-MM-DD/top5_creative_production_report_YYYY-MM-DD.md`.
+2. Confirm `outputs/reports/YYYY-MM-DD/top5_angle_planning_sheet_YYYY-MM-DD.xlsx` exists.
+3. Read the top per-video reports from `runs/batch-analysis/<latest>/reports/*_video_evidence_report.md` when source evidence detail is needed.
+4. Quote the **Nattome Priority Score** out of 30 for the top 3 available Shootable Angles.
+5. Surface **Manual Review Flags** from `data/*_evidence_quality.json`.
+6. Surface **Claim Safety Review** findings from `data/*_claim_safety_review.json`.
+7. Confirm `logs/telegram_delivery.json` if Telegram delivery was configured.
+8. Tell the user both final output paths and the Run Folder path.
 
 ## Honest Reporting Rules
 
@@ -135,7 +139,7 @@ Stream the CLI output to the user as it runs. Preserve missing-evidence signals 
 - **"Use last week's candidates"** -> pick the second-newest scrape from `data/raw_scrapes/`.
 - **"Skip Telegram this time"** -> set a config with Telegram disabled or note that missing Telegram env vars intentionally skip delivery.
 - **"Re-run on the same candidates"** -> safe; each run gets a fresh timestamped Run Folder.
-- **"Clean up old runs"** -> use cleanup deliberately; preserve reports, structured JSON, CSV, manifest, and logs.
+- **"Clean up old runs"** -> use cleanup deliberately; preserve the Top 5 Creative Production Report, Excel planning workbook, run manifest, internal structured JSON, and logs.
 
 ## Reference Files
 
