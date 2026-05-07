@@ -1,6 +1,6 @@
 ---
 name: nattome-batch-analysis
-description: Weekly Gemini evidence-first TikTok video analysis pipeline for Nattome. Selects viral TikTok candidates via the Minimum Eligibility Filter and Viral Relevance Selection, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates per-video Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, Shootable Angles, internal structured JSON, a Top 5 Creative Production Report, an Excel angle planning workbook, Run Manifest, and optional Telegram delivery. Use whenever the user asks to run weekly batch analysis, produce video evidence reports, run batch evidence analysis, analyze a batch of TikToks, create a Top 5 Creative Production Report, review claim safety, or invokes `run_batch_analysis.py`. Use `nattome-daily-discovery` instead for fast daily ideation briefs without video evidence extraction.
+description: Weekly Gemini evidence-first TikTok video analysis pipeline for Nattome. Selects viral TikTok candidates via the Minimum Eligibility Filter and Viral Relevance Selection, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates per-video Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, evidence-backed Shootable Angles, internal structured JSON, a Top 5 Creative Production Report, an Excel angle planning workbook, Run Manifest, and optional Telegram delivery. Use whenever the user asks to run weekly batch analysis, produce video evidence reports, run batch evidence analysis, analyze a batch of TikToks, create a Top 5 Creative Production Report, review claim safety, generate production-ready shootable angles, or invokes `run_batch_analysis.py`. Use `nattome-daily-discovery` first only when fresh TikTok discovery and top-5 video handoff creation are needed.
 user-invocable: true
 ---
 
@@ -10,7 +10,7 @@ You are running Nattome's weekly **Batch Analysis Run**. The deliverable is **ev
 
 Read `CONTEXT.md` at the project root before producing reports. It is the terminology dictionary for **Video Evidence Report**, **Evidence Bundle**, **Run Folder**, **Top 5 Creative Production Report**, **Evidence Quality Score**, **Claim Safety Review**, **Shootable Angle**, and **Nattome Priority Score**.
 
-This skill is for the heavier weekly workflow. If the user wants a fast daily content brief without source-video evidence extraction, use `nattome-daily-discovery` instead.
+This skill is for the heavier evidence workflow. If the user wants fresh TikTok discovery first, use `nattome-daily-discovery` to create the top-5 video handoff, then run this skill in `daily` mode for evidence-backed shootable angles.
 
 ## Current Architecture
 
