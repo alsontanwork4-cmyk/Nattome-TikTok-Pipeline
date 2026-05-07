@@ -12,7 +12,7 @@ from dashboard.store import (
     MUTABLE_TABLES,
     initialize_dashboard_store,
 )
-from dashboard.web import DashboardServer, create_handler
+from dashboard.web import DashboardServer, create_handler, resolve_dashboard_workspace
 
 
 class DashboardStoreTest(unittest.TestCase):
@@ -64,6 +64,17 @@ class DashboardStoreTest(unittest.TestCase):
 
 
 class DashboardWebShellTest(unittest.TestCase):
+    def test_launching_from_dashboard_folder_resolves_repo_workspace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            dashboard_folder = workspace / "dashboard"
+            dashboard_folder.mkdir()
+            (workspace / "runs" / "batch-analysis").mkdir(parents=True)
+
+            resolved = resolve_dashboard_workspace(dashboard_folder)
+
+            self.assertEqual(resolved, workspace.resolve())
+
     def test_overview_route_loads_without_pipeline_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)

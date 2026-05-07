@@ -67,6 +67,26 @@ NAV_ITEMS = (
     ("Pipeline Architecture", "/pipeline-architecture"),
 )
 
+NAV_GROUPS = (
+    ("Discovery", (
+        ("Overview", "/", "overview"),
+        ("Global Search", "/search", "search"),
+        ("Scraped Content", "/scraped-content", "content"),
+    )),
+    ("Quality", (
+        ("Run History", "/run-history", "history"),
+        ("Scrape Settings", "/scrape-settings", "settings"),
+        ("Recommendations", "/recommendations", "recommendations"),
+    )),
+    ("Library", (
+        ("Pattern Library", "/pattern-library", "pattern"),
+        ("Nattome POV Library", "/nattome-pov-library", "pov"),
+    )),
+    ("System", (
+        ("Pipeline Architecture", "/pipeline-architecture", "architecture"),
+    )),
+)
+
 CURATION_LABELS = (
     "Relevant",
     "Irrelevant",
@@ -81,6 +101,24 @@ CURATION_LABELS = (
 
 class DashboardServer(ThreadingHTTPServer):
     daemon_threads = True
+
+
+def resolve_dashboard_workspace(workspace: Path | str = ".") -> Path:
+    """Return the pipeline workspace even when launched from a nested dashboard path."""
+    workspace_path = Path(workspace).expanduser()
+    if not workspace_path.is_absolute():
+        workspace_path = Path.cwd() / workspace_path
+    workspace_path = workspace_path.resolve()
+    if _has_pipeline_workspace_markers(workspace_path):
+        return workspace_path
+    for parent in workspace_path.parents:
+        if _has_pipeline_workspace_markers(parent) and (parent / "dashboard").is_dir():
+            return parent
+    return workspace_path
+
+
+def _has_pipeline_workspace_markers(path: Path) -> bool:
+    return (path / "runs" / "batch-analysis").is_dir() or (path / "data" / "raw_scrapes").is_dir()
 
 
 def create_handler(
@@ -341,10 +379,8 @@ def render_page(
 ) -> str:
     title = _title_for_path(active_path)
     query_params = query_params or {}
-    nav = "\n".join(
-        _render_nav_item(label, route, active_path)
-        for label, route in NAV_ITEMS
-    )
+    sidebar = _render_sidebar(active_path)
+    topbar = _render_topbar(active_path, workspace)
     if active_path == "/":
         overview = _render_overview(workspace)
     elif active_path == "/search":
@@ -371,66 +407,227 @@ def render_page(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nattome Scrape Quality Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
   <style>
     :root {{
       color-scheme: light;
-      --bg: #f6f7f4;
-      --panel: #ffffff;
-      --ink: #1f2722;
-      --muted: #657166;
-      --line: #dce2da;
-      --accent: #2f6f5e;
-      --accent-soft: #dceee7;
-      --warn-soft: #fff0ce;
+      --bg: #FAF6F1;
+      --bg-warm: #F4ECE2;
+      --panel: #FFFFFF;
+      --surface-2: #F4ECE2;
+      --ink: #1F1714;
+      --ink-2: #3D2F26;
+      --muted: #7A6A5C;
+      --muted-2: #A8998A;
+      --line: #EADFD2;
+      --line-strong: #D8C7B5;
+      --accent: #B85B2E;
+      --accent-hover: #9E4A22;
+      --accent-soft: #FBE5D2;
+      --accent-ink: #7A3712;
+      --warn: #C77A1A;
+      --warn-soft: #FCEFD3;
+      --success: #4F7042;
+      --success-soft: #E4EED8;
+      --danger: #B0413A;
+      --danger-soft: #F6DAD6;
+      --shadow-1: 0 1px 2px rgba(31,23,20,.04), 0 1px 0 rgba(31,23,20,.02);
+      --shadow-2: 0 8px 28px -12px rgba(31,23,20,.18), 0 2px 6px -2px rgba(31,23,20,.06);
+      --shadow-focus: 0 0 0 3px rgba(184,91,46,.22);
+      --r-sm: 6px;
+      --r-md: 10px;
+      --r-lg: 14px;
+      --r-xl: 20px;
+      --r-pill: 999px;
+      --font-sans: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
     }}
     * {{ box-sizing: border-box; }}
+    html, body {{ height: 100%; }}
     body {{
       margin: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(1200px 600px at 100% -10%, rgba(184,91,46,.06), transparent 60%),
+        radial-gradient(800px 500px at -10% 110%, rgba(199,122,26,.05), transparent 60%),
+        var(--bg);
       color: var(--ink);
-      font-family: Arial, Helvetica, sans-serif;
-      letter-spacing: 0;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }}
+    a {{ color: var(--accent); text-decoration: none; }}
+    a:hover {{ color: var(--accent-hover); }}
+    code {{
+      background: var(--surface-2);
+      border-radius: 4px;
+      color: var(--ink-2);
+      font-size: 12.5px;
+      padding: 2px 6px;
+    }}
+    h1, h2, h3 {{
+      font-family: var(--font-display);
+      color: var(--ink-2);
+      letter-spacing: -0.01em;
+    }}
+    /* ---- Shell ---- */
     .layout {{
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 248px minmax(0, 1fr);
+      grid-template-columns: 252px minmax(0, 1fr);
+      grid-template-rows: 64px 1fr;
+      grid-template-areas:
+        "topbar topbar"
+        "sidebar main";
     }}
-    nav {{
-      border-right: 1px solid var(--line);
-      background: var(--panel);
-      padding: 24px 16px;
+    .topbar {{
+      grid-area: topbar;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--line);
     }}
-    .brand {{
-      font-size: 18px;
+    .brand-mark {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
       font-weight: 700;
-      line-height: 1.25;
-      margin: 0 0 24px;
+      font-size: 17px;
+      color: var(--ink-2);
+      letter-spacing: -0.01em;
+    }}
+    .brand-mark .leaf {{
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #D9824A);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-1);
+      color: #fff;
+    }}
+    .brand-tag {{
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding-left: 12px;
+      border-left: 1px solid var(--line);
+      margin-left: 4px;
+    }}
+    .topbar-meta {{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .meta-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--r-pill);
+      background: var(--bg-warm);
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+      font-size: 12.5px;
+      font-weight: 500;
+    }}
+    .meta-pill .dot {{
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(79,112,66,.18);
+    }}
+    .meta-pill code {{ background: transparent; padding: 0; color: var(--muted); white-space: nowrap; }}
+    .meta-pill svg {{ width: 14px; height: 14px; flex: 0 0 14px; color: var(--muted); }}
+    .brand-mark .leaf svg {{ width: 16px; height: 16px; }}
+    .sidebar {{
+      grid-area: sidebar;
+      border-right: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0));
+      padding: 24px 14px 32px;
+      position: sticky;
+      top: 64px;
+      align-self: start;
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+    }}
+    .nav-group {{ margin-bottom: 22px; }}
+    .nav-group-label {{
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      margin: 0 12px 8px;
     }}
     .nav-link {{
-      display: block;
-      border-radius: 6px;
-      color: var(--ink);
-      padding: 10px 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--r-md);
+      color: var(--ink-2);
+      padding: 9px 12px;
       text-decoration: none;
       font-size: 14px;
-      line-height: 1.3;
+      font-weight: 500;
+      transition: background-color .15s ease, color .15s ease;
     }}
-    .nav-link + .nav-link {{ margin-top: 4px; }}
+    .nav-link + .nav-link {{ margin-top: 2px; }}
+    .nav-link:hover {{ background: var(--bg-warm); color: var(--ink); }}
+    .nav-link svg {{ width: 18px; height: 18px; flex: 0 0 18px; color: var(--muted); }}
     .nav-link[aria-current="page"] {{
       background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 700;
+      color: var(--accent-ink);
+      font-weight: 600;
+    }}
+    .nav-link[aria-current="page"] svg {{ color: var(--accent); }}
+    .nav-link[aria-current="page"]::before {{
+      content: "";
+      position: absolute;
+      left: -14px;
+      top: 8px; bottom: 8px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--accent);
     }}
     main {{
-      padding: 32px;
-      max-width: 1120px;
+      grid-area: main;
+      padding: 32px 40px 64px;
+      max-width: 1280px;
       width: 100%;
     }}
+    /* ---- Page header ---- */
+    .breadcrumb {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }}
+    .breadcrumb a {{ color: var(--muted); }}
+    .breadcrumb a:hover {{ color: var(--accent); }}
+    .breadcrumb .sep {{ color: var(--muted-2); }}
+    .breadcrumb .current {{ color: var(--ink-2); font-weight: 600; }}
     h1 {{
-      font-size: 30px;
-      line-height: 1.15;
-      margin: 0 0 8px;
+      font-size: 32px;
+      line-height: 1.1;
+      font-weight: 700;
+      margin: 0 0 10px;
     }}
     .lede {{
       color: var(--muted);
@@ -438,78 +635,153 @@ def render_page(
       margin: 0 0 28px;
       max-width: 760px;
     }}
+    h2 {{ font-weight: 600; }}
+    h3 {{ font-weight: 600; font-family: var(--font-sans); }}
+    /* ---- Grids ---- */
     .grid {{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 18px;
     }}
+    /* ---- Buttons ---- */
     .actions {{
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin: 0 0 20px;
+      gap: 10px;
+      margin: 0 0 24px;
     }}
     .action-link,
-    .action-form button {{
+    .action-form button,
+    .run-control-form button,
+    .curation-form button,
+    .settings-form button,
+    .rollback-form button,
+    .search-form button,
+    .recommendation-form button,
+    .pattern-form button {{
       background: var(--accent);
-      border: 0;
-      border-radius: 6px;
+      border: 1px solid transparent;
+      border-radius: var(--r-md);
       color: #ffffff;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
       line-height: 1.2;
-      padding: 10px 12px;
+      padding: 10px 16px;
       text-decoration: none;
+      box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, var(--shadow-1);
+      transition: background-color .15s ease, box-shadow .15s ease, transform .05s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }}
-    .action-form {{
-      margin: 0;
+    .action-link:hover,
+    .action-form button:hover,
+    .run-control-form button:hover,
+    .curation-form button:hover,
+    .settings-form button:hover,
+    .rollback-form button:hover,
+    .search-form button:hover,
+    .recommendation-form button:hover,
+    .pattern-form button:hover {{ background: var(--accent-hover); color: #fff; }}
+    .action-link:focus-visible,
+    button:focus-visible {{ outline: none; box-shadow: var(--shadow-focus); }}
+    .action-link:active, button:active {{ transform: translateY(1px); }}
+    .action-link.secondary,
+    a.action-link[href^="/exports/"] {{
+      background: var(--panel);
+      color: var(--ink-2);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-1);
     }}
+    .action-link.secondary:hover,
+    a.action-link[href^="/exports/"]:hover {{ background: var(--bg-warm); color: var(--ink); }}
+    .action-form {{ margin: 0; }}
+    /* ---- Run controls ---- */
     .run-controls {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
+      gap: 18px;
+      margin-bottom: 18px;
     }}
     .run-control-form {{
       display: grid;
-      gap: 10px;
+      gap: 12px;
     }}
-    .run-control-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      cursor: pointer;
-      font: inherit;
-      font-weight: 700;
-      justify-self: start;
-      padding: 10px 12px;
-    }}
+    .run-control-form button {{ justify-self: start; }}
+    /* ---- Cards / Panels ---- */
     .panel {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
+      border-radius: var(--r-lg);
+      padding: 22px;
       min-height: 132px;
+      box-shadow: var(--shadow-1);
+      transition: box-shadow .2s ease, transform .2s ease;
     }}
     .panel h2 {{
-      font-size: 16px;
-      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-family: var(--font-sans);
+    }}
+    .panel.feature {{
+      box-shadow: var(--shadow-2);
+      border-color: var(--line);
+      position: relative;
+      overflow: hidden;
+    }}
+    .panel.feature::before {{
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #E08858);
     }}
     .metric {{
-      font-size: 28px;
-      font-weight: 700;
-      margin: 0 0 6px;
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--ink-2);
+      margin: 0 0 8px;
+      font-feature-settings: "tnum";
     }}
+    .metric.muted {{ color: var(--muted-2); font-weight: 500; }}
     .muted {{ color: var(--muted); }}
     .notice {{
       background: var(--warn-soft);
-      border-color: #f0d28f;
+      border-color: rgba(199,122,26,.35);
     }}
-    .wide-panel {{
-      margin-top: 16px;
+    .notice h2 {{ color: var(--warn); }}
+    .panel.healthy {{ background: linear-gradient(180deg, var(--success-soft), var(--panel) 70%); border-color: rgba(79,112,66,.3); }}
+    .panel.healthy .metric {{ color: var(--success); }}
+    .panel.degraded {{ background: linear-gradient(180deg, var(--warn-soft), var(--panel) 70%); border-color: rgba(199,122,26,.35); }}
+    .panel.degraded .metric {{ color: var(--warn); }}
+    .panel.failing {{ background: linear-gradient(180deg, var(--danger-soft), var(--panel) 70%); border-color: rgba(176,65,58,.3); }}
+    .panel.failing .metric {{ color: var(--danger); }}
+    .wide-panel {{ margin-top: 18px; }}
+    /* ---- Empty state ---- */
+    .empty-state {{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 13.5px;
     }}
+    .empty-state-icon {{
+      width: 36px; height: 36px; flex: 0 0 36px;
+      border-radius: 10px;
+      background: var(--bg-warm);
+      display: grid; place-items: center;
+      color: var(--muted-2);
+    }}
+    /* ---- Lists ---- */
     .compact-list,
     .video-list {{
       margin: 0;
@@ -518,6 +790,7 @@ def render_page(
     .compact-list li + li {{
       margin-top: 8px;
     }}
+    .compact-list li::marker {{ color: var(--accent); }}
     .video-list {{
       list-style: none;
       padding-left: 0;
@@ -528,19 +801,21 @@ def render_page(
       gap: 16px;
       align-items: center;
       border-top: 1px solid var(--line);
-      padding: 12px 0;
+      padding: 14px 0;
     }}
+    .video-row:first-child {{ border-top: 0; padding-top: 4px; }}
     .video-caption {{
-      font-weight: 700;
+      font-weight: 600;
+      color: var(--ink-2);
       margin: 0 0 4px;
     }}
     .video-row a {{
       color: var(--accent);
-      font-weight: 700;
+      font-weight: 600;
     }}
     .content-list {{
       display: grid;
-      gap: 16px;
+      gap: 18px;
     }}
     .scraped-card-header {{
       display: grid;
@@ -549,28 +824,42 @@ def render_page(
       align-items: start;
     }}
     .scraped-card-header h2 {{
-      margin: 0 0 4px;
+      margin: 0 0 6px;
+      color: var(--ink-2);
+      font-size: 16px;
+      font-family: var(--font-sans);
+      text-transform: none;
+      letter-spacing: 0;
     }}
     .metadata-grid {{
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin: 16px 0;
+      gap: 14px;
+      margin: 18px 0;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }}
     .metadata-grid dt {{
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      margin: 0 0 3px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      margin: 0 0 4px;
       text-transform: uppercase;
     }}
     .metadata-grid dd {{
       margin: 0;
+      color: var(--ink-2);
+      font-size: 13.5px;
       overflow-wrap: anywhere;
     }}
     .table-scroll {{
       overflow-x: auto;
       width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background: var(--panel);
     }}
     .data-table {{
       border-collapse: collapse;
@@ -581,32 +870,43 @@ def render_page(
     .data-table td {{
       border-top: 1px solid var(--line);
       font-size: 13px;
-      line-height: 1.35;
-      padding: 10px 8px;
+      line-height: 1.4;
+      padding: 12px 14px;
       text-align: left;
       vertical-align: top;
     }}
-    .data-table th {{
+    .data-table thead th {{
+      background: var(--surface-2);
+      border-top: 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
       text-transform: uppercase;
+      position: sticky;
+      top: 0;
     }}
+    .data-table tbody tr:hover td {{ background: var(--bg-warm); }}
     .data-table a {{
       color: var(--accent);
-      font-weight: 700;
+      font-weight: 600;
     }}
     h3 {{
       font-size: 14px;
-      margin: 14px 0 8px;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin: 16px 0 8px;
     }}
     .output-links {{
       min-width: 180px;
     }}
+    /* ---- Forms ---- */
     .curation-form {{
       border-top: 1px solid var(--line);
       display: grid;
-      gap: 12px;
-      padding-top: 14px;
+      gap: 14px;
+      padding-top: 16px;
+      margin-top: 4px;
     }}
     .curation-form fieldset {{
       border: 0;
@@ -617,8 +917,10 @@ def render_page(
     .field-label {{
       color: var(--muted);
       display: grid;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
       gap: 6px;
     }}
     .label-grid {{
@@ -630,128 +932,158 @@ def render_page(
     .check-label {{
       align-items: center;
       display: inline-flex;
-      gap: 6px;
+      gap: 8px;
       font-size: 13px;
       font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink-2);
+      padding: 6px 10px;
+      border-radius: var(--r-pill);
+      background: var(--bg-warm);
+      border: 1px solid var(--line);
     }}
+    .check-label input {{ accent-color: var(--accent); }}
     .field-label input,
     .field-label textarea {{
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
       color: var(--ink);
       font: inherit;
-      padding: 9px 10px;
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
+      font-weight: 400;
+      padding: 10px 12px;
       width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }}
+    .field-label input:focus,
+    .field-label textarea:focus {{
+      border-color: var(--accent);
+      box-shadow: var(--shadow-focus);
+      outline: none;
     }}
     .field-label textarea {{
-      min-height: 70px;
+      min-height: 80px;
       resize: vertical;
+      font-family: var(--font-sans);
     }}
-    .curation-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      font: inherit;
-      font-weight: 700;
-      justify-self: start;
-      padding: 10px 12px;
-    }}
+    .curation-form button {{ justify-self: start; }}
     .settings-form {{
       display: grid;
-      gap: 14px;
+      gap: 16px;
     }}
     .settings-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }}
-    .settings-form select {{
-      border: 1px solid var(--line);
-      border-radius: 6px;
+    .settings-form select,
+    .recommendation-form select,
+    .recommendation-form input {{
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
       color: var(--ink);
       font: inherit;
-      padding: 9px 10px;
+      padding: 10px 12px;
       width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }}
+    .settings-form select:focus,
+    .recommendation-form select:focus,
+    .recommendation-form input:focus {{
+      border-color: var(--accent);
+      box-shadow: var(--shadow-focus);
+      outline: none;
     }}
     .settings-form button,
-    .rollback-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      font: inherit;
-      font-weight: 700;
-      justify-self: start;
-      padding: 10px 12px;
-    }}
+    .rollback-form button {{ justify-self: start; }}
     .history-list {{
       display: grid;
-      gap: 12px;
+      gap: 14px;
       list-style: none;
       margin: 0;
       padding: 0;
     }}
     .history-item {{
       border-top: 1px solid var(--line);
-      padding-top: 12px;
+      padding-top: 14px;
     }}
     .rollback-form {{
       display: grid;
-      gap: 8px;
-      margin-top: 10px;
+      gap: 10px;
+      margin-top: 12px;
     }}
     .recommendation-list {{
       display: grid;
-      gap: 16px;
+      gap: 18px;
     }}
-    .recommendation-header {{
+    .recommendation-header,
+    .pattern-header {{
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 16px;
       align-items: start;
     }}
+    .recommendation-header h2,
+    .pattern-header h2 {{
+      color: var(--ink-2);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      margin: 0 0 4px;
+    }}
     .status-pill {{
-      background: #eef1ec;
-      border-radius: 999px;
+      background: var(--bg-warm);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
       line-height: 1;
-      padding: 7px 9px;
+      padding: 7px 11px;
+      text-transform: uppercase;
       white-space: nowrap;
     }}
+    .status-pill.ok {{ background: var(--success-soft); color: var(--success); border-color: rgba(79,112,66,.3); }}
+    .status-pill.warn {{ background: var(--warn-soft); color: var(--warn); border-color: rgba(199,122,26,.35); }}
+    .status-pill.err {{ background: var(--danger-soft); color: var(--danger); border-color: rgba(176,65,58,.3); }}
+    .status-pill.accent {{ background: var(--accent-soft); color: var(--accent-ink); border-color: rgba(184,91,46,.3); }}
     .search-form {{
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }}
     .search-form input {{
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
       color: var(--ink);
       font: inherit;
-      padding: 10px 12px;
+      font-size: 15px;
+      padding: 12px 14px;
       width: 100%;
+      transition: border-color .15s ease, box-shadow .15s ease;
     }}
-    .search-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      cursor: pointer;
-      font: inherit;
-      font-weight: 700;
-      justify-self: start;
-      padding: 10px 12px;
+    .search-form input:focus {{
+      border-color: var(--accent);
+      box-shadow: var(--shadow-focus);
+      outline: none;
     }}
+    .search-form button {{ justify-self: start; }}
     .facet-grid {{
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px 14px;
+      gap: 10px 16px;
     }}
     .search-result-list {{
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }}
     .search-result-header {{
       align-items: start;
@@ -764,68 +1096,54 @@ def render_page(
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 14px;
-    }}
-    .recommendation-form select,
-    .recommendation-form input {{
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      color: var(--ink);
-      font: inherit;
-      padding: 9px 10px;
-    }}
-    .recommendation-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      font: inherit;
-      font-weight: 700;
-      padding: 10px 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
     }}
     .pattern-list {{
       display: grid;
-      gap: 16px;
-    }}
-    .pattern-header {{
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: start;
+      gap: 18px;
     }}
     .pattern-form {{
       border-top: 1px solid var(--line);
       display: grid;
-      gap: 12px;
-      margin-top: 14px;
-      padding-top: 14px;
+      gap: 14px;
+      margin-top: 16px;
+      padding-top: 16px;
     }}
     .pattern-form-grid {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
     }}
-    .pattern-form button {{
-      background: var(--accent);
-      border: 0;
-      border-radius: 6px;
-      color: #ffffff;
-      font: inherit;
-      font-weight: 700;
-      justify-self: start;
-      padding: 10px 12px;
-    }}
-    code {{
-      background: #eef1ec;
-      border-radius: 4px;
-      padding: 2px 4px;
-    }}
-    @media (max-width: 760px) {{
-      .layout {{ grid-template-columns: 1fr; }}
-      nav {{
+    .pattern-form button {{ justify-self: start; }}
+    /* ---- Responsive ---- */
+    @media (max-width: 960px) {{
+      .layout {{
+        grid-template-columns: 1fr;
+        grid-template-rows: 64px auto 1fr;
+        grid-template-areas:
+          "topbar"
+          "sidebar"
+          "main";
+      }}
+      .sidebar {{
+        position: static;
+        max-height: none;
         border-right: 0;
         border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
       }}
+      .nav-group {{ margin: 0; flex: 0 0 auto; }}
+      .nav-group-label {{ display: none; }}
+      .nav-link {{ white-space: nowrap; padding: 8px 12px; }}
+      .nav-link[aria-current="page"]::before {{ display: none; }}
+      .topbar {{ padding: 0 16px; }}
+      .brand-tag {{ display: none; }}
+      .topbar-meta .meta-pill:not(.primary) {{ display: none; }}
       main {{ padding: 24px 18px; }}
       .grid {{ grid-template-columns: 1fr; }}
       .video-row {{ grid-template-columns: 1fr; }}
@@ -840,10 +1158,8 @@ def render_page(
 </head>
 <body>
   <div class="layout">
-    <nav aria-label="Dashboard sections">
-      <p class="brand">Nattome Scrape Quality Dashboard</p>
-      {nav}
-    </nav>
+    {topbar}
+    {sidebar}
     <main>
       {overview}
     </main>
@@ -853,9 +1169,117 @@ def render_page(
 """
 
 
-def _render_nav_item(label: str, route: str, active_path: str) -> str:
+_ICON_PATHS: dict[str, str] = {
+    "overview": '<path d="M3 12 12 4l9 8"/><path d="M5 10v10h14V10"/>',
+    "search": '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    "content": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 6 3-6 3z" fill="currentColor" stroke="none"/>',
+    "history": '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v5l3 2"/>',
+    "settings": '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+    "recommendations": '<path d="M9 11.5 11 13.5l4.5-4.5"/><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6z"/>',
+    "pattern": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    "pov": '<path d="M4 5h16v12H5.5L4 19z"/><path d="M8 10h8M8 13h5"/>',
+    "architecture": '<path d="M4 6h6v4H4z"/><path d="M14 6h6v4h-6z"/><path d="M9 14h6v4H9z"/><path d="M7 10v2h10v-2"/>',
+    "warning": '<path d="M12 3 2 20h20z"/><path d="M12 10v5"/><circle cx="12" cy="18" r="0.6" fill="currentColor" stroke="none"/>',
+    "empty": '<rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16"/><path d="M9 14h6"/>',
+    "db": '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
+    "leaf": '<path d="M5 19c0-8 6-14 14-14-1 9-6 14-14 14z" fill="currentColor" stroke="none" opacity=".95"/><path d="M5 19c4-4 8-7 14-14" stroke="rgba(255,255,255,.55)" stroke-width="1.2"/>',
+    "spark": '<path d="m4 16 4-5 4 3 4-7 4 5"/>',
+}
+
+
+def _icon(name: str) -> str:
+    paths = _ICON_PATHS.get(name, '')
+    return (
+        f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" '
+        f'aria-hidden="true">{paths}</svg>'
+    )
+
+
+def _render_nav_item(label: str, route: str, active_path: str, icon_key: str = "") -> str:
     current = ' aria-current="page"' if route == active_path else ""
-    return f'<a class="nav-link" href="{html.escape(route)}"{current}>{html.escape(label)}</a>'
+    icon_markup = _icon(icon_key) if icon_key else ""
+    return (
+        f'<a class="nav-link" href="{html.escape(route)}"{current}>'
+        f'{icon_markup}<span>{html.escape(label)}</span></a>'
+    )
+
+
+def _render_sidebar(active_path: str) -> str:
+    groups = []
+    for group_label, items in NAV_GROUPS:
+        links = "\n".join(
+            _render_nav_item(label, route, active_path, icon_key)
+            for label, route, icon_key in items
+        )
+        groups.append(
+            f'<div class="nav-group">'
+            f'<p class="nav-group-label">{html.escape(group_label)}</p>'
+            f'{links}'
+            f'</div>'
+        )
+    return (
+        '<aside class="sidebar" aria-label="Dashboard sections">'
+        + "".join(groups)
+        + '</aside>'
+    )
+
+
+def _render_breadcrumb(active_path: str) -> str:
+    title = _title_for_path(active_path)
+    if active_path == "/":
+        return (
+            '<nav class="breadcrumb" aria-label="Breadcrumb">'
+            '<span class="current">Overview</span>'
+            '</nav>'
+        )
+    return (
+        '<nav class="breadcrumb" aria-label="Breadcrumb">'
+        '<a href="/">Dashboard</a>'
+        '<span class="sep" aria-hidden="true">/</span>'
+        f'<span class="current">{html.escape(title)}</span>'
+        '</nav>'
+    )
+
+
+def _render_topbar(active_path: str, workspace: Path) -> str:
+    db_path = html.escape(str(Path(workspace) / DASHBOARD_DB_PATH))
+    return f"""
+    <header class="topbar" role="banner">
+      <div class="brand-mark">
+        <span class="leaf">{_icon('leaf')}</span>
+        <span>Nattome</span>
+        <span class="brand-tag">Scrape Quality</span>
+      </div>
+      <div class="topbar-meta">
+        <span class="meta-pill primary"><span class="dot" aria-hidden="true"></span>Pipeline ready</span>
+        <span class="meta-pill">{_icon('db')}<code>{db_path}</code></span>
+      </div>
+    </header>
+    """
+
+
+def _render_page_header(title: str, lede: str, active_path: str = "/", actions_html: str = "") -> str:
+    actions_block = f'<div class="page-actions">{actions_html}</div>' if actions_html else ""
+    return f"""
+      {_render_breadcrumb(active_path)}
+      <h1>{html.escape(title)}</h1>
+      <p class="lede">{html.escape(lede)}</p>
+      {actions_block}
+    """
+
+
+def _render_empty_state(icon_key: str, headline: str, helper: str = "") -> str:
+    helper_markup = f'<p class="muted" style="margin:4px 0 0;font-size:13px;">{html.escape(helper)}</p>' if helper else ""
+    return f"""
+      <div class="empty-state">
+        <span class="empty-state-icon">{_icon(icon_key)}</span>
+        <div>
+          <p style="margin:0;color:var(--ink-2);font-weight:600;">{html.escape(headline)}</p>
+          {helper_markup}
+        </div>
+      </div>
+    """
 
 
 def _render_search(workspace: Path, query_params: dict[str, list[str]]) -> str:
@@ -1008,38 +1432,44 @@ def _render_overview(workspace: Path) -> str:
     compute_pipeline_health(workspace)
     overview = _load_latest_overview(workspace)
     actions = _render_overview_actions()
+    header = _render_page_header(
+        "Latest Run Overview",
+        "Local dashboard shell for monitoring scrape quality and pipeline health.",
+        active_path="/",
+    )
     if overview is None:
+        db_path = html.escape(str(workspace / DASHBOARD_DB_PATH))
         return f"""
-      <h1>Latest Run Overview</h1>
-      <p class="lede">No indexed runs yet. The dashboard is ready once a Batch Analysis Run is available.</p>
+      {header}
+      <p class="lede" style="margin-top:-12px;">No indexed runs yet. The dashboard is ready once a Batch Analysis Run is available.</p>
       {actions}
       <section class="grid" aria-label="Overview status">
-        <article class="panel notice">
+        <article class="panel feature">
           <h2>Scrape Quality Score</h2>
           <p class="metric muted">--</p>
           <p class="muted">No raw scrape candidates have been indexed.</p>
         </article>
-        <article class="panel notice">
+        <article class="panel feature">
           <h2>Pipeline Health</h2>
-          <p class="metric muted">Waiting</p>
-          <p class="muted">No pipeline run has been indexed for review.</p>
+          <p class="metric">Ready</p>
+          <p class="muted">Overview loads without Apify, Gemini, or run artifacts.</p>
         </article>
-        <article class="panel">
+        <article class="panel feature">
           <h2>Dashboard Store</h2>
           <p class="metric">SQLite</p>
-          <p class="muted"><code>{html.escape(str(workspace / DASHBOARD_DB_PATH))}</code></p>
+          <p class="muted"><code>{db_path}</code></p>
         </article>
-        <article class="panel">
+        <article class="panel notice">
           <h2>Latest Run</h2>
-          <p class="muted">Run timestamp and run type will appear after indexing.</p>
+          {_render_empty_state('warning', 'No Batch Analysis Run has been indexed.', 'Trigger a run above to populate this overview.')}
         </article>
         <article class="panel">
           <h2>Current Config Version</h2>
-          <p class="muted">No active run configuration has been indexed.</p>
+          {_render_empty_state('settings', 'Settings versioning is initialized for later slices.')}
         </article>
         <article class="panel">
           <h2>Top Quality Drivers</h2>
-          <p class="muted">Quality drivers will appear after scrape scoring.</p>
+          {_render_empty_state('spark', 'Artifact indexing and scoring will populate this area.')}
         </article>
       </section>
     """
@@ -1055,16 +1485,16 @@ def _render_overview(workspace: Path) -> str:
     config_version = config.get("version") or "Not recorded"
     next_scheduled_run = config.get("next_scheduled_run") or config.get("next_run") or "Not scheduled"
     return f"""
-      <h1>Latest Run Overview</h1>
-      <p class="lede">Latest indexed Batch Analysis Run, scrape quality, pipeline health, and marketer review queue.</p>
+      {header}
+      <p class="lede" style="margin-top:-12px;">Latest indexed Batch Analysis Run, scrape quality, pipeline health, and marketer review queue.</p>
       {actions}
       <section class="grid" aria-label="Overview status">
-        <article class="panel">
+        <article class="panel feature">
           <h2>Scrape Quality Score</h2>
           <p class="metric">{html.escape(quality_metric)}</p>
           <p class="muted">{html.escape(quality_band)}</p>
         </article>
-        <article class="panel {_health_panel_class(health_summary)}">
+        <article class="panel feature {_health_panel_class(health_summary)}">
           <h2>Pipeline Health</h2>
           <p class="metric">{html.escape(health_status)}</p>
           <p class="muted">{html.escape(health_impact)}</p>
@@ -1072,7 +1502,7 @@ def _render_overview(workspace: Path) -> str:
         <article class="panel">
           <h2>Latest Run</h2>
           <p class="metric">{html.escape(run["run_id"])}</p>
-          <p class="muted">{html.escape(run["run_timestamp"] or "Timestamp not recorded")} - {html.escape(run["mode"] or "Run type not recorded")}</p>
+          <p class="muted">{html.escape(run["run_timestamp"] or "Timestamp not recorded")} &middot; {html.escape(run["mode"] or "Run type not recorded")}</p>
         </article>
         <article class="panel">
           <h2>Current Config Version</h2>
@@ -1106,9 +1536,9 @@ def _render_overview_actions() -> str:
           <input type="hidden" name="run_type" value="full_pipeline">
           <button type="submit">Run full pipeline</button>
         </form>
-        <a class="action-link" href="/scrape-settings">Edit scrape settings</a>
-        <a class="action-link" href="/run-history">View run history</a>
-        <a class="action-link" href="/scraped-content">Browse content library</a>
+        <a class="action-link secondary" href="/scrape-settings">Edit scrape settings</a>
+        <a class="action-link secondary" href="/run-history">View run history</a>
+        <a class="action-link secondary" href="/scraped-content">Browse content library</a>
       </div>
     """
 
@@ -2775,7 +3205,7 @@ def serve(
     port: int = 8765,
     server_factory: Callable[..., DashboardServer] = DashboardServer,
 ) -> None:
-    workspace_path = Path(workspace)
+    workspace_path = resolve_dashboard_workspace(workspace)
     initialize_dashboard_store(workspace_path)
     server = server_factory((host, port), create_handler(workspace_path))
     print(f"Nattome dashboard running at http://{host}:{server.server_address[1]}")
