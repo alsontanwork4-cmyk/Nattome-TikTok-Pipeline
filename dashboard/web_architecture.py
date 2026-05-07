@@ -11,9 +11,11 @@ def _render_pipeline_architecture(workspace: Path) -> str:
     return f"""
       <h1>Pipeline Architecture</h1>
       <p class="lede">Scrape to score to select to analyze to report. This read-only view links the docs, decisions, indexed run phases, outputs, and data lineage behind the Nattome TikTok discovery pipeline.</p>
-      <section class="panel wide-panel" aria-label="Pipeline flow">
+      <section class="panel wide-panel pipeline-flow-panel" aria-label="Pipeline flow">
         <h2>High-Level Flow</h2>
+        <p class="pipeline-flow-caption muted">Each stage hands a sharper artifact to the next &mdash; raw scrapes become scored candidates, then a selected batch, then evidence, then a marketer-ready report.</p>
         {_render_architecture_flow(architecture.pipeline_flow)}
+        <p class="pipeline-flow-legend muted">Raw scrape JSON &rarr; quality score &rarr; selected batch &rarr; evidence bundles &rarr; reports &amp; workbooks</p>
       </section>
       <section class="grid" aria-label="Architecture decisions and status">
         <article class="panel">
@@ -40,12 +42,35 @@ def _render_pipeline_architecture(workspace: Path) -> str:
     """
 
 
+_STAGE_TOOL_LABELS: dict[str, str] = {
+    "Scrape": "Apify",
+    "Score": "SQLite Scoring",
+    "Select": "Eligibility Filters",
+    "Analyze": "Gemini",
+    "Report": "Markdown / Excel / JSON",
+}
+
+
 def _render_architecture_flow(steps: list[object]) -> str:
-    items = [
-        f"<li><strong>{html.escape(getattr(step, 'name'))}</strong>: {html.escape(getattr(step, 'summary'))}</li>"
-        for step in steps
-    ]
-    return f'<ol class="compact-list">{"".join(items)}</ol>'
+    items: list[str] = []
+    for index, step in enumerate(steps, start=1):
+        name = html.escape(getattr(step, "name"))
+        summary = html.escape(getattr(step, "summary"))
+        tool = html.escape(_STAGE_TOOL_LABELS.get(getattr(step, "name"), ""))
+        tool_markup = f'<span class="stage-tool">{tool}</span>' if tool else ""
+        items.append(
+            f"""
+            <li class="pipeline-stage">
+              <div class="stage-card">
+                <span class="stage-num" aria-hidden="true">{index}</span>
+                {tool_markup}
+                <h3 class="stage-name">{name}</h3>
+                <p class="stage-desc">{summary}</p>
+              </div>
+            </li>
+            """
+        )
+    return f'<ol class="pipeline-stages">{"".join(items)}</ol>'
 
 
 def _render_tool_decisions(decisions: list[object]) -> str:

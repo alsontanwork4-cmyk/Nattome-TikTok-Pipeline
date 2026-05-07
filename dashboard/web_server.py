@@ -78,7 +78,7 @@ GET_EXPORT_ROUTES: dict[str, ExportRoute] = {
 }
 
 POST_FORM_ACTIONS: dict[str, PostFormAction] = {
-    "/scraped-content/curation": (_save_video_curation, "/scraped-content"),
+    "/run-history/curation": (_save_video_curation, "/run-history"),
     "/scrape-settings/save": (_save_scrape_settings, "/scrape-settings"),
     "/scrape-settings/rollback": (_rollback_scrape_settings, "/scrape-settings"),
     "/recommendations/status": (_update_recommendation_status, "/recommendations"),
@@ -155,6 +155,7 @@ def create_handler(
                         workspace_path,
                         query_params=query,
                         run_history_run_id=_first_form_value(query, "run_id") if parsed_path == "/run-history" else "",
+                        run_history_tab=_first_form_value(query, "tab") if parsed_path == "/run-history" else "",
                     )
                 )
                 return

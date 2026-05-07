@@ -74,10 +74,13 @@ class RunHistoryDetail:
     row: RunHistoryRow
     raw_content: list[RunContentItem]
     selected_content: list[RunContentItem]
+    videos: list[dict[str, Any]]
+    selected_video_ids: set[str]
     quality_drivers: list[dict[str, Any]]
     pipeline_phases: list[dict[str, Any]]
     logs: list[str]
     output_links: list[RunOutputLink]
+    selection_config: dict[str, Any]
 
 
 @dataclass(frozen=True)
@@ -132,10 +135,13 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
                 row=row,
                 raw_content=[],
                 selected_content=[],
+                videos=[],
+                selected_video_ids=set(),
                 quality_drivers=[],
                 pipeline_phases=[],
                 logs=[],
                 output_links=row.output_links,
+                selection_config={},
             )
         selected = _selected_batch(connection, run_id)
         raw_videos = _candidate_videos(connection, run_id, selected)
@@ -145,6 +151,7 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
             (run_id,),
         ).fetchone()
         manifest = _json_loads(run["raw_json"])
+        videos_with_curation = _videos_with_curation(connection, raw_videos)
         return RunHistoryDetail(
             row=row,
             raw_content=[_content_item(video) for video in raw_videos],
@@ -153,13 +160,46 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
                 for video in raw_videos
                 if video["video_id"] in selected_ids or video["selection_status"] in {"selected", "analyzed"}
             ],
+            videos=videos_with_curation,
+            selected_video_ids=selected_ids,
             quality_drivers=_json_list(score["drivers_json"] if score else None),
             pipeline_phases=_phase_list(manifest),
             logs=[link.path for link in row.output_links if link.artifact_type == "log"],
             output_links=row.output_links,
+            selection_config=_selection_config(manifest),
         )
     finally:
         connection.close()
+
+
+def _videos_with_curation(
+    connection: sqlite3.Connection,
+    raw_videos: list[sqlite3.Row],
+) -> list[dict[str, Any]]:
+    enriched: list[dict[str, Any]] = []
+    for video in raw_videos:
+        curation = connection.execute(
+            """
+            SELECT labels, exclude_similar_reason, note
+            FROM video_curation
+            WHERE tiktok_video_id = ?
+            """,
+            (video["video_id"],),
+        ).fetchone()
+        record = dict(video)
+        record["curation_labels"] = curation["labels"] if curation else None
+        record["exclude_similar_reason"] = curation["exclude_similar_reason"] if curation else ""
+        record["curation_note"] = curation["note"] if curation else ""
+        enriched.append(record)
+    return enriched
+
+
+def _selection_config(manifest: dict[str, Any]) -> dict[str, Any]:
+    configuration = manifest.get("configuration")
+    if not isinstance(configuration, dict):
+        return {}
+    selection = configuration.get("selection")
+    return selection if isinstance(selection, dict) else {}
 
 
 def _refresh_derived_dashboard_data(workspace: Path) -> None:

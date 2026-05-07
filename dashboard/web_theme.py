@@ -708,6 +708,121 @@ _THEME_STYLES = '''
       gap: 14px;
     }
     .pattern-form button { justify-self: start; }
+    /* ---- Pipeline flow diagram ---- */
+    .pipeline-flow-panel { padding: 24px 24px 22px; }
+    .pipeline-flow-caption {
+      margin: -4px 0 18px;
+      max-width: 760px;
+      font-size: 13.5px;
+    }
+    .pipeline-stages {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: stage;
+    }
+    .pipeline-stage {
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+    .pipeline-stage::marker { content: ""; }
+    .pipeline-stage + .pipeline-stage::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      width: 12px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--line-strong), var(--accent));
+      transform: translateY(-50%);
+      border-radius: 2px;
+    }
+    .pipeline-stage + .pipeline-stage::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+      transform: translate(-2px, -50%) rotate(45deg);
+      opacity: .85;
+    }
+    .stage-card {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 18px 16px 16px;
+      height: 100%;
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .stage-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #E08858);
+      opacity: .9;
+    }
+    .stage-card:hover {
+      box-shadow: var(--shadow-2);
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+    }
+    .stage-num {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1;
+    }
+    .stage-tool {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 4px 36px 6px 0;
+    }
+    .stage-name {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+    .stage-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .pipeline-flow-legend {
+      margin: 18px 0 0;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      font-size: 12.5px;
+      letter-spacing: .01em;
+    }
     /* ---- Responsive ---- */
     @media (max-width: 960px) {
       .layout {
@@ -744,6 +859,26 @@ _THEME_STYLES = '''
       .pattern-form-grid,
       .facet-grid,
       .metadata-grid { grid-template-columns: 1fr; }
+      .pipeline-stages {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .pipeline-stage + .pipeline-stage::before {
+        left: 50%;
+        top: -14px;
+        width: 2px;
+        height: 12px;
+        background: linear-gradient(180deg, var(--line-strong), var(--accent));
+        transform: translateX(-50%);
+      }
+      .pipeline-stage + .pipeline-stage::after {
+        left: 50%;
+        top: -8px;
+        border-top: 0;
+        border-right: 2px solid var(--accent);
+        border-bottom: 2px solid var(--accent);
+        transform: translate(-50%, 0) rotate(45deg);
+      }
     }
 '''.strip()
 

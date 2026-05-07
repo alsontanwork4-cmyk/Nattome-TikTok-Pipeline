@@ -9,8 +9,6 @@ from .web_overview import _render_overview
 from .web_pattern_library import _render_pattern_library
 from .web_recommendations import _render_recommendations
 from .web_run_history import _render_run_history
-from .web_scraped_content import _render_scraped_content
-from .web_search import _render_search
 from .web_settings import _render_scrape_settings
 from .web_theme import render_theme_styles
 
@@ -21,6 +19,7 @@ def render_page(
     *,
     query_params: dict[str, list[str]] | None = None,
     run_history_run_id: str = "",
+    run_history_tab: str = "",
 ) -> str:
     title = _title_for_path(active_path)
     query_params = query_params or {}
@@ -28,14 +27,14 @@ def render_page(
     topbar = _render_topbar(active_path, workspace)
     if active_path == "/":
         overview = _render_overview(workspace)
-    elif active_path == "/search":
-        overview = _render_search(workspace, query_params)
-    elif active_path == "/scraped-content":
-        overview = _render_scraped_content(workspace)
     elif active_path == "/scrape-settings":
         overview = _render_scrape_settings(workspace)
     elif active_path == "/run-history":
-        overview = _render_run_history(workspace, run_history_run_id=run_history_run_id)
+        overview = _render_run_history(
+            workspace,
+            run_history_run_id=run_history_run_id,
+            run_history_tab=run_history_tab,
+        )
     elif active_path == "/recommendations":
         overview = _render_recommendations(workspace)
     elif active_path == "/pattern-library":

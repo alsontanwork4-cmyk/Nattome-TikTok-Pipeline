@@ -2,8 +2,6 @@ from __future__ import annotations
 
 NAV_ITEMS = (
     ("Overview", "/"),
-    ("Global Search", "/search"),
-    ("Scraped Content", "/scraped-content"),
     ("Run History", "/run-history"),
     ("Scrape Settings", "/scrape-settings"),
     ("Recommendations", "/recommendations"),
@@ -15,11 +13,9 @@ NAV_ITEMS = (
 NAV_GROUPS = (
     ("Discovery", (
         ("Overview", "/", "overview"),
-        ("Global Search", "/search", "search"),
-        ("Scraped Content", "/scraped-content", "content"),
+        ("Run History", "/run-history", "history"),
     )),
     ("Quality", (
-        ("Run History", "/run-history", "history"),
         ("Scrape Settings", "/scrape-settings", "settings"),
         ("Recommendations", "/recommendations", "recommendations"),
     )),
