@@ -62,11 +62,13 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS video_curation (
             tiktok_video_id TEXT PRIMARY KEY,
             labels TEXT NOT NULL DEFAULT '[]',
+            exclude_similar_reason TEXT NOT NULL DEFAULT '',
             note TEXT NOT NULL DEFAULT '',
             {ATTRIBUTION_COLUMNS}
         )
         """
     )
+    _ensure_column(connection, "video_curation", "exclude_similar_reason", "TEXT NOT NULL DEFAULT ''")
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS scrape_settings_versions (
@@ -129,6 +131,20 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
         """
     )
     _create_artifact_tables(connection)
+
+
+def _ensure_column(
+    connection: sqlite3.Connection,
+    table_name: str,
+    column_name: str,
+    definition: str,
+) -> None:
+    columns = {
+        row[1]
+        for row in connection.execute(f"PRAGMA table_info({table_name})")
+    }
+    if column_name not in columns:
+        connection.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {definition}")
 
 
 def _create_artifact_tables(connection: sqlite3.Connection) -> None:

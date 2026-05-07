@@ -7,7 +7,7 @@ import sqlite3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Callable
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from .health import compute_pipeline_health
 from .indexer import index_pipeline_artifacts
@@ -24,6 +24,17 @@ NAV_ITEMS = (
     ("Pattern Library", "/pattern-library"),
     ("Nattome POV Library", "/nattome-pov-library"),
     ("Pipeline Architecture", "/pipeline-architecture"),
+)
+
+CURATION_LABELS = (
+    "Relevant",
+    "Irrelevant",
+    "Wrong Market",
+    "Great Hook",
+    "Good Nattome Fit",
+    "Competitor Inspiration",
+    "Save for Later",
+    "Exclude Similar",
 )
 
 
@@ -46,6 +57,17 @@ def create_handler(workspace: Path | str = ".") -> type[BaseHTTPRequestHandler]:
                 return
             self.send_error(404, "Dashboard route not found")
 
+        def do_POST(self) -> None:
+            parsed_path = urlparse(self.path).path
+            if parsed_path == "/scraped-content/curation":
+                initialize_dashboard_store(workspace_path)
+                length = int(self.headers.get("Content-Length") or 0)
+                body = self.rfile.read(length).decode("utf-8")
+                _save_video_curation(workspace_path, parse_qs(body))
+                self._redirect("/scraped-content")
+                return
+            self.send_error(404, "Dashboard route not found")
+
         def log_message(self, format: str, *args: object) -> None:
             return
 
@@ -56,6 +78,12 @@ def create_handler(workspace: Path | str = ".") -> type[BaseHTTPRequestHandler]:
             self.send_header("Content-Length", str(len(encoded)))
             self.end_headers()
             self.wfile.write(encoded)
+
+        def _redirect(self, location: str) -> None:
+            self.send_response(303)
+            self.send_header("Location", location)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
 
         def _send_text(self, body: str) -> None:
             encoded = body.encode("utf-8")
@@ -74,7 +102,12 @@ def render_page(active_path: str, workspace: Path) -> str:
         _render_nav_item(label, route, active_path)
         for label, route in NAV_ITEMS
     )
-    overview = _render_overview(workspace) if active_path == "/" else _render_placeholder(title)
+    if active_path == "/":
+        overview = _render_overview(workspace)
+    elif active_path == "/scraped-content":
+        overview = _render_scraped_content(workspace)
+    else:
+        overview = _render_placeholder(title)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -221,6 +254,91 @@ def render_page(active_path: str, workspace: Path) -> str:
       color: var(--accent);
       font-weight: 700;
     }}
+    .content-list {{
+      display: grid;
+      gap: 16px;
+    }}
+    .scraped-card-header {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }}
+    .scraped-card-header h2 {{
+      margin: 0 0 4px;
+    }}
+    .metadata-grid {{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }}
+    .metadata-grid dt {{
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 0 3px;
+      text-transform: uppercase;
+    }}
+    .metadata-grid dd {{
+      margin: 0;
+      overflow-wrap: anywhere;
+    }}
+    .curation-form {{
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+      padding-top: 14px;
+    }}
+    .curation-form fieldset {{
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }}
+    .curation-form legend,
+    .field-label {{
+      color: var(--muted);
+      display: grid;
+      font-size: 13px;
+      font-weight: 700;
+      gap: 6px;
+    }}
+    .label-grid {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin-top: 8px;
+    }}
+    .check-label {{
+      align-items: center;
+      display: inline-flex;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 400;
+    }}
+    .field-label input,
+    .field-label textarea {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      font: inherit;
+      padding: 9px 10px;
+      width: 100%;
+    }}
+    .field-label textarea {{
+      min-height: 70px;
+      resize: vertical;
+    }}
+    .curation-form button {{
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      justify-self: start;
+      padding: 10px 12px;
+    }}
     code {{
       background: #eef1ec;
       border-radius: 4px;
@@ -235,6 +353,8 @@ def render_page(active_path: str, workspace: Path) -> str:
       main {{ padding: 24px 18px; }}
       .grid {{ grid-template-columns: 1fr; }}
       .video-row {{ grid-template-columns: 1fr; }}
+      .scraped-card-header,
+      .metadata-grid {{ grid-template-columns: 1fr; }}
     }}
   </style>
 </head>
@@ -567,6 +687,237 @@ def _json_loads(value: object) -> object:
         return json.loads(str(value))
     except json.JSONDecodeError:
         return {}
+
+
+def _render_scraped_content(workspace: Path) -> str:
+    workspace = Path(workspace)
+    index_pipeline_artifacts(workspace)
+    videos = _load_scraped_videos(workspace)
+    if not videos:
+        return """
+      <h1>Raw Scraped Videos</h1>
+      <p class="lede">No indexed raw scraped videos yet.</p>
+      <section class="panel notice">
+        <h2>Scraped Content</h2>
+        <p class="muted">Raw TikTok scrape files will appear here after the artifact indexer finds them.</p>
+      </section>
+    """
+    return f"""
+      <h1>Raw Scraped Videos</h1>
+      <p class="lede">Browse indexed TikTok scrape records, review selection status, and save lightweight curation notes.</p>
+      <section class="content-list" aria-label="Raw scraped videos">
+        {"".join(_render_scraped_video(video) for video in videos)}
+      </section>
+    """
+
+
+def _load_scraped_videos(workspace: Path) -> list[dict[str, object]]:
+    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
+    connection.row_factory = sqlite3.Row
+    try:
+        rows = connection.execute(
+            """
+            SELECT
+                raw_videos.*,
+                video_curation.labels AS curation_labels,
+                video_curation.exclude_similar_reason AS exclude_similar_reason,
+                video_curation.note AS curation_note
+            FROM raw_videos
+            LEFT JOIN video_curation
+                ON video_curation.tiktok_video_id = raw_videos.video_id
+            ORDER BY COALESCE(play_count, 0) DESC, video_id
+            """
+        )
+        return [dict(row) for row in rows]
+    finally:
+        connection.close()
+
+
+def _render_scraped_video(video: dict[str, object]) -> str:
+    video_id = str(video.get("video_id") or "")
+    labels = _curation_labels(video.get("curation_labels"))
+    caption = str(video.get("caption") or "Untitled TikTok")
+    hashtags = _hashtag_text(video.get("hashtags_json"))
+    source_input = str(video.get("source_input") or "Not recorded")
+    status = _display_status(video.get("selection_status"))
+    engagement = _engagement_rate(video)
+    relevance = _relevance_label(caption, hashtags, source_input)
+    freshness = _freshness_label(video.get("created_at"))
+    downloadable = "downloadable" if int(video.get("is_downloadable") or 0) else "not downloadable"
+    tiktok_url = str(video.get("tiktok_url") or "")
+    link = (
+        f'<a href="{html.escape(tiktok_url)}" target="_blank" rel="noopener">Open TikTok</a>'
+        if tiktok_url
+        else '<span class="muted">No TikTok link</span>'
+    )
+    return f"""
+        <article class="panel scraped-card">
+          <div class="scraped-card-header">
+            <div>
+              <h2>{html.escape(caption)}</h2>
+              <p class="muted">{html.escape(str(video.get("author_handle") or "Unknown creator"))} - {html.escape(status)}</p>
+            </div>
+            {link}
+          </div>
+          <dl class="metadata-grid">
+            {_metadata_item("Hashtags", hashtags or "None")}
+            {_metadata_item("Source Input", source_input)}
+            {_metadata_item("Views", _format_count(video.get("play_count")))}
+            {_metadata_item("Likes", _format_count(video.get("like_count")))}
+            {_metadata_item("Comments", _format_count(video.get("comment_count")))}
+            {_metadata_item("Shares", _format_count(video.get("share_count")))}
+            {_metadata_item("Created Date", str(video.get("created_at") or "Not recorded"))}
+            {_metadata_item("Freshness", freshness)}
+            {_metadata_item("Engagement", engagement)}
+            {_metadata_item("Relevance", relevance)}
+            {_metadata_item("Downloadability", downloadable)}
+            {_metadata_item("Run ID", str(video.get("run_id") or "Not tied to a run"))}
+            {_metadata_item("Config Version", str(video.get("config_version") or "Not recorded"))}
+            {_metadata_item("Status", status)}
+          </dl>
+          {_render_curation_form(video_id, labels, str(video.get("curation_note") or ""), str(video.get("exclude_similar_reason") or ""))}
+        </article>
+    """
+
+
+def _metadata_item(label: str, value: str) -> str:
+    return f"""
+      <div>
+        <dt>{html.escape(label)}</dt>
+        <dd>{html.escape(value)}</dd>
+      </div>
+    """
+
+
+def _render_curation_form(
+    video_id: str,
+    selected_labels: list[str],
+    note: str,
+    exclude_similar_reason: str,
+) -> str:
+    checkboxes = []
+    for label in CURATION_LABELS:
+        checked = " checked" if label in selected_labels else ""
+        checkboxes.append(
+            f"""
+            <label class="check-label">
+              <input type="checkbox" name="labels" value="{html.escape(label)}"{checked}>
+              {html.escape(label)}
+            </label>
+            """
+        )
+    return f"""
+      <form class="curation-form" method="post" action="/scraped-content/curation">
+        <input type="hidden" name="video_id" value="{html.escape(video_id)}">
+        <fieldset>
+          <legend>Labels</legend>
+          <div class="label-grid">{"".join(checkboxes)}</div>
+        </fieldset>
+        <label class="field-label">
+          Exclude Similar Reason
+          <input type="text" name="exclude_similar_reason" maxlength="160" value="{html.escape(exclude_similar_reason)}">
+        </label>
+        <label class="field-label">
+          Note
+          <textarea name="note" maxlength="500">{html.escape(note)}</textarea>
+        </label>
+        <button type="submit">Save curation</button>
+      </form>
+    """
+
+
+def _save_video_curation(workspace: Path, form: dict[str, list[str]]) -> None:
+    video_id = _first_form_value(form, "video_id")
+    if not video_id:
+        return
+    labels = [label for label in form.get("labels", []) if label in CURATION_LABELS]
+    exclude_reason = _first_form_value(form, "exclude_similar_reason")[:160]
+    if "Exclude Similar" in labels and not exclude_reason.strip():
+        labels = [label for label in labels if label != "Exclude Similar"]
+    note = _first_form_value(form, "note")[:500]
+    connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
+    try:
+        connection.execute(
+            """
+            INSERT INTO video_curation (
+                tiktok_video_id,
+                labels,
+                exclude_similar_reason,
+                note,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(tiktok_video_id) DO UPDATE SET
+                labels = excluded.labels,
+                exclude_similar_reason = excluded.exclude_similar_reason,
+                note = excluded.note,
+                updated_at = CURRENT_TIMESTAMP
+            """,
+            (video_id, json.dumps(labels, ensure_ascii=True), exclude_reason, note),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+
+def _first_form_value(form: dict[str, list[str]], key: str) -> str:
+    values = form.get(key) or [""]
+    return values[0].strip()
+
+
+def _curation_labels(raw_value: object) -> list[str]:
+    labels = _json_loads(raw_value)
+    if not isinstance(labels, list):
+        return []
+    return [str(label) for label in labels if str(label) in CURATION_LABELS]
+
+
+def _hashtag_text(raw_value: object) -> str:
+    hashtags = _json_loads(raw_value)
+    if not isinstance(hashtags, list):
+        return ""
+    return " ".join(f"#{str(tag).lstrip('#')}" for tag in hashtags)
+
+
+def _display_status(value: object) -> str:
+    status = str(value or "raw").lower()
+    if status == "raw":
+        return "raw only"
+    if status in {"eligible", "selected", "analyzed"}:
+        return status
+    return "raw only"
+
+
+def _engagement_rate(video: dict[str, object]) -> str:
+    views = _int_value(video.get("play_count"))
+    if views <= 0:
+        return "--"
+    likes = _int_value(video.get("like_count"))
+    comments = _int_value(video.get("comment_count"))
+    shares = _int_value(video.get("share_count"))
+    rate = (likes + comments * 5 + shares * 10) / views
+    return f"{rate * 100:.1f}%"
+
+
+def _relevance_label(caption: str, hashtags: str, source_input: str) -> str:
+    haystack = f"{caption} {hashtags} {source_input}".lower()
+    matches = sum(1 for term in ("gut", "digest", "bloating", "reflux", "stomach") if term in haystack)
+    if matches >= 2:
+        return "high"
+    if matches == 1:
+        return "medium"
+    return "low"
+
+
+def _freshness_label(created_at: object) -> str:
+    return "created date available" if created_at else "created date missing"
+
+
+def _int_value(value: object) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def _render_placeholder(title: str) -> str:

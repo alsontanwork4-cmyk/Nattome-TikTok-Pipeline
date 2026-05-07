@@ -133,7 +133,7 @@ def _index_raw_scrapes(connection: Connection, workspace: Path) -> None:
                     1 if video.get("video_download_url") or video.get("videoDownloadUrl") else 0,
                     None,
                     None,
-                    "raw",
+                    _initial_selection_status(video),
                     _json_dumps(video),
                 ),
             )
@@ -428,6 +428,18 @@ def _video_items(data: Any) -> list[dict[str, Any]]:
 
 def _video_id(video: dict[str, Any]) -> str:
     return str(video.get("id") or video.get("video_id") or video.get("videoId") or "")
+
+
+def _initial_selection_status(video: dict[str, Any]) -> str:
+    status = str(video.get("selection_status") or video.get("selectionStatus") or "").lower()
+    if status in {"eligible", "selected", "analyzed"}:
+        return status
+    eligibility = video.get("is_eligible")
+    if eligibility is None:
+        eligibility = video.get("eligible")
+    if eligibility is True or str(eligibility).lower() in {"true", "eligible", "yes"}:
+        return "eligible"
+    return "raw"
 
 
 def _artifact_metadata(data: Any) -> dict[str, Any]:

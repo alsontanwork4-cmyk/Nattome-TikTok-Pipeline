@@ -171,7 +171,64 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Edit scrape settings", body)
             self.assertIn("Browse content library", body)
 
+    def test_scraped_content_route_lists_raw_videos_with_status_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            self._write_scraped_content_workspace(workspace)
+
+            response, body = self._request(workspace, "GET", "/scraped-content")
+
+            self.assertEqual(response.status, 200)
+            self.assertIn("Raw Scraped Videos", body)
+            self.assertIn("Raw only clip", body)
+            self.assertIn("Eligible clip", body)
+            self.assertIn("Analyzed clip", body)
+            self.assertIn("raw only", body)
+            self.assertIn("eligible", body)
+            self.assertIn("analyzed", body)
+            self.assertIn("@creator-raw-1", body)
+            self.assertIn("#guthealth", body)
+            self.assertIn("15.0%", body)
+            self.assertIn("https://www.tiktok.com/@creator/video/raw-1", body)
+            self.assertNotIn("<video", body.lower())
+
+    def test_scraped_content_route_persists_labels_notes_and_exclude_reason(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            self._write_scraped_content_workspace(workspace)
+            form_body = (
+                "video_id=raw-1&labels=Relevant&labels=Exclude+Similar"
+                "&exclude_similar_reason=Wrong+market+pattern&note=Keep+for+hook+study"
+            )
+
+            post_response, _ = self._request(
+                workspace,
+                "POST",
+                "/scraped-content/curation",
+                body=form_body,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            get_response, body = self._request(workspace, "GET", "/scraped-content")
+
+            self.assertEqual(post_response.status, 303)
+            self.assertEqual(get_response.status, 200)
+            self.assertIn("Relevant", body)
+            self.assertIn("Exclude Similar", body)
+            self.assertIn("Wrong market pattern", body)
+            self.assertIn("Keep for hook study", body)
+
     def _get_overview(self, workspace: Path):
+        return self._request(workspace, "GET", "/")
+
+    def _request(
+        self,
+        workspace: Path,
+        method: str,
+        path: str,
+        *,
+        body: str | None = None,
+        headers: dict[str, str] | None = None,
+    ):
         server = DashboardServer(
             ("127.0.0.1", 0),
             create_handler(workspace),
@@ -181,10 +238,10 @@ class DashboardWebShellTest(unittest.TestCase):
         try:
             host, port = server.server_address
             connection = http.client.HTTPConnection(host, port, timeout=5)
-            connection.request("GET", "/")
+            connection.request(method, path, body=body, headers=headers or {})
             response = connection.getresponse()
-            body = response.read().decode("utf-8")
-            return response, body
+            response_body = response.read().decode("utf-8")
+            return response, response_body
         finally:
             server.shutdown()
             thread.join(timeout=5)
@@ -308,3 +365,88 @@ class DashboardWebShellTest(unittest.TestCase):
             "share_count": shares,
             "created_at": "2026-05-06T00:00:00Z",
         }
+
+    def _write_scraped_content_workspace(self, workspace: Path) -> None:
+        raw_scrapes = workspace / "data" / "raw_scrapes"
+        run_folder = workspace / "runs" / "batch-analysis" / "20260507T030000Z_default"
+        data_folder = run_folder / "data"
+        raw_scrapes.mkdir(parents=True, exist_ok=True)
+        data_folder.mkdir(parents=True, exist_ok=True)
+        candidate_source = "data/raw_scrapes/sample_raw.json"
+        videos = [
+            {
+                "id": "raw-1",
+                "url": "https://www.tiktok.com/@creator/video/raw-1",
+                "author_handle": "@creator-raw-1",
+                "caption": "Raw only clip",
+                "hashtags": ["guthealth", "routine"],
+                "source_input": "#guthealth",
+                "video_download_url": "https://cdn.example.com/raw-1.mp4",
+                "play_count": 10000,
+                "like_count": 1000,
+                "comment_count": 50,
+                "share_count": 25,
+                "created_at": "2026-05-06T00:00:00Z",
+            },
+            {
+                "id": "eligible-1",
+                "url": "https://www.tiktok.com/@creator/video/eligible-1",
+                "author_handle": "@creator-eligible-1",
+                "caption": "Eligible clip",
+                "hashtags": ["guthealth"],
+                "source_input": "#guthealth",
+                "video_download_url": "https://cdn.example.com/eligible-1.mp4",
+                "play_count": 9000,
+                "like_count": 900,
+                "comment_count": 45,
+                "share_count": 20,
+                "created_at": "2026-05-06T00:00:00Z",
+                "is_eligible": True,
+            },
+            {
+                "id": "analyzed-1",
+                "url": "https://www.tiktok.com/@creator/video/analyzed-1",
+                "author_handle": "@creator-analyzed-1",
+                "caption": "Analyzed clip",
+                "hashtags": ["digestion"],
+                "source_input": "#digestion",
+                "video_download_url": "https://cdn.example.com/analyzed-1.mp4",
+                "play_count": 8000,
+                "like_count": 800,
+                "comment_count": 40,
+                "share_count": 16,
+                "created_at": "2026-05-06T00:00:00Z",
+            },
+        ]
+        (raw_scrapes / "sample_raw.json").write_text(
+            json.dumps({"generated_at": "2026-05-07T00:00:00Z", "top": videos}),
+            encoding="utf-8",
+        )
+        (run_folder / "run_manifest.json").write_text(
+            json.dumps(
+                {
+                    "run_timestamp": "2026-05-07T00:00:00Z",
+                    "mode": "default",
+                    "requested_batch_size": 1,
+                    "configuration": {"selection": {"maximum_age_days": 14}},
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_folder / "selected_batch.json").write_text(
+            json.dumps(
+                {
+                    "selected_at": "2026-05-07T00:00:00Z",
+                    "candidate_source": candidate_source,
+                    "input_candidate_count": 3,
+                    "eligible_candidate_count": 2,
+                    "selected_candidate_count": 1,
+                    "selected_candidates": [{"id": "analyzed-1"}],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (data_folder / "001_analyzed-1_source_metadata.json").write_text(
+            json.dumps({"id": "analyzed-1", "caption": "Analyzed clip"}),
+            encoding="utf-8",
+        )

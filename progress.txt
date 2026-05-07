@@ -1084,3 +1084,30 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0042-browse-and-curate-raw-scraped-videos.md` is next.
+
+## 2026-05-07 - 0042 Browse And Curate Raw Scraped Videos
+
+Task completed from `docs/issues/0042-browse-and-curate-raw-scraped-videos.md`.
+
+Key decisions made:
+- Built `/scraped-content` around indexed `raw_videos` so marketers can browse raw, eligible, selected, and analyzed TikTok records without local video playback.
+- Added raw-video status derivation for scrape records that already carry eligible/selection metadata, while preserving selected and analyzed status from the artifact indexer.
+- Rendered author, caption, hashtags, source input, TikTok link, engagement, relevance, downloadability, run ID, config version, created date, freshness, and status.
+- Added form-based curation keyed by TikTok video ID with supported labels, short notes, and an Exclude Similar reason.
+- Added a small dashboard-store migration for `exclude_similar_reason` so existing local SQLite stores can keep working.
+
+Files changed:
+- `dashboard/web.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0042-browse-and-curate-raw-scraped-videos.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` first failed with the expected placeholder route and unimplemented POST response, then passed with 7 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 66 tests.
+- Real-workspace smoke passed: `render_page("/scraped-content", Path("."))` included Raw Scraped Videos and outbound TikTok links, and did not render a local `<video>` element.
+
+Blockers or notes for the next iteration:
+- Issue `0043-manage-scrape-settings-with-version-history.md` is next.
