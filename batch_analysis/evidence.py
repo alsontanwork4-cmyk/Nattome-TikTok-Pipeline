@@ -16,6 +16,7 @@ from .evidence_io import (
     relative_path,
 )
 from .reports import write_video_evidence_report, write_video_evidence_report_from_snapshot
+from .shootable_angles import generate_shootable_angles
 from .tool_adapters import (
     copy_or_download_video,
     extract_audio,
@@ -741,6 +742,13 @@ def write_snapshot_evidence_outputs(
         claim_review,
     )
     quality = read_json_object(quality_path) or {}
+    shootable_angles = generate_shootable_angles(
+        candidate,
+        snapshot,
+        gemini_evidence,
+        claim_safety_review=claim_review,
+        evidence_quality=quality,
+    )
 
     report_path = prefixed_report_path(run_folder, snapshot, "video_evidence_report")
     write_video_evidence_report_from_snapshot(
@@ -751,6 +759,7 @@ def write_snapshot_evidence_outputs(
         audio_analysis,
         claim_review,
         quality,
+        shootable_angles,
     )
 
     snapshot.setdefault("artifacts", {})

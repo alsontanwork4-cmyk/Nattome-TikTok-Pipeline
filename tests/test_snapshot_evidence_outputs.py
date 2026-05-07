@@ -138,6 +138,8 @@ class SnapshotEvidenceOutputsTest(unittest.TestCase):
             )
             self.assertIn("Gemini evidence not available: Gemini API key is missing.", report)
             self.assertIn("Manual review required", report)
+            self.assertIn("No evidence-backed Shootable Angle was generated", report)
+            self.assertNotIn("Digestive Comfort Routine Check", report)
 
     def test_selected_batch_run_writes_snapshot_reports_to_two_layer_layout(self):
         with tempfile.TemporaryDirectory() as temp_dir:

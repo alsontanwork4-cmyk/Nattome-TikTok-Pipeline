@@ -256,6 +256,7 @@ def write_video_evidence_report_from_snapshot(
     audio_analysis: dict[str, Any],
     claim_review: dict[str, Any],
     quality: dict[str, Any],
+    shootable_angles: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     quality_score = quality.get("evidence_quality_score") if isinstance(quality, dict) else {}
     manual_review = quality.get("manual_review_flag") if isinstance(quality, dict) else {}
@@ -364,20 +365,38 @@ def write_video_evidence_report_from_snapshot(
             "",
             "## Shootable Angles",
             "",
-            "### Angle 1: Digestive Comfort Routine Check",
-            "",
-            f"- Hook: Turn the creator topic into a safe question: `{caption}`",
-            f"- Avatar: {avatar_for_candidate(candidate)}",
-            "- Format: Talking-head explainer with simple on-screen text.",
-            f"- Product tie-in: {product_tie_in_for_candidate(candidate)}",
-            "- Script beats: problem moment; simple routine cue; product-safe support language; reminder to read labels.",
-            "- CTA: Save this for your next meal routine.",
-            f"- Claim guardrails: {claim_guardrails(claim_review)}",
-            "",
-            "## Claim Safety Review",
-            "",
         ]
     )
+    angles = shootable_angles if isinstance(shootable_angles, list) else []
+    if angles:
+        for index, angle in enumerate(angles, start=1):
+            if not isinstance(angle, dict):
+                continue
+            score = angle.get("priority_score") if isinstance(angle.get("priority_score"), dict) else {}
+            lines.extend(
+                [
+                    f"### Angle {index}: {angle.get('angle_title', 'Shootable Angle')}",
+                    "",
+                    f"- Hook: {angle.get('hook', 'Not available')}",
+                    f"- Avatar: {angle.get('avatar', 'Not available')}",
+                    f"- Format: {angle.get('format', 'Not available')}",
+                    f"- Product fit: {angle.get('product_fit', 'Not available')}",
+                    f"- Recommendation: {angle.get('recommendation', 'Not available')}",
+                    f"- Claim guardrails: {angle.get('claim_guardrails', 'Not available')}",
+                    f"- Source evidence: {', '.join(angle.get('source_evidence', [])) if isinstance(angle.get('source_evidence'), list) else 'Not available'}",
+                    f"- Nattome Priority Score: {score.get('total', 'unknown')}/{score.get('max_points', 30)}",
+                    "",
+                ]
+            )
+    else:
+        lines.extend(
+            [
+                "No evidence-backed Shootable Angle was generated from this snapshot.",
+                "",
+            ]
+        )
+
+    lines.extend(["## Claim Safety Review", ""])
     claims = claim_review.get("flagged_claims") if isinstance(claim_review, dict) else []
     if isinstance(claims, list) and claims:
         for claim in claims:

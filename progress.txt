@@ -531,3 +531,33 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - The full run still keeps the legacy nested bundle writer until the later architecture migration issue removes old layout writes.
+
+## 2026-05-07 - 0022 Generate Evidence-Backed Shootable Angles Locally
+
+Task completed from `docs/issues/0022-generate-evidence-backed-shootable-angles-locally.md`.
+
+Key decisions made:
+- Added `batch_analysis.shootable_angles` as a pure domain module with no file writes.
+- Local logic now generates zero, one, or up to three Shootable Angles from candidate metadata, Evidence Bundle snapshot context, Gemini evidence, Evidence Quality, and Claim Safety Review.
+- Gemini evidence is used only as input evidence; any Gemini-provided creative angle field is ignored.
+- Snapshot Video Evidence Reports now render locally generated angles and explicitly show when no evidence-backed angle was generated.
+- Nattome Priority Score remains six dimensions with a 30-point maximum.
+
+Files changed:
+- `batch_analysis/shootable_angles.py`
+- `batch_analysis/evidence.py`
+- `batch_analysis/reports.py`
+- `tests/test_shootable_angles.py`
+- `tests/test_snapshot_evidence_outputs.py`
+- `progress.txt`
+- `docs/issues/done/0022-generate-evidence-backed-shootable-angles-locally.md`
+
+Feedback:
+- `python -m pytest tests\test_shootable_angles.py -q` failed before implementation, then passed.
+- `python -m pytest tests\test_snapshot_evidence_outputs.py::SnapshotEvidenceOutputsTest::test_partial_and_missing_gemini_snapshots_record_uncertainty tests\test_shootable_angles.py -q` passed.
+- `python -m pytest tests\test_shootable_angles.py tests\test_snapshot_evidence_outputs.py tests\test_reports.py tests\test_outputs.py -q` passed.
+- `python -m pytest -q` passed with 44 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
+- Batch-level cross-video outputs still use the legacy single-angle path until the next output migration slice.
