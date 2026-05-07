@@ -1059,3 +1059,28 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0041-build-latest-run-overview.md` is next.
+
+## 2026-05-07 - 0041 Build Latest Run Overview
+
+Task completed from `docs/issues/0041-build-latest-run-overview.md`.
+
+Key decisions made:
+- Wired the Overview route to rebuild the dashboard artifact index, compute Scrape Quality Scores, compute Pipeline Health, and render the latest indexed Batch Analysis Run from SQLite.
+- Kept Scrape Quality and Pipeline Health visually and conceptually separate on the marketer-facing screen.
+- Added primary action links for running scrapes and pipelines, editing scrape settings, viewing run history, and browsing scraped content.
+- Rendered current config version, next scheduled run information, top quality drivers, health drilldown, and top raw scraped videos with TikTok outbound links.
+- Preserved understandable empty-state copy when no runs or raw scrape artifacts exist.
+
+Files changed:
+- `dashboard/web.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0041-build-latest-run-overview.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_shell` first failed with the expected static Overview output, then passed with 5 tests after implementation.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 64 tests.
+- Real-workspace smoke passed: `render_page("/", Path("."))` included Latest Run Overview, Scrape Quality Score, and Pipeline Health.
+
+Blockers or notes for the next iteration:
+- Issue `0042-browse-and-curate-raw-scraped-videos.md` is next.
