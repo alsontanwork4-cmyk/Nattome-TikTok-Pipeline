@@ -11,6 +11,7 @@ from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
 
 
 DERIVED_TABLES = (
+    "scrape_quality_scores",
     "artifact_sources",
     "raw_videos",
     "selected_batches",

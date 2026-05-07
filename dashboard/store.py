@@ -218,3 +218,21 @@ def _create_artifact_tables(connection: sqlite3.Connection) -> None:
         )
         """
     )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS scrape_quality_scores (
+            run_id TEXT PRIMARY KEY,
+            score INTEGER NOT NULL,
+            band TEXT NOT NULL,
+            needs_attention INTEGER NOT NULL DEFAULT 0,
+            candidate_volume_score INTEGER NOT NULL,
+            eligibility_yield_score INTEGER NOT NULL,
+            nattome_relevance_score INTEGER NOT NULL,
+            freshness_score INTEGER NOT NULL,
+            engagement_strength_score INTEGER NOT NULL,
+            duplicate_noise_control_score INTEGER NOT NULL,
+            drivers_json TEXT NOT NULL DEFAULT '[]',
+            computed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )

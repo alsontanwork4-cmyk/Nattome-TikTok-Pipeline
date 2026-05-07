@@ -1004,3 +1004,30 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0039-compute-scrape-quality-score.md` is next.
+
+## 2026-05-07 - 0039 Compute Scrape Quality Score
+
+Task completed from `docs/issues/0039-compute-scrape-quality-score.md`.
+
+Key decisions made:
+- Added `dashboard.quality.compute_scrape_quality_scores(workspace)` as the public scrape-only scoring interface for indexed Batch Analysis Runs.
+- Persisted score results in `scrape_quality_scores` with the requested component breakdown, quality drivers, score band, and `needs_attention` flag.
+- Used the PRD weighting: 25 candidate volume, 20 eligibility yield, 20 Nattome relevance, 15 freshness, 15 engagement strength, and 5 duplicate/noise control.
+- Kept claim safety, manual review burden, evidence extraction, output generation, and other downstream Pipeline Health signals out of the score.
+- Treated scores below 60 as an attention condition only; scoring does not mutate scrape settings or scheduled run behavior.
+
+Files changed:
+- `dashboard/quality.py`
+- `dashboard/store.py`
+- `dashboard/indexer.py`
+- `tests/test_scrape_quality_score.py`
+- `progress.txt`
+- `docs/issues/done/0039-compute-scrape-quality-score.md`
+
+Feedback:
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_scrape_quality_score` passed with 4 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 57 tests.
+- Real-workspace smoke passed: artifact index summary was `IndexSummary(raw_videos=49, selected_batches=2, batch_runs=2, run_outputs=16, documentation_records=11)` and both indexed runs scored `78` as `usable scrape`.
+
+Blockers or notes for the next iteration:
+- Issue `0040-summarize-pipeline-health.md` is next.
