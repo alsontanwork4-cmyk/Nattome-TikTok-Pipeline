@@ -1463,3 +1463,38 @@ Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - `C:\Users\Alson\.venv\Scripts\python.exe -m pytest ...` could not run because that virtualenv does not have `pytest`; the system `python -m pytest` runner was used for the red, green, and full-suite feedback loops.
 - Continue with `docs/issues/0056-centralize-dashboard-derived-refresh.md` next if context allows.
+
+## 2026-05-07 - 0056 Centralize Dashboard Derived Refresh
+
+Task completed from `docs/issues/0056-centralize-dashboard-derived-refresh.md`.
+
+Key decisions made:
+- Added `dashboard.refresh.refresh_dashboard_derivatives` as the shared orchestration point for artifact indexing, Scrape Quality recomputation, and Pipeline Health recomputation.
+- Added intent and scope parameters so callers can request `artifacts`, `quality`, or `all` without duplicating the refresh sequence.
+- Moved overview, search, run history, scraped content, architecture, pattern generation, recommendations, and manual-run completion refresh calls through the shared module.
+- Kept automatic local artifact-driven dashboard refresh behavior; no manual refresh step was introduced.
+- Kept primitive indexing/scoring/health modules as the only modules that directly own their compute functions.
+
+Files changed:
+- `dashboard/refresh.py`
+- `dashboard/architecture.py`
+- `dashboard/manual_runs.py`
+- `dashboard/pattern_library.py`
+- `dashboard/recommendations.py`
+- `dashboard/run_history.py`
+- `dashboard/search.py`
+- `dashboard/web_overview.py`
+- `dashboard/web_scraped_content.py`
+- `tests/test_dashboard_refresh.py`
+- `progress.txt`
+- `docs/issues/done/0056-centralize-dashboard-derived-refresh.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_refresh.py -q` failed because `dashboard.refresh` did not exist yet.
+- GREEN: `python -m pytest tests/test_dashboard_refresh.py -q` passed with 2 tests.
+- `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_shell.py tests/test_dashboard_global_search.py tests/test_dashboard_run_history.py tests/test_dashboard_recommendations.py tests/test_dashboard_artifact_indexer.py tests/test_scrape_quality_score.py tests/test_pipeline_health.py -q` passed with 41 tests and 44 subtests.
+- `python -m pytest -q` passed with 113 tests and 45 subtests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0056 rather than starting issue 0057.

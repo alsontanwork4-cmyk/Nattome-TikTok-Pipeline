@@ -6,10 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .health import compute_pipeline_health
-from .indexer import index_pipeline_artifacts
 from .manual_runs import list_manual_runs
-from .quality import NATTOME_TERMS, compute_scrape_quality_scores
+from .quality import NATTOME_TERMS
+from .refresh import refresh_dashboard_derivatives
 from .store import connect_dashboard_store
 
 
@@ -164,9 +163,7 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
 
 
 def _refresh_derived_dashboard_data(workspace: Path) -> None:
-    index_pipeline_artifacts(workspace)
-    compute_scrape_quality_scores(workspace)
-    compute_pipeline_health(workspace)
+    refresh_dashboard_derivatives(workspace, intent="run_history", scope="all")
 
 
 def _scheduled_run_row(connection: sqlite3.Connection, run: sqlite3.Row) -> RunHistoryRow:

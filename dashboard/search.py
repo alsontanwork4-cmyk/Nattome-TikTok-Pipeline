@@ -7,8 +7,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from .indexer import index_pipeline_artifacts
-from .quality import NATTOME_TERMS, compute_scrape_quality_scores
+from .quality import NATTOME_TERMS
+from .refresh import refresh_dashboard_derivatives
 from .store import connect_dashboard_store
 
 
@@ -38,8 +38,7 @@ def search_dashboard_records(
 ) -> SearchResponse:
     """Search indexed dashboard records and dashboard-owned mutable state."""
     workspace_path = Path(workspace)
-    index_pipeline_artifacts(workspace_path)
-    compute_scrape_quality_scores(workspace_path)
+    refresh_dashboard_derivatives(workspace_path, intent="search", scope="quality")
     selected_facets = _normalize_selected_facets(facets or {})
     records = _collect_records(workspace_path)
     query_filtered = [record for record in records if _matches_query(record, query)]

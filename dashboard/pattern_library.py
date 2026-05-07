@@ -7,7 +7,7 @@ from pathlib import Path
 from statistics import median
 from typing import Any
 
-from .indexer import index_pipeline_artifacts
+from .refresh import refresh_dashboard_derivatives
 from .store import connect_dashboard_store, dump_json
 
 
@@ -69,7 +69,7 @@ def generate_candidate_patterns(
     user: str = "local",
 ) -> list[CandidatePattern]:
     workspace_path = Path(workspace)
-    index_pipeline_artifacts(workspace_path)
+    refresh_dashboard_derivatives(workspace_path, intent="pattern_library", scope="artifacts")
     connection = connect_dashboard_store(workspace_path)
     try:
         videos = _load_pattern_source_videos(connection)

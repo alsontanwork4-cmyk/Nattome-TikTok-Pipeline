@@ -3,7 +3,7 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
-from .indexer import index_pipeline_artifacts
+from .refresh import refresh_dashboard_derivatives
 from .store import connect_dashboard_store
 from .web_components import (
     _curation_labels,
@@ -22,7 +22,7 @@ from .web_constants import CURATION_LABELS
 
 def _render_scraped_content(workspace: Path) -> str:
     workspace = Path(workspace)
-    index_pipeline_artifacts(workspace)
+    refresh_dashboard_derivatives(workspace, intent="scraped_content", scope="artifacts")
     videos = _load_scraped_videos(workspace)
     if not videos:
         return """

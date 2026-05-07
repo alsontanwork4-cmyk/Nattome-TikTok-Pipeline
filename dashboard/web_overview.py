@@ -3,9 +3,7 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
-from .health import compute_pipeline_health
-from .indexer import index_pipeline_artifacts
-from .quality import compute_scrape_quality_scores
+from .refresh import refresh_dashboard_derivatives
 from .store import DASHBOARD_DB_PATH, connect_dashboard_store
 from .web_components import (
     _display_status,
@@ -23,9 +21,7 @@ from .web_components import (
 
 def _render_overview(workspace: Path) -> str:
     workspace = Path(workspace)
-    index_pipeline_artifacts(workspace)
-    compute_scrape_quality_scores(workspace)
-    compute_pipeline_health(workspace)
+    refresh_dashboard_derivatives(workspace, intent="overview", scope="all")
     overview = _load_latest_overview(workspace)
     actions = _render_overview_actions()
     header = _render_page_header(

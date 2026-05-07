@@ -6,8 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .indexer import index_pipeline_artifacts
-from .quality import compute_scrape_quality_scores
+from .refresh import refresh_dashboard_derivatives
 from .settings import get_active_settings_version
 from .store import connect_dashboard_store, dump_json
 
@@ -55,8 +54,7 @@ class Recommendation:
 def generate_recommendations(workspace: Path | str = ".") -> list[Recommendation]:
     """Generate passive scrape recommendations without mutating settings or scores."""
     workspace_path = Path(workspace)
-    index_pipeline_artifacts(workspace_path)
-    compute_scrape_quality_scores(workspace_path)
+    refresh_dashboard_derivatives(workspace_path, intent="recommendations", scope="quality")
     active_config = _active_config_label(workspace_path)
 
     connection = connect_dashboard_store(workspace_path)

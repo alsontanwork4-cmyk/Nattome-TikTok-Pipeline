@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable, Sequence
 
-from .indexer import index_pipeline_artifacts
+from .refresh import refresh_dashboard_derivatives
 from .settings import get_active_settings_version
 from .store import connect_dashboard_store, dump_json, load_json
 
@@ -78,7 +78,7 @@ def trigger_manual_run(
             break
     if status == "completed":
         try:
-            index_pipeline_artifacts(workspace_path)
+            refresh_dashboard_derivatives(workspace_path, intent="manual_run_completed", scope="artifacts")
         except Exception as exc:  # pragma: no cover - defensive dashboard boundary
             status = "failed"
             error_text = f"indexing failed: {exc}"

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .indexer import index_pipeline_artifacts
+from .refresh import refresh_dashboard_derivatives
 from .store import connect_dashboard_store
 
 
@@ -58,7 +58,7 @@ class PipelineArchitecture:
 def load_pipeline_architecture(workspace: Path | str = ".") -> PipelineArchitecture:
     """Build a read-only architecture view model from indexed pipeline artifacts."""
     workspace_path = Path(workspace)
-    index_pipeline_artifacts(workspace_path)
+    refresh_dashboard_derivatives(workspace_path, intent="pipeline_architecture", scope="artifacts")
     connection = connect_dashboard_store(workspace_path)
     try:
         latest_run = _latest_run(connection)
