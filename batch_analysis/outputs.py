@@ -232,15 +232,7 @@ def write_top5_creative_production_report(
     bundles_by_candidate = evidence_bundles_by_candidate(evidence_index)
     selected = ranked_top_five(selected_batch)
 
-    lines = [
-        "# What We Learned From These 5 Videos",
-        "",
-        "- Lead with a concrete digestive discomfort moment the audience already recognizes.",
-        "- Translate the source pattern into Nattome support language instead of repeating claims.",
-        "- Keep each production idea simple enough to shoot as a talking-head, routine, or text-led short.",
-        "- Use source videos as creative inspiration, then rewrite hooks and overlays for brand-safe execution.",
-        "",
-    ]
+    lines: list[str] = []
 
     for index, candidate in enumerate(selected, start=1):
         candidate_id = str(candidate.get("id") or "")

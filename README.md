@@ -1,15 +1,16 @@
 # Nattome TikTok Content Discovery Pipeline
 
-Two-tier content intelligence pipeline for **Nattome** (Atomic Group's flagship digestive-health brand for Malaysians). Discovers viral TikToks, analyzes why they work, and generates Nattome-shootable angles — daily for ideation, weekly for evidence-backed strategic research.
+End-to-end viral intelligence pipeline for **Nattome** (Atomic Group's flagship digestive-health brand for Malaysians). It discovers viral TikToks, preserves evidence-ready candidates, analyzes source videos with Gemini, and generates Nattome-shootable angles. Discovery creates the data; evidence analysis turns that data into actionable insight.
 
 ## What This Project Is
 
-| Cadence | Skill | Purpose / artifact | Runtime |
+| Use case | Skill | Purpose / artifact | Runtime |
 |---|---|---|---|
-| **Daily** | `nattome-daily-discovery` | Discovery and ideation handoff: `outputs/daily_briefs/daily_brief_<date>.md` plus `data/daily_selections/nattome_daily_<date>_top5.json` | 3–8 min |
-| **Weekly** | `nattome-batch-analysis` | Final production deliverables: `outputs/reports/<date>/top5_creative_production_report_<date>.md` + `top5_angle_planning_sheet_<date>.xlsx` | 15–30 min |
+| **Automation / normal run** | `nattome-viral-intelligence-run` | Runs discovery, then evidence insight analysis, then reports final paths and evidence status. | 20–40 min |
+| **Phase 1 only** | `nattome-tiktok-candidate-discovery` | Candidate discovery handoff: `outputs/daily_briefs/daily_brief_<date>.md` plus `data/daily_selections/nattome_daily_<date>_top5.json` | 3–8 min |
+| **Phase 2 only** | `nattome-evidence-insight-analysis` | Final production deliverables: `outputs/reports/<date>/top5_creative_production_report_<date>.md` + `top5_angle_planning_sheet_<date>.xlsx` | 15–30 min |
 
-Both skills live under `skills/` and are loaded automatically by Claude Code via `.claude/settings.json`.
+The phase skills are not alternatives. Use the orchestrator skill for recurring jobs unless you explicitly need a discovery-only scrape or an evidence-only rerun.
 
 ## Folder Layout
 
@@ -20,8 +21,9 @@ Both skills live under `skills/` and are loaded automatically by Claude Code via
 ├── progress.txt                   ← chronological execution log
 ├── .claude/settings.json          ← registers skills/ as a skill directory
 ├── skills/
-│   ├── nattome-daily-discovery/   ← daily ideation skill (with scrape + Telegram scripts)
-│   └── nattome-batch-analysis/    ← weekly evidence-first analysis skill
+│   ├── nattome-viral-intelligence-run/       ← end-to-end orchestration skill
+│   ├── nattome-tiktok-candidate-discovery/   ← phase 1: scrape, rank, handoff
+│   └── nattome-evidence-insight-analysis/    ← phase 2: Gemini evidence insights
 ├── batch_analysis/                ← importable weekly batch analysis package
 ├── scripts/
 │   └── run_batch_analysis.py      ← thin compatibility CLI (called by the batch skill)
@@ -76,7 +78,7 @@ New code should import from `batch_analysis/` instead of importing the CLI scrip
 **Daily discovery brief:**
 
 ```powershell
-python skills/nattome-daily-discovery/scripts/scrape_tiktok.py `
+python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
   --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd)_top30.json `
   --top 30 `
   --download-videos `
@@ -127,12 +129,12 @@ C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_
 
 ## Running On a Schedule
 
-The two skills are wired to run via the `anthropic-skills:schedule` skill. Each schedule entry is just a prompt — the prompt's wording triggers the matching skill via its `description:` field.
+Use one scheduled prompt for the normal pipeline. The prompt wording should trigger `nattome-viral-intelligence-run` so discovery and evidence run together.
 
 | Cadence | Prompt | Matches skill |
 |---|---|---|
-| Daily 09:00 local | "Run the Nattome daily TikTok discovery brief for today." | `nattome-daily-discovery` |
-| Weekly Mon 08:00 local | "Run the Nattome weekly batch evidence analysis on this week's top candidates." | `nattome-batch-analysis` |
+| Daily 09:00 local | "Run the end-to-end Nattome TikTok viral intelligence pipeline for today." | `nattome-viral-intelligence-run` |
+| Weekly Mon 08:00 local | "Run the weekly Nattome viral intelligence batch: discover candidates, then run evidence insight analysis." | `nattome-viral-intelligence-run` |
 
 Manage these via `/anthropic-skills:schedule` (create / list / update / run).
 
@@ -140,11 +142,12 @@ Manage these via `/anthropic-skills:schedule` (create / list / update / run).
 
 1. `CONTEXT.md` — what every domain term means
 2. `docs/prd/gemini-two-layer-evidence-pipeline-architecture-prd.md` — current Gemini/two-layer architecture
-3. `skills/nattome-daily-discovery/SKILL.md` — daily workflow
-4. `skills/nattome-batch-analysis/SKILL.md` — weekly workflow
-5. `skills/nattome-daily-discovery/references/nattome_brand.md` — voice + claim guardrails (shared)
-6. `skills/nattome-daily-discovery/references/virality_framework.md` — analysis lens (shared)
-7. `progress.txt` — chronological record of every implementation slice
+3. `skills/nattome-viral-intelligence-run/SKILL.md` — end-to-end automation workflow
+4. `skills/nattome-tiktok-candidate-discovery/SKILL.md` — phase 1 discovery workflow
+5. `skills/nattome-evidence-insight-analysis/SKILL.md` — phase 2 evidence workflow
+6. `skills/nattome-tiktok-candidate-discovery/references/nattome_brand.md` — voice + claim guardrails (shared)
+7. `skills/nattome-tiktok-candidate-discovery/references/virality_framework.md` — analysis lens (shared)
+8. `progress.txt` — chronological record of every implementation slice
 
 ## Tests
 

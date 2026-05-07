@@ -8,12 +8,10 @@ from pathlib import Path
 from threading import Thread
 
 from dashboard.exports import (
-    export_nattome_povs_markdown,
     export_raw_videos_csv,
     export_run_summaries_csv,
 )
 from dashboard.indexer import index_pipeline_artifacts
-from dashboard.nattome_pov_library import create_nattome_pov
 from dashboard.store import DASHBOARD_DB_PATH, initialize_dashboard_store
 from dashboard.web import DashboardServer, create_handler, render_page
 
@@ -64,37 +62,6 @@ class DashboardExportsTest(unittest.TestCase):
             self.assertIn("report_markdown", rows[0]["output_types"])
             self.assertIn("excel_workbook", rows[0]["output_types"])
 
-    def test_markdown_exports_include_nattome_pov_metadata(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            workspace = Path(temp_dir)
-            initialize_dashboard_store(workspace)
-            create_nattome_pov(
-                workspace,
-                {
-                    "title": "Morning gut reset",
-                    "description": "Owned Nattome angle for breakfast routines.",
-                    "brand_safe_interpretation": "Support daily digestive comfort.",
-                    "adaptation_rules": "Pair with normal breakfast prep.",
-                    "product": "Nattome",
-                    "campaign": "Always-on gut comfort",
-                    "market": "Malaysia",
-                    "language": "mixed/English",
-                    "audience_avatar": "office workers",
-                    "source_links": ["https://docs.test/source"],
-                },
-                user="strategist@example.com",
-                status="approved",
-            )
-
-            pov_markdown = export_nattome_povs_markdown(workspace)
-
-            self.assertIn("# Nattome POV Export", pov_markdown)
-            self.assertIn("## Morning gut reset", pov_markdown)
-            self.assertIn("Campaign: Always-on gut comfort", pov_markdown)
-            self.assertIn("Support daily digestive comfort.", pov_markdown)
-            self.assertIn("https://docs.test/source", pov_markdown)
-            self.assertNotIn("Linked approved pattern IDs", pov_markdown)
-
     def test_empty_exports_keep_headers_and_markdown_empty_states(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
@@ -107,7 +74,6 @@ class DashboardExportsTest(unittest.TestCase):
             self.assertIn("video_id,tiktok_url,author_handle", export_raw_videos_csv(workspace))
             self.assertEqual(run_rows, [])
             self.assertIn("run_id,timestamp,run_type", export_run_summaries_csv(workspace))
-            self.assertIn("No Nattome POVs are available", export_nattome_povs_markdown(workspace))
 
     def test_dashboard_export_routes_return_downloadable_artifacts_and_pages_link_them(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -121,7 +87,7 @@ class DashboardExportsTest(unittest.TestCase):
 
             csv_status, csv_headers, csv_body = self._get(workspace, "/exports/raw-videos.csv?selection_status=analyzed")
             run_status, run_headers, run_body = self._get(workspace, "/exports/run-summaries.csv")
-            pov_status, pov_headers, pov_body = self._get(workspace, "/exports/nattome-povs.md")
+            removed_status, _, removed_body = self._get(workspace, "/exports/nattome-povs.md")
 
             self.assertIn("/exports/raw-videos.csv", run_page)
             self.assertIn("/exports/run-summaries.csv", run_page)
@@ -139,13 +105,8 @@ class DashboardExportsTest(unittest.TestCase):
                 'attachment; filename="nattome-run-summaries.csv"',
             )
             self.assertIn("20260507T000000Z_default", run_body)
-            self.assertEqual(pov_status, 200)
-            self.assertEqual(pov_headers["Content-Type"], "text/markdown; charset=utf-8")
-            self.assertEqual(
-                pov_headers["Content-Disposition"],
-                'attachment; filename="nattome-povs.md"',
-            )
-            self.assertIn("No Nattome POVs are available", pov_body)
+            self.assertEqual(removed_status, 404)
+            self.assertIn("Dashboard route not found", removed_body)
 
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"

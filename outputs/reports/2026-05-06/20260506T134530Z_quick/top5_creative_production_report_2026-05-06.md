@@ -1,10 +1,3 @@
-# What We Learned From These 5 Videos
-
-- Lead with a concrete digestive discomfort moment the audience already recognizes.
-- Translate the source pattern into Nattome support language instead of repeating claims.
-- Keep each production idea simple enough to shoot as a talking-head, routine, or text-led short.
-- Use source videos as creative inspiration, then rewrite hooks and overlays for brand-safe execution.
-
 ## 1. Nattome Creative Brief - good-relevant
 
 ### Source Reference

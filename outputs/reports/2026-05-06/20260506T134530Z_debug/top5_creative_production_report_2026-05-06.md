@@ -1,20 +1,13 @@
-# What We Learned From These 5 Videos
-
-- Lead with a concrete digestive discomfort moment the audience already recognizes.
-- Translate the source pattern into Nattome support language instead of repeating claims.
-- Keep each production idea simple enough to shoot as a talking-head, routine, or text-led short.
-- Use source videos as creative inspiration, then rewrite hooks and overlays for brand-safe execution.
-
-## 1. Nattome Creative Brief - telegram-video
+## 1. Nattome Creative Brief - missing-gemini
 
 ### Source Reference
 
 - Creator: Not available
-- Source video: https://www.tiktok.com/@creator/video/telegram
-- Views: 90000
-- Likes: 9000
-- Comments: 300
-- Shares: 500
+- Source video: https://www.tiktok.com/@creator/video/twolayer
+- Views: 120000
+- Likes: 12000
+- Comments: 600
+- Shares: 700
 
 ### Inspiration Pattern
 
@@ -38,7 +31,7 @@ Hook: Open with the clearest digestive discomfort moment.
 
 | Time | Scene | On-screen text | Exact line |
 |---|---|---|---|
-| 0-3s | Face to camera | Reflux feels uncomfortable | If reflux feels uncomfortable after makan, start with the moment your customer already knows. |
+| 0-3s | Face to camera | After meals feel heavy | If your stomach feels heavy after makan, start with the moment everyone recognises. |
 | 3-8s | Face to camera | What changed today? | Ask yourself: was it the portion, the timing, or the routine after the meal? |
 | 8-14s | Simple routine | Keep it simple | For content, show one small routine change instead of making big health promises. |
 | 14-22s | Routine proof | One small habit | Keep the story on one everyday habit, so the message feels helpful instead of salesy. |

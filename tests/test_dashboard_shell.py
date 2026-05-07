@@ -187,7 +187,7 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Overview", body)
             self.assertIn("Run History", body)
             self.assertIn("Scrape Settings", body)
-            self.assertIn("Nattome POV Library", body)
+            self.assertNotIn("Nattome POV Library", body)
             self.assertIn("Pipeline Architecture", body)
             self.assertNotIn("Run scrape now", body)
             self.assertNotIn("Run full pipeline", body)

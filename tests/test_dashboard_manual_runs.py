@@ -109,9 +109,9 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertEqual(len(executor.calls), 1)
             command, cwd = executor.calls[0]
             self.assertEqual(cwd, workspace)
-            self.assertIn("skills/nattome-daily-discovery/scripts/scrape_tiktok.py", command)
+            self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", command)
             self.assertIn("--config", command)
-            self.assertIn("skills/nattome-daily-discovery/config.json", command)
+            self.assertIn("skills/nattome-tiktok-candidate-discovery/config.json", command)
             self.assertIn("--download-videos", command)
 
             rows = list_manual_runs(workspace)
@@ -157,7 +157,7 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertEqual(len(executor.calls), 2)
             scrape_command = executor.calls[0][0]
             batch_command = executor.calls[1][0]
-            self.assertIn("skills/nattome-daily-discovery/scripts/scrape_tiktok.py", scrape_command)
+            self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", scrape_command)
             self.assertIn("scripts/run_batch_analysis.py", batch_command)
             self.assertIn("--mode", batch_command)
             self.assertIn("daily", batch_command)

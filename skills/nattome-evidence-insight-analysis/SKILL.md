@@ -1,16 +1,16 @@
 ---
-name: nattome-batch-analysis
-description: Weekly Gemini evidence-first TikTok video analysis pipeline for Nattome. Selects viral TikTok candidates via the Minimum Eligibility Filter and Viral Relevance Selection, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates per-video Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, evidence-backed Shootable Angles, internal structured JSON, a Top 5 Creative Production Report, an Excel angle planning workbook, Run Manifest, and optional Telegram delivery. Use whenever the user asks to run weekly batch analysis, produce video evidence reports, run batch evidence analysis, analyze a batch of TikToks, create a Top 5 Creative Production Report, review claim safety, generate production-ready shootable angles, or invokes `run_batch_analysis.py`. Use `nattome-daily-discovery` first only when fresh TikTok discovery and top-5 video handoff creation are needed.
+name: nattome-evidence-insight-analysis
+description: Phase 2 of the Nattome viral intelligence pipeline. Consumes candidate JSON from `nattome-tiktok-candidate-discovery`, preserves source videos as Evidence Artifacts, uses Gemini 2.5 Flash to extract timestamped visual, visible-text, spoken-content, audio, hook, and claim evidence, then generates Video Evidence Reports, Claim Safety Reviews, Evidence Quality Scores, evidence-backed Shootable Angles, structured JSON, a Top 5 Creative Production Report, an Excel angle planning workbook, Run Manifest, and optional Telegram delivery. If no fresh evidence-ready candidate file exists, run candidate discovery first. For recurring automations or end-to-end discovery plus evidence analysis, prefer `nattome-viral-intelligence-run`. Use this phase when the user asks for evidence analysis, production-ready shootable angles, claim safety, batch analysis, daily evidence analysis, or invokes `run_batch_analysis.py`.
 user-invocable: true
 ---
 
-# Nattome TikTok Batch Evidence Analysis
+# Nattome TikTok Evidence Insight Analysis
 
-You are running Nattome's weekly **Batch Analysis Run**. The deliverable is **evidence-first strategic research**: every claim about why a video worked must be backed by source-video evidence captured by Gemini 2.5 Flash, not metadata guesswork.
+You are running Phase 2 of Nattome's viral intelligence pipeline. The deliverable is **evidence-first strategic research**: every claim about why a video worked must be backed by source-video evidence captured by Gemini 2.5 Flash, not metadata guesswork.
 
 Read `CONTEXT.md` at the project root before producing reports. It is the terminology dictionary for **Video Evidence Report**, **Evidence Bundle**, **Run Folder**, **Top 5 Creative Production Report**, **Evidence Quality Score**, **Claim Safety Review**, **Shootable Angle**, and **Nattome Priority Score**.
 
-This skill is for the heavier evidence workflow. If the user wants fresh TikTok discovery first, use `nattome-daily-discovery` to create the top-5 video handoff, then run this skill in `daily` mode for evidence-backed shootable angles.
+This skill is normally run after `nattome-tiktok-candidate-discovery`. Discovery creates the evidence-ready candidate data; evidence insight analysis turns those discovered videos into actionable, evidence-backed Nattome insights. For automations, use `nattome-viral-intelligence-run` so discovery and evidence analysis run together unless the user explicitly asks for discovery-only or evidence-only work.
 
 ## Current Architecture
 
@@ -60,12 +60,12 @@ Before launching the run, verify these. Stop and tell the user honestly if a req
 
 | Requirement | How to check | If missing |
 |---|---|---|
-| Candidates JSON file | Pick the freshest `data/raw_scrapes/nattome_raw_*.json` by mtime unless the user specifies one. | Run `nattome-daily-discovery` first, or ask which file to use. |
+| Candidates JSON file | Pick the freshest `data/raw_scrapes/nattome_raw_*.json` by mtime unless the user specifies one. | Run `nattome-tiktok-candidate-discovery` first, or ask which file to use. |
 | Downloadable video sources | Candidate rows need `video_download_url`; the Minimum Eligibility Filter requires this by default. | Tell the user the scrape is not evidence-ready. Use metadata-preview config only if explicitly requested. |
-| `GEMINI_API_KEY` env var | `$env:GEMINI_API_KEY` in PowerShell. | Ask the user to set it. Without it, the run records missing Gemini evidence rather than fabricating analysis. |
+| `GEMINI_API_KEY` env var or project root `.env` | Load/check `.env`, then check `$env:GEMINI_API_KEY` in PowerShell without printing the value. | Ask the user to set it. Without it, the run records missing Gemini evidence rather than fabricating analysis. |
 | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | Env vars. | Optional. Skip Telegram silently if either is missing. |
 
-Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/writes for candidate JSON, reports, workbook-adjacent structured data, manifests, and Telegram logs so Unicode captions do not fail on Windows `cp1252`.
+Candidate JSON from `nattome-tiktok-candidate-discovery` is UTF-8. Preserve UTF-8 reads/writes for candidate JSON, reports, workbook-adjacent structured data, manifests, and Telegram logs so Unicode captions do not fail on Windows `cp1252`.
 
 `APIFY_TOKEN` is needed only if you must run fresh discovery first. A Batch Analysis Run can use an existing candidates JSON without calling Apify.
 
@@ -74,7 +74,7 @@ Candidate JSON from `nattome-daily-discovery` is UTF-8. Preserve UTF-8 reads/wri
 | Mode | Batch size | When to use |
 |---|---:|---|
 | `debug` | 1 | Smoke test, schema check, or one-video analysis. |
-| `daily` | 5 | Daily evidence analysis for the exact top videos from `nattome-daily-discovery`. Preserves input order and does not rerank to 10. |
+| `daily` | 5 | Daily evidence analysis for the exact top videos from `nattome-tiktok-candidate-discovery`. Preserves input order and does not rerank to 10. |
 | `quick` | 5 | Pilot or mid-week sanity check. |
 | `default` | 10 | Weekly standard run. Use this unless the user says otherwise. |
 | `deep` | 20 | Strategic deep-dive. Use only when explicitly asked. |
@@ -91,7 +91,7 @@ python scripts/run_batch_analysis.py `
   --candidates data/raw_scrapes/nattome_raw_<YYYYMMDD>_top30.json
 ```
 
-For daily evidence analysis, use the daily handoff produced by `nattome-daily-discovery`:
+For daily evidence analysis, use the daily handoff produced by `nattome-tiktok-candidate-discovery`:
 
 ```powershell
 python scripts/run_batch_analysis.py `
@@ -146,8 +146,8 @@ Stream the CLI output to the user as it runs. Preserve missing-evidence signals 
 - `CONTEXT.md` — current domain terminology.
 - `docs/prd/gemini-two-layer-evidence-pipeline-architecture-prd.md` — current Gemini/two-layer architecture.
 - `docs/adr/0001-...md` and `docs/adr/0002-...md` — batch-first and Gemini evidence-first decisions.
-- `skills/nattome-daily-discovery/references/nattome_brand.md` — voice and claim guardrails.
-- `skills/nattome-daily-discovery/references/virality_framework.md` — hook taxonomy, pacing, structure, emotional triggers.
+- `skills/nattome-tiktok-candidate-discovery/references/nattome_brand.md` — voice and claim guardrails.
+- `skills/nattome-tiktok-candidate-discovery/references/virality_framework.md` — hook taxonomy, pacing, structure, emotional triggers.
 
 ## Troubleshooting
 

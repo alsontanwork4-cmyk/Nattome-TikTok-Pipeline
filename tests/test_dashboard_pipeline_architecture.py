@@ -24,7 +24,7 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
             self.assertIn("CONTEXT.md", [doc.path for doc in architecture.documents])
             self.assertIn("docs/prd/sample-prd.md", [doc.path for doc in architecture.documents])
             self.assertIn("docs/adr/0001-sample.md", [doc.path for doc in architecture.documents])
-            self.assertIn("skills/nattome-batch-analysis/SKILL.md", [doc.path for doc in architecture.documents])
+            self.assertIn("skills/nattome-evidence-insight-analysis/SKILL.md", [doc.path for doc in architecture.documents])
             self.assertEqual(
                 [step.name for step in architecture.pipeline_flow],
                 ["Scrape", "Score", "Select", "Analyze", "Report"],
@@ -54,7 +54,7 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
         report_folder = workspace / "outputs" / "reports" / "2026-05-07"
         docs_prd = workspace / "docs" / "prd"
         docs_adr = workspace / "docs" / "adr"
-        skill_folder = workspace / "skills" / "nattome-batch-analysis"
+        skill_folder = workspace / "skills" / "nattome-evidence-insight-analysis"
         for folder in [raw_scrapes, run_folder / "data", run_folder / "logs", report_folder, docs_prd, docs_adr, skill_folder]:
             folder.mkdir(parents=True, exist_ok=True)
 

@@ -1,11 +1,12 @@
 ---
-name: nattome-tiktok-discovery
-description: Daily viral TikTok discovery and evidence-ready handoff pipeline for Nattome (Atomic Group's flagship digestive-health brand for Malaysians). Scrapes TikTok via Apify across hashtags, keywords, and competitor profiles, keeps candidates with downloadable source videos, ranks the top 5 viral videos, writes a daily brief, and creates the top-5 handoff for Gemini video evidence analysis. Use this skill for discovery, ranking, metadata-informed notes, and handoff creation. Do not present daily-discovery angles as production-ready unless the source video has been downloaded and analyzed through `nattome-batch-analysis` / Gemini 2.5 Flash. Use whenever the user mentions TikTok content discovery, viral content research, the daily content brief, content ideas for Nattome, gut-health TikTok trends, competitor TikTok analysis, Apify scraping, or asks "what's trending today", "give me content ideas", "run the daily brief", "find viral TikToks", "what should we post", or wants a breakdown of why a specific video went viral. Enforces Nattome's updated brand voice: natural fermented-soy gut care, relief plus repair, named clinical backing (UCSI / ClinicalTrials.gov NCT06524271), pharmacy trust signals (CARiNG / BIG / Watsons / Wellings), family-care messaging, sincere Malaysian tone, and strict no-cure/no-fearmongering claim guardrails.
+name: nattome-tiktok-candidate-discovery
+description: Phase 1 of the Nattome viral intelligence pipeline. Scrapes TikTok via Apify across hashtags, keywords, and competitor profiles, keeps candidates with downloadable source videos, ranks viral digestive-health candidates, writes the daily discovery handoff, and creates candidate JSON for Gemini evidence analysis. This skill creates the data that `nattome-evidence-insight-analysis` turns into actionable insight; it is normally followed by evidence analysis unless the user explicitly asks for discovery-only output. For recurring automations or end-to-end runs, prefer `nattome-viral-intelligence-run`. Use this phase when the user mentions TikTok content discovery, viral content research, daily discovery handoff, Nattome content candidates, gut-health TikTok trends, competitor TikTok analysis, Apify scraping, or asks "what's trending today", "find viral TikToks", or "create candidates for evidence analysis". Enforces Nattome's updated brand voice and strict no-cure/no-fearmongering claim guardrails.
+user-invocable: true
 ---
 
-# Nattome TikTok Daily Content Discovery
+# Nattome TikTok Candidate Discovery
 
-You are running Nattome's daily TikTok content discovery pipeline. Your job is to find evidence-ready viral candidates, preserve source videos where possible, and create a practical handoff for video evidence analysis. Do not turn metadata alone into confident production claims.
+You are running Phase 1 of Nattome's viral intelligence pipeline. Your job is to find evidence-ready viral candidates, preserve source videos where possible, and create a practical handoff for Gemini video evidence analysis. Do not turn metadata alone into confident production claims.
 
 ## What Nattome Is (Memorize This)
 
@@ -49,7 +50,7 @@ Read `references/nattome_brand.md` for the full voice/style guide and the do/don
 3. RANK       -> score by virality (views, engagement rate, recency)
 4. PREVIEW    -> write metadata-informed notes only; label unknown video-content details clearly
 5. HANDOFF    -> write daily_brief_YYYY-MM-DD.md and top-5 JSON for Gemini evidence analysis
-6. ANALYZE    -> for real shootable angles, run `nattome-batch-analysis --mode daily` on the handoff
+6. ANALYZE    -> for real shootable angles, run `nattome-evidence-insight-analysis --mode daily` on the handoff
 ```
 
 The whole run should take 3-8 minutes depending on Apify response time.
@@ -61,18 +62,19 @@ The whole run should take 3-8 minutes depending on Apify response time.
 Default daily run: hashtags + keywords + competitor profiles, top 5. If the user says something narrower (for example, "just analyze this one URL" or "do bloating only"), respect that and skip what's not asked for.
 
 Check that `APIFY_TOKEN` is set in the environment. If it's not, stop and ask the user to provide it. Do not fake the run.
+The project root `.env` counts as a valid credential source; load/check it before reporting `APIFY_TOKEN` as missing, and never print the token value.
 
 Run the discovery:
 
 ```powershell
-python skills/nattome-daily-discovery/scripts/scrape_tiktok.py `
+python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
   --output data/raw_scrapes/nattome_raw_$(Get-Date -Format yyyyMMdd)_top30.json `
   --top 30 `
   --download-videos `
   --daily-selection-output data/daily_selections/nattome_daily_$(Get-Date -Format yyyyMMdd)_top5.json
 ```
 
-(POSIX equivalent: `python skills/nattome-daily-discovery/scripts/scrape_tiktok.py --output data/raw_scrapes/nattome_raw_$(date +%Y%m%d)_top30.json --top 30 --download-videos --daily-selection-output data/daily_selections/nattome_daily_$(date +%Y%m%d)_top5.json`)
+(POSIX equivalent: `python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py --output data/raw_scrapes/nattome_raw_$(date +%Y%m%d)_top30.json --top 30 --download-videos --daily-selection-output data/daily_selections/nattome_daily_$(date +%Y%m%d)_top5.json`)
 
 The script writes the full ranked scrape and a separate daily evidence-analysis handoff. The handoff contains the same top videos used for the daily brief and is the source for daily video evidence analysis. Treat candidates without `video_download_url` as metadata-only previews, not evidence-ready production inputs. If `--top` is omitted, the scraper returns only the top 5, but the normal daily pipeline should keep the top-30 scrape for audit and the top-5 handoff for analysis.
 
@@ -97,7 +99,7 @@ If a video's view count is high but engagement rate is poor, say so. That is a d
 
 ### Step 3 - Generate Preliminary Angles Only When Evidence Is Missing
 
-If Gemini video evidence is missing, any angles are **preliminary metadata-informed ideas**, not evidence-backed shootable angles. Label them as preliminary and recommend running `nattome-batch-analysis --mode daily` before production decisions.
+If Gemini video evidence is missing, any angles are **preliminary metadata-informed ideas**, not evidence-backed shootable angles. Label them as preliminary and recommend running `nattome-evidence-insight-analysis --mode daily` before production decisions.
 
 For each viral topic, preliminary angles may include:
 
@@ -112,7 +114,7 @@ For each viral topic, preliminary angles may include:
 | Evidence status | `metadata_only`, `video_downloaded`, or `gemini_evidence_completed` |
 | Why this may work for Nattome | One line connecting the likely emotional trigger to Nattome's positioning |
 
-Only call an angle **shootable** when source-video evidence exists and supports the hook, structure, pacing, and emotional-trigger read. For production-ready outputs, run `nattome-batch-analysis`, which uses Gemini 2.5 Flash and writes evidence-backed Shootable Angles.
+Only call an angle **shootable** when source-video evidence exists and supports the hook, structure, pacing, and emotional-trigger read. For production-ready outputs, run `nattome-evidence-insight-analysis`, which uses Gemini 2.5 Flash and writes evidence-backed Shootable Angles.
 
 **Format selection rules** (use judgment, these are guides not laws):
 - **Talking head** - when the angle hinges on authority, education, or a clear claim. Good for clinical-backing references and product explainers.
@@ -131,7 +133,7 @@ Only call an angle **shootable** when source-video evidence exists and supports 
 
 ### Step 4 - Write The Daily Discovery Handoff
 
-Use the template at `skills/nattome-daily-discovery/assets/daily_brief_template.md`. Save to:
+Use the template at `skills/nattome-tiktok-candidate-discovery/assets/daily_brief_template.md`. Save to:
 
 ```text
 outputs/daily_briefs/daily_brief_YYYY-MM-DD.md
@@ -139,14 +141,14 @@ outputs/daily_briefs/daily_brief_YYYY-MM-DD.md
 
 The brief is a discovery and evidence-analysis handoff, not the current final production report. Make it scannable so the marketing team can quickly decide what to send into Gemini analysis next. Use tables for preliminary angle grids only when helpful, short paragraphs for metadata preview, and links to original TikToks.
 
-For final production-ready outputs and evidence-backed shootable angles, use `nattome-batch-analysis`, which analyzes the downloaded videos with Gemini 2.5 Flash and writes the Top 5 Creative Production Report and Excel planning workbook under `outputs/reports/YYYY-MM-DD/`.
+For final production-ready outputs and evidence-backed shootable angles, use `nattome-evidence-insight-analysis`, which analyzes the downloaded videos with Gemini 2.5 Flash and writes the Top 5 Creative Production Report and Excel planning workbook under `outputs/reports/YYYY-MM-DD/`.
 
 ### Step 5 - Optional Telegram Delivery
 
 If `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are both set in the environment, also push the brief:
 
 ```powershell
-python skills/nattome-daily-discovery/scripts/telegram_send.py `
+python skills/nattome-tiktok-candidate-discovery/scripts/telegram_send.py `
   --brief outputs/daily_briefs/daily_brief_YYYY-MM-DD.md
 ```
 
@@ -154,7 +156,7 @@ If either env var is missing, skip silently and just confirm the markdown file p
 
 ## When The User Gives You A Single URL Instead Of A Daily Run
 
-Skip discovery. If the user needs production-ready angles, run the video through `nattome-batch-analysis`/Gemini evidence analysis before generating shootable angles. If only metadata or a URL is available, output a single-video preview with preliminary ideas and clearly label missing evidence. The full daily template is not needed.
+Skip discovery. If the user needs production-ready angles, run the video through `nattome-evidence-insight-analysis`/Gemini evidence analysis before generating shootable angles. If only metadata or a URL is available, output a single-video preview with preliminary ideas and clearly label missing evidence. The full daily template is not needed.
 
 ## When The User Is Clearly Ideating, Not Running The Daily
 

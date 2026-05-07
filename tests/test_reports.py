@@ -48,6 +48,7 @@ class VideoEvidenceReportTest(unittest.TestCase):
             report = report_path.read_text(encoding="utf-8")
             self.assertIn("# Video Evidence Report: report-test", report)
             self.assertIn("## Video Reference", report)
+            self.assertNotIn("## Nattome POV", report)
             self.assertIn("## Claim Safety Review", report)
             self.assertIn("## Evidence Quality", report)
             self.assertIn("Gemini evidence not available", report)

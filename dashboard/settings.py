@@ -311,7 +311,7 @@ def _write_production_settings(
         _json_dumps({"version": version, "settings": settings}) + "\n",
         encoding="utf-8",
     )
-    scraper_config_path = workspace / "skills" / "nattome-daily-discovery" / "config.json"
+    scraper_config_path = workspace / "skills" / "nattome-tiktok-candidate-discovery" / "config.json"
     if scraper_config_path.parent.exists():
         scraper_config_path.write_text(
             _json_dumps(_scraper_config(settings, version)) + "\n",

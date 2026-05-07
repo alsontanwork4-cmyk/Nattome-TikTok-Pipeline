@@ -26,6 +26,12 @@ import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 
+WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+if str(WORKSPACE_ROOT) not in sys.path:
+    sys.path.insert(0, str(WORKSPACE_ROOT))
+
+from batch_analysis.env import load_dotenv_files
+
 APIFY_ACTOR_ID = "clockworks~tiktok-scraper"
 APIFY_BASE = "https://api.apify.com/v2"
 
@@ -279,6 +285,7 @@ def deduplicate(items: list[dict]) -> list[dict]:
 
 
 def main() -> int:
+    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT])
     ap = argparse.ArgumentParser(description="Nattome TikTok discovery scraper")
     ap.add_argument("--config", type=Path, default=Path(__file__).parent.parent / "config.json",
                     help="Path to config.json (defaults to ../config.json then bundled example)")

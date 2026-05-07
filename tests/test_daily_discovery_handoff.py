@@ -5,7 +5,7 @@ import unittest
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
-SCRAPER = WORKSPACE / "skills" / "nattome-daily-discovery" / "scripts" / "scrape_tiktok.py"
+SCRAPER = WORKSPACE / "skills" / "nattome-tiktok-candidate-discovery" / "scripts" / "scrape_tiktok.py"
 
 
 def load_scraper_module():

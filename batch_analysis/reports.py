@@ -153,11 +153,6 @@ def write_video_evidence_report_from_snapshot(
             f"- Nattome relevance score: {candidate.get('nattome_relevance_score', 0)}",
             "- Caution: Do not treat missing Gemini evidence as proof of a creative mechanism.",
             "",
-            "## Nattome POV",
-            "",
-            f"- Product fit: {product_tie_in_for_candidate(candidate)}",
-            "- Reuse stance: Adapt the topic and structure only after claim guardrails are applied.",
-            "",
             "## Shootable Angles",
             "",
         ]

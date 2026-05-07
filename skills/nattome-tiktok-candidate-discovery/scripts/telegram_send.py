@@ -17,6 +17,12 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+if str(WORKSPACE_ROOT) not in sys.path:
+    sys.path.insert(0, str(WORKSPACE_ROOT))
+
+from batch_analysis.env import load_dotenv_files
+
 API_BASE = "https://api.telegram.org"
 MAX_MESSAGE_LEN = 3800  # leave headroom under the 4096 hard cap
 
@@ -95,6 +101,7 @@ def send_document(token: str, chat_id: str, filepath: Path, caption: str = "") -
 
 
 def main() -> int:
+    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT])
     ap = argparse.ArgumentParser(description="Send the daily Nattome brief to Telegram")
     ap.add_argument("--brief", type=Path, required=True, help="Path to the markdown brief")
     ap.add_argument("--as-document", action="store_true",

@@ -10,8 +10,12 @@ DASHBOARD_DB_PATH = Path("data") / "dashboard" / "dashboard.sqlite3"
 MUTABLE_TABLES = (
     "video_curation",
     "scrape_settings_versions",
-    "nattome_povs",
     "manual_runs",
+)
+
+OBSOLETE_TABLES = (
+    "nattome_pov_versions",
+    "nattome_povs",
 )
 
 ATTRIBUTION_COLUMNS = """
@@ -77,6 +81,7 @@ def dump_json(value: object) -> str:
 
 
 def _create_mutable_tables(connection: sqlite3.Connection) -> None:
+    _drop_obsolete_tables(connection)
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS video_curation (
@@ -109,31 +114,6 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
     _ensure_column(connection, "scrape_settings_versions", "rollback_of_version", "INTEGER")
     connection.execute(
         f"""
-        CREATE TABLE IF NOT EXISTS nattome_povs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'draft',
-            pov_json TEXT NOT NULL DEFAULT '{{}}',
-            version INTEGER NOT NULL DEFAULT 1,
-            {ATTRIBUTION_COLUMNS}
-        )
-        """
-    )
-    connection.execute(
-        """
-        CREATE TABLE IF NOT EXISTS nattome_pov_versions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            pov_id INTEGER NOT NULL,
-            version INTEGER NOT NULL,
-            change_type TEXT NOT NULL,
-            pov_json TEXT NOT NULL DEFAULT '{}',
-            changed_by TEXT NOT NULL DEFAULT 'local',
-            changed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    connection.execute(
-        f"""
         CREATE TABLE IF NOT EXISTS manual_runs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             run_id TEXT,
@@ -159,6 +139,11 @@ def _create_mutable_tables(connection: sqlite3.Connection) -> None:
     _ensure_column(connection, "manual_runs", "output_paths_json", "TEXT NOT NULL DEFAULT '{}'")
     _ensure_column(connection, "manual_runs", "error_text", "TEXT NOT NULL DEFAULT ''")
     _create_artifact_tables(connection)
+
+
+def _drop_obsolete_tables(connection: sqlite3.Connection) -> None:
+    for table_name in OBSOLETE_TABLES:
+        connection.execute(f"DROP TABLE IF EXISTS {table_name}")
 
 
 def _ensure_column(

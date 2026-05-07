@@ -230,6 +230,7 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
             runs_dir = temp_path / "runs"
             env = os.environ.copy()
             env.pop("GEMINI_API_KEY", None)
+            env["NATTOME_DISABLE_DOTENV"] = "1"
 
             result = subprocess.run(
                 [

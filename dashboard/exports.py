@@ -7,7 +7,6 @@ from io import StringIO
 from pathlib import Path
 from typing import Any
 
-from .nattome_pov_library import list_nattome_povs
 from .run_history import load_run_history
 from .store import connect_dashboard_store
 
@@ -81,43 +80,6 @@ def export_run_summaries_csv(workspace: Path | str = ".") -> str:
     history = load_run_history(workspace)
     rows = [_run_summary_export_row(row) for row in history.rows]
     return _csv_text(RUN_SUMMARY_CSV_COLUMNS, rows)
-
-
-def export_nattome_povs_markdown(workspace: Path | str = ".") -> str:
-    povs = [pov for pov in list_nattome_povs(workspace) if str(getattr(pov, "status")) != "archived"]
-    lines = ["# Nattome POV Export", ""]
-    if not povs:
-        lines.extend(["No Nattome POVs are available for export.", ""])
-        return "\n".join(lines)
-    for pov in povs:
-        lines.extend(
-            [
-                f"## {getattr(pov, 'title')}",
-                "",
-                f"- Status: {getattr(pov, 'status')}",
-                f"- Version: {getattr(pov, 'version')}",
-                f"- Product: {getattr(pov, 'product')}",
-                f"- Campaign: {getattr(pov, 'campaign') or 'Not set'}",
-                f"- Market: {getattr(pov, 'market')}",
-                f"- Language: {getattr(pov, 'language')}",
-                f"- Audience / avatar: {getattr(pov, 'audience_avatar') or 'Not set'}",
-                f"- Symptom / occasion: {getattr(pov, 'symptom_occasion') or 'Not set'}",
-                f"- Channel: {getattr(pov, 'channel')}",
-                f"- Updated by: {getattr(pov, 'updated_by')}",
-                f"- Source links: {_joined_or_empty(getattr(pov, 'source_links'))}",
-                "",
-                "### Description",
-                str(getattr(pov, "description") or "Not set"),
-                "",
-                "### Brand-Safe Interpretation",
-                str(getattr(pov, "brand_safe_interpretation") or "Not set"),
-                "",
-                "### Adaptation Rules",
-                str(getattr(pov, "adaptation_rules") or "Not set"),
-                "",
-            ]
-        )
-    return "\n".join(lines)
 
 
 def _raw_video_rows(connection: sqlite3.Connection) -> list[sqlite3.Row]:
@@ -258,12 +220,6 @@ def _source_video_markdown_lines(source_videos: object) -> list[str]:
         suffix = f" ({run_id})" if run_id else ""
         lines.append(f"- {video_id}: {url}{suffix}")
     return lines
-
-
-def _joined_or_empty(value: object) -> str:
-    if not isinstance(value, list) or not value:
-        return "None"
-    return "; ".join(str(item) for item in value)
 
 
 def _csv_text(columns: list[str], rows: list[dict[str, object]]) -> str:

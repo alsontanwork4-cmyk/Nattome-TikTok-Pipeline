@@ -207,7 +207,7 @@ def _commands_for_run(
 ) -> list[list[str]]:
     scrape_command = [
         sys.executable,
-        "skills/nattome-daily-discovery/scripts/scrape_tiktok.py",
+        "skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py",
         "--config",
         config_path,
         "--output",
@@ -236,7 +236,7 @@ def _commands_for_run(
 
 
 def _ensure_scraper_config(workspace: Path, version: int, settings: dict[str, object]) -> str:
-    relative_path = Path("skills") / "nattome-daily-discovery" / "config.json"
+    relative_path = Path("skills") / "nattome-tiktok-candidate-discovery" / "config.json"
     config_path = workspace / relative_path
     config_path.parent.mkdir(parents=True, exist_ok=True)
     selection = {

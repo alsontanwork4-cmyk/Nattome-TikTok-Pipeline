@@ -2,12 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .nattome_pov_library import (
-    NATTOME_POV_STATUSES,
-    archive_nattome_pov,
-    create_nattome_pov,
-    update_nattome_pov,
-)
 from .settings import rollback_settings_version, save_settings_version
 from .store import connect_dashboard_store, dump_json
 from .web_components import _first_form_value
@@ -62,57 +56,6 @@ def _rollback_scrape_settings(workspace: Path, form: dict[str, list[str]]) -> No
         reason=_first_form_value(form, "reason"),
         user=_first_form_value(form, "user") or "local",
     )
-def _create_nattome_pov(workspace: Path, form: dict[str, list[str]]) -> None:
-    create_nattome_pov(
-        workspace,
-        _nattome_pov_form_payload(form),
-        user=_first_form_value(form, "user") or "local",
-        status="draft",
-    )
-
-
-def _edit_nattome_pov(workspace: Path, form: dict[str, list[str]]) -> None:
-    update_nattome_pov(
-        workspace,
-        int(_first_form_value(form, "pov_id") or "0"),
-        _nattome_pov_form_payload(form, include_status=True),
-        user=_first_form_value(form, "user") or "local",
-    )
-
-
-def _archive_nattome_pov(workspace: Path, form: dict[str, list[str]]) -> None:
-    archive_nattome_pov(
-        workspace,
-        int(_first_form_value(form, "pov_id") or "0"),
-        user=_first_form_value(form, "user") or "local",
-    )
-
-
-def _nattome_pov_form_payload(
-    form: dict[str, list[str]],
-    *,
-    include_status: bool = False,
-) -> dict[str, object]:
-    payload: dict[str, object] = {
-        "title": _first_form_value(form, "title"),
-        "description": _first_form_value(form, "description"),
-        "brand_safe_interpretation": _first_form_value(form, "brand_safe_interpretation"),
-        "adaptation_rules": _first_form_value(form, "adaptation_rules"),
-        "product": _first_form_value(form, "product"),
-        "campaign": _first_form_value(form, "campaign"),
-        "market": _first_form_value(form, "market"),
-        "language": _first_form_value(form, "language"),
-        "audience_avatar": _first_form_value(form, "audience_avatar"),
-        "symptom_occasion": _first_form_value(form, "symptom_occasion"),
-        "channel": _first_form_value(form, "channel"),
-        "source_links": _first_form_value(form, "source_links").splitlines(),
-    }
-    if include_status:
-        status = _first_form_value(form, "status") or "draft"
-        if status not in NATTOME_POV_STATUSES:
-            raise ValueError(f"Invalid Nattome POV status: {status}")
-        payload["status"] = status
-    return payload
 def _settings_form_payload(form: dict[str, list[str]]) -> dict[str, object]:
     engagement_rate = _first_form_value(form, "minimum_weighted_engagement_rate")
     engagement_rate_percent = _first_form_value(form, "minimum_engagement_rate_percent")
