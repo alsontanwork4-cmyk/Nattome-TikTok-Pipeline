@@ -117,7 +117,7 @@ Start the marketer-facing Scrape Quality Dashboard shell locally:
 C:\Users\Alson\.venv\Scripts\python.exe -m dashboard.web
 ```
 
-The app runs at `http://127.0.0.1:8765` by default and initializes its dashboard-owned SQLite state at `data/dashboard/dashboard.sqlite3`. The initial shell includes navigation for Overview, Scraped Content, Run History, Scrape Settings, Recommendations, Pattern Library, Nattome POV Library, and Pipeline Architecture. The Overview route loads without Apify, Gemini, or existing run artifacts.
+The app runs at `http://127.0.0.1:8765` by default and initializes its dashboard-owned SQLite state at `data/dashboard/dashboard.sqlite3`. The initial shell includes navigation for Overview, Scraped Content, Run History, Scrape Settings, Nattome POV Library, and Pipeline Architecture. The Overview route loads without Apify, Gemini, or existing run artifacts.
 
 Rebuild the dashboard's artifact-derived SQLite index from existing repo files:
 

@@ -13,9 +13,8 @@ _ICON_PATHS: dict[str, str] = {
     "search": '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     "content": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 6 3-6 3z" fill="currentColor" stroke="none"/>',
     "history": '<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v5l3 2"/>',
+    "report": '<path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4"/><path d="M9 11h6"/><path d="M9 15h6"/><path d="M9 19h4"/>',
     "settings": '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
-    "recommendations": '<path d="M9 11.5 11 13.5l4.5-4.5"/><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6z"/>',
-    "pattern": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     "pov": '<path d="M4 5h16v12H5.5L4 19z"/><path d="M8 10h8M8 13h5"/>',
     "architecture": '<path d="M4 6h6v4H4z"/><path d="M14 6h6v4h-6z"/><path d="M9 14h6v4H9z"/><path d="M7 10v2h10v-2"/>',
     "warning": '<path d="M12 3 2 20h20z"/><path d="M12 10v5"/><circle cx="12" cy="18" r="0.6" fill="currentColor" stroke="none"/>',
@@ -83,17 +82,23 @@ def _render_breadcrumb(active_path: str) -> str:
 def _render_topbar(active_path: str, workspace: Path) -> str:
     return f"""
     <header class="topbar" role="banner">
-      <div class="brand-mark">
-        <span class="leaf">{_icon('leaf')}</span>
-        <span>Nattome</span>
-        <span class="brand-tag">Scrape Quality</span>
-      </div>
+      <a class="brand-mark" href="/" aria-label="Nattome dashboard home">
+        {_render_brand_logo()}
+        <span class="brand-tag">Nattome TikTok Scraper</span>
+      </a>
       <div class="topbar-meta">
         <span class="meta-pill primary"><span class="dot" aria-hidden="true"></span>Pipeline ready</span>
         <span class="meta-pill">{_icon('db')}Local workspace</span>
       </div>
     </header>
     """
+
+
+def _render_brand_logo() -> str:
+    logo_path = Path(__file__).resolve().parent / "assets" / "nattome-logo.png"
+    if logo_path.is_file():
+        return '<img class="brand-logo" src="/static/nattome-logo.png" alt="Nattome">'
+    return f'<span class="leaf">{_icon("leaf")}</span><span>Nattome</span>'
 
 
 def _render_page_header(title: str, lede: str, active_path: str = "/", actions_html: str = "") -> str:
@@ -143,10 +148,16 @@ def _input_field(label: str, name: str, value: object) -> str:
 
 
 def _scope_options(active_scope: str) -> str:
+    labels = {
+        "all": "All sources",
+        "hashtags": "Only hashtags",
+        "keywords": "Only keywords",
+        "profiles": "Only competitor profiles",
+    }
     options = []
     for scope in ("all", "hashtags", "keywords", "profiles"):
         selected = " selected" if scope == active_scope else ""
-        options.append(f'<option value="{scope}"{selected}>{scope}</option>')
+        options.append(f'<option value="{scope}"{selected}>{html.escape(labels[scope])}</option>')
     return "".join(options)
 
 

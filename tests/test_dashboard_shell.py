@@ -185,15 +185,12 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Latest Run Overview", body)
             self.assertIn("No indexed runs yet", body)
             self.assertIn("Overview", body)
-            self.assertIn("Scraped Content", body)
             self.assertIn("Run History", body)
             self.assertIn("Scrape Settings", body)
-            self.assertIn("Recommendations", body)
-            self.assertIn("Pattern Library", body)
             self.assertIn("Nattome POV Library", body)
             self.assertIn("Pipeline Architecture", body)
-            self.assertIn("Run scrape now", body)
-            self.assertIn("Run full pipeline", body)
+            self.assertNotIn("Run scrape now", body)
+            self.assertNotIn("Run full pipeline", body)
             self.assertTrue((workspace / DASHBOARD_DB_PATH).is_file())
 
     def test_overview_route_summarizes_strong_latest_run(self):
@@ -281,31 +278,28 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Pipeline is blocked before marketer-ready outputs can be trusted.", body)
             self.assertIn("No usable raw candidates", body)
             self.assertIn("Random lifestyle clip", body)
-            self.assertIn("Edit scrape settings", body)
-            self.assertIn("Browse content library", body)
 
-    def test_scraped_content_route_lists_raw_videos_with_status_metadata(self):
+    def test_run_history_posts_tab_lists_raw_videos_with_marketer_columns(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_scraped_content_workspace(workspace)
 
-            response, body = self._request(workspace, "GET", "/scraped-content")
+            response, body = self._request(workspace, "GET", "/run-history?tab=posts")
 
             self.assertEqual(response.status, 200)
-            self.assertIn("Raw Scraped Videos", body)
+            self.assertIn("Run History", body)
             self.assertIn("Raw only clip", body)
             self.assertIn("Eligible clip", body)
             self.assertIn("Analyzed clip", body)
-            self.assertIn("raw only", body)
-            self.assertIn("eligible", body)
-            self.assertIn("analyzed", body)
             self.assertIn("@creator-raw-1", body)
             self.assertIn("#guthealth", body)
-            self.assertIn("15.0%", body)
             self.assertIn("https://www.tiktok.com/@creator/video/raw-1", body)
+            self.assertIn("Weighted Engagement", body)
+            self.assertIn("Nattome Relevance", body)
+            self.assertIn("Risk Flags", body)
             self.assertNotIn("<video", body.lower())
 
-    def test_scraped_content_route_persists_labels_notes_and_exclude_reason(self):
+    def test_run_history_curation_route_persists_labels_notes_and_exclude_reason(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_scraped_content_workspace(workspace)
@@ -317,11 +311,11 @@ class DashboardWebShellTest(unittest.TestCase):
             post_response, _ = self._request(
                 workspace,
                 "POST",
-                "/scraped-content/curation",
+                "/run-history/curation",
                 body=form_body,
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
-            get_response, body = self._request(workspace, "GET", "/scraped-content")
+            get_response, body = self._request(workspace, "GET", "/run-history?tab=posts")
 
             self.assertEqual(post_response.status, 303)
             self.assertEqual(get_response.status, 200)
@@ -410,20 +404,30 @@ class DashboardWebShellTest(unittest.TestCase):
             final_response, final_body = self._request(workspace, "GET", "/scrape-settings")
 
             self.assertEqual(initial_response.status, 200)
-            self.assertIn("Production Scrape Settings", initial_body)
-            self.assertIn("API keys", initial_body)
-            self.assertIn("APIFY_TOKEN", initial_body)
+            self.assertIn("Scrape Settings", initial_body)
+            self.assertIn("Next scheduled scrape uses config:", initial_body)
+            self.assertNotIn("API keys", initial_body)
+            self.assertNotIn("APIFY_TOKEN", initial_body)
+            self.assertNotIn("Current saved settings used by the next run", initial_body)
+            self.assertNotIn('name="user"', initial_body)
+            self.assertIn("Where to search", initial_body)
+            self.assertIn("How much to collect", initial_body)
+            self.assertIn("What to filter out", initial_body)
+            self.assertIn("All sources", initial_body)
+            self.assertIn("Only competitor profiles", initial_body)
+            self.assertIn("Minimum engagement rate (%)", initial_body)
+            self.assertIn("Explain", initial_body)
             self.assertEqual(missing_reason_response.status, 400)
             self.assertIn("requires a reason", missing_reason_body)
             self.assertEqual(first_save_response.status, 303)
             self.assertEqual(second_save_response.status, 303)
             self.assertEqual(rollback_response.status, 303)
             self.assertEqual(final_response.status, 200)
-            self.assertIn("Current production config version", final_body)
             self.assertIn("v3", final_body)
-            self.assertIn("Next scheduled run will use version v3", final_body)
+            self.assertIn("Next scheduled scrape uses config:", final_body)
             self.assertIn("guthealth", final_body)
             self.assertIn("digestion", final_body)
+            self.assertIn("Advanced: version history and rollback", final_body)
             self.assertIn("Rollback of v1", final_body)
             self.assertIn("Restore gut health settings", final_body)
             self.assertNotIn(">#guthealth<", final_body)

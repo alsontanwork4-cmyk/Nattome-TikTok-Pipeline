@@ -8,14 +8,12 @@ from pathlib import Path
 from threading import Thread
 
 from dashboard.exports import (
-    export_approved_patterns_markdown,
     export_nattome_povs_markdown,
     export_raw_videos_csv,
     export_run_summaries_csv,
 )
 from dashboard.indexer import index_pipeline_artifacts
 from dashboard.nattome_pov_library import create_nattome_pov
-from dashboard.pattern_library import create_approved_pattern
 from dashboard.store import DASHBOARD_DB_PATH, initialize_dashboard_store
 from dashboard.web import DashboardServer, create_handler, render_page
 
@@ -66,40 +64,10 @@ class DashboardExportsTest(unittest.TestCase):
             self.assertIn("report_markdown", rows[0]["output_types"])
             self.assertIn("excel_workbook", rows[0]["output_types"])
 
-    def test_markdown_exports_include_approved_patterns_and_nattome_pov_metadata(self):
+    def test_markdown_exports_include_nattome_pov_metadata(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             initialize_dashboard_store(workspace)
-            pattern = create_approved_pattern(
-                workspace,
-                {
-                    "pattern_name": "Bloating relief routine demo",
-                    "hook_type": "problem_solution",
-                    "format_type": "routine_demo",
-                    "emotional_trigger": "relief",
-                    "source_videos": [
-                        {
-                            "video_id": "video-1",
-                            "tiktok_url": "https://tiktok.test/video-1",
-                            "run_id": "20260507T000000Z_default",
-                        }
-                    ],
-                    "why_it_works": "Shows visible routine proof without medical claims.",
-                    "nattome_adaptation_notes": "Keep it product-light and breakfast-specific.",
-                    "freshness": "emerging",
-                    "targeting": {"market": "Malaysia", "persona": "office workers"},
-                    "related_povs": ["Morning gut reset"],
-                    "avoid_notes": "Avoid treatment language.",
-                },
-                user="strategist@example.com",
-                status="approved",
-            )
-            create_approved_pattern(
-                workspace,
-                {"pattern_name": "Draft only"},
-                user="strategist@example.com",
-                status="draft",
-            )
             create_nattome_pov(
                 workspace,
                 {
@@ -113,28 +81,19 @@ class DashboardExportsTest(unittest.TestCase):
                     "language": "mixed/English",
                     "audience_avatar": "office workers",
                     "source_links": ["https://docs.test/source"],
-                    "linked_pattern_ids": [pattern.id],
                 },
                 user="strategist@example.com",
                 status="approved",
             )
 
-            pattern_markdown = export_approved_patterns_markdown(workspace)
             pov_markdown = export_nattome_povs_markdown(workspace)
-
-            self.assertIn("# Approved Patterns Export", pattern_markdown)
-            self.assertIn("## Bloating relief routine demo", pattern_markdown)
-            self.assertIn("Status: approved", pattern_markdown)
-            self.assertIn("https://tiktok.test/video-1", pattern_markdown)
-            self.assertIn("Market: Malaysia", pattern_markdown)
-            self.assertNotIn("Draft only", pattern_markdown)
 
             self.assertIn("# Nattome POV Export", pov_markdown)
             self.assertIn("## Morning gut reset", pov_markdown)
             self.assertIn("Campaign: Always-on gut comfort", pov_markdown)
             self.assertIn("Support daily digestive comfort.", pov_markdown)
             self.assertIn("https://docs.test/source", pov_markdown)
-            self.assertIn(f"Linked approved pattern IDs: {pattern.id}", pov_markdown)
+            self.assertNotIn("Linked approved pattern IDs", pov_markdown)
 
     def test_empty_exports_keep_headers_and_markdown_empty_states(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -148,7 +107,6 @@ class DashboardExportsTest(unittest.TestCase):
             self.assertIn("video_id,tiktok_url,author_handle", export_raw_videos_csv(workspace))
             self.assertEqual(run_rows, [])
             self.assertIn("run_id,timestamp,run_type", export_run_summaries_csv(workspace))
-            self.assertIn("No approved patterns are available", export_approved_patterns_markdown(workspace))
             self.assertIn("No Nattome POVs are available", export_nattome_povs_markdown(workspace))
 
     def test_dashboard_export_routes_return_downloadable_artifacts_and_pages_link_them(self):
@@ -159,15 +117,13 @@ class DashboardExportsTest(unittest.TestCase):
             index_pipeline_artifacts(workspace)
             self._save_curation(workspace)
 
-            scraped_page = render_page("/scraped-content", workspace)
             run_page = render_page("/run-history", workspace)
 
             csv_status, csv_headers, csv_body = self._get(workspace, "/exports/raw-videos.csv?selection_status=analyzed")
             run_status, run_headers, run_body = self._get(workspace, "/exports/run-summaries.csv")
-            md_status, md_headers, md_body = self._get(workspace, "/exports/approved-patterns.md")
             pov_status, pov_headers, pov_body = self._get(workspace, "/exports/nattome-povs.md")
 
-            self.assertIn("/exports/raw-videos.csv", scraped_page)
+            self.assertIn("/exports/raw-videos.csv", run_page)
             self.assertIn("/exports/run-summaries.csv", run_page)
             self.assertEqual(csv_status, 200)
             self.assertEqual(csv_headers["Content-Type"], "text/csv; charset=utf-8")
@@ -183,13 +139,6 @@ class DashboardExportsTest(unittest.TestCase):
                 'attachment; filename="nattome-run-summaries.csv"',
             )
             self.assertIn("20260507T000000Z_default", run_body)
-            self.assertEqual(md_status, 200)
-            self.assertEqual(md_headers["Content-Type"], "text/markdown; charset=utf-8")
-            self.assertEqual(
-                md_headers["Content-Disposition"],
-                'attachment; filename="nattome-approved-patterns.md"',
-            )
-            self.assertIn("No approved patterns are available", md_body)
             self.assertEqual(pov_status, 200)
             self.assertEqual(pov_headers["Content-Type"], "text/markdown; charset=utf-8")
             self.assertEqual(

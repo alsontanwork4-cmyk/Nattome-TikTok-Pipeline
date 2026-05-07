@@ -12,11 +12,8 @@ import dashboard.exports as dashboard_exports
 import dashboard.health as dashboard_health
 import dashboard.indexer as dashboard_indexer
 import dashboard.nattome_pov_library as dashboard_nattome_pov_library
-import dashboard.pattern_library as dashboard_pattern_library
 import dashboard.quality as dashboard_quality
-import dashboard.recommendations as dashboard_recommendations
 import dashboard.run_history as dashboard_run_history
-import dashboard.search as dashboard_search
 import dashboard.store as dashboard_store
 import dashboard.web as dashboard_web
 import dashboard.web_server as dashboard_web_server
@@ -34,11 +31,8 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
             dashboard_health,
             dashboard_indexer,
             dashboard_nattome_pov_library,
-            dashboard_pattern_library,
             dashboard_quality,
-            dashboard_recommendations,
             dashboard_run_history,
-            dashboard_search,
         ]
 
         for module in modules:
@@ -87,9 +81,9 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
 
             self.assertEqual(response.status, 200)
             self.assertIn('<header class="topbar" role="banner">', topbar)
-            self.assertIn('<div class="brand-mark">', topbar)
-            self.assertIn("<span>Nattome</span>", topbar)
-            self.assertIn('<span class="brand-tag">Scrape Quality</span>', topbar)
+            self.assertIn('class="brand-mark"', topbar)
+            self.assertIn("Nattome", topbar)
+            self.assertIn('<span class="brand-tag">Nattome TikTok Scraper</span>', topbar)
             self.assertIn("Pipeline ready", topbar)
             self.assertIn("Local workspace", topbar)
             self.assertNotIn(html.escape(str(workspace / DASHBOARD_DB_PATH)), topbar)
@@ -145,7 +139,7 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
         self.assertIn("POST_FORM_ACTIONS", source)
         self.assertLessEqual(source.count("if parsed_path =="), 2)
         self.assertNotIn('if parsed_path == "/exports/raw-videos.csv"', source)
-        self.assertNotIn('if parsed_path == "/scraped-content/curation"', source)
+        self.assertNotIn('if parsed_path == "/run-history/curation"', source)
 
     def test_dashboard_architecture_contract_has_no_prohibited_abstractions(self):
         dashboard_path = PROJECT_ROOT / "dashboard"
@@ -163,10 +157,7 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
             "health.py",
             "manual_runs.py",
             "nattome_pov_library.py",
-            "pattern_library.py",
-            "recommendations.py",
             "run_history.py",
-            "search.py",
             "settings.py",
         }
         self.assertTrue(expected_feature_modules.issubset({path.name for path in module_paths}))
@@ -192,10 +183,7 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
     def test_dashboard_read_paths_keep_automatic_refresh_contract(self):
         read_path_modules = [
             dashboard_architecture,
-            dashboard_pattern_library,
-            dashboard_recommendations,
             dashboard_run_history,
-            dashboard_search,
         ]
         for module in read_path_modules:
             with self.subTest(module=module.__name__):

@@ -12,28 +12,15 @@ from dashboard.nattome_pov_library import (
     list_nattome_povs,
     update_nattome_pov,
 )
-from dashboard.pattern_library import create_approved_pattern
 from dashboard.store import initialize_dashboard_store
 from dashboard.web import DashboardServer, create_handler, render_page
 
 
 class DashboardNattomePovLibraryTest(unittest.TestCase):
-    def test_create_edit_approve_archive_pattern_links_defaults_and_version_history(self):
+    def test_create_edit_approve_archive_defaults_and_version_history(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             initialize_dashboard_store(workspace)
-            pattern = create_approved_pattern(
-                workspace,
-                {
-                    "pattern_name": "Bloating relief routine demo",
-                    "hook_type": "problem_solution",
-                    "format_type": "routine_demo",
-                    "emotional_trigger": "relief",
-                    "why_it_works": "External routine mechanic.",
-                },
-                user="pattern-lead@example.com",
-                status="approved",
-            )
 
             pov = create_nattome_pov(
                 workspace,
@@ -45,7 +32,6 @@ class DashboardNattomePovLibraryTest(unittest.TestCase):
                     "product": "Nattome",
                     "campaign": "Always-on gut comfort",
                     "source_links": ["https://tiktok.test/source-1"],
-                    "linked_pattern_ids": [pattern.id],
                 },
                 user="strategist@example.com",
             )
@@ -54,7 +40,6 @@ class DashboardNattomePovLibraryTest(unittest.TestCase):
             self.assertEqual(pov.market, "Malaysia")
             self.assertEqual(pov.language, "mixed/English")
             self.assertEqual(pov.channel, "TikTok")
-            self.assertEqual(pov.linked_pattern_ids, [pattern.id])
 
             edited = update_nattome_pov(
                 workspace,
@@ -86,23 +71,11 @@ class DashboardNattomePovLibraryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             initialize_dashboard_store(workspace)
-            pattern = create_approved_pattern(
-                workspace,
-                {
-                    "pattern_name": "Comment objection opener",
-                    "hook_type": "objection",
-                    "format_type": "talking_head",
-                    "emotional_trigger": "confidence",
-                },
-                user="pattern-lead@example.com",
-                status="approved",
-            )
 
             initial_body = render_page("/nattome-pov-library", workspace)
             self.assertIn("Nattome POV Library", initial_body)
             self.assertIn("Owned Nattome interpretations", initial_body)
-            self.assertIn("Approved Pattern Links", initial_body)
-            self.assertIn("Comment objection opener", initial_body)
+            self.assertNotIn("Approved Pattern Links", initial_body)
 
             response, _ = self._request(
                 workspace,
@@ -122,7 +95,6 @@ class DashboardNattomePovLibraryTest(unittest.TestCase):
                         "symptom_occasion": "heavy dinner",
                         "channel": "",
                         "source_links": "https://tiktok.test/source-2",
-                        "linked_pattern_ids": str(pattern.id),
                         "user": "marketer@example.com",
                     }
                 ),
@@ -137,7 +109,6 @@ class DashboardNattomePovLibraryTest(unittest.TestCase):
             self.assertEqual(povs[0].language, "mixed/English")
             self.assertEqual(povs[0].channel, "TikTok")
             self.assertIn("Clinic-free comfort proof", final_body)
-            self.assertIn("Comment objection opener", final_body)
 
     def _request(
         self,

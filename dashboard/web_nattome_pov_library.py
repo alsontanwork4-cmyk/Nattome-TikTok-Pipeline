@@ -4,60 +4,39 @@ import html
 from pathlib import Path
 
 from .nattome_pov_library import list_nattome_pov_versions, list_nattome_povs
-from .pattern_library import list_approved_patterns
-from .web_components import _input_field, _metadata_item, _render_empty_state, _render_page_header, _textarea_field
-from .web_pattern_library import _render_pattern_versions
+from .web_components import _input_field, _metadata_item, _textarea_field
 
 def _render_nattome_pov_library(workspace: Path) -> str:
     povs = list_nattome_povs(workspace)
-    approved_patterns = [
-        pattern for pattern in list_approved_patterns(workspace)
-        if str(getattr(pattern, "status")) == "approved"
-    ]
-    pattern_names = {int(getattr(pattern, "id")): str(getattr(pattern, "pattern_name")) for pattern in approved_patterns}
     pov_body = (
-        "".join(_render_nattome_pov(workspace, pov, pattern_names) for pov in povs)
+        "".join(_render_nattome_pov(workspace, pov) for pov in povs)
         if povs
         else '<p class="muted">No Nattome POV entries have been created yet.</p>'
     )
-    pattern_link_body = (
-        "".join(
-            f"<li><strong>{html.escape(str(getattr(pattern, 'pattern_name')))}</strong> "
-            f"<span class=\"muted\">{html.escape(str(getattr(pattern, 'hook_type')))} / {html.escape(str(getattr(pattern, 'format_type')))}</span></li>"
-            for pattern in approved_patterns
-        )
-        if approved_patterns
-        else '<li class="muted">No approved external patterns are available to link.</li>'
-    )
     return f"""
       <h1>Nattome POV Library</h1>
-      <p class="lede">Owned Nattome interpretations live here: brand-safe readings, targeting, adaptation rules, and source links. External TikTok mechanics remain in the Pattern Library and are linked only as approved inputs.</p>
+      <p class="lede">Owned Nattome interpretations live here: brand-safe readings, targeting, adaptation rules, and source links.</p>
       <div class="actions" aria-label="Nattome POV exports">
         <a class="action-link" href="/exports/nattome-povs.md">Export Nattome POVs Markdown</a>
       </div>
       <section class="panel wide-panel">
         <h2>Nattome POV Entries</h2>
-        <div class="pattern-list" aria-label="Nattome POV entries">
+        <div class="library-list" aria-label="Nattome POV entries">
           {pov_body}
         </div>
       </section>
       <section class="panel wide-panel">
-        <h2>Approved Pattern Links</h2>
-        <p class="muted">Use these approved external mechanics as links; keep the Nattome-owned interpretation in each POV entry.</p>
-        <ul class="compact-list">{pattern_link_body}</ul>
-      </section>
-      <section class="panel wide-panel">
         <h2>Create Nattome POV</h2>
-        {_render_nattome_pov_create_form(approved_patterns)}
+        {_render_nattome_pov_create_form()}
       </section>
     """
 
 
-def _render_nattome_pov(workspace: Path, pov: object, pattern_names: dict[int, str]) -> str:
+def _render_nattome_pov(workspace: Path, pov: object) -> str:
     versions = list_nattome_pov_versions(workspace, getattr(pov, "id"))
     return f"""
       <article class="panel">
-        <div class="pattern-header">
+        <div class="library-header">
           <div>
             <h3>{html.escape(str(getattr(pov, "title")))}</h3>
             <p>{html.escape(str(getattr(pov, "description")))}</p>
@@ -79,9 +58,8 @@ def _render_nattome_pov(workspace: Path, pov: object, pattern_names: dict[int, s
         <h3>Adaptation rules</h3>
         <p>{html.escape(str(getattr(pov, "adaptation_rules") or "Not set"))}</p>
         {_render_pov_source_links(getattr(pov, "source_links"))}
-        {_render_pov_pattern_links(getattr(pov, "linked_pattern_ids"), pattern_names)}
-        {_render_pattern_versions(versions)}
-        {_render_nattome_pov_edit_form(pov, pattern_names)}
+        {_render_version_history(versions)}
+        {_render_nattome_pov_edit_form(pov)}
         {_render_nattome_pov_archive_form(pov)}
       </article>
     """
@@ -101,27 +79,27 @@ def _render_pov_source_links(source_links: object) -> str:
     """
 
 
-def _render_pov_pattern_links(linked_pattern_ids: object, pattern_names: dict[int, str]) -> str:
-    if not isinstance(linked_pattern_ids, list) or not linked_pattern_ids:
-        return '<p class="muted">No approved patterns linked.</p>'
-    items = []
-    for pattern_id in linked_pattern_ids:
-        try:
-            numeric_id = int(pattern_id)
-        except (TypeError, ValueError):
-            continue
-        label = pattern_names.get(numeric_id, f"Approved pattern #{numeric_id}")
-        items.append(f"<li>{html.escape(label)} <span class=\"muted\">#{numeric_id}</span></li>")
+def _render_version_history(versions: list[object]) -> str:
+    if not versions:
+        return '<p class="muted">No version history recorded.</p>'
+    items = [
+        (
+            f"<li>v{getattr(version, 'version')} {html.escape(str(getattr(version, 'change_type')))} "
+            f"by {html.escape(str(getattr(version, 'changed_by')))} "
+            f"{html.escape(str(getattr(version, 'changed_at')))}</li>"
+        )
+        for version in versions
+    ]
     return f"""
-      <h3>Linked approved patterns</h3>
+      <h3>Version history</h3>
       <ul class="compact-list">{"".join(items)}</ul>
     """
 
 
-def _render_nattome_pov_create_form(approved_patterns: list[object]) -> str:
+def _render_nattome_pov_create_form() -> str:
     return f"""
-      <form class="pattern-form" method="post" action="/nattome-pov-library/create">
-        <div class="pattern-form-grid">
+      <form class="library-form" method="post" action="/nattome-pov-library/create">
+        <div class="library-form-grid">
           {_input_field("Title", "title", "")}
           {_input_field("Product", "product", "Nattome")}
           {_input_field("Campaign", "campaign", "")}
@@ -134,7 +112,6 @@ def _render_nattome_pov_create_form(approved_patterns: list[object]) -> str:
           {_textarea_field("Brand-safe interpretation", "brand_safe_interpretation", "")}
           {_textarea_field("Adaptation rules", "adaptation_rules", "")}
           {_textarea_field("Source links", "source_links", "")}
-          {_textarea_field("Linked approved pattern IDs", "linked_pattern_ids", _approved_pattern_id_lines(approved_patterns))}
           {_input_field("User", "user", "local")}
         </div>
         <button type="submit">Create Nattome POV</button>
@@ -142,12 +119,11 @@ def _render_nattome_pov_create_form(approved_patterns: list[object]) -> str:
     """
 
 
-def _render_nattome_pov_edit_form(pov: object, pattern_names: dict[int, str]) -> str:
-    del pattern_names
+def _render_nattome_pov_edit_form(pov: object) -> str:
     return f"""
-      <form class="pattern-form" method="post" action="/nattome-pov-library/edit">
+      <form class="library-form" method="post" action="/nattome-pov-library/edit">
         <input type="hidden" name="pov_id" value="{getattr(pov, "id")}">
-        <div class="pattern-form-grid">
+        <div class="library-form-grid">
           {_input_field("Title", "title", getattr(pov, "title"))}
           {_input_field("Status", "status", getattr(pov, "status"))}
           {_input_field("Product", "product", getattr(pov, "product"))}
@@ -161,7 +137,6 @@ def _render_nattome_pov_edit_form(pov: object, pattern_names: dict[int, str]) ->
           {_textarea_field("Brand-safe interpretation", "brand_safe_interpretation", getattr(pov, "brand_safe_interpretation"))}
           {_textarea_field("Adaptation rules", "adaptation_rules", getattr(pov, "adaptation_rules"))}
           {_textarea_field("Source links", "source_links", "\n".join(getattr(pov, "source_links") or []))}
-          {_textarea_field("Linked approved pattern IDs", "linked_pattern_ids", "\n".join(str(item) for item in getattr(pov, "linked_pattern_ids") or []))}
           {_input_field("User", "user", "local")}
         </div>
         <button type="submit">Save Nattome POV</button>
@@ -173,12 +148,9 @@ def _render_nattome_pov_archive_form(pov: object) -> str:
     if str(getattr(pov, "status")) == "archived":
         return ""
     return f"""
-      <form class="pattern-form" method="post" action="/nattome-pov-library/archive">
+      <form class="library-form" method="post" action="/nattome-pov-library/archive">
         <input type="hidden" name="pov_id" value="{getattr(pov, "id")}">
         {_input_field("User", "user", "local")}
         <button type="submit">Archive Nattome POV</button>
       </form>
     """
-def _approved_pattern_id_lines(approved_patterns: list[object]) -> str:
-    ids = [str(getattr(pattern, "id")) for pattern in approved_patterns]
-    return "\n".join(ids[:5])

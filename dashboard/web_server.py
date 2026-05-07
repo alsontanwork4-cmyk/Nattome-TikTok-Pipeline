@@ -8,7 +8,6 @@ from typing import Callable
 from urllib.parse import parse_qs, urlparse
 
 from .exports import (
-    export_approved_patterns_markdown,
     export_nattome_povs_markdown,
     export_raw_videos_csv,
     export_run_summaries_csv,
@@ -16,17 +15,12 @@ from .exports import (
 from .manual_runs import trigger_manual_run
 from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
 from .web_actions import (
-    _approve_pattern_candidate,
     _archive_nattome_pov,
-    _archive_pattern,
     _create_nattome_pov,
-    _create_pattern,
     _edit_nattome_pov,
-    _edit_pattern,
     _rollback_scrape_settings,
     _save_scrape_settings,
     _save_video_curation,
-    _update_recommendation_status,
 )
 from .web_components import _first_form_value, _first_query_values
 from .web_constants import NAV_ITEMS
@@ -37,6 +31,15 @@ ExportRoute = tuple[Callable[[Path, FormData], str], str, str]
 PostFormAction = tuple[Callable[[Path, FormData], object], str]
 NAV_ROUTES = {route for _, route in NAV_ITEMS}
 
+_STATIC_CONTENT_TYPES: dict[str, str] = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+    ".ico": "image/x-icon",
+}
+
 
 def _export_raw_videos(workspace: Path, query: FormData) -> str:
     return export_raw_videos_csv(workspace, filters=_first_query_values(query))
@@ -44,10 +47,6 @@ def _export_raw_videos(workspace: Path, query: FormData) -> str:
 
 def _export_run_summaries(workspace: Path, query: FormData) -> str:
     return export_run_summaries_csv(workspace)
-
-
-def _export_approved_patterns(workspace: Path, query: FormData) -> str:
-    return export_approved_patterns_markdown(workspace)
 
 
 def _export_nattome_povs(workspace: Path, query: FormData) -> str:
@@ -65,11 +64,6 @@ GET_EXPORT_ROUTES: dict[str, ExportRoute] = {
         "text/csv; charset=utf-8",
         "nattome-run-summaries.csv",
     ),
-    "/exports/approved-patterns.md": (
-        _export_approved_patterns,
-        "text/markdown; charset=utf-8",
-        "nattome-approved-patterns.md",
-    ),
     "/exports/nattome-povs.md": (
         _export_nattome_povs,
         "text/markdown; charset=utf-8",
@@ -81,11 +75,6 @@ POST_FORM_ACTIONS: dict[str, PostFormAction] = {
     "/run-history/curation": (_save_video_curation, "/run-history"),
     "/scrape-settings/save": (_save_scrape_settings, "/scrape-settings"),
     "/scrape-settings/rollback": (_rollback_scrape_settings, "/scrape-settings"),
-    "/recommendations/status": (_update_recommendation_status, "/recommendations"),
-    "/pattern-library/approve": (_approve_pattern_candidate, "/pattern-library"),
-    "/pattern-library/create": (_create_pattern, "/pattern-library"),
-    "/pattern-library/edit": (_edit_pattern, "/pattern-library"),
-    "/pattern-library/archive": (_archive_pattern, "/pattern-library"),
     "/nattome-pov-library/create": (_create_nattome_pov, "/nattome-pov-library"),
     "/nattome-pov-library/edit": (_edit_nattome_pov, "/nattome-pov-library"),
     "/nattome-pov-library/archive": (_archive_nattome_pov, "/nattome-pov-library"),
@@ -141,6 +130,10 @@ def create_handler(
                 self._send_text("ok\n")
                 return
 
+            if parsed_path.startswith("/static/"):
+                self._handle_static_asset(parsed_path[len("/static/"):])
+                return
+
             export_route = GET_EXPORT_ROUTES.get(parsed_path)
             if export_route:
                 self._handle_export_route(export_route)
@@ -149,13 +142,17 @@ def create_handler(
             if parsed_path in NAV_ROUTES:
                 initialize_dashboard_store(workspace_path)
                 query = self._query_params()
+                page_query = {parsed_path: query}
+                run_history_query = page_query.get("/run-history", {})
+                overview_query = page_query.get("/", {})
                 self._send_html(
                     render_page(
                         parsed_path,
                         workspace_path,
                         query_params=query,
-                        run_history_run_id=_first_form_value(query, "run_id") if parsed_path == "/run-history" else "",
-                        run_history_tab=_first_form_value(query, "tab") if parsed_path == "/run-history" else "",
+                        run_history_run_id=_first_form_value(run_history_query, "run_id"),
+                        run_history_tab=_first_form_value(run_history_query, "tab"),
+                        overview_run_id=_first_form_value(overview_query, "run_id"),
                     )
                 )
                 return
@@ -183,6 +180,23 @@ def create_handler(
 
         def _parse_form(self) -> FormData:
             return parse_qs(self._read_request_body())
+
+        def _handle_static_asset(self, relative_name: str) -> None:
+            if not relative_name or "/" in relative_name or "\\" in relative_name or ".." in relative_name:
+                self.send_error(404, "Asset not found")
+                return
+            asset_path = Path(__file__).resolve().parent / "assets" / relative_name
+            if not asset_path.is_file():
+                self.send_error(404, "Asset not found")
+                return
+            content_type = _STATIC_CONTENT_TYPES.get(asset_path.suffix.lower(), "application/octet-stream")
+            payload = asset_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(payload)))
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.end_headers()
+            self.wfile.write(payload)
 
         def _handle_export_route(self, export_route: ExportRoute) -> None:
             body_factory, content_type, filename = export_route

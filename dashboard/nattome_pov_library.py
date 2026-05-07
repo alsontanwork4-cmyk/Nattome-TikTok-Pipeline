@@ -27,7 +27,6 @@ class NattomePov:
     channel: str
     status: str
     source_links: list[str]
-    linked_pattern_ids: list[int]
     version: int
     created_by: str
     updated_by: str
@@ -237,7 +236,6 @@ def _pov_payload(fields: dict[str, object]) -> dict[str, object]:
         "symptom_occasion": str(fields.get("symptom_occasion") or ""),
         "channel": str(fields.get("channel") or "TikTok"),
         "source_links": [str(item) for item in _list_value(fields.get("source_links"))],
-        "linked_pattern_ids": _int_list(fields.get("linked_pattern_ids")),
     }
 
 
@@ -255,7 +253,6 @@ def _pov_to_payload(pov: NattomePov) -> dict[str, object]:
         "symptom_occasion": pov.symptom_occasion,
         "channel": pov.channel,
         "source_links": pov.source_links,
-        "linked_pattern_ids": pov.linked_pattern_ids,
     }
 
 
@@ -276,7 +273,6 @@ def _pov_from_row(row: sqlite3.Row) -> NattomePov:
         channel=str(payload["channel"]),
         status=str(row["status"]),
         source_links=[str(item) for item in _list_value(payload["source_links"])],
-        linked_pattern_ids=_int_list(payload["linked_pattern_ids"]),
         version=int(row["version"]),
         created_by=str(row["created_by"]),
         updated_by=str(row["updated_by"]),
@@ -300,7 +296,6 @@ def _version_from_row(row: sqlite3.Row) -> NattomePovVersion:
         channel=str(payload["channel"]),
         status=str(_json_loads(row["pov_json"]).get("status") or ""),
         source_links=[str(item) for item in _list_value(payload["source_links"])],
-        linked_pattern_ids=_int_list(payload["linked_pattern_ids"]),
         version=int(row["version"]),
         created_by=str(row["changed_by"]),
         updated_by=str(row["changed_by"]),
@@ -351,16 +346,6 @@ def _list_value(value: object) -> list[object]:
     if isinstance(value, str) and value.strip():
         return [item.strip() for item in value.splitlines() if item.strip()]
     return []
-
-
-def _int_list(value: object) -> list[int]:
-    ids = []
-    for item in _list_value(value):
-        try:
-            ids.append(int(item))
-        except (TypeError, ValueError):
-            continue
-    return ids
 
 
 def _json_loads(value: object) -> dict[str, object]:

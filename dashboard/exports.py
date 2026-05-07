@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 from .nattome_pov_library import list_nattome_povs
-from .pattern_library import list_approved_patterns
 from .run_history import load_run_history
 from .store import connect_dashboard_store
 
@@ -84,52 +83,6 @@ def export_run_summaries_csv(workspace: Path | str = ".") -> str:
     return _csv_text(RUN_SUMMARY_CSV_COLUMNS, rows)
 
 
-def export_approved_patterns_markdown(workspace: Path | str = ".") -> str:
-    patterns = [
-        pattern
-        for pattern in list_approved_patterns(workspace)
-        if str(getattr(pattern, "status")) == "approved"
-    ]
-    lines = ["# Approved Patterns Export", ""]
-    if not patterns:
-        lines.extend(["No approved patterns are available for export.", ""])
-        return "\n".join(lines)
-    for pattern in patterns:
-        lines.extend(
-            [
-                f"## {getattr(pattern, 'pattern_name')}",
-                "",
-                f"- Status: {getattr(pattern, 'status')}",
-                f"- Version: {getattr(pattern, 'version')}",
-                f"- Hook type: {getattr(pattern, 'hook_type')}",
-                f"- Format type: {getattr(pattern, 'format_type')}",
-                f"- Emotional trigger: {getattr(pattern, 'emotional_trigger')}",
-                f"- Freshness: {getattr(pattern, 'freshness') or 'Not set'}",
-                f"- Updated by: {getattr(pattern, 'updated_by')}",
-            ]
-        )
-        lines.extend(_dict_markdown_lines("Targeting", getattr(pattern, "targeting")))
-        lines.extend(_source_video_markdown_lines(getattr(pattern, "source_videos")))
-        lines.extend(
-            [
-                "",
-                "### Why It Works",
-                str(getattr(pattern, "why_it_works") or "Not set"),
-                "",
-                "### Nattome Adaptation Notes",
-                str(getattr(pattern, "nattome_adaptation_notes") or "Not set"),
-                "",
-                "### Related POVs",
-                _joined_or_empty(getattr(pattern, "related_povs")),
-                "",
-                "### Avoid Notes",
-                str(getattr(pattern, "avoid_notes") or "Not set"),
-                "",
-            ]
-        )
-    return "\n".join(lines)
-
-
 def export_nattome_povs_markdown(workspace: Path | str = ".") -> str:
     povs = [pov for pov in list_nattome_povs(workspace) if str(getattr(pov, "status")) != "archived"]
     lines = ["# Nattome POV Export", ""]
@@ -152,7 +105,6 @@ def export_nattome_povs_markdown(workspace: Path | str = ".") -> str:
                 f"- Channel: {getattr(pov, 'channel')}",
                 f"- Updated by: {getattr(pov, 'updated_by')}",
                 f"- Source links: {_joined_or_empty(getattr(pov, 'source_links'))}",
-                f"- Linked approved pattern IDs: {_joined_or_empty(getattr(pov, 'linked_pattern_ids'))}",
                 "",
                 "### Description",
                 str(getattr(pov, "description") or "Not set"),

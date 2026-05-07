@@ -2,10 +2,9 @@ from __future__ import annotations
 
 NAV_ITEMS = (
     ("Overview", "/"),
+    ("Report", "/report"),
     ("Run History", "/run-history"),
     ("Scrape Settings", "/scrape-settings"),
-    ("Recommendations", "/recommendations"),
-    ("Pattern Library", "/pattern-library"),
     ("Nattome POV Library", "/nattome-pov-library"),
     ("Pipeline Architecture", "/pipeline-architecture"),
 )
@@ -13,14 +12,13 @@ NAV_ITEMS = (
 NAV_GROUPS = (
     ("Discovery", (
         ("Overview", "/", "overview"),
+        ("Report", "/report", "report"),
         ("Run History", "/run-history", "history"),
     )),
     ("Quality", (
         ("Scrape Settings", "/scrape-settings", "settings"),
-        ("Recommendations", "/recommendations", "recommendations"),
     )),
     ("Library", (
-        ("Pattern Library", "/pattern-library", "pattern"),
         ("Nattome POV Library", "/nattome-pov-library", "pov"),
     )),
     ("System", (
