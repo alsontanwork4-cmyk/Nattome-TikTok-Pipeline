@@ -1390,6 +1390,33 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+
+## 2026-05-07 - 0059 Simplify Dashboard Web Request Adapter
+
+Task completed from `docs/issues/0059-simplify-dashboard-web-request-adapter.md`.
+
+Key decisions made:
+- Replaced repeated dashboard GET export branching with `GET_EXPORT_ROUTES` dispatch entries that preserve export content types, filenames, and response bodies.
+- Replaced repeated POST form action branching with `POST_FORM_ACTIONS` dispatch plus a per-handler manual-run action closure for dependency injection.
+- Added shared request helpers for path/query parsing, body/form parsing, export sending, validation error handling, and redirects.
+- Kept the existing lightweight `http.server` dashboard and did not introduce any web framework.
+
+Files changed:
+- `dashboard/web_server.py`
+- `tests/test_dashboard_architecture_characterization.py`
+- `tests/test_dashboard_exports.py`
+- `progress.txt`
+- `docs/issues/done/0059-simplify-dashboard-web-request-adapter.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py` failed because `create_handler` still used repeated route branches instead of dispatch tables.
+- GREEN: `python -m pytest tests/test_dashboard_architecture_characterization.py tests/test_dashboard_exports.py` passed with 12 tests.
+- `python -m pytest tests -k dashboard` passed with 54 selected tests and 63 deselected tests.
+- `python -m pytest` passed with 117 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
+- Context threshold is above the requested stop point, so stop after completing issue 0059 rather than starting issue 0060.
 - Continue with `docs/issues/0054-localize-store-access-for-small-dashboard-callers.md` next.
 
 ## 2026-05-07 - 0054 Localize Store Access For Small Dashboard Callers

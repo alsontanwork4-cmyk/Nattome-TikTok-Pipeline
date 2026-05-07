@@ -133,6 +133,15 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
             self.assertIn("Dashboard route not found", body)
             self.assertFalse((workspace / DASHBOARD_DB_PATH).exists())
 
+    def test_web_request_adapter_uses_route_dispatch_tables(self):
+        source = inspect.getsource(dashboard_web.create_handler)
+
+        self.assertIn("GET_EXPORT_ROUTES", source)
+        self.assertIn("POST_FORM_ACTIONS", source)
+        self.assertLessEqual(source.count("if parsed_path =="), 2)
+        self.assertNotIn('if parsed_path == "/exports/raw-videos.csv"', source)
+        self.assertNotIn('if parsed_path == "/scraped-content/curation"', source)
+
     def _request(self, workspace: Path, method: str, path: str):
         server = dashboard_web.DashboardServer(
             ("127.0.0.1", 0),

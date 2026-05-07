@@ -32,6 +32,66 @@ from .web_components import _first_form_value, _first_query_values
 from .web_constants import NAV_ITEMS
 from .web_layout import render_page
 
+FormData = dict[str, list[str]]
+ExportRoute = tuple[Callable[[Path, FormData], str], str, str]
+PostFormAction = tuple[Callable[[Path, FormData], object], str]
+NAV_ROUTES = {route for _, route in NAV_ITEMS}
+
+
+def _export_raw_videos(workspace: Path, query: FormData) -> str:
+    return export_raw_videos_csv(workspace, filters=_first_query_values(query))
+
+
+def _export_run_summaries(workspace: Path, query: FormData) -> str:
+    return export_run_summaries_csv(workspace)
+
+
+def _export_approved_patterns(workspace: Path, query: FormData) -> str:
+    return export_approved_patterns_markdown(workspace)
+
+
+def _export_nattome_povs(workspace: Path, query: FormData) -> str:
+    return export_nattome_povs_markdown(workspace)
+
+
+GET_EXPORT_ROUTES: dict[str, ExportRoute] = {
+    "/exports/raw-videos.csv": (
+        _export_raw_videos,
+        "text/csv; charset=utf-8",
+        "nattome-raw-videos.csv",
+    ),
+    "/exports/run-summaries.csv": (
+        _export_run_summaries,
+        "text/csv; charset=utf-8",
+        "nattome-run-summaries.csv",
+    ),
+    "/exports/approved-patterns.md": (
+        _export_approved_patterns,
+        "text/markdown; charset=utf-8",
+        "nattome-approved-patterns.md",
+    ),
+    "/exports/nattome-povs.md": (
+        _export_nattome_povs,
+        "text/markdown; charset=utf-8",
+        "nattome-povs.md",
+    ),
+}
+
+POST_FORM_ACTIONS: dict[str, PostFormAction] = {
+    "/scraped-content/curation": (_save_video_curation, "/scraped-content"),
+    "/scrape-settings/save": (_save_scrape_settings, "/scrape-settings"),
+    "/scrape-settings/rollback": (_rollback_scrape_settings, "/scrape-settings"),
+    "/recommendations/status": (_update_recommendation_status, "/recommendations"),
+    "/pattern-library/approve": (_approve_pattern_candidate, "/pattern-library"),
+    "/pattern-library/create": (_create_pattern, "/pattern-library"),
+    "/pattern-library/edit": (_edit_pattern, "/pattern-library"),
+    "/pattern-library/archive": (_archive_pattern, "/pattern-library"),
+    "/nattome-pov-library/create": (_create_nattome_pov, "/nattome-pov-library"),
+    "/nattome-pov-library/edit": (_edit_nattome_pov, "/nattome-pov-library"),
+    "/nattome-pov-library/archive": (_archive_nattome_pov, "/nattome-pov-library"),
+}
+
+
 class DashboardServer(ThreadingHTTPServer):
     daemon_threads = True
 
@@ -61,48 +121,34 @@ def create_handler(
 ) -> type[BaseHTTPRequestHandler]:
     workspace_path = resolve_dashboard_workspace(workspace)
 
+    def trigger_manual_run_action(current_workspace: Path, form: FormData) -> object:
+        return trigger_manual_run(
+            current_workspace,
+            _first_form_value(form, "run_type") or "scrape_only",
+            triggered_by=_first_form_value(form, "user") or "local",
+            executor=manual_run_executor,
+        )
+
+    post_form_actions = {
+        **POST_FORM_ACTIONS,
+        "/manual-runs/trigger": (trigger_manual_run_action, "/run-history"),
+    }
+
     class DashboardRequestHandler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:
-            parsed_path = urlparse(self.path).path
+            parsed_path = self._request_path()
             if parsed_path == "/healthz":
                 self._send_text("ok\n")
                 return
-            if parsed_path == "/exports/raw-videos.csv":
-                initialize_dashboard_store(workspace_path)
-                query = parse_qs(urlparse(self.path).query)
-                self._send_export(
-                    export_raw_videos_csv(workspace_path, filters=_first_query_values(query)),
-                    content_type="text/csv; charset=utf-8",
-                    filename="nattome-raw-videos.csv",
-                )
+
+            export_route = GET_EXPORT_ROUTES.get(parsed_path)
+            if export_route:
+                self._handle_export_route(export_route)
                 return
-            if parsed_path == "/exports/run-summaries.csv":
+
+            if parsed_path in NAV_ROUTES:
                 initialize_dashboard_store(workspace_path)
-                self._send_export(
-                    export_run_summaries_csv(workspace_path),
-                    content_type="text/csv; charset=utf-8",
-                    filename="nattome-run-summaries.csv",
-                )
-                return
-            if parsed_path == "/exports/approved-patterns.md":
-                initialize_dashboard_store(workspace_path)
-                self._send_export(
-                    export_approved_patterns_markdown(workspace_path),
-                    content_type="text/markdown; charset=utf-8",
-                    filename="nattome-approved-patterns.md",
-                )
-                return
-            if parsed_path == "/exports/nattome-povs.md":
-                initialize_dashboard_store(workspace_path)
-                self._send_export(
-                    export_nattome_povs_markdown(workspace_path),
-                    content_type="text/markdown; charset=utf-8",
-                    filename="nattome-povs.md",
-                )
-                return
-            if parsed_path in {route for _, route in NAV_ITEMS}:
-                initialize_dashboard_store(workspace_path)
-                query = parse_qs(urlparse(self.path).query)
+                query = self._query_params()
                 self._send_html(
                     render_page(
                         parsed_path,
@@ -115,145 +161,47 @@ def create_handler(
             self.send_error(404, "Dashboard route not found")
 
         def do_POST(self) -> None:
-            parsed_path = urlparse(self.path).path
-            if parsed_path == "/scraped-content/curation":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                _save_video_curation(workspace_path, parse_qs(body))
-                self._redirect("/scraped-content")
-                return
-            if parsed_path == "/scrape-settings/save":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _save_scrape_settings(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/scrape-settings")
-                return
-            if parsed_path == "/scrape-settings/rollback":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _rollback_scrape_settings(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/scrape-settings")
-                return
-            if parsed_path == "/manual-runs/trigger":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                form = parse_qs(body)
-                try:
-                    trigger_manual_run(
-                        workspace_path,
-                        _first_form_value(form, "run_type") or "scrape_only",
-                        triggered_by=_first_form_value(form, "user") or "local",
-                        executor=manual_run_executor,
-                    )
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/run-history")
-                return
-            if parsed_path == "/recommendations/status":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _update_recommendation_status(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/recommendations")
-                return
-            if parsed_path == "/pattern-library/approve":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _approve_pattern_candidate(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/pattern-library")
-                return
-            if parsed_path == "/pattern-library/create":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _create_pattern(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/pattern-library")
-                return
-            if parsed_path == "/pattern-library/edit":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _edit_pattern(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/pattern-library")
-                return
-            if parsed_path == "/pattern-library/archive":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _archive_pattern(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/pattern-library")
-                return
-            if parsed_path == "/nattome-pov-library/create":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _create_nattome_pov(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/nattome-pov-library")
-                return
-            if parsed_path == "/nattome-pov-library/edit":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _edit_nattome_pov(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/nattome-pov-library")
-                return
-            if parsed_path == "/nattome-pov-library/archive":
-                initialize_dashboard_store(workspace_path)
-                length = int(self.headers.get("Content-Length") or 0)
-                body = self.rfile.read(length).decode("utf-8")
-                try:
-                    _archive_nattome_pov(workspace_path, parse_qs(body))
-                except ValueError as exc:
-                    self._send_error_page(400, str(exc))
-                    return
-                self._redirect("/nattome-pov-library")
+            form_action = post_form_actions.get(self._request_path())
+            if form_action:
+                self._handle_form_action(form_action)
                 return
             self.send_error(404, "Dashboard route not found")
 
         def log_message(self, format: str, *args: object) -> None:
             return
+
+        def _request_path(self) -> str:
+            return urlparse(self.path).path
+
+        def _query_params(self) -> FormData:
+            return parse_qs(urlparse(self.path).query)
+
+        def _read_request_body(self) -> str:
+            length = int(self.headers.get("Content-Length") or 0)
+            return self.rfile.read(length).decode("utf-8")
+
+        def _parse_form(self) -> FormData:
+            return parse_qs(self._read_request_body())
+
+        def _handle_export_route(self, export_route: ExportRoute) -> None:
+            body_factory, content_type, filename = export_route
+            initialize_dashboard_store(workspace_path)
+            self._send_export(
+                body_factory(workspace_path, self._query_params()),
+                content_type=content_type,
+                filename=filename,
+            )
+
+        def _handle_form_action(self, form_action: PostFormAction) -> None:
+            action, redirect_location = form_action
+            initialize_dashboard_store(workspace_path)
+            form = self._parse_form()
+            try:
+                action(workspace_path, form)
+            except ValueError as exc:
+                self._send_error_page(400, str(exc))
+                return
+            self._redirect(redirect_location)
 
         def _send_html(self, body: str) -> None:
             encoded = body.encode("utf-8")

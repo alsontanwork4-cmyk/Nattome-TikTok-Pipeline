@@ -165,18 +165,38 @@ class DashboardExportsTest(unittest.TestCase):
             csv_status, csv_headers, csv_body = self._get(workspace, "/exports/raw-videos.csv?selection_status=analyzed")
             run_status, run_headers, run_body = self._get(workspace, "/exports/run-summaries.csv")
             md_status, md_headers, md_body = self._get(workspace, "/exports/approved-patterns.md")
+            pov_status, pov_headers, pov_body = self._get(workspace, "/exports/nattome-povs.md")
 
             self.assertIn("/exports/raw-videos.csv", scraped_page)
             self.assertIn("/exports/run-summaries.csv", run_page)
             self.assertEqual(csv_status, 200)
             self.assertEqual(csv_headers["Content-Type"], "text/csv; charset=utf-8")
+            self.assertEqual(
+                csv_headers["Content-Disposition"],
+                'attachment; filename="nattome-raw-videos.csv"',
+            )
             self.assertIn("video-1", csv_body)
             self.assertNotIn("video-2", csv_body)
             self.assertEqual(run_status, 200)
+            self.assertEqual(
+                run_headers["Content-Disposition"],
+                'attachment; filename="nattome-run-summaries.csv"',
+            )
             self.assertIn("20260507T000000Z_default", run_body)
             self.assertEqual(md_status, 200)
             self.assertEqual(md_headers["Content-Type"], "text/markdown; charset=utf-8")
+            self.assertEqual(
+                md_headers["Content-Disposition"],
+                'attachment; filename="nattome-approved-patterns.md"',
+            )
             self.assertIn("No approved patterns are available", md_body)
+            self.assertEqual(pov_status, 200)
+            self.assertEqual(pov_headers["Content-Type"], "text/markdown; charset=utf-8")
+            self.assertEqual(
+                pov_headers["Content-Disposition"],
+                'attachment; filename="nattome-povs.md"',
+            )
+            self.assertIn("No Nattome POVs are available", pov_body)
 
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
