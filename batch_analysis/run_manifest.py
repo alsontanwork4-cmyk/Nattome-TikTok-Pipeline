@@ -38,6 +38,7 @@ def build_run_manifest(
     has_telegram_delivery: bool,
     has_evidence_artifact_cleanup: bool,
     has_refinement_hooks: bool,
+    gemini_evidence_statuses: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     batch_size = args.batch_size
     if batch_size is None:
@@ -46,6 +47,29 @@ def build_run_manifest(
         batch_size = MODE_DEFAULT_BATCH_SIZE[args.mode]
 
     candidates_path = str(args.candidates) if args.candidates else None
+    gemini_statuses = gemini_evidence_statuses or []
+    failed_gemini_statuses = [
+        status
+        for status in gemini_statuses
+        if status.get("status") in {"failed", "missing_credentials"}
+    ]
+    partial_gemini_statuses = [
+        status for status in gemini_statuses if status.get("status") == "partial"
+    ]
+    if failed_gemini_statuses:
+        gemini_phase_status = "failed"
+    elif partial_gemini_statuses:
+        gemini_phase_status = "partial"
+    elif gemini_statuses:
+        gemini_phase_status = "completed"
+    else:
+        gemini_phase_status = "skipped"
+    gemini_notes = [
+        f"{status.get('candidate_id')}: {status.get('reason')}"
+        for status in failed_gemini_statuses
+        if status.get("reason")
+    ]
+
     phases = [
         phase_record(
             "run_folder",
@@ -69,6 +93,18 @@ def build_run_manifest(
             "completed" if has_evidence_bundles else "skipped",
             outputs={"index": "evidence_bundles/index.json"} if has_evidence_bundles else {},
             notes=[] if has_evidence_bundles else ["Evidence bundles require a selected batch."],
+        ),
+        phase_record(
+            "gemini_evidence",
+            gemini_phase_status,
+            inputs={
+                "primary_adapter": configuration.get("tool_stack", {}).get("primary_adapter"),
+                "model": configuration.get("tool_stack", {}).get("gemini_model"),
+            },
+            outputs={"evidence": "data/*_gemini_evidence.json"} if gemini_statuses else {},
+            notes=gemini_notes
+            if gemini_notes
+            else ([] if gemini_statuses else ["Gemini evidence extraction has not run yet."]),
         ),
         phase_record(
             "cross_video_pattern_summary",

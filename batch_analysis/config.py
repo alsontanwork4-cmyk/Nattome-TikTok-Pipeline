@@ -43,6 +43,9 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "logs": "logs",
     },
     "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
         "discovery_download": "Apify",
         "video_processing": "FFmpeg",
         "ocr_primary": "PaddleOCR",

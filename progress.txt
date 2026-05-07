@@ -471,3 +471,33 @@ Feedback:
 Blockers or notes for the next iteration:
 - The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.
 - Later migration issues still need to move downstream reports, summaries, cleanup, and delivery outputs off the legacy nested writer paths.
+
+## 2026-05-07 - 0020 Add Gemini 2.5 Flash Tool Stack Adapter
+
+Task completed from `docs/issues/0020-add-gemini-2-5-flash-tool-stack-adapter.md`.
+
+Key decisions made:
+- Added `GeminiFlashAdapter` with an injectable client so normal tests use fake Gemini responses and never require live network access.
+- `DEFAULT_CONFIG` now makes `gemini_2_5_flash` the primary Tool Stack Adapter and records the model and API key env var.
+- The adapter normalizes Gemini responses into timestamped visual observations, visible text, spoken content, audio cues, hook evidence, and claim evidence.
+- Adapter output intentionally drops any `shootable_angles` returned by Gemini because Gemini evidence must not become final creative output.
+- Partial responses, client failures, and missing credentials return explicit status payloads.
+- `EvidenceBundleStore` can persist Gemini evidence under the flat `data/` layout and update the per-video snapshot state.
+- `run_manifest.py` can represent Gemini evidence phase states, including failed missing-credential records.
+
+Files changed:
+- `batch_analysis/config.py`
+- `batch_analysis/evidence_io.py`
+- `batch_analysis/run_manifest.py`
+- `batch_analysis/tool_adapters.py`
+- `tests/test_gemini_adapter.py`
+- `progress.txt`
+- `docs/issues/done/0020-add-gemini-2-5-flash-tool-stack-adapter.md`
+
+Feedback:
+- `python -m pytest tests\test_gemini_adapter.py -q` failed before implementation, then passed.
+- `python -m pytest -q` passed with 37 tests and 1 subtest.
+
+Blockers or notes for the next iteration:
+- This slice adds the adapter contract and persistence path, but does not yet make the full batch run call live Gemini.
+- The full pytest run still emits the existing `RequestsDependencyWarning` about local `urllib3` and charset dependency versions.

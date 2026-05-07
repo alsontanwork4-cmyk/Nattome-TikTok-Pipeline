@@ -44,6 +44,9 @@ class EvidenceBundleStore:
     def snapshot_path(self, candidate: dict[str, Any]) -> Path:
         return self.data_folder / f"{stable_evidence_prefix(candidate)}_evidence_snapshot.json"
 
+    def gemini_evidence_path(self, candidate: dict[str, Any]) -> Path:
+        return self.data_folder / f"{stable_evidence_prefix(candidate)}_gemini_evidence.json"
+
     def source_video_path(self, candidate: dict[str, Any]) -> Path:
         video_source = str(candidate.get("video_download_url") or "")
         filename = source_video_filename(video_source)
@@ -160,4 +163,31 @@ class EvidenceBundleStore:
                 },
                 "artifacts": {},
             }
+        return snapshot
+
+    def write_gemini_evidence(
+        self,
+        candidate: dict[str, Any],
+        evidence: dict[str, Any],
+    ) -> dict[str, Any]:
+        self.data_folder.mkdir(parents=True, exist_ok=True)
+        evidence_path = self.gemini_evidence_path(candidate)
+        evidence_path.write_text(
+            json.dumps(evidence, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
+        snapshot = self.load_snapshot(candidate)
+        status = str(evidence.get("status") or "failed")
+        snapshot.setdefault("artifacts", {})
+        snapshot["artifacts"]["gemini_evidence"] = {
+            "state": status,
+            "path": relative_path(evidence_path, self.run_folder),
+            "reason": evidence.get("reason"),
+            "missing_evidence": evidence.get("missing_evidence", []),
+        }
+        self.snapshot_path(candidate).write_text(
+            json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
         return snapshot
