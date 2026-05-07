@@ -1529,3 +1529,30 @@ Feedback:
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - Context threshold is above the requested stop point, so stop after completing issue 0057 rather than starting issue 0058.
+
+## 2026-05-07 - 0058 Extract Dashboard Theme Rendering
+
+Task completed from `docs/issues/0058-extract-dashboard-theme-rendering.md`.
+
+Key decisions made:
+- Added `dashboard.web_theme` as the shared owner for the dashboard inline theme CSS.
+- Kept `dashboard.web_layout` focused on page composition by calling `render_theme_styles()` inside the existing inline `<style>` block.
+- Preserved the self-contained local HTML response and avoided static asset serving or visual redesign.
+- Added a shell rendering test that verifies the theme module styles are inlined with expected layout markers without pinning every CSS rule.
+
+Files changed:
+- `dashboard/web_theme.py`
+- `dashboard/web_layout.py`
+- `tests/test_dashboard_shell.py`
+- `progress.txt`
+- `docs/issues/done/0058-extract-dashboard-theme-rendering.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_shell.py` failed because `dashboard.web_theme` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_shell.py` passed with 15 tests.
+- `python -m pytest tests/test_dashboard_shell.py tests/test_dashboard_global_search.py tests/test_dashboard_run_history.py tests/test_dashboard_exports.py tests/test_dashboard_manual_runs.py` passed with 31 tests.
+- `git diff --check` passed with line-ending warnings only.
+- `python -m pytest` passed with 116 tests.
+
+Blockers or notes for the next iteration:
+- Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.

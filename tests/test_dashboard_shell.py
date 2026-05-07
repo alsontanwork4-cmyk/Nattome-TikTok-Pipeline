@@ -17,6 +17,8 @@ from dashboard.store import (
 )
 from dashboard.web_actions import _save_video_curation
 from dashboard.web import DashboardServer, NAV_ITEMS, create_handler, resolve_dashboard_workspace
+from dashboard.web_layout import render_page
+from dashboard.web_theme import render_theme_styles
 
 
 class DashboardStoreTest(unittest.TestCase):
@@ -161,6 +163,18 @@ class DashboardWebShellTest(unittest.TestCase):
                     self.assertIn("<main>", body)
                     self.assertIn(f'href="{route}" aria-current="page"', body)
                     self.assertIn(label, body)
+
+    def test_rendered_page_uses_inline_theme_module_styles(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            body = render_page("/", Path(temp_dir))
+            theme_styles = render_theme_styles().strip()
+
+            self.assertIn("<style>", body)
+            self.assertIn(theme_styles, body)
+            self.assertIn(".layout {", theme_styles)
+            self.assertIn('<header class="topbar" role="banner">', body)
+            self.assertIn("Latest Run Overview", body)
+            self.assertNotIn('href="/static/', body)
 
     def test_overview_route_loads_without_pipeline_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
