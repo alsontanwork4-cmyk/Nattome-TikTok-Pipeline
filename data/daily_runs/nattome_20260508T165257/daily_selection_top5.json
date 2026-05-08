@@ -1,0 +1,236 @@
+{
+  "generated_at": "2026-05-08T08:55:03.351215+00:00",
+  "source_scrape": "data\\daily_runs\\nattome_20260508T165257\\raw_scrape_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_strategy": "viral_relevance_score",
+  "selection_pool_size": 30,
+  "input_candidate_count": 30,
+  "eligible_candidate_count": 3,
+  "selection_count": 3,
+  "minimum_eligibility_filter": {
+    "minimum_views": 10000,
+    "maximum_age_days": 150,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true,
+    "exclusion_terms": [
+      "weight loss",
+      "slimming",
+      "detox tea"
+    ]
+  },
+  "top": [
+    {
+      "rank": 1,
+      "id": "7589593108338330901",
+      "url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/xbKWqWqNmzD0w4ObY/records/video-refluxrese-20251230101738-7589593108338330901.mp4",
+      "author_handle": "refluxreset",
+      "caption": "Tea tips for acid reflux🫖🍃 #acidreflux #gerd #tea #malaysia #foryou ",
+      "play_count": 10900,
+      "like_count": 207,
+      "comment_count": 3,
+      "share_count": 16,
+      "created_at": "2025-12-30T10:17:38Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.035,
+      "nattome_relevance_score": 0.5,
+      "selection_score": 0.5
+    },
+    {
+      "rank": 2,
+      "id": "7637071570086726932",
+      "url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/xbKWqWqNmzD0w4ObY/records/video-muhammadha-20260507085815-7637071570086726932.mp4",
+      "author_handle": "muhammadhaziqhaiqal",
+      "caption": "auraa \n#iwc #malaysiacreator ",
+      "play_count": 32700,
+      "like_count": 1716,
+      "comment_count": 15,
+      "share_count": 73,
+      "created_at": "2026-05-07T08:58:15Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0771,
+      "nattome_relevance_score": 0.0,
+      "selection_score": 0.3153
+    },
+    {
+      "rank": 3,
+      "id": "7600382988030872852",
+      "url": "https://www.tiktok.com/@nickreflux/video/7600382988030872852",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/xbKWqWqNmzD0w4ObY/records/video-nickreflux-20260128120748-7600382988030872852.mp4",
+      "author_handle": "nickreflux",
+      "caption": "#acidreflux #acidrefluxdiet #fypmalaysia #kualalumpur #gerd ",
+      "play_count": 42300,
+      "like_count": 1170,
+      "comment_count": 49,
+      "share_count": 408,
+      "created_at": "2026-01-28T12:07:48Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1299,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "7633612522750348565",
+      "url": "https://www.tiktok.com/@lion300226/video/7633612522750348565",
+      "reason": "below minimum weighted engagement rate (0.0145 < 0.0300)"
+    },
+    {
+      "id": "7633730553639882004",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7633730553639882004",
+      "reason": "below minimum views (1874 < 10000); below minimum weighted engagement rate (0.0235 < 0.0300)"
+    },
+    {
+      "id": "7631459402779872533",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7631459402779872533",
+      "reason": "below minimum views (1436 < 10000)"
+    },
+    {
+      "id": "7627166192410561799",
+      "url": "https://www.tiktok.com/@iznimazlin/video/7627166192410561799",
+      "reason": "below minimum weighted engagement rate (0.0249 < 0.0300)"
+    },
+    {
+      "id": "7622528352355814663",
+      "url": "https://www.tiktok.com/@nia.acid.reflux/video/7622528352355814663",
+      "reason": "below minimum views (738 < 10000)"
+    },
+    {
+      "id": "7609924467149589767",
+      "url": "https://www.tiktok.com/@lil.eykaa/video/7609924467149589767",
+      "reason": "below minimum weighted engagement rate (0.0300 < 0.0300)"
+    },
+    {
+      "id": "7612284303111736596",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7612284303111736596",
+      "reason": "below minimum views (2741 < 10000); below minimum weighted engagement rate (0.0212 < 0.0300)"
+    },
+    {
+      "id": "7608785676234018068",
+      "url": "https://www.tiktok.com/@happilens/video/7608785676234018068",
+      "reason": "below minimum views (4626 < 10000); below minimum weighted engagement rate (0.0205 < 0.0300)"
+    },
+    {
+      "id": "7602211642516065557",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7602211642516065557",
+      "reason": "below minimum views (2605 < 10000)"
+    },
+    {
+      "id": "7591644783664270599",
+      "url": "https://www.tiktok.com/@b.a.r.i.a.h_043/video/7591644783664270599",
+      "reason": "below minimum views (190 < 10000)"
+    },
+    {
+      "id": "7591643998289186055",
+      "url": "https://www.tiktok.com/@k.bariah_0403/video/7591643998289186055",
+      "reason": "below minimum views (1640 < 10000)"
+    },
+    {
+      "id": "7586714163309841686",
+      "url": "https://www.tiktok.com/@jean.pan/video/7586714163309841686",
+      "reason": "below minimum views (3102 < 10000)"
+    },
+    {
+      "id": "7582540155009928469",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7582540155009928469",
+      "reason": "below minimum views (8377 < 10000)"
+    },
+    {
+      "id": "7576303135946312968",
+      "url": "https://www.tiktok.com/@zackacidreflux/video/7576303135946312968",
+      "reason": "below minimum views (5992 < 10000); older than 150 days"
+    },
+    {
+      "id": "7540105751235251474",
+      "url": "https://www.tiktok.com/@farmasimurni_official/video/7540105751235251474",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7536589784240688406",
+      "url": "https://www.tiktok.com/@greggetseverywhere/video/7536589784240688406",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7535385695045684488",
+      "url": "https://www.tiktok.com/@daisyjiejie73.1/video/7535385695045684488",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7528312896112102663",
+      "url": "https://www.tiktok.com/@bariatricsurgerymy/video/7528312896112102663",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7522868909075139858",
+      "url": "https://www.tiktok.com/@boonseong.kok/video/7522868909075139858",
+      "reason": "below minimum views (1376 < 10000); older than 150 days"
+    },
+    {
+      "id": "7521271717344447764",
+      "url": "https://www.tiktok.com/@bariatricsurgerymy/video/7521271717344447764",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7509473659216481554",
+      "url": "https://www.tiktok.com/@farmasieverlife/video/7509473659216481554",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7403731061215104289",
+      "url": "https://www.tiktok.com/@thisfoodbangz/video/7403731061215104289",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7377261877191068946",
+      "url": "https://www.tiktok.com/@klskyclinic/video/7377261877191068946",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7356994694846418209",
+      "url": "https://www.tiktok.com/@sabrinal4mb/video/7356994694846418209",
+      "reason": "older than 150 days; below minimum weighted engagement rate (0.0242 < 0.0300)"
+    },
+    {
+      "id": "7272346342419107080",
+      "url": "https://www.tiktok.com/@esmanfsh/video/7272346342419107080",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7173294967874489627",
+      "url": "https://www.tiktok.com/@rejim_mongol/video/7173294967874489627",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7169890716645182747",
+      "url": "https://www.tiktok.com/@smhealthcare.malaysia/video/7169890716645182747",
+      "reason": "older than 150 days; below minimum weighted engagement rate (0.0136 < 0.0300)"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "created_at": "2026-05-08T06:45:00Z",
+  "bundle_count": 5,
+  "bundles": [
+    {
+      "candidate_id": "7636964432131853588",
+      "rank": 1,
+      "prefix": "001_7636964432131853588",
+      "snapshot_path": "data/001_7636964432131853588_evidence_snapshot.json",
+      "source_metadata": {
+        "state": "available",
+        "path": "data/001_7636964432131853588_source_metadata.json"
+      },
+      "source_video": {
+        "state": "available",
+        "path": "evidence/001_7636964432131853588_source_video.mp4",
+        "bytes": 7021793,
+        "source": "https://api.apify.com/v2/key-value-stores/LxXmgWlRtKu0dyLI9/records/video-alimrkbegl-20260507020235-7636964432131853588.mp4"
+      },
+      "artifacts": {
+        "gemini_evidence": {
+          "state": "failed",
+          "path": "data/001_7636964432131853588_gemini_evidence.json",
+          "reason": "The read operation timed out",
+          "missing_evidence": [
+            "visual_observations",
+            "visible_text",
+            "spoken_content",
+            "audio_cues",
+            "hook_evidence",
+            "claim_evidence"
+          ]
+        },
+        "derived_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "Derived evidence has not been captured in this slice"
+        },
+        "baseline_audio_analysis": {
+          "state": "completed",
+          "path": "data/001_7636964432131853588_baseline_audio_analysis.json"
+        },
+        "claim_safety_review": {
+          "state": "completed",
+          "path": "data/001_7636964432131853588_claim_safety_review.json"
+        },
+        "evidence_quality": {
+          "state": "completed",
+          "path": "data/001_7636964432131853588_evidence_quality.json"
+        },
+        "shootable_angles": {
+          "state": "completed",
+          "path": "data/001_7636964432131853588_shootable_angles.json"
+        },
+        "video_evidence_report": {
+          "state": "completed",
+          "path": "reports/001_7636964432131853588_video_evidence_report.md"
+        }
+      }
+    },
+    {
+      "candidate_id": "7632626379581869333",
+      "rank": 2,
+      "prefix": "002_7632626379581869333",
+      "snapshot_path": "data/002_7632626379581869333_evidence_snapshot.json",
+      "source_metadata": {
+        "state": "available",
+        "path": "data/002_7632626379581869333_source_metadata.json"
+      },
+      "source_video": {
+        "state": "available",
+        "path": "evidence/002_7632626379581869333_source_video.mp4",
+        "bytes": 3650756,
+        "source": "https://api.apify.com/v2/key-value-stores/LxXmgWlRtKu0dyLI9/records/video-official_k-20260425092839-7632626379581869333.mp4"
+      },
+      "artifacts": {
+        "gemini_evidence": {
+          "state": "completed",
+          "path": "data/002_7632626379581869333_gemini_evidence.json",
+          "reason": null,
+          "missing_evidence": []
+        },
+        "derived_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "Derived evidence has not been captured in this slice"
+        },
+        "baseline_audio_analysis": {
+          "state": "completed",
+          "path": "data/002_7632626379581869333_baseline_audio_analysis.json"
+        },
+        "claim_safety_review": {
+          "state": "completed",
+          "path": "data/002_7632626379581869333_claim_safety_review.json"
+        },
+        "evidence_quality": {
+          "state": "completed",
+          "path": "data/002_7632626379581869333_evidence_quality.json"
+        },
+        "shootable_angles": {
+          "state": "completed",
+          "path": "data/002_7632626379581869333_shootable_angles.json"
+        },
+        "video_evidence_report": {
+          "state": "completed",
+          "path": "reports/002_7632626379581869333_video_evidence_report.md"
+        }
+      }
+    },
+    {
+      "candidate_id": "7630535088601566485",
+      "rank": 3,
+      "prefix": "003_7630535088601566485",
+      "snapshot_path": "data/003_7630535088601566485_evidence_snapshot.json",
+      "source_metadata": {
+        "state": "available",
+        "path": "data/003_7630535088601566485_source_metadata.json"
+      },
+      "source_video": {
+        "state": "failed",
+        "path": null,
+        "reason": "HTTP Error 404: Not Found",
+        "source": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260419181325-7630535088601566485.mp4"
+      },
+      "artifacts": {
+        "gemini_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "HTTP Error 404: Not Found",
+          "missing_evidence": [
+            "visual_observations",
+            "visible_text",
+            "spoken_content",
+            "audio_cues",
+            "hook_evidence",
+            "claim_evidence"
+          ]
+        },
+        "derived_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "Derived evidence has not been captured in this slice"
+        },
+        "baseline_audio_analysis": {
+          "state": "completed",
+          "path": "data/003_7630535088601566485_baseline_audio_analysis.json"
+        },
+        "claim_safety_review": {
+          "state": "completed",
+          "path": "data/003_7630535088601566485_claim_safety_review.json"
+        },
+        "evidence_quality": {
+          "state": "completed",
+          "path": "data/003_7630535088601566485_evidence_quality.json"
+        },
+        "shootable_angles": {
+          "state": "completed",
+          "path": "data/003_7630535088601566485_shootable_angles.json"
+        },
+        "video_evidence_report": {
+          "state": "completed",
+          "path": "reports/003_7630535088601566485_video_evidence_report.md"
+        }
+      }
+    },
+    {
+      "candidate_id": "7635660968009157901",
+      "rank": 4,
+      "prefix": "004_7635660968009157901",
+      "snapshot_path": "data/004_7635660968009157901_evidence_snapshot.json",
+      "source_metadata": {
+        "state": "available",
+        "path": "data/004_7635660968009157901_source_metadata.json"
+      },
+      "source_video": {
+        "state": "available",
+        "path": "evidence/004_7635660968009157901_source_video.mp4",
+        "bytes": 5717258,
+        "source": "https://api.apify.com/v2/key-value-stores/LxXmgWlRtKu0dyLI9/records/video-thestomach-20260503134457-7635660968009157901.mp4"
+      },
+      "artifacts": {
+        "gemini_evidence": {
+          "state": "failed",
+          "path": "data/004_7635660968009157901_gemini_evidence.json",
+          "reason": "Extra data: line 32 column 4 (char 1043)",
+          "missing_evidence": [
+            "visual_observations",
+            "visible_text",
+            "spoken_content",
+            "audio_cues",
+            "hook_evidence",
+            "claim_evidence"
+          ]
+        },
+        "derived_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "Derived evidence has not been captured in this slice"
+        },
+        "baseline_audio_analysis": {
+          "state": "completed",
+          "path": "data/004_7635660968009157901_baseline_audio_analysis.json"
+        },
+        "claim_safety_review": {
+          "state": "completed",
+          "path": "data/004_7635660968009157901_claim_safety_review.json"
+        },
+        "evidence_quality": {
+          "state": "completed",
+          "path": "data/004_7635660968009157901_evidence_quality.json"
+        },
+        "shootable_angles": {
+          "state": "completed",
+          "path": "data/004_7635660968009157901_shootable_angles.json"
+        },
+        "video_evidence_report": {
+          "state": "completed",
+          "path": "reports/004_7635660968009157901_video_evidence_report.md"
+        }
+      }
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "rank": 5,
+      "prefix": "005_7633461167788166413",
+      "snapshot_path": "data/005_7633461167788166413_evidence_snapshot.json",
+      "source_metadata": {
+        "state": "available",
+        "path": "data/005_7633461167788166413_source_metadata.json"
+      },
+      "source_video": {
+        "state": "available",
+        "path": "evidence/005_7633461167788166413_source_video.mp4",
+        "bytes": 28031052,
+        "source": "https://api.apify.com/v2/key-value-stores/LxXmgWlRtKu0dyLI9/records/video-onehealthy-20260427152858-7633461167788166413.mp4"
+      },
+      "artifacts": {
+        "gemini_evidence": {
+          "state": "completed",
+          "path": "data/005_7633461167788166413_gemini_evidence.json",
+          "reason": null,
+          "missing_evidence": []
+        },
+        "derived_evidence": {
+          "state": "missing",
+          "path": null,
+          "reason": "Derived evidence has not been captured in this slice"
+        },
+        "baseline_audio_analysis": {
+          "state": "completed",
+          "path": "data/005_7633461167788166413_baseline_audio_analysis.json"
+        },
+        "claim_safety_review": {
+          "state": "completed",
+          "path": "data/005_7633461167788166413_claim_safety_review.json"
+        },
+        "evidence_quality": {
+          "state": "completed",
+          "path": "data/005_7633461167788166413_evidence_quality.json"
+        },
+        "shootable_angles": {
+          "state": "completed",
+          "path": "data/005_7633461167788166413_shootable_angles.json"
+        },
+        "video_evidence_report": {
+          "state": "completed",
+          "path": "reports/005_7633461167788166413_video_evidence_report.md"
+        }
+      }
+    }
+  ]
+}

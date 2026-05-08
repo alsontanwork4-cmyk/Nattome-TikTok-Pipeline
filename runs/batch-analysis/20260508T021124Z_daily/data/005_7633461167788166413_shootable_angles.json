@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "candidate_id": "7633461167788166413",
+  "angles": [
+    {
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `FOODS THAT HEALED MY GUT` into a safer prompt about food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+      "avatar": "The Sufferer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    }
+  ]
+}

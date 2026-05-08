@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-05-08T06:28:25.681901+00:00",
+  "source_scrape": "data\\raw_scrapes\\nattome_raw_20260508_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_notes": "Malaysia content creator focus; selected from raw scrape by minimum eligibility (10000+ views, >=2.5% weighted engagement where available), downloadable video, and Malaysia/Malay digestive-health relevance.",
+  "selection_count": 5,
+  "top": [
+    {
+      "id": "7630535088601566485",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7630535088601566485",
+      "author_handle": "dannyfitjourney",
+      "author_followers": 8970,
+      "caption": "Makanan ‘safe’ untuk perut versi Malaysia.\nSiapa ada GERD wajib save. \n#gerdmalaysia #acidreflux #gerd #malaysia #gerdanxiety ",
+      "hashtags": [
+        "gerdmalaysia",
+        "acidreflux",
+        "gerd",
+        "malaysia",
+        "gerdanxiety"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Aesthetic",
+        "author": "BoominBeats",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260419181325-7630535088601566485.mp4",
+      "play_count": 11100,
+      "like_count": 218,
+      "comment_count": 5,
+      "share_count": 38,
+      "created_at": "2026-04-19T18:13:25+00:00",
+      "source_input": null,
+      "virality_score": 0.0363
+    },
+    {
+      "id": "7622232363908500744",
+      "url": "https://www.tiktok.com/@therapist_house/video/7622232363908500744",
+      "author_handle": "therapist_house",
+      "author_followers": 111100,
+      "caption": "Anda ada punca punca seperti ini ? #fyp #gerd #therapisthouse #rawatan ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "therapisthouse",
+        "rawatan"
+      ],
+      "duration_s": 91,
+      "music": {
+        "title": "Suspense, horror, piano and music box",
+        "author": "takaya",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-therapist_-20260328091434-7622232363908500744.mp4",
+      "play_count": 980100,
+      "like_count": 9725,
+      "comment_count": 193,
+      "share_count": 4333,
+      "created_at": "2026-03-28T09:14:34+00:00",
+      "source_input": null,
+      "virality_score": 0.0058
+    },
+    {
+      "id": "7614088578410253589",
+      "url": "https://www.tiktok.com/@official_kakmeklegacyhq/video/7614088578410253589",
+      "author_handle": "official_kakmeklegacyhq",
+      "author_followers": 92100,
+      "caption": "#petua buang angin ! #angin #gastrik #gerd ",
+      "hashtags": [
+        "petua",
+        "angin",
+        "gastrik",
+        "gerd"
+      ],
+      "duration_s": 102,
+      "music": {
+        "title": "original sound - Kakmek Legacy HQ",
+        "author": "Kakmek Legacy HQ",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-official_k-20260306103232-7614088578410253589.mp4",
+      "play_count": 1300000,
+      "like_count": 32700,
+      "comment_count": 542,
+      "share_count": 21000,
+      "created_at": "2026-03-06T10:32:32+00:00",
+      "source_input": null,
+      "virality_score": 0.0023
+    },
+    {
+      "id": "7612842834424646933",
+      "url": "https://www.tiktok.com/@lactomexhq/video/7612842834424646933",
+      "author_handle": "lactomexhq",
+      "author_followers": 10500,
+      "caption": "‼️ 1. Perut kembung & rasa tegang\nLepas makan sikit pun rasa penuh, sendawa tak berhenti.\n\n\t‼️ 2. Dada rasa ketat / berdebar\nKadang rasa macam simptom jantung, tapi sebenarnya angin terperangkap.\n\n\t‼️ 3. Sakit kepala & badan lemah\nAngin naik ke atas boleh buat pening dan cepat letih.\n\n\t‼️ 4. Sukar membuang air besar\nUsus jadi perlahan, perut rasa tak selesa berhari-hari.\n\n\t‼️ 5.Pedih ulu hati & rasa panas sampai ke dada. Ini paling ramai tak sangka.\n\nRamai umur 30–40an ingat biasa saja, rupanya tanda awal gastrik atau GERD kalau dibiarkan.\n\n✨ BONUS:\nSelalu berdebar, gelisah & susah tidur waktu malam. Ramai tak sangka, angin dalam badan pun boleh ganggu tidur & buat jantung rasa tak selesa.",
+      "hashtags": [],
+      "duration_s": 0,
+      "music": {
+        "title": "The Epic",
+        "author": "OlexandrMusic",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-lactomexhq-20260303015826-7612842834424646933.mp4",
+      "play_count": 490300,
+      "like_count": 8420,
+      "comment_count": 167,
+      "share_count": 2769,
+      "created_at": "2026-03-03T01:58:26+00:00",
+      "source_input": null,
+      "virality_score": 0.0006
+    },
+    {
+      "id": "7610293057908428052",
+      "url": "https://www.tiktok.com/@klinikwakafsiku/video/7610293057908428052",
+      "author_handle": "klinikwakafsiku",
+      "author_followers": 1886,
+      "caption": "Pukul 12 tengah hari, perut mula berbunyi. Tiba-tiba datang rasa pedih mencucuk kat ulu hati, naik sampai ke dada. Muka dah pucat, dahi berpeluh sejuk menahan sakit kat meja ofis.\n\nTapi dalam hati berbisik, \"Sikit je lagi nak Maghrib ni, rugi kalau buka. Tahan jelah.\"\n\nIni adalah dilema biasa pesakit gastrik di bulan puasa. Ramai yang sanggup seksa diri sebab rasa berdosa kalau berbuka. Tapi tahukah anda, dari sudut perubatan, anda mungkin sedang membiarkan perut anda berlubang?\n\nRasa lapar biasa dan serangan gastrik kronik adalah dua benda berbeza. Waktu anda kena gastrik teruk, asid hidroklorik dalam perut sedang menggelegak dan menghakis dinding perut anda yang kosong tu. \n\nBila keadaan dah sampai tahap amaran, anda WAJIB berbuka puasa. Jangan paksa diri. \n\nTolong perhatikan 3 tanda amaran (Lampu Merah) ini. Kalau ada salah satu, terus pergi cari air:\n\n1. Pedih Tajam Dan Sukar Bernafas\nSakit di ulu hati yang sangat tajam macam dihiris pisau, dan asid naik ke dada (GERD) sampai anda rasa sesak nafas atau pedih tekak.\n\n2. Menggeletar Dan Hampir Pitam\nBadan jadi terlalu lemah, tangan menggeletar (tremor), pandangan jadi gelap, dan anda rasa tak boleh nak berdiri seimbang lagi. Ini tanda gula dalam darah dah terlalu rendah (hipoglikemia) bergabung dengan stres gastrik.\n\n3. Muntah Air Asid\nKalau anda mula muntah-muntah mengeluarkan cecair kuning pahit (asid) atau lebih teruk, muntah berwarna gelap macam serbuk kopi (tanda pendarahan ulser), wajib batal puasa serta merta dan terus ke klinik!\n\nAgama kita sangat menitikberatkan kesihatan nyawa (Maqasid Syariah). Allah beri kelonggaran untuk pesakit berbuka kalau puasa tu bawa mudarat. Ganti balik puasa tu bila perut dah sihat lepas raya nanti.\n\nKalau terpaksa berbuka, mula dengan air suam dan kurma atau biskut tawar. Jangan terus balun nasi kandar atau air bergas, terkejut perut tu nanti.\n\n Kesihatan Anda Keperihatinan Kami\n\n#klinikpakarkanserpayudar \n#klinikpakarkansertyhroid \n#klinikkesihatanutksemua \n#klinikpanelanda \n#klinikwakafsiku ",
+      "hashtags": [
+        "klinikpakarkanserpayudar",
+        "klinikpakarkansertyhroid",
+        "klinikkesihatanutksemua",
+        "klinikpanelanda",
+        "klinikwakafsiku"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "bunyi asal - 𝑆𝑌𝐼𝐹𝐴",
+        "author": "ʂყιϝα♡",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-klinikwaka-20260224050402-7610293057908428052.mp4",
+      "play_count": 209100,
+      "like_count": 7698,
+      "comment_count": 110,
+      "share_count": 1896,
+      "created_at": "2026-02-24T05:04:02+00:00",
+      "source_input": null,
+      "virality_score": 0.0005
+    }
+  ]
+}

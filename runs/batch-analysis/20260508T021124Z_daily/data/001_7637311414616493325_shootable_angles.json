@@ -1,0 +1,80 @@
+{
+  "status": "completed",
+  "candidate_id": "7637311414616493325",
+  "angles": [
+    {
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `What are the roles of your GI team` into a safer prompt about When you’re dealing with a complex gut health issue, one perspective often isn’t enough. True healing happens when we stop looking at the gut in one symptom or issue at a time and start looking at the whole person. This takes a multidisciplinary approach. In a collaborative care model, your team works like a well-oiled machine. Here is how each “player” on your team brings something unique to the table: The Gastroenterologist: The coach of the team. They’re looking into the internal issues, calling the plays. This may be using scopes and imaging to identify structural issues, inflammation, or disease. 🧑‍⚕️ 🩺 Advanced Practice Provider (NP or PA): The quarterback, running plays. We dive deep into the clinical management, symptom tracking, and the long-term plan, ensuring your treatment fits into your actual life. Continue to monitor and tweak therapies to help manage your care. Nurse 👩🏻‍⚕️ The GI Dietitian: The special teams. They move beyond “avoidance” to help you find a sustainable way to eat that nourishes your body without triggering a flare. 🍎 The GI Psychologist: The offense or the brain-gut specialist. They help manage the literal “nervous system” of the gut, addressing how stress and the brain-gut axis impact your physical symptoms. 🧠 The patient: Team owner. The one who has final say, and has input on how the team is working together to deliver results. When we communicate and collaborate, you get better results, faster. Does your current care plan include a multidisciplinary team? Tell us how your specialists have made a difference in your journey below! 👇 #guthealth #patientadvocacy #gatroenterology #gicare #fyp @socalgastrodoc @gutsygirlMD @Jessie, IBS & FODMAP Dietitian.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: GI care",
+      "avatar": "Maintainer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Borrow the audio pacing cue `Speech` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    }
+  ]
+}

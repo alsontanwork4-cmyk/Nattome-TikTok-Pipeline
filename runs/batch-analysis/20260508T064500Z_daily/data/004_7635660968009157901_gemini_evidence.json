@@ -1,0 +1,19 @@
+{
+  "status": "failed",
+  "model": "gemini-2.5-flash",
+  "reason": "Extra data: line 32 column 4 (char 1043)",
+  "visual_observations": [],
+  "visible_text": [],
+  "spoken_content": [],
+  "audio_cues": [],
+  "hook_evidence": [],
+  "claim_evidence": [],
+  "missing_evidence": [
+    "visual_observations",
+    "visible_text",
+    "spoken_content",
+    "audio_cues",
+    "hook_evidence",
+    "claim_evidence"
+  ]
+}

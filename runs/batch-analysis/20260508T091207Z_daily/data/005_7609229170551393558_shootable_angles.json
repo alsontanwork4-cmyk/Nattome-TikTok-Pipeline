@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "candidate_id": "7609229170551393558",
+  "angles": [
+    {
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `you wanna know why Malaysia` into a safer prompt about The best food scene in the entire word is in MALAYSIA 🇲🇾 there’s no competition. #georgetown #penang #malaysiatravel #malaysiatiktok #travelcreator.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: You wanna know why Malaysia is the best country in the world if you are a foodie?",
+      "avatar": "Maintainer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Borrow the audio pacing cue `Voiceover by the man speaking` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    }
+  ]
+}

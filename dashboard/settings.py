@@ -37,7 +37,7 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
     "top_n": 30,
     "daily_selection_size": 5,
     "minimum_views": 10000,
-    "maximum_age_days": 30,
+    "maximum_age_days": 150,
     "minimum_weighted_engagement_rate": 0.03,
     "requires_downloadable_video": True,
     "exclusion_terms": [],
@@ -311,7 +311,7 @@ def _write_production_settings(
         _json_dumps({"version": version, "settings": settings}) + "\n",
         encoding="utf-8",
     )
-    scraper_config_path = workspace / "skills" / "nattome-daily-discovery" / "config.json"
+    scraper_config_path = workspace / "skills" / "nattome-tiktok-candidate-discovery" / "config.json"
     if scraper_config_path.parent.exists():
         scraper_config_path.write_text(
             _json_dumps(_scraper_config(settings, version)) + "\n",

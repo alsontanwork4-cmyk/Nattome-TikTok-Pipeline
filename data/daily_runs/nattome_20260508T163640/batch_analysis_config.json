@@ -1,0 +1,9 @@
+{
+  "selection": {
+    "minimum_views": 10000,
+    "maximum_age_days": 150,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true
+  }
+}

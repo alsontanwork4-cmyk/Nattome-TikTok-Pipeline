@@ -1,0 +1,205 @@
+{
+  "created_at": "2026-05-08T08:38:34Z",
+  "source_video_count": 2,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Clear first-three-second problem hook",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "music_or_reused_sound",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive-health curiosity",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "Gemini hook evidence: The text \"Wife Effect\" immediately appears, setting up a comedic premise.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7637071570086726932"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video starts with a woman looking directly at the camera with 'Hi!' text appearing, immediately followed by her name 'Preshana' and a quick transition to her introducing herself as a content creator.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7630160987693321479"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "No risky claims flagged from available evidence",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7630160987693321479",
+      "source_tiktok_url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman looking directly at the camera with 'Hi!' text appearing, immediately followed by her name 'Preshana' and a quick transition to her introducing herself as a content creator.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 21,
+        "max_points": 30
+      },
+      "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7630160987693321479",
+      "source_tiktok_url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Hi!` into a safer prompt about Introducing Preshana 😌😇 #contentcreator #vlogger #malaysianinfluencer #beautytok #lifestyleblogger.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 21,
+        "max_points": 30
+      },
+      "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7637071570086726932",
+      "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The text \"Wife Effect\" immediately appears, setting up a comedic premise.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      },
+      "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    },
+    {
+      "candidate_id": "7637071570086726932",
+      "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Wife Effect` into a safer prompt about auraa #iwc #malaysiacreator.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      },
+      "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 4
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7630160987693321479",
+    "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

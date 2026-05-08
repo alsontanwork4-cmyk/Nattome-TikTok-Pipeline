@@ -1,0 +1,241 @@
+{
+  "generated_at": "2026-05-08T08:58:01.865698+00:00",
+  "source_scrape": "data\\daily_runs\\nattome_20260508T165620\\raw_scrape_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_strategy": "viral_relevance_score",
+  "selection_pool_size": 30,
+  "input_candidate_count": 30,
+  "eligible_candidate_count": 12,
+  "selection_count": 5,
+  "minimum_eligibility_filter": {
+    "minimum_views": 10000,
+    "maximum_age_days": 150,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true,
+    "exclusion_terms": [
+      "weight loss",
+      "slimming",
+      "detox tea"
+    ]
+  },
+  "top": [
+    {
+      "rank": 1,
+      "id": "7634032257329614098",
+      "url": "https://www.tiktok.com/@jeevaa_ayur/video/7634032257329614098",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-jeevaa_ayu-20260429042409-7634032257329614098.mp4",
+      "author_handle": "jeevaa_ayur",
+      "caption": "Book Your Appointment Now \n60189446496 / 601160742018\n\nNabhi Vasti is a powerful Ayurveda therapy focused on healing from the core. Warm herbal oil is gently retained over the navel area to balance digestion, improve gut health, reduce bloating, and support hormonal harmony. \nA simple yet effective way to restore inner wellness naturally✨\n\n#AyurvedaMalaysia #HolisticHealing #GutHealthMatters #NaturalWellness #AyurvedicTreatment",
+      "play_count": 17400,
+      "like_count": 425,
+      "comment_count": 9,
+      "share_count": 76,
+      "created_at": "2026-04-29T04:24:09Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0707,
+      "nattome_relevance_score": 1.0,
+      "selection_score": 1.1207
+    },
+    {
+      "rank": 2,
+      "id": "7611764629043301640",
+      "url": "https://www.tiktok.com/@drlife077/video/7611764629043301640",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-drlife077-20260228050000-7611764629043301640.mp4",
+      "author_handle": "drlife077",
+      "caption": "Here are some tips to cure and avoid gastritis\n#health #guthealth #malaysia #gastric #probiotics ",
+      "play_count": 43300,
+      "like_count": 1773,
+      "comment_count": 48,
+      "share_count": 850,
+      "created_at": "2026-02-28T05:00:00Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.2428,
+      "nattome_relevance_score": 0.5,
+      "selection_score": 0.5012
+    },
+    {
+      "rank": 3,
+      "id": "7600466100060441876",
+      "url": "https://www.tiktok.com/@nickreflux/video/7600466100060441876",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-nickreflux-20260128173025-7600466100060441876.mp4",
+      "author_handle": "nickreflux",
+      "caption": "#fypmalaysia #kualalumpur #acidrefluxdiet #acidreflux #gerd ",
+      "play_count": 16200,
+      "like_count": 655,
+      "comment_count": 27,
+      "share_count": 148,
+      "created_at": "2026-01-28T17:30:25Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1401,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    },
+    {
+      "rank": 4,
+      "id": "7600382988030872852",
+      "url": "https://www.tiktok.com/@nickreflux/video/7600382988030872852",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-nickreflux-20260128120748-7600382988030872852.mp4",
+      "author_handle": "nickreflux",
+      "caption": "#acidreflux #acidrefluxdiet #fypmalaysia #kualalumpur #gerd ",
+      "play_count": 42300,
+      "like_count": 1170,
+      "comment_count": 49,
+      "share_count": 408,
+      "created_at": "2026-01-28T12:07:48Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1299,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    },
+    {
+      "rank": 5,
+      "id": "7593650788191309063",
+      "url": "https://www.tiktok.com/@gactricgone/video/7593650788191309063",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-gactricgon-20260110084326-7593650788191309063.mp4",
+      "author_handle": "gactricgone",
+      "caption": "#gastric #gastritis #relatable #pain #malaysia ",
+      "play_count": 203200,
+      "like_count": 21700,
+      "comment_count": 196,
+      "share_count": 1550,
+      "created_at": "2026-01-10T08:43:26Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1879,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "7636379169152044308",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7636379169152044308",
+      "reason": "below minimum views (549 < 10000)"
+    },
+    {
+      "id": "7633813855310859541",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7633813855310859541",
+      "reason": "below minimum views (4315 < 10000)"
+    },
+    {
+      "id": "7636634963776982293",
+      "url": "https://www.tiktok.com/@shatishksinniah/video/7636634963776982293",
+      "reason": "below minimum views (785 < 10000); below minimum weighted engagement rate (0.0153 < 0.0300)"
+    },
+    {
+      "id": "7633730553639882004",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7633730553639882004",
+      "reason": "below minimum views (1874 < 10000); below minimum weighted engagement rate (0.0235 < 0.0300)"
+    },
+    {
+      "id": "7631459402779872533",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7631459402779872533",
+      "reason": "below minimum views (1436 < 10000)"
+    },
+    {
+      "id": "7629112786169187602",
+      "url": "https://www.tiktok.com/@akkfarmasi/video/7629112786169187602",
+      "reason": "below minimum views (5389 < 10000)"
+    },
+    {
+      "id": "7629163445694385429",
+      "url": "https://www.tiktok.com/@petua.kampung1/video/7629163445694385429",
+      "reason": "below minimum views (8805 < 10000); below minimum weighted engagement rate (0.0250 < 0.0300)"
+    },
+    {
+      "id": "7622528352355814663",
+      "url": "https://www.tiktok.com/@nia.acid.reflux/video/7622528352355814663",
+      "reason": "below minimum views (738 < 10000)"
+    },
+    {
+      "id": "7620376872672595221",
+      "url": "https://www.tiktok.com/@vitamindotmy/video/7620376872672595221",
+      "reason": "below minimum views (1016 < 10000); below minimum weighted engagement rate (0.0197 < 0.0300)"
+    },
+    {
+      "id": "7616650973922250004",
+      "url": "https://www.tiktok.com/@refluxreset/video/7616650973922250004",
+      "reason": "below minimum views (3381 < 10000)"
+    },
+    {
+      "id": "7613525407865851157",
+      "url": "https://www.tiktok.com/@rameshofficiall/video/7613525407865851157",
+      "reason": "below minimum weighted engagement rate (0.0156 < 0.0300)"
+    },
+    {
+      "id": "7609924467149589767",
+      "url": "https://www.tiktok.com/@lil.eykaa/video/7609924467149589767",
+      "reason": "below minimum weighted engagement rate (0.0300 < 0.0300)"
+    },
+    {
+      "id": "7612284303111736596",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7612284303111736596",
+      "reason": "below minimum views (2741 < 10000); below minimum weighted engagement rate (0.0212 < 0.0300)"
+    },
+    {
+      "id": "7602597589120322824",
+      "url": "https://www.tiktok.com/@missmaroonz/video/7602597589120322824",
+      "reason": "below minimum views (7257 < 10000)"
+    },
+    {
+      "id": "7601919722094939413",
+      "url": "https://www.tiktok.com/@baseline_my/video/7601919722094939413",
+      "reason": "below minimum views (317 < 10000)"
+    },
+    {
+      "id": "7600404240418245909",
+      "url": "https://www.tiktok.com/@gerdgabby/video/7600404240418245909",
+      "reason": "below minimum views (1591 < 10000)"
+    },
+    {
+      "id": "7591644783664270599",
+      "url": "https://www.tiktok.com/@b.a.r.i.a.h_043/video/7591644783664270599",
+      "reason": "below minimum views (190 < 10000)"
+    },
+    {
+      "id": "7591643998289186055",
+      "url": "https://www.tiktok.com/@k.bariah_0403/video/7591643998289186055",
+      "reason": "below minimum views (1640 < 10000)"
+    }
+  ]
+}

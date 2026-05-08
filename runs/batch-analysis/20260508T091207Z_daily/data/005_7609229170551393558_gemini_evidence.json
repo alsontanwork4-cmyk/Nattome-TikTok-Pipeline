@@ -1,0 +1,216 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A man with a mustache and short hair, wearing a black tank top, is sitting at a table with food in front of him, looking directly at the camera and talking. There are other people and food stalls in the background.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.01,
+      "observation": "The man is gesturing with his right hand while talking to the camera.",
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 0.04,
+      "observation": "The camera pans down to show a table with multiple dishes of food, including chicken rice, soup, and vegetables. The man's hand points to the food.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.07,
+      "observation": "A wide shot of a bustling food court is shown, with many people seated at tables and various food stalls lining the sides. Numerous flags from different countries are strung across the ceiling.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.1,
+      "observation": "The man is back in the frame, looking at the camera and talking, with the food still on the table in front of him.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.14,
+      "observation": "The camera again shows a close-up of the food on the table, with the man's hand pointing to different dishes.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.2,
+      "observation": "The man is talking to the camera, then the shot transitions to a wide view of the food court.",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0.26,
+      "observation": "The man is eating the chicken rice with chopsticks, looking satisfied.",
+      "confidence": 0.95
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "you wanna know why Malaysia",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.01,
+      "text": "is the best country in the world",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.02,
+      "text": "if you are a foodie",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.04,
+      "text": "it's because look",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.05,
+      "text": "I just got all of this in this insane",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.07,
+      "text": "wait for location",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "text": "amazing place for only 10 RM",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.1,
+      "text": "wait for location",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.12,
+      "text": "which is €2 like $2.5 for all of this chicken",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.17,
+      "text": "rice with the soup as well",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.2,
+      "text": "and the vegetables in this incredible place",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.23,
+      "text": "New World Park Food City",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.24,
+      "text": "in Georgetown Penang",
+      "confidence": 0.95,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0.28,
+      "text": "incomparable I love you Malaysia",
+      "confidence": 0.95,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 4,
+      "text": "You wanna know why Malaysia is the best country in the world if you are a foodie?",
+      "language": "English",
+      "confidence": 0.95
+    },
+    {
+      "start_seconds": 4,
+      "end_seconds": 6,
+      "text": "It's because look, I just got all of this in this insane",
+      "language": "English",
+      "confidence": 0.95
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 14,
+      "text": "amazing place for only 10 RM, which is like €2, like $2.5 for all of this chicken",
+      "language": "English",
+      "confidence": 0.95
+    },
+    {
+      "start_seconds": 17,
+      "end_seconds": 20,
+      "text": "rice with the soup as well and the vegetables",
+      "language": "English",
+      "confidence": 0.95
+    },
+    {
+      "start_seconds": 20,
+      "end_seconds": 25,
+      "text": "in this incredible place in Georgetown, Penang.",
+      "language": "English",
+      "confidence": 0.95
+    },
+    {
+      "start_seconds": 28,
+      "end_seconds": 31,
+      "text": "Incomparable. I love you, Malaysia.",
+      "language": "English",
+      "confidence": 0.95
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Voiceover by the man speaking",
+      "confidence": 0.95
+    },
+    {
+      "timestamp_seconds": 0,
+      "cue": "Background chatter and ambient noise of a busy food court",
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 26,
+      "cue": "Sound of eating with chopsticks",
+      "confidence": 0.85
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+      "source": null,
+      "confidence": 0.95
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Malaysia is the best country in the world if you are a foodie",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 0.09,
+      "text": "I just got all of this in this insane amazing place for only 10 RM which is €2 like $2.5 for all of this chicken rice with the soup as well and the vegetables",
+      "source": null,
+      "confidence": 0.9
+    }
+  ],
+  "missing_evidence": []
+}

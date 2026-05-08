@@ -114,7 +114,7 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
         report_folder = workspace / "outputs" / "reports" / "2026-05-07"
         docs_prd = workspace / "docs" / "prd"
         docs_adr = workspace / "docs" / "adr"
-        skill_folder = workspace / "skills" / "nattome-daily-discovery"
+        skill_folder = workspace / "skills" / "nattome-tiktok-candidate-discovery"
         for folder in [raw_scrapes, run_folder / "data", report_folder, docs_prd, docs_adr, skill_folder]:
             folder.mkdir(parents=True, exist_ok=True)
 

@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": null
+  },
+  "audio_format": "voiceover",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

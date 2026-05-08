@@ -1,0 +1,266 @@
+{
+  "generated_at": "2026-05-08T08:21:24.218060+00:00",
+  "source_scrape": "data\\daily_runs\\nattome_20260508T161933\\raw_scrape_top30.json",
+  "selection_purpose": "daily_evidence_analysis_handoff",
+  "selection_strategy": "viral_relevance_score",
+  "selection_pool_size": 30,
+  "input_candidate_count": 30,
+  "eligible_candidate_count": 7,
+  "selection_count": 5,
+  "minimum_eligibility_filter": {
+    "minimum_views": 10000,
+    "maximum_age_days": 150,
+    "minimum_weighted_engagement_rate": 0.03,
+    "requires_tiktok_link": true,
+    "requires_downloadable_video": true,
+    "exclusion_terms": [
+      "weight loss",
+      "detox",
+      "cleanse"
+    ]
+  },
+  "top": [
+    {
+      "rank": 1,
+      "id": "7618055525665623316",
+      "url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/hHa51YKvFFhd4q0Td/records/video-superkuala-20260317030618-7618055525665623316.mp4",
+      "author_handle": "superkualalumpur",
+      "caption": "🇲🇾 We Stopped His Acid Reflux (Here’s How) 😉\n\n📍 ZettaCare Protec-G @ZettaCare MY \nAvailable at Big Pharmacy, Caring Pharmacy, Georgetown Pharmacy & Wellings Pharmacy! 🤩\n\nBuy 5 FREE 1 – Now available at pharmacies selected stores! Don’t miss out! ✨\n\n#gastric #acidreflux #bloating #health #awareness ",
+      "play_count": 33500,
+      "like_count": 428,
+      "comment_count": 10,
+      "share_count": 404,
+      "created_at": "2026-03-17T03:06:18Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1349,
+      "nattome_relevance_score": 1.0,
+      "selection_score": 1.0035
+    },
+    {
+      "rank": 2,
+      "id": "7617808627826576660",
+      "url": "https://www.tiktok.com/@i_love_kl123/video/7617808627826576660",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/hHa51YKvFFhd4q0Td/records/video-i_love_kl1-20260316120000-7617808627826576660.mp4",
+      "author_handle": "i_love_kl123",
+      "caption": "🇲🇾 用了半年 终于把胃给养好了🥹\n\n📍 ZettaCare Protec-G @ZettaCare MY \n看到Big Pharmacy, Caring Pharmacy, Georgetown Pharmacy, Wellings Pharmacy都有在卖✨\n\n好消息！现在Pharmacy门店还有买5送1的优惠哦！\n\n#gastric #acidreflux #bloating #health #awareness ",
+      "play_count": 87800,
+      "like_count": 1281,
+      "comment_count": 10,
+      "share_count": 1029,
+      "created_at": "2026-03-16T12:00:00Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1324,
+      "nattome_relevance_score": 0.75,
+      "selection_score": 0.7535
+    },
+    {
+      "rank": 3,
+      "id": "7600382988030872852",
+      "url": "https://www.tiktok.com/@nickreflux/video/7600382988030872852",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/hHa51YKvFFhd4q0Td/records/video-nickreflux-20260128120748-7600382988030872852.mp4",
+      "author_handle": "nickreflux",
+      "caption": "#acidreflux #acidrefluxdiet #fypmalaysia #kualalumpur #gerd ",
+      "play_count": 42300,
+      "like_count": 1170,
+      "comment_count": 49,
+      "share_count": 408,
+      "created_at": "2026-01-28T12:07:48Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.1299,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    },
+    {
+      "rank": 4,
+      "id": "7594929413922278677",
+      "url": "https://www.tiktok.com/@refluxreset/video/7594929413922278677",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/hHa51YKvFFhd4q0Td/records/video-refluxrese-20260113192526-7594929413922278677.mp4",
+      "author_handle": "refluxreset",
+      "caption": "1. Coffee\n2. Fried/ greasy foods\n3. Chocolate-based foods\n4. Pastries/ refined-carbs\n5. Spicy foods\n6. Citrus fruits/ juices\n\n#acidreflux #gerd #breakfastideas #malaysia #gastritis ",
+      "play_count": 59700,
+      "like_count": 1420,
+      "comment_count": 12,
+      "share_count": 178,
+      "created_at": "2026-01-13T19:25:26Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0546,
+      "nattome_relevance_score": 0.25,
+      "selection_score": 0.25
+    },
+    {
+      "rank": 5,
+      "id": "7632679138498825492",
+      "url": "https://www.tiktok.com/@diana.meyland/video/7632679138498825492",
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/hHa51YKvFFhd4q0Td/records/video-dianameyla-20260425125321-7632679138498825492.mp4",
+      "author_handle": "diana.meyland",
+      "caption": "#malaysiatiktok🇲🇾 #fypシ #malaysiatiktok #fyp #viralvideo ",
+      "play_count": 10400,
+      "like_count": 154,
+      "comment_count": 10,
+      "share_count": 14,
+      "created_at": "2026-04-25T12:53:21Z",
+      "duration_seconds": null,
+      "sound_title": null,
+      "sound_author": null,
+      "is_reused_sound": null,
+      "audio_format_hint": null,
+      "audio_mood": null,
+      "visible_text_expected": null,
+      "has_visible_text": null,
+      "text_overlay_expected": null,
+      "weighted_engagement_rate": 0.0331,
+      "nattome_relevance_score": 0.0,
+      "selection_score": 0.0374
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "7624491986053106965",
+      "url": "https://www.tiktok.com/@happygolucky0313/video/7624491986053106965",
+      "reason": "below minimum views (1958 < 10000)"
+    },
+    {
+      "id": "7621034032385625364",
+      "url": "https://www.tiktok.com/@happygolucky0313/video/7621034032385625364",
+      "reason": "below minimum views (1219 < 10000)"
+    },
+    {
+      "id": "7601950784422448402",
+      "url": "https://www.tiktok.com/@pohycpoh/video/7601950784422448402",
+      "reason": "below minimum views (3549 < 10000)"
+    },
+    {
+      "id": "7608785676234018068",
+      "url": "https://www.tiktok.com/@happilens/video/7608785676234018068",
+      "reason": "below minimum views (4626 < 10000); below minimum weighted engagement rate (0.0205 < 0.0300)"
+    },
+    {
+      "id": "7597426908749516053",
+      "url": "https://www.tiktok.com/@bryanlowwww/video/7597426908749516053",
+      "reason": "below minimum views (3810 < 10000)"
+    },
+    {
+      "id": "7601300780158815508",
+      "url": "https://www.tiktok.com/@supergirlrmgroup/video/7601300780158815508",
+      "reason": "below minimum views (2712 < 10000)"
+    },
+    {
+      "id": "7591644783664270599",
+      "url": "https://www.tiktok.com/@b.a.r.i.a.h_043/video/7591644783664270599",
+      "reason": "below minimum views (190 < 10000)"
+    },
+    {
+      "id": "7586714163309841686",
+      "url": "https://www.tiktok.com/@jean.pan/video/7586714163309841686",
+      "reason": "below minimum views (3101 < 10000)"
+    },
+    {
+      "id": "7578145414461787400",
+      "url": "https://www.tiktok.com/@ashviniciku/video/7578145414461787400",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7569211305962294548",
+      "url": "https://www.tiktok.com/@applefrog_95/video/7569211305962294548",
+      "reason": "below minimum views (628 < 10000); older than 150 days"
+    },
+    {
+      "id": "7550190681675861256",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7550190681675861256",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7531323859316870408",
+      "url": "https://www.tiktok.com/@izzattikhwan/video/7531323859316870408",
+      "reason": "below minimum views (1755 < 10000); older than 150 days"
+    },
+    {
+      "id": "7529519066910838023",
+      "url": "https://www.tiktok.com/@lifeofalyy4/video/7529519066910838023",
+      "reason": "below minimum views (1178 < 10000); older than 150 days"
+    },
+    {
+      "id": "7474516256528420114",
+      "url": "https://www.tiktok.com/@biruni.my/video/7474516256528420114",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7451625424016264470",
+      "url": "https://www.tiktok.com/@megantanart/video/7451625424016264470",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7434791045365353746",
+      "url": "https://www.tiktok.com/@amway_my/video/7434791045365353746",
+      "reason": "below minimum views (7530 < 10000); older than 150 days"
+    },
+    {
+      "id": "7397646452748553480",
+      "url": "https://www.tiktok.com/@healthlanerzct/video/7397646452748553480",
+      "reason": "below minimum views (3120 < 10000); older than 150 days; below minimum weighted engagement rate (0.0154 < 0.0300)"
+    },
+    {
+      "id": "7383158449179266310",
+      "url": "https://www.tiktok.com/@vanishaoctaviana/video/7383158449179266310",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7321673298889182471",
+      "url": "https://www.tiktok.com/@agaeatskl/video/7321673298889182471",
+      "reason": "older than 150 days; below minimum weighted engagement rate (0.0239 < 0.0300)"
+    },
+    {
+      "id": "7313882078989258002",
+      "url": "https://www.tiktok.com/@agaeatskl/video/7313882078989258002",
+      "reason": "below minimum views (9585 < 10000); older than 150 days"
+    },
+    {
+      "id": "7287436223591861509",
+      "url": "https://www.tiktok.com/@hungrymikego/video/7287436223591861509",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7235105814011235586",
+      "url": "https://www.tiktok.com/@malaysiafoodandtravel/video/7235105814011235586",
+      "reason": "older than 150 days"
+    },
+    {
+      "id": "7014803879728532762",
+      "url": "https://www.tiktok.com/@charlotte_chew/video/7014803879728532762",
+      "reason": "older than 150 days"
+    }
+  ]
+}

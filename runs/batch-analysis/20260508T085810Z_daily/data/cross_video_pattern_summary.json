@@ -1,0 +1,381 @@
+{
+  "created_at": "2026-05-08T08:58:10Z",
+  "source_video_count": 5,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Clear first-three-second problem hook",
+        "video_count": 3,
+        "candidate_ids": [
+          "7593650788191309063",
+          "7611764629043301640",
+          "7634032257329614098"
+        ]
+      },
+      {
+        "pattern": "Unclear hook requiring manual review",
+        "video_count": 2,
+        "candidate_ids": [
+          "7600382988030872852",
+          "7600466100060441876"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "unknown",
+        "video_count": 2,
+        "candidate_ids": [
+          "7600382988030872852",
+          "7600466100060441876"
+        ]
+      },
+      {
+        "pattern": "voiceover",
+        "video_count": 2,
+        "candidate_ids": [
+          "7611764629043301640",
+          "7634032257329614098"
+        ]
+      },
+      {
+        "pattern": "music_or_reused_sound",
+        "video_count": 1,
+        "candidate_ids": [
+          "7593650788191309063"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive discomfort relief",
+        "video_count": 5,
+        "candidate_ids": [
+          "7593650788191309063",
+          "7600382988030872852",
+          "7600466100060441876",
+          "7611764629043301640",
+          "7634032257329614098"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "Gemini hook or audio evidence is unavailable; manual review required",
+        "video_count": 2,
+        "candidate_ids": [
+          "7600382988030872852",
+          "7600466100060441876"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The speaker immediately addresses a viewer's request about 'gastric tips', setting the topic for the video.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7611764629043301640"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video immediately displays on-screen text about 'Gastric issues' and how they've 'ruined my life', combined with a visual of a person eating, creating an emotional and relatable hook.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7593650788191309063"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video immediately shows a close-up of an Ayurvedic treatment (Nabhi Vasti) being performed on a person's abdomen, with oil being poured into a dough ring around the navel. The text 'Nabhi Vasti' is displayed, clearly indicating the subject of the video.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7634032257329614098"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "No risky claims flagged from available evidence",
+        "video_count": 5,
+        "candidate_ids": [
+          "7593650788191309063",
+          "7600382988030872852",
+          "7600466100060441876",
+          "7611764629043301640",
+          "7634032257329614098"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 3,
+        "candidate_ids": [
+          "7593650788191309063",
+          "7611764629043301640",
+          "7634032257329614098"
+        ]
+      },
+      {
+        "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "video_count": 2,
+        "candidate_ids": [
+          "7600382988030872852",
+          "7600466100060441876"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7611764629043301640",
+      "source_tiktok_url": "https://www.tiktok.com/@drlife077/video/7611764629043301640",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The speaker immediately addresses a viewer's request about 'gastric tips', setting the topic for the video.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7611764629043301640",
+      "source_tiktok_url": "https://www.tiktok.com/@drlife077/video/7611764629043301640",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Gastric Tips` into a safer prompt about Here are some tips to cure and avoid gastritis #health #guthealth #malaysia #gastric #probiotics.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7611764629043301640",
+      "source_tiktok_url": "https://www.tiktok.com/@drlife077/video/7611764629043301640",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: One of my video",
+      "avatar": "The Sufferer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    },
+    {
+      "candidate_id": "7634032257329614098",
+      "source_tiktok_url": "https://www.tiktok.com/@jeevaa_ayur/video/7634032257329614098",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a close-up of an Ayurvedic treatment (Nabhi Vasti) being performed on a person's abdomen, with oil being poured into a dough ring around the navel. The text 'Nabhi Vasti' is displayed, clearly indicating the subject of the video.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 5,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 4
+    },
+    {
+      "candidate_id": "7634032257329614098",
+      "source_tiktok_url": "https://www.tiktok.com/@jeevaa_ayur/video/7634032257329614098",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Jeevaa Ayur Spa & Massage` into a safer prompt about Book Your Appointment Now 60189446496 / 601160742018 Nabhi Vasti is a powerful Ayurveda therapy focused on healing from the core. Warm herbal oil is gently retained over the navel area to balance digestion, improve gut health, reduce bloating, and support hormonal harmony. A simple yet effective way to restore inner wellness naturally✨ #AyurvedaMalaysia #HolisticHealing #GutHealthMatters #NaturalWellness #AyurvedicTreatment.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 5,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 5
+    },
+    {
+      "candidate_id": "7634032257329614098",
+      "source_tiktok_url": "https://www.tiktok.com/@jeevaa_ayur/video/7634032257329614098",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Nabhi Vasti",
+      "avatar": "The Sufferer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `Background music with a calming, spiritual tone.` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 5,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 6
+    },
+    {
+      "candidate_id": "7593650788191309063",
+      "source_tiktok_url": "https://www.tiktok.com/@gactricgone/video/7593650788191309063",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately displays on-screen text about 'Gastric issues' and how they've 'ruined my life', combined with a visual of a person eating, creating an emotional and relatable hook.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 22,
+        "max_points": 30
+      },
+      "why": "22/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 7
+    },
+    {
+      "candidate_id": "7593650788191309063",
+      "source_tiktok_url": "https://www.tiktok.com/@gactricgone/video/7593650788191309063",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `when someone jokes about Gastric issues but they don't know how badly it's ruined my life` into a safer prompt about #gastric #gastritis #relatable #pain #malaysia.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 22,
+        "max_points": 30
+      },
+      "why": "22/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 8
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7611764629043301640",
+    "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

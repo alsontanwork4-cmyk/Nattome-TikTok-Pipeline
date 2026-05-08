@@ -11,7 +11,6 @@ import dashboard.architecture as dashboard_architecture
 import dashboard.exports as dashboard_exports
 import dashboard.health as dashboard_health
 import dashboard.indexer as dashboard_indexer
-import dashboard.nattome_pov_library as dashboard_nattome_pov_library
 import dashboard.quality as dashboard_quality
 import dashboard.run_history as dashboard_run_history
 import dashboard.store as dashboard_store
@@ -30,7 +29,6 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
             dashboard_exports,
             dashboard_health,
             dashboard_indexer,
-            dashboard_nattome_pov_library,
             dashboard_quality,
             dashboard_run_history,
         ]
@@ -156,7 +154,6 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
             "exports.py",
             "health.py",
             "manual_runs.py",
-            "nattome_pov_library.py",
             "run_history.py",
             "settings.py",
         }

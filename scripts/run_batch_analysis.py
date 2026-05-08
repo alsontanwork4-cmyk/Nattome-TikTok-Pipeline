@@ -12,6 +12,7 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
 from batch_analysis.config import MODE_DEFAULT_BATCH_SIZE
+from batch_analysis.env import load_dotenv_files
 from batch_analysis.run import create_run
 
 
@@ -60,6 +61,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
+    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT], override=True)
     args = parse_args()
     try:
         run_folder = create_run(args)

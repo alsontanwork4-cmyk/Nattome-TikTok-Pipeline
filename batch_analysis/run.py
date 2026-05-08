@@ -299,6 +299,7 @@ def create_run(args: argparse.Namespace) -> Path:
             selected_batch,
             flat_evidence_index,
             metadata["run_timestamp"],
+            run_folder.name,
         )
         workbook_status = write_top5_angle_planning_workbook(
             run_folder,
@@ -306,6 +307,7 @@ def create_run(args: argparse.Namespace) -> Path:
             selected_batch,
             flat_evidence_index,
             metadata["run_timestamp"],
+            run_folder.name,
         )
         final_outputs = [
             {

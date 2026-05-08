@@ -1,9 +1,0 @@
-{
-  "status": "skipped",
-  "reason": "missing Telegram credentials",
-  "missing": [
-    "TELEGRAM_BOT_TOKEN",
-    "TELEGRAM_CHAT_ID"
-  ],
-  "message_character_count": 568
-}

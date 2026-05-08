@@ -1,0 +1,56 @@
+{
+  "candidate_id": "7600466100060441876",
+  "rank": 3,
+  "prefix": "003_7600466100060441876",
+  "snapshot_path": "data/003_7600466100060441876_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/003_7600466100060441876_source_metadata.json"
+  },
+  "source_video": {
+    "state": "failed",
+    "path": null,
+    "reason": "HTTP Error 404: Not Found",
+    "source": "https://api.apify.com/v2/key-value-stores/eVgPKxah21YO06BSU/records/video-nickreflux-20260128173025-7600466100060441876.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "HTTP Error 404: Not Found",
+      "missing_evidence": [
+        "visual_observations",
+        "visible_text",
+        "spoken_content",
+        "audio_cues",
+        "hook_evidence",
+        "claim_evidence"
+      ]
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/003_7600466100060441876_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/003_7600466100060441876_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/003_7600466100060441876_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/003_7600466100060441876_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/003_7600466100060441876_video_evidence_report.md"
+    }
+  }
+}

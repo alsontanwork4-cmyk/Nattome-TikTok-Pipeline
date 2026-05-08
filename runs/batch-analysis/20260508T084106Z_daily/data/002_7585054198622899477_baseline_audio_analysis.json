@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": false
+  },
+  "audio_format": "music_or_reused_sound",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video immediately displays text: 'Most people don't see this side of acid reflux. It's not just physical pain.' This statement aims to capture the attention of individuals who experience acid reflux by highlighting a less commonly discussed aspect of the condition.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Audio evidence is limited; adapt only after human review."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

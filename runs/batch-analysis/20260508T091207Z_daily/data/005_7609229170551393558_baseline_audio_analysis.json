@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": false
+  },
+  "audio_format": "voiceover",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

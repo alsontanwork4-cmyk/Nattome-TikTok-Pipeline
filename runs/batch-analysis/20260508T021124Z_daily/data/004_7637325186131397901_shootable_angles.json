@@ -1,0 +1,56 @@
+{
+  "status": "completed",
+  "candidate_id": "7637325186131397901",
+  "angles": [
+    {
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 22,
+        "max_points": 30
+      }
+    },
+    {
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Google says dancing helps you digest food quicker` into a safer prompt about Google says dancing helps you digest food quicker #explore.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommendation": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 22,
+        "max_points": 30
+      }
+    }
+  ]
+}

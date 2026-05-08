@@ -1,0 +1,52 @@
+{
+  "candidate_id": "7637071570086726932",
+  "rank": 3,
+  "prefix": "003_7637071570086726932",
+  "snapshot_path": "data/003_7637071570086726932_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/003_7637071570086726932_source_metadata.json"
+  },
+  "source_video": {
+    "state": "available",
+    "path": "evidence/003_7637071570086726932_source_video.mp4",
+    "bytes": 1677775,
+    "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-muhammadha-20260507085815-7637071570086726932.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "partial",
+      "path": "data/003_7637071570086726932_gemini_evidence.json",
+      "reason": null,
+      "missing_evidence": [
+        "spoken_content",
+        "claim_evidence"
+      ]
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/003_7637071570086726932_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/003_7637071570086726932_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/003_7637071570086726932_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/003_7637071570086726932_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/003_7637071570086726932_video_evidence_report.md"
+    }
+  }
+}

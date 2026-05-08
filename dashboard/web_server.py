@@ -8,16 +8,12 @@ from typing import Callable
 from urllib.parse import parse_qs, urlparse
 
 from .exports import (
-    export_nattome_povs_markdown,
     export_raw_videos_csv,
     export_run_summaries_csv,
 )
 from .manual_runs import trigger_manual_run
 from .store import DASHBOARD_DB_PATH, initialize_dashboard_store
 from .web_actions import (
-    _archive_nattome_pov,
-    _create_nattome_pov,
-    _edit_nattome_pov,
     _rollback_scrape_settings,
     _save_scrape_settings,
     _save_video_curation,
@@ -49,10 +45,6 @@ def _export_run_summaries(workspace: Path, query: FormData) -> str:
     return export_run_summaries_csv(workspace)
 
 
-def _export_nattome_povs(workspace: Path, query: FormData) -> str:
-    return export_nattome_povs_markdown(workspace)
-
-
 GET_EXPORT_ROUTES: dict[str, ExportRoute] = {
     "/exports/raw-videos.csv": (
         _export_raw_videos,
@@ -64,20 +56,12 @@ GET_EXPORT_ROUTES: dict[str, ExportRoute] = {
         "text/csv; charset=utf-8",
         "nattome-run-summaries.csv",
     ),
-    "/exports/nattome-povs.md": (
-        _export_nattome_povs,
-        "text/markdown; charset=utf-8",
-        "nattome-povs.md",
-    ),
 }
 
 POST_FORM_ACTIONS: dict[str, PostFormAction] = {
     "/run-history/curation": (_save_video_curation, "/run-history"),
     "/scrape-settings/save": (_save_scrape_settings, "/scrape-settings"),
     "/scrape-settings/rollback": (_rollback_scrape_settings, "/scrape-settings"),
-    "/nattome-pov-library/create": (_create_nattome_pov, "/nattome-pov-library"),
-    "/nattome-pov-library/edit": (_edit_nattome_pov, "/nattome-pov-library"),
-    "/nattome-pov-library/archive": (_archive_nattome_pov, "/nattome-pov-library"),
 }
 
 

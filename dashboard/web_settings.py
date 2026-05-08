@@ -107,57 +107,138 @@ def _render_scrape_settings(workspace: Path) -> str:
       <h1>Scrape Settings</h1>
       <p class="lede">Choose what the next scheduled TikTok scrape should search, collect, and filter.</p>
       <p class="settings-status">Next scheduled scrape uses config: <strong>{html.escape(active_label)}</strong></p>
-      {_render_current_settings(settings)}
-      <section class="panel wide-panel settings-panel">
-        <h2>Edit scrape settings</h2>
-        {_render_settings_form(settings)}
-      </section>
+      {_render_unified_settings(settings)}
       {_render_advanced_history(versions)}
     """
 
 
-def _render_settings_form(settings: dict[str, object]) -> str:
+def _render_unified_settings(settings: dict[str, object]) -> str:
+    """Render a single panel that starts read-only and toggles to editable."""
     checked = " checked" if settings.get("requires_downloadable_video") else ""
     return f"""
-      <form class="settings-form" method="post" action="/scrape-settings/save">
-        <section class="settings-group" aria-labelledby="where-to-search">
-          <h3 id="where-to-search">Where to search</h3>
-          <div class="settings-grid">
-            {_textarea_setting("Hashtags", "hashtags", _lines(settings.get("hashtags")), "#guthealth\n#bloating")}
-            {_textarea_setting("Keywords", "keywords", _lines(settings.get("keywords")), "bloated stomach\ngut health routine")}
-            {_textarea_setting("Competitor profiles", "competitor_profiles", _lines(settings.get("competitor_profiles")), "@gaviscon\n@gutgang")}
-            {_scope_setting(str(settings.get("scope") or "all"))}
+      <section class="panel wide-panel settings-panel unified-settings" id="unified-settings-panel">
+        <div class="unified-settings-header">
+          <div>
+            <h2>Scrape settings</h2>
+            <p class="muted current-settings-helper" id="settings-mode-hint">
+              Viewing current settings. Click Edit to make changes.
+            </p>
           </div>
-        </section>
-        <section class="settings-group" aria-labelledby="how-much-to-collect">
-          <h3 id="how-much-to-collect">How much to collect</h3>
-          <div class="settings-grid">
-            {_input_setting("Results per input", "results_per_input", settings.get("results_per_input"))}
-            {_input_setting("Top N", "top_n", settings.get("top_n"))}
-            {_input_setting("Daily selection size", "daily_selection_size", settings.get("daily_selection_size"))}
-          </div>
-        </section>
-        <section class="settings-group" aria-labelledby="what-to-filter-out">
-          <h3 id="what-to-filter-out">What to filter out</h3>
-          <div class="settings-grid">
-            {_input_setting("Minimum views", "minimum_views", settings.get("minimum_views"))}
-            {_input_setting("Freshness window (days)", "maximum_age_days", settings.get("maximum_age_days"))}
-            {_input_setting("Minimum engagement rate (%)", "minimum_engagement_rate_percent", _percent_value(settings.get("minimum_weighted_engagement_rate")))}
-            {_checkbox_setting("Require downloadable video", "requires_downloadable_video", checked)}
-            {_textarea_setting("Exclusion terms", "exclusion_terms", _lines(settings.get("exclusion_terms")), "weight loss\nunrelated supplement")}
-          </div>
-        </section>
-        <div class="settings-save-area">
-          <ul class="settings-validation-note">
-            <li>At least one hashtag, keyword, or competitor profile is required.</li>
-            <li>Duplicate source terms are not allowed.</li>
-            <li>Number fields must use valid positive values where required.</li>
-          </ul>
-          {_input_setting("Save reason", "reason", "", placeholder="Why are you changing this?", required=True, show_help=False)}
-          <p class="muted">Saved changes affect the next scheduled scrape.</p>
-          <button type="submit">Save scrape settings</button>
+          <button type="button" class="edit-toggle-btn" id="edit-toggle-btn" onclick="toggleSettingsEdit()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Settings
+          </button>
         </div>
-      </form>
+        <form class="settings-form" method="post" action="/scrape-settings/save">
+          <section class="settings-group" aria-labelledby="where-to-search">
+            <h3 id="where-to-search">Where to search</h3>
+            <div class="settings-grid">
+              {_textarea_setting("Hashtags", "hashtags", _lines(settings.get("hashtags")), "#guthealth\\n#bloating")}
+              {_textarea_setting("Keywords", "keywords", _lines(settings.get("keywords")), "bloated stomach\\ngut health routine")}
+              {_textarea_setting("Competitor profiles", "competitor_profiles", _lines(settings.get("competitor_profiles")), "@gaviscon\\n@gutgang")}
+              {_scope_setting(str(settings.get("scope") or "all"))}
+            </div>
+          </section>
+          <section class="settings-group" aria-labelledby="how-much-to-collect">
+            <h3 id="how-much-to-collect">How much to collect</h3>
+            <div class="settings-grid">
+              {_input_setting("Results per input", "results_per_input", settings.get("results_per_input"))}
+              {_input_setting("Top N", "top_n", settings.get("top_n"))}
+              {_input_setting("Daily selection size", "daily_selection_size", settings.get("daily_selection_size"))}
+            </div>
+          </section>
+          <section class="settings-group" aria-labelledby="what-to-filter-out">
+            <h3 id="what-to-filter-out">What to filter out</h3>
+            <div class="settings-grid">
+              {_input_setting("Minimum views", "minimum_views", settings.get("minimum_views"))}
+              {_input_setting("Freshness window (days)", "maximum_age_days", settings.get("maximum_age_days"))}
+              {_input_setting("Minimum engagement rate (%)", "minimum_engagement_rate_percent", _percent_value(settings.get("minimum_weighted_engagement_rate")))}
+              {_checkbox_setting("Require downloadable video", "requires_downloadable_video", checked)}
+              {_textarea_setting("Exclusion terms", "exclusion_terms", _lines(settings.get("exclusion_terms")), "weight loss\\nunrelated supplement")}
+            </div>
+          </section>
+          <div class="settings-save-area" id="settings-save-area">
+            <ul class="settings-validation-note">
+              <li>At least one hashtag, keyword, or competitor profile is required.</li>
+              <li>Duplicate source terms are not allowed.</li>
+              <li>Number fields must use valid positive values where required.</li>
+            </ul>
+            {_input_setting("Save reason", "reason", "", placeholder="Why are you changing this?", required=True, show_help=False)}
+            <p class="muted">Saved changes affect the next scheduled scrape.</p>
+            <div class="settings-save-buttons">
+              <button type="submit">Save scrape settings</button>
+              <button type="button" class="cancel-edit-btn" onclick="toggleSettingsEdit()">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </section>
+      {_render_edit_toggle_script()}
+    """
+
+
+def _render_edit_toggle_script() -> str:
+    return """
+      <script>
+        (function() {
+          var panel = document.getElementById('unified-settings-panel');
+          var btn = document.getElementById('edit-toggle-btn');
+          var hint = document.getElementById('settings-mode-hint');
+          var saveArea = document.getElementById('settings-save-area');
+
+          // Start in read-only mode
+          panel.classList.add('readonly-mode');
+          panel.classList.remove('edit-mode');
+
+          // Set all form controls to readonly/disabled
+          setFieldsReadonly(true);
+
+          window.toggleSettingsEdit = function() {
+            var isReadonly = panel.classList.contains('readonly-mode');
+            if (isReadonly) {
+              // Switch to edit mode
+              panel.classList.remove('readonly-mode');
+              panel.classList.add('edit-mode');
+              btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Cancel';
+              btn.classList.add('cancel-state');
+              hint.textContent = 'Editing mode — make your changes and save below.';
+              setFieldsReadonly(false);
+            } else {
+              // Switch back to read-only mode (cancel)
+              panel.classList.add('readonly-mode');
+              panel.classList.remove('edit-mode');
+              btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Settings';
+              btn.classList.remove('cancel-state');
+              hint.textContent = 'Viewing current settings. Click Edit to make changes.';
+              setFieldsReadonly(true);
+              // Reset form to original values
+              panel.querySelector('.settings-form').reset();
+            }
+          };
+
+          function setFieldsReadonly(readonly) {
+            var inputs = panel.querySelectorAll('.settings-form input[type="text"], .settings-form textarea');
+            var selects = panel.querySelectorAll('.settings-form select');
+            var checkboxes = panel.querySelectorAll('.settings-form input[type="checkbox"]');
+
+            for (var i = 0; i < inputs.length; i++) {
+              // Skip the reason field — always editable when save area is visible
+              if (inputs[i].name === 'reason') continue;
+              inputs[i].readOnly = readonly;
+              if (readonly) {
+                inputs[i].tabIndex = -1;
+              } else {
+                inputs[i].removeAttribute('tabindex');
+              }
+            }
+            for (var i = 0; i < selects.length; i++) {
+              selects[i].disabled = readonly;
+            }
+            for (var i = 0; i < checkboxes.length; i++) {
+              checkboxes[i].disabled = readonly;
+            }
+          }
+        })();
+      </script>
     """
 
 
@@ -259,94 +340,6 @@ def _percent_value(value: object) -> str:
     except (TypeError, ValueError):
         return ""
     return f"{percent:g}"
-
-
-def _render_current_settings(settings: dict[str, object]) -> str:
-    items = [
-        ("Hashtags", _settings_list(settings.get("hashtags"), prefix="#"), _list_count(settings.get("hashtags"))),
-        ("Keywords", _settings_list(settings.get("keywords")), _list_count(settings.get("keywords"))),
-        ("Competitor profiles", _settings_list(settings.get("competitor_profiles"), prefix="@"), _list_count(settings.get("competitor_profiles"))),
-        ("Exclusion terms", _settings_list(settings.get("exclusion_terms")) or "None", _list_count(settings.get("exclusion_terms"))),
-        ("Scrape scope", str(settings.get("scope") or "all"), ""),
-        ("Results per input", str(settings.get("results_per_input") or ""), ""),
-        ("Top N", str(settings.get("top_n") or ""), ""),
-        ("Daily selection size", str(settings.get("daily_selection_size") or ""), ""),
-        ("Minimum views", _format_views(settings.get("minimum_views")), ""),
-        ("Freshness window (days)", str(settings.get("maximum_age_days") or ""), ""),
-        (
-            "Minimum engagement rate",
-            _format_engagement_rate(settings.get("minimum_weighted_engagement_rate")),
-            "",
-        ),
-        (
-            "Require downloadable video",
-            "Yes" if settings.get("requires_downloadable_video") else "No",
-            "",
-        ),
-    ]
-    rows = [
-        f"""
-        <div class="current-setting-row">
-          <dt>{html.escape(label)}{_count_suffix(count)}</dt>
-          <dd>{html.escape(value)}</dd>
-        </div>
-        """
-        for label, value, count in items
-    ]
-    return f"""
-      <section class="panel wide-panel current-settings" aria-label="Current scrape settings">
-        <h2>Your current settings</h2>
-        <p class="muted current-settings-helper">Reference what the next run will use today; edit below to change them.</p>
-        <dl class="current-settings-grid">{"".join(rows)}</dl>
-      </section>
-    """
-
-
-def _list_count(value: object) -> str:
-    if isinstance(value, list):
-        meaningful = [item for item in value if str(item).strip()]
-        return str(len(meaningful))
-    text = str(value or "").strip()
-    return "1" if text else "0"
-
-
-def _count_suffix(count: str) -> str:
-    if not count:
-        return ""
-    return f' <span class="setting-count">({html.escape(count)})</span>'
-
-
-def _format_engagement_rate(value: object) -> str:
-    try:
-        rate = float(value)
-    except (TypeError, ValueError):
-        return ""
-    if rate <= 0:
-        return "0%"
-    return f"{rate * 100:g}% (decimal {rate:g})"
-
-
-def _format_views(value: object) -> str:
-    try:
-        views = int(value)
-    except (TypeError, ValueError):
-        return str(value or "")
-    return f"{views:,}"
-
-
-def _settings_list(value: object, *, prefix: str = "") -> str:
-    if not isinstance(value, list):
-        text = str(value or "").strip()
-        return f"{prefix}{text}" if text and prefix and not text.startswith(prefix) else text
-    tokens = []
-    for item in value:
-        token = str(item).strip()
-        if not token:
-            continue
-        if prefix and not token.startswith(prefix):
-            token = f"{prefix}{token}"
-        tokens.append(token)
-    return ", ".join(tokens)
 
 
 def _render_advanced_history(versions: list[object]) -> str:

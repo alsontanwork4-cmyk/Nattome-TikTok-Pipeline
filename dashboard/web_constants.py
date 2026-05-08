@@ -5,7 +5,6 @@ NAV_ITEMS = (
     ("Report", "/report"),
     ("Run History", "/run-history"),
     ("Scrape Settings", "/scrape-settings"),
-    ("Nattome POV Library", "/nattome-pov-library"),
     ("Pipeline Architecture", "/pipeline-architecture"),
 )
 
@@ -17,9 +16,6 @@ NAV_GROUPS = (
     )),
     ("Quality", (
         ("Scrape Settings", "/scrape-settings", "settings"),
-    )),
-    ("Library", (
-        ("Nattome POV Library", "/nattome-pov-library", "pov"),
     )),
     ("System", (
         ("Pipeline Architecture", "/pipeline-architecture", "architecture"),

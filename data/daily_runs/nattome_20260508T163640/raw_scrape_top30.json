@@ -1,0 +1,806 @@
+{
+  "generated_at": "2026-05-08T08:38:14.170250+00:00",
+  "scope": "all",
+  "inputs": {
+    "hashtags": [
+      "malaysiatiktok",
+      "malaysiacreator",
+      "malaysiancreator",
+      "tiktokmalaysia",
+      "guthealthmalaysia"
+    ],
+    "keywords": [
+      "Malaysia content creator bloating",
+      "Malaysia creator acid reflux",
+      "Malaysia TikTok gut health",
+      "Malaysia creator gastric",
+      "Malaysia creator indigestion"
+    ],
+    "profiles": []
+  },
+  "total_candidates": 28,
+  "top": [
+    {
+      "id": "7637071570086726932",
+      "url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "author_handle": "muhammadhaziqhaiqal",
+      "author_followers": 35100,
+      "caption": "auraa \n#iwc #malaysiacreator ",
+      "hashtags": [
+        "iwc",
+        "malaysiacreator"
+      ],
+      "duration_s": 31,
+      "music": {
+        "title": "Chopin Nocturne No. 2 Piano Mono",
+        "author": "moshimo sound design",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-muhammadha-20260507085815-7637071570086726932.mp4",
+      "play_count": 32600,
+      "like_count": 1708,
+      "comment_count": 15,
+      "share_count": 73,
+      "created_at": "2026-05-07T08:58:15+00:00",
+      "source_input": null,
+      "virality_score": 0.3155
+    },
+    {
+      "id": "7630160987693321479",
+      "url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "author_handle": "preshana_dbella",
+      "author_followers": 6291,
+      "caption": "Introducing Preshana 😌😇\n\n#contentcreator #vlogger #malaysianinfluencer #beautytok #lifestyleblogger",
+      "hashtags": [
+        "contentcreator",
+        "vlogger",
+        "malaysianinfluencer",
+        "beautytok",
+        "lifestyleblogger"
+      ],
+      "duration_s": 7,
+      "music": {
+        "title": "original sound - Preshana",
+        "author": "Preshana",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-preshana_d-20260418180137-7630160987693321479.mp4",
+      "play_count": 10200,
+      "like_count": 1454,
+      "comment_count": 20,
+      "share_count": 53,
+      "created_at": "2026-04-18T18:01:37+00:00",
+      "source_input": null,
+      "virality_score": 0.1175
+    },
+    {
+      "id": "7633612522750348565",
+      "url": "https://www.tiktok.com/@lion300226/video/7633612522750348565",
+      "author_handle": "lion300226",
+      "author_followers": 24200,
+      "caption": "#fypシ゚viral🖤tiktok #fyopppppppppppppppppppppppppppppppp #viralkanvedio #creatorsearchinsightssekilas #viralkanvedio ",
+      "hashtags": [
+        "fypシ゚viral🖤tiktok",
+        "fyopppppppppppppppppppppppppppppppp",
+        "viralkanvedio",
+        "creatorsearchinsightssekilas",
+        "viralkanvedio"
+      ],
+      "duration_s": 13,
+      "music": {
+        "title": "1000X",
+        "author": "Ghea Indrawari",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-lion300226-20260428011527-7633612522750348565.mp4",
+      "play_count": 479800,
+      "like_count": 5430,
+      "comment_count": 140,
+      "share_count": 85,
+      "created_at": "2026-04-28T01:15:27+00:00",
+      "source_input": null,
+      "virality_score": 0.0298
+    },
+    {
+      "id": "7631963219753471250",
+      "url": "https://www.tiktok.com/@medical_mnemonics/video/7631963219753471250",
+      "author_handle": "medical_mnemonics",
+      "author_followers": 186700,
+      "caption": "Bloating & Gas After Every Meal? Fix Your Gut Fast\n\n#probiotics #guthealth #bloating #gasproblem #tiktokmalaysia ",
+      "hashtags": [
+        "probiotics",
+        "guthealth",
+        "bloating",
+        "gasproblem",
+        "tiktokmalaysia"
+      ],
+      "duration_s": 14,
+      "music": {
+        "title": "Suit",
+        "author": "Bruno Boe",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-medical_mn-20260423143513-7631963219753471250.mp4",
+      "play_count": 1132,
+      "like_count": 35,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-04-23T14:35:13+00:00",
+      "source_input": null,
+      "virality_score": 0.0282
+    },
+    {
+      "id": "7611575745441402133",
+      "url": "https://www.tiktok.com/@nishalor1/video/7611575745441402133",
+      "author_handle": "nishalor1",
+      "author_followers": 131700,
+      "caption": "@SULU #tiktokmalaysia #dance #sulu #fyp ",
+      "hashtags": [
+        "tiktokmalaysia",
+        "dance",
+        "sulu",
+        "fyp"
+      ],
+      "duration_s": 15,
+      "music": {
+        "title": "suara asli - wonniech",
+        "author": "wonniech",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-nishalor1-20260227160128-7611575745441402133.mp4",
+      "play_count": 95300,
+      "like_count": 10700,
+      "comment_count": 46,
+      "share_count": 2177,
+      "created_at": "2026-02-27T16:01:28+00:00",
+      "source_input": null,
+      "virality_score": 0.0017
+    },
+    {
+      "id": "7612125853702606087",
+      "url": "https://www.tiktok.com/@drlife077/video/7612125853702606087",
+      "author_handle": "drlife077",
+      "author_followers": 12100,
+      "caption": "I usually take high fiber, high probiotic food to support my gut health once a week. It helps with gut issue \n#health #guthealth #malaysia #gastric #probiotics ",
+      "hashtags": [
+        "health",
+        "guthealth",
+        "malaysia",
+        "gastric",
+        "probiotics"
+      ],
+      "duration_s": 52,
+      "music": {
+        "title": "original sound - DrlifeMY",
+        "author": "DrlifeMY",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-drlife077-20260301050000-7612125853702606087.mp4",
+      "play_count": 3576,
+      "like_count": 155,
+      "comment_count": 3,
+      "share_count": 16,
+      "created_at": "2026-03-01T05:00:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0004
+    },
+    {
+      "id": "7608785676234018068",
+      "url": "https://www.tiktok.com/@happilens/video/7608785676234018068",
+      "author_handle": "happilens",
+      "author_followers": 1753,
+      "caption": "Kleenenfit is a gentle gut health support supplement from Malaysia — a simple, lifestyle-friendly addition for your everyday routine. #guthealth #bloated #bloatedstomach #constipation #stomachproblems \n\nDisclaimer: No approved therapeutic claims. Results may vary. This product is not intended to diagnose, treat, or cure any disease.",
+      "hashtags": [
+        "guthealth",
+        "bloated",
+        "bloatedstomach",
+        "constipation",
+        "stomachproblems"
+      ],
+      "duration_s": 21,
+      "music": {
+        "title": "original sound - ivanrecos",
+        "author": "ivanrecos",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-happilens-20260220033441-7608785676234018068.mp4",
+      "play_count": 4626,
+      "like_count": 20,
+      "comment_count": 7,
+      "share_count": 4,
+      "created_at": "2026-02-20T03:34:41+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7596917299576081684",
+      "url": "https://www.tiktok.com/@imc4upg/video/7596917299576081684",
+      "author_handle": "imc4upg",
+      "author_followers": 1772,
+      "caption": "Order yours today!\n\n#ayurveda #fyppppppppppppppppppppppp #tiktokmalaysia #guthealth #seabuckthorn ",
+      "hashtags": [
+        "ayurveda",
+        "fyppppppppppppppppppppppp",
+        "tiktokmalaysia",
+        "guthealth",
+        "seabuckthorn"
+      ],
+      "duration_s": 57,
+      "music": {
+        "title": "Viral Trending",
+        "author": "Kilo G",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-imc4upg-20260119042738-7596917299576081684.mp4",
+      "play_count": 1062,
+      "like_count": 25,
+      "comment_count": 2,
+      "share_count": 32,
+      "created_at": "2026-01-19T04:27:38+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7594030165886291201",
+      "url": "https://www.tiktok.com/@tara_choi_/video/7594030165886291201",
+      "author_handle": "tara_choi_",
+      "author_followers": 1000000,
+      "caption": "when you tell a korean dad you have indigestion this is what he will do 😳🪡 #koreaninmalaysia #indigestion #bloodletting #traditionalmedicine ",
+      "hashtags": [
+        "koreaninmalaysia",
+        "indigestion",
+        "bloodletting",
+        "traditionalmedicine"
+      ],
+      "duration_s": 55,
+      "music": {
+        "title": "original sound - Tara Choi 🇰🇷🇲🇾",
+        "author": "Tara Choi 🇰🇷🇲🇾",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-tara_choi_-20260111091632-7594030165886291201.mp4",
+      "play_count": 971200,
+      "like_count": 61200,
+      "comment_count": 171,
+      "share_count": 2243,
+      "created_at": "2026-01-11T09:16:32+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7598008889073847570",
+      "url": "https://www.tiktok.com/@taslymy/video/7598008889073847570",
+      "author_handle": "taslymy",
+      "author_followers": 6258,
+      "caption": "Gut issues are heading right now. #Drkavitha #health #taslymalaysia #supplements #guthealth ",
+      "hashtags": [
+        "drkavitha",
+        "health",
+        "taslymalaysia",
+        "supplements",
+        "guthealth"
+      ],
+      "duration_s": 85,
+      "music": {
+        "title": "original sound - Tasly Malaysia",
+        "author": "Tasly Malaysia",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-taslymy-20260122023505-7598008889073847570.mp4",
+      "play_count": 802,
+      "like_count": 15,
+      "comment_count": 2,
+      "share_count": 1,
+      "created_at": "2026-01-22T02:35:05+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7585054198622899477",
+      "url": "https://www.tiktok.com/@refluxreset/video/7585054198622899477",
+      "author_handle": "refluxreset",
+      "author_followers": 4103,
+      "caption": "Acid reflux fighters will understand this without any explanation… #gerd #acidreflux #viral #malaysia #cravingssatisfied ",
+      "hashtags": [
+        "gerd",
+        "acidreflux",
+        "viral",
+        "malaysia",
+        "cravingssatisfied"
+      ],
+      "duration_s": 9,
+      "music": {
+        "title": "suara asli - ˢᵃᵈⁿᵉˢˢ",
+        "author": "ˢᵃᵈⁿᵉˢˢ",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-refluxrese-20251218044422-7585054198622899477.mp4",
+      "play_count": 517900,
+      "like_count": 40300,
+      "comment_count": 388,
+      "share_count": 2899,
+      "created_at": "2025-12-18T04:44:22+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7586714163309841686",
+      "url": "https://www.tiktok.com/@jean.pan/video/7586714163309841686",
+      "author_handle": "jean.pan",
+      "author_followers": 929,
+      "caption": "looking for some KL/ Malaysia creators 🥹🇲🇾 #ugccreators #microcreator #kualalumpur #malaysiatiktok #malaysiantiktok ",
+      "hashtags": [
+        "ugccreators",
+        "microcreator",
+        "kualalumpur",
+        "malaysiatiktok",
+        "malaysiantiktok"
+      ],
+      "duration_s": 52,
+      "music": {
+        "title": "original sound - jean 🫘",
+        "author": "jean 🫘",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-jeanpan-20251222160548-7586714163309841686.mp4",
+      "play_count": 3101,
+      "like_count": 92,
+      "comment_count": 21,
+      "share_count": 8,
+      "created_at": "2025-12-22T16:05:48+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7581753627736329490",
+      "url": "https://www.tiktok.com/@gastriclan/video/7581753627736329490",
+      "author_handle": "gastriclan",
+      "author_followers": 2979,
+      "caption": "I be fighting for my life 😭 \n\n#gastric #gastritis #malaysia #pain #jet2holidays ",
+      "hashtags": [
+        "gastric",
+        "gastritis",
+        "malaysia",
+        "pain",
+        "jet2holidays"
+      ],
+      "duration_s": 7,
+      "music": {
+        "title": "original sound",
+        "author": "Joe Christopher",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-gastriclan-20251209071623-7581753627736329490.mp4",
+      "play_count": 231200,
+      "like_count": 18400,
+      "comment_count": 204,
+      "share_count": 1403,
+      "created_at": "2025-12-09T07:16:23+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7584374865277340949",
+      "url": "https://www.tiktok.com/@lawcombe/video/7584374865277340949",
+      "author_handle": "lawcombe",
+      "author_followers": 882300,
+      "caption": "shoutout to these girls i love watching your content 🥺\n@Nicole 🦋 CEO of ok bye 👋🏼✨ @johanis @AMY LOH @Sa @✦ pudds ✦ #malaysiancreator ",
+      "hashtags": [
+        "malaysiancreator"
+      ],
+      "duration_s": 279,
+      "music": {
+        "title": "original sound - leeloo 𓆩❤︎𓆪",
+        "author": "leeloo 𓆩❤︎𓆪",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-lawcombe-20251216084814-7584374865277340949.mp4",
+      "play_count": 13400,
+      "like_count": 479,
+      "comment_count": 7,
+      "share_count": 12,
+      "created_at": "2025-12-16T08:48:14+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7582604272752151826",
+      "url": "https://www.tiktok.com/@zackacidreflux/video/7582604272752151826",
+      "author_handle": "zackacidreflux",
+      "author_followers": 390,
+      "caption": "Choosing the right drink really helps me to deal with Acid Reflux.\n#gerd #malaysia #acidreflux #cureacidreflux #kualalumpur ",
+      "hashtags": [
+        "gerd",
+        "malaysia",
+        "acidreflux",
+        "cureacidreflux",
+        "kualalumpur"
+      ],
+      "duration_s": 15,
+      "music": {
+        "title": "eternal winter",
+        "author": "inalery",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-zackacidre-20251211141717-7582604272752151826.mp4",
+      "play_count": 51100,
+      "like_count": 374,
+      "comment_count": 52,
+      "share_count": 77,
+      "created_at": "2025-12-11T14:17:17+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7578802229126155540",
+      "url": "https://www.tiktok.com/@baraacidreflux/video/7578802229126155540",
+      "author_handle": "baraacidreflux",
+      "author_followers": 1764,
+      "caption": "I will highly recommend for those who have acid reflux yo try this out? Want to get your? Pm me now! #acidreflux #gerd #fyp #malaysia #singapore ",
+      "hashtags": [
+        "acidreflux",
+        "gerd",
+        "fyp",
+        "malaysia",
+        "singapore"
+      ],
+      "duration_s": 28,
+      "music": {
+        "title": "original sound - BaraAcidReflux",
+        "author": "BaraAcidReflux",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-baraacidre-20251201082327-7578802229126155540.mp4",
+      "play_count": 36300,
+      "like_count": 502,
+      "comment_count": 52,
+      "share_count": 70,
+      "created_at": "2025-12-01T08:23:27+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7577877939706924289",
+      "url": "https://www.tiktok.com/@vitavibrance77/video/7577877939706924289",
+      "author_handle": "vitavibrance77",
+      "author_followers": 47,
+      "caption": "Aku baru tahu… rupanya bloated aku selama ni bukan sebab makanan pun.\n#perutbuncit\n#probiotikmalaysia\n#guttok\n#bloatedsolution\n#creatorsearchinsights ",
+      "hashtags": [
+        "perutbuncit",
+        "probiotikmalaysia",
+        "guttok",
+        "bloatedsolution",
+        "creatorsearchinsights"
+      ],
+      "duration_s": 23,
+      "music": {
+        "title": "original sound - jennyview",
+        "author": "jennyview",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-vitavibran-20251128203809-7577877939706924289.mp4",
+      "play_count": 1426,
+      "like_count": 52,
+      "comment_count": 0,
+      "share_count": 0,
+      "created_at": "2025-11-28T20:38:09+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7572954122446523655",
+      "url": "https://www.tiktok.com/@levelupmilo/video/7572954122446523655",
+      "author_handle": "levelupmilo",
+      "author_followers": 3520,
+      "caption": "Your stomach is ALWAYS bloated.\nMorning? Bloated.\nAfter lunch? Even more bloated.\nBy dinner? You look 6 months pregnant.\n\"I must be eating too much,\" you think.\nNo. It's not how much you're eating.\nHere's what's actually causing it:\n\n1️⃣ YOU'RE EATING TOO FAST\nBreakfast in the car in 5 minutes.\nLunch at your desk while working.\nDinner while watching TV.\nWhen you eat fast, you swallow air.\nAnd you don't chew properly.\nResult: Food sits in your stomach undigested, fermenting, creating gas.\nBloating isn't about WHAT you ate. It's HOW you ate it.\n\n2️⃣ YOUR GUT IS INFLAMED\nYears of:\nProcessed food\nLate night eating\nHigh stress\nZero fiber\nYour gut lining is damaged.\nIt can't digest food properly anymore.\nEverything you eat triggers inflammation = bloating\n\n3️⃣ YOU'RE LACTOSE INTOLERANT (And don't know it)\nThat Milo? Has milk.\nThat teh tarik? Has condensed milk.\nThat kopi? Has evaporated milk.\nMost Asians lose the ability to digest lactose as adults.\nYou're drinking dairy all day and wondering why you're bloated.\n\n4️⃣ YOU'RE NOT DRINKING ENOUGH WATER\nYou think: \"If I'm bloated, I should drink LESS water.\"\nWrong.\nWhen you're dehydrated, your body HOLDS ONTO water (makes you look bloated).\nPlus, without water, your digestion slows down = more bloating.\n\n5️⃣ YOU'RE CONSTIPATED\nIf you're not pooping daily (or it's hard to pass)...\nYou're literally backed up with waste.\nThat \"bloat\"? It's just undigested food sitting in your intestines.\nLow fiber + low water + no movement = constipation = permanent bloat\n\nHOW TO FIX IT:\n✅ Eat slower - 20 minutes minimum per meal, chew properly\n✅ Cut dairy for 2 weeks - See if bloating reduces (it probably will)\n✅ Drink 2L water daily - Helps digestion, reduces water retention\n✅ Add fiber - Vegetables every meal, at least 2 servings\n✅ Move after eating - 10min walk helps digestion\n\nBloating isn't normal.\nIt's your body telling you something is wrong with your digestion.\nFix the root cause. Not just the symptom.\n💬 Comment 'BLOAT' if you're bloated 24/7 and I'll send you my \"Fix Your Bloating\" guide\n\n#MalaysianHealth #MalaysianFitness #WellnessJourney #BodyTransformation #LevelUp ",
+      "hashtags": [
+        "malaysianhealth",
+        "malaysianfitness",
+        "wellnessjourney",
+        "bodytransformation",
+        "levelup"
+      ],
+      "duration_s": 7,
+      "music": {
+        "title": "Blade Runner 2049",
+        "author": "Synthwave Goose",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-levelupmil-20251115140948-7572954122446523655.mp4",
+      "play_count": 141200,
+      "like_count": 2075,
+      "comment_count": 38,
+      "share_count": 544,
+      "created_at": "2025-11-15T14:09:48+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7535075945258945814",
+      "url": "https://www.tiktok.com/@lifewithrebel1/video/7535075945258945814",
+      "author_handle": "lifewithrebel1",
+      "author_followers": 6986,
+      "caption": "Reached the point I’m learning Malay 🥲 #malaysia #fypmalaysia #malaysiatiktok #kualalumpur #kl ",
+      "hashtags": [
+        "malaysia",
+        "fypmalaysia",
+        "malaysiatiktok",
+        "kualalumpur",
+        "kl"
+      ],
+      "duration_s": 23,
+      "music": {
+        "title": "original sound",
+        "author": "Life With Rebel",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-lifewithre-20250805122308-7535075945258945814.mp4",
+      "play_count": 527500,
+      "like_count": 31000,
+      "comment_count": 836,
+      "share_count": 4529,
+      "created_at": "2025-08-05T12:23:08+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7536589784240688406",
+      "url": "https://www.tiktok.com/@greggetseverywhere/video/7536589784240688406",
+      "author_handle": "greggetseverywhere",
+      "author_followers": 91600,
+      "caption": "Don’t travel to Malaysia at this time of year, apparently\n#malaysiatiktok #warning #advice #malaysia #weather ",
+      "hashtags": [
+        "malaysiatiktok",
+        "warning",
+        "advice",
+        "malaysia",
+        "weather"
+      ],
+      "duration_s": 132,
+      "music": {
+        "title": "original sound",
+        "author": "Greg Larcombe",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-greggetsev-20250809141736-7536589784240688406.mp4",
+      "play_count": 251900,
+      "like_count": 8964,
+      "comment_count": 381,
+      "share_count": 362,
+      "created_at": "2025-08-09T14:17:36+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7528312896112102663",
+      "url": "https://www.tiktok.com/@bariatricsurgerymy/video/7528312896112102663",
+      "author_handle": "bariatricsurgerymy",
+      "author_followers": 3272,
+      "caption": "🎥 Mini Gastric Bypass (MGB) ialah salah satu prosedur bariatrik yang berkesan untuk membantu pesakit menurunkan berat badan secara selamat dan jangka panjang.\n\nMelalui teknik ini, saiz perut dikecilkan dan laluan makanan diubah supaya penyerapan kalori dikurangkan. Hasilnya?\n✅ Penurunan berat badan yang cepat & stabil\n✅ Kawalan gula darah yang lebih baik (termasuk diabetes type 2)\n✅ Mengurangkan rasa lapar melalui perubahan hormon\n✅ Kualiti hidup meningkat secara menyeluruh\n\nPembedahan ini dilakukan secara laparoskopik (lubang kecil), dengan risiko yang rendah dan pemulihan yang cepat.\n\n💬 “Ramai dah berjaya. Anda pun boleh. Ketahui bagaimana Mini Gastric Bypass boleh jadi titik perubahan hidup anda.”\n\n📲 Hubungi kami di bio sekarang untuk pertanyaan lebih lanjut\n\n#MiniGastricBypass #BariatrikMalaysia #TransformasiSihat #TurunBeratSelamat #KurusSihat #BariatricJourney #TurunBeratDenganSihat #GayaHidupBaru\n#Bariatricsurgerymalaysia #diet #healthy #health #wealth #daily #fyp #kurus #cepatkurus",
+      "hashtags": [],
+      "duration_s": 40,
+      "music": {
+        "title": "original sound - bariatricsurgerymalaysia",
+        "author": "bariatricsurgerymalaysia",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-bariatrics-20250719120000-7528312896112102663.mp4",
+      "play_count": 10100,
+      "like_count": 169,
+      "comment_count": 12,
+      "share_count": 19,
+      "created_at": "2025-07-19T12:00:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7524229271473179909",
+      "url": "https://www.tiktok.com/@fauceto_/video/7524229271473179909",
+      "author_handle": "fauceto_",
+      "author_followers": 53300,
+      "caption": "Embracing it >>>> trying to get rid of it 😭😭😭#bloating  #girlhood #mamacita  #zambiantiktok🇿🇲 #fauceto #tiktokmalaysia🇲🇾 #🇫🇷",
+      "hashtags": [
+        "bloating",
+        "girlhood",
+        "mamacita",
+        "zambiantiktok🇿🇲",
+        "fauceto",
+        "tiktokmalaysia🇲🇾",
+        "🇫🇷"
+      ],
+      "duration_s": 8,
+      "music": {
+        "title": "original sound",
+        "author": "bella 🧘🏼‍♀️",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-fauceto_-20250707065235-7524229271473179909.mp4",
+      "play_count": 10200,
+      "like_count": 677,
+      "comment_count": 31,
+      "share_count": 29,
+      "created_at": "2025-07-07T06:52:35+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7515264014746733855",
+      "url": "https://www.tiktok.com/@therapisthollidriver/video/7515264014746733855",
+      "author_handle": "therapisthollidriver",
+      "author_followers": 16000,
+      "caption": "traveling through Malaysia after Bariatric surgery. #bariatricsurgery #gastricbypass  #was #bariatriccommunity  #barilife #baritravel ",
+      "hashtags": [
+        "bariatricsurgery",
+        "gastricbypass",
+        "was",
+        "bariatriccommunity",
+        "barilife",
+        "baritravel"
+      ],
+      "duration_s": 17,
+      "music": {
+        "title": "Anxiety",
+        "author": "Doechii",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-therapisth-20250613030253-7515264014746733855.mp4",
+      "play_count": 8218,
+      "like_count": 218,
+      "comment_count": 14,
+      "share_count": 1,
+      "created_at": "2025-06-13T03:02:53+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7485995027865308432",
+      "url": "https://www.tiktok.com/@surya.malaysia/video/7485995027865308432",
+      "author_handle": "surya.malaysia",
+      "author_followers": 2448,
+      "caption": "Ready to feast on your Juadah Berbuka but worried about indigestion? 🍽️💭\n\nDon’t let discomfort hold you back! Enjoy your meals stress-free with our cider vinegar, crafted to help relieve indigestion and keep you feeling great. 🍎✨ Get yours now!\n\n#SuryaCiderVinegar #GutHealth #NaturalHoney #Digestion #SuryaMalaysia",
+      "hashtags": [],
+      "duration_s": 31,
+      "music": {
+        "title": "original sound - Natural Options",
+        "author": "Surya Malaysia",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-suryamalay-20250326060417-7485995027865308432.mp4",
+      "play_count": 546,
+      "like_count": 16,
+      "comment_count": 0,
+      "share_count": 4,
+      "created_at": "2025-03-26T06:04:17+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7474516256528420114",
+      "url": "https://www.tiktok.com/@biruni.my/video/7474516256528420114",
+      "author_handle": "biruni.my",
+      "author_followers": 25800,
+      "caption": "Replying to @zunaniah 21st Century Probiotics ni betul-betul berkesan ke? 🤔\n\nRamai cakap bagus untuk usus, tapi betul? Jom kita tengok! 👀✨\n\n#Probiotics #21stCentury #GutHealth #Farmasi #Pharmacy #Pharmacist #malaysia ",
+      "hashtags": [
+        "probiotics",
+        "21stcentury",
+        "guthealth",
+        "farmasi",
+        "pharmacy",
+        "pharmacist",
+        "malaysia"
+      ],
+      "duration_s": 58,
+      "music": {
+        "title": "original sound - FARMASI BIRUNI",
+        "author": "FARMASI BIRUNI",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-birunimy-20250223074038-7474516256528420114.mp4",
+      "play_count": 1100000,
+      "like_count": 15300,
+      "comment_count": 923,
+      "share_count": 3499,
+      "created_at": "2025-02-23T07:40:38+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7403731061215104289",
+      "url": "https://www.tiktok.com/@thisfoodbangz/video/7403731061215104289",
+      "author_handle": "thisfoodbangz",
+      "author_followers": 48700,
+      "caption": "Dont do thisin Malaysia #fyp #traveltiktok #malaysia #malaysiatiktok #kualalumpur #traveltips #travel ",
+      "hashtags": [
+        "fyp",
+        "traveltiktok",
+        "malaysia",
+        "malaysiatiktok",
+        "kualalumpur",
+        "traveltips",
+        "travel"
+      ],
+      "duration_s": 89,
+      "music": {
+        "title": "Storytelling",
+        "author": "Adriel",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-thisfoodba-20240816133757-7403731061215104289.mp4",
+      "play_count": 293700,
+      "like_count": 8202,
+      "comment_count": 122,
+      "share_count": 1178,
+      "created_at": "2024-08-16T13:37:57+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7356994694846418209",
+      "url": "https://www.tiktok.com/@sabrinal4mb/video/7356994694846418209",
+      "author_handle": "sabrinal4mb",
+      "author_followers": 19000,
+      "caption": "I love Malaysia but wouldn’t stay long term #travel #traveltiktok #traveldiaries #travelvlog #travelling #malaysia #kualalumpur #fyp ",
+      "hashtags": [
+        "travel",
+        "traveltiktok",
+        "traveldiaries",
+        "travelvlog",
+        "travelling",
+        "malaysia",
+        "kualalumpur",
+        "fyp"
+      ],
+      "duration_s": 65,
+      "music": {
+        "title": "original sound",
+        "author": "Sabrina Lamb",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-sabrinal4m-20240412145658-7356994694846418209.mp4",
+      "play_count": 178200,
+      "like_count": 2034,
+      "comment_count": 219,
+      "share_count": 116,
+      "created_at": "2024-04-12T14:56:58+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    },
+    {
+      "id": "7169890716645182747",
+      "url": "https://www.tiktok.com/@smhealthcare.malaysia/video/7169890716645182747",
+      "author_handle": "smhealthcare.malaysia",
+      "author_followers": 1365,
+      "caption": "𝙊𝙝 𝙢𝙮 𝙂𝙀𝙍𝘿 𝙞𝙩 𝙝𝙪𝙧𝙩𝙨! 😫\n\n𝗚𝗮𝘀𝘁𝗿𝗼𝗲𝘀𝗼𝗽𝗵𝗮𝗴𝗲𝗮𝗹 𝗿𝗲𝗳𝗹𝘂𝘅 𝗱𝗶𝘀𝗲𝗮𝘀𝗲 (𝗚𝗘𝗥𝗗) is a chronic condition of your stomach acid frequently flowing back into the esophagus, which is the tube that connects your mouth and stomach.\n\nHere are the symptoms of GERD and what you can do about it!\n\nOur probiotics are currently on a DISCOUNT so make sure to grab them before someone else does! 𝙃𝙚𝙖𝙙 𝙤𝙫𝙚𝙧 𝙩𝙤 𝙤𝙪𝙧 𝙬𝙚𝙗𝙨𝙞𝙩𝙚 𝙣𝙤𝙬! 🤩\n\n#smhealthcare #health #healthcare #medical #medicalsupplier #malaysia #guthealth #gerd #heartburn #medicaltiktok #probiotics #gerdawareness #fyp #pun ",
+      "hashtags": [
+        "smhealthcare",
+        "health",
+        "healthcare",
+        "medical",
+        "medicalsupplier",
+        "malaysia",
+        "guthealth",
+        "gerd",
+        "heartburn",
+        "medicaltiktok",
+        "probiotics",
+        "gerdawareness",
+        "fyp",
+        "pun"
+      ],
+      "duration_s": 17,
+      "music": {
+        "title": "original sound",
+        "author": "ALTÉGO",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-smhealthca-20221125095757-7169890716645182747.mp4",
+      "play_count": 260400,
+      "like_count": 1300,
+      "comment_count": 56,
+      "share_count": 197,
+      "created_at": "2022-11-25T09:57:57+00:00",
+      "source_input": null,
+      "virality_score": 0.0
+    }
+  ]
+}

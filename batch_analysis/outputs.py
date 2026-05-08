@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import json
 import math
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .creative_scripts import recommended_shoot_markdown
 from .evidence_io import read_json_object
+from .report_dates import report_date_from_timestamp, report_output_path
 from .reports import (
     avatar_for_candidate,
     claim_guardrails,
@@ -98,10 +98,7 @@ def shootable_angles_for_bundle(
 
 
 def output_report_date(timestamp: str) -> str:
-    parsed = datetime.fromisoformat(str(timestamp).replace("Z", "+00:00"))
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d")
+    return report_date_from_timestamp(timestamp)
 
 
 def markdown_cell(value: Any, fallback: str = "Not available") -> str:
@@ -221,28 +218,21 @@ def write_top5_creative_production_report(
     selected_batch: dict[str, Any],
     evidence_index: dict[str, Any],
     timestamp: str,
+    run_id: str = "",
 ) -> dict[str, Any]:
     report_date = output_report_date(timestamp)
-    report_path = (
-        output_root
-        / "reports"
-        / report_date
-        / f"top5_creative_production_report_{report_date}.md"
+    report_path = report_output_path(
+        output_root,
+        report_date,
+        f"top5_creative_production_report_{report_date}.md",
+        run_id,
     )
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
     bundles_by_candidate = evidence_bundles_by_candidate(evidence_index)
     selected = ranked_top_five(selected_batch)
 
-    lines = [
-        "# What We Learned From These 5 Videos",
-        "",
-        "- Lead with a concrete digestive discomfort moment the audience already recognizes.",
-        "- Translate the source pattern into Nattome support language instead of repeating claims.",
-        "- Keep each production idea simple enough to shoot as a talking-head, routine, or text-led short.",
-        "- Use source videos as creative inspiration, then rewrite hooks and overlays for brand-safe execution.",
-        "",
-    ]
+    lines: list[str] = []
 
     for index, candidate in enumerate(selected, start=1):
         candidate_id = str(candidate.get("id") or "")

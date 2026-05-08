@@ -1,0 +1,3729 @@
+{
+  "batch_metadata": {
+    "run_timestamp": "2026-05-08T02:11:24Z",
+    "mode": "daily",
+    "requested_batch_size": 5,
+    "configuration": {
+      "selection": {
+        "minimum_views": 0,
+        "maximum_age_days": 30,
+        "minimum_weighted_engagement_rate": 0,
+        "requires_tiktok_link": true,
+        "requires_downloadable_video": true
+      },
+      "outputs": {
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
+        "logs": "logs"
+      },
+      "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
+        "discovery_download": "Apify",
+        "evidence_extraction": "Gemini 2.5 Flash"
+      },
+      "telegram": {
+        "enabled": true,
+        "bot_token_env": "TELEGRAM_BOT_TOKEN",
+        "chat_id_env": "TELEGRAM_CHAT_ID"
+      },
+      "cleanup": {
+        "enabled": false,
+        "requires_report_approval": true,
+        "report_approved": false,
+        "remove_source_videos": true,
+        "remove_frames": true
+      }
+    },
+    "implementation_status": {
+      "candidate_selection": "implemented",
+      "video_download": "implemented",
+      "gemini_evidence": "implemented",
+      "audio_music_trend_analysis": "implemented",
+      "claim_safety_review": "implemented",
+      "evidence_quality": "implemented",
+      "video_evidence_reports": "implemented",
+      "cross_video_pattern_summary": "implemented",
+      "structured_json_output": "implemented",
+      "telegram_delivery": "implemented",
+      "evidence_artifact_cleanup": "implemented",
+      "refinement_hooks": "implemented"
+    },
+    "notes": [
+      "This run records missing setup or missing evidence instead of fabricating analysis.",
+      "Cross-video summaries compare only captured evidence and selected candidate metadata."
+    ]
+  },
+  "selection_decisions": {
+    "selected_at": "2026-05-08T02:11:24Z",
+    "candidate_source": "data\\daily_selections\\nattome_daily_20260508_top5.json",
+    "selection_strategy": "input_order",
+    "requested_batch_size": 5,
+    "input_candidate_count": 5,
+    "eligible_candidate_count": 5,
+    "selected_candidate_count": 5,
+    "minimum_eligibility_filter": {
+      "minimum_views": 0,
+      "maximum_age_days": 30,
+      "minimum_weighted_engagement_rate": 0,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true
+    },
+    "selected_candidates": [
+      {
+        "rank": 1,
+        "id": "7637311414616493325",
+        "url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-gutgalz-20260508002917-7637311414616493325.mp4",
+        "author_handle": "gutgalz",
+        "caption": "When you’re dealing with a complex gut health issue, one perspective often isn’t enough. True healing happens when we stop looking at the gut in one symptom or issue at a time and start looking at the whole person. This takes a multidisciplinary approach. \n\nIn a collaborative care model, your team works like a well-oiled machine. Here is how each “player” on your team brings something unique to the table:\n\nThe Gastroenterologist: The coach of the team. They’re looking into the internal issues, calling the plays. This may be using scopes and imaging to identify structural issues, inflammation, or disease. 🧑‍⚕️ 🩺 \n\nAdvanced Practice Provider (NP or PA): The quarterback, running plays. We dive deep into the clinical management, symptom tracking, and the long-term plan, ensuring your treatment fits into your actual life. Continue to monitor and tweak therapies to help manage your care. Nurse 👩🏻‍⚕️ \n\nThe GI Dietitian: The special teams. They move beyond “avoidance” to help you find a sustainable way to eat that nourishes your body without triggering a flare. 🍎\n\nThe GI Psychologist: The offense or the brain-gut specialist. They help manage the literal “nervous system” of the gut, addressing how stress and the brain-gut axis impact your physical symptoms. 🧠\n\nThe patient: Team owner. The one who has final say, and has input on how the team is working together to deliver results.\n\nWhen we communicate and collaborate, you get better results, faster.\n\nDoes your current care plan include a multidisciplinary team? Tell us how your specialists have made a difference in your journey below! 👇\n\n#guthealth #patientadvocacy #gatroenterology #gicare #fyp @socalgastrodoc @gutsygirlMD @Jessie, IBS & FODMAP Dietitian ",
+        "play_count": 146,
+        "like_count": 4,
+        "comment_count": 0,
+        "share_count": 16,
+        "created_at": "2026-05-08T00:29:17Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 1.1233,
+        "nattome_relevance_score": 0.5,
+        "selection_score": 2.9175
+      },
+      {
+        "rank": 2,
+        "id": "7637002506635201813",
+        "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-isaaarraa-20260507043026-7637002506635201813.mp4",
+        "author_handle": "isaaarraa",
+        "caption": "#ibs 😻",
+        "play_count": 3424,
+        "like_count": 541,
+        "comment_count": 5,
+        "share_count": 22,
+        "created_at": "2026-05-07T04:30:26Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2296,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.992
+      },
+      {
+        "rank": 3,
+        "id": "7637166359733980448",
+        "url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-germanysho-20260507150603-7637166359733980448.mp4",
+        "author_handle": "germanyshoaib1",
+        "caption": "Add chia seeds to pineapple and see what happens.It can help cleanse your intestines, #ChiaSeeds #PineappleDetox #GutHealth #HealthyDigestion #NaturalCleanse ",
+        "play_count": 839,
+        "like_count": 50,
+        "comment_count": 0,
+        "share_count": 15,
+        "created_at": "2026-05-07T15:06:03Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2384,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 1.4159
+      },
+      {
+        "rank": 4,
+        "id": "7637325186131397901",
+        "url": "https://www.tiktok.com/@memphisbrittney/video/7637325186131397901",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-memphisbri-20260508012240-7637325186131397901.mp4",
+        "author_handle": "memphisbrittney",
+        "caption": "Google says dancing helps you digest food quicker #explore ",
+        "play_count": 294,
+        "like_count": 51,
+        "comment_count": 2,
+        "share_count": 0,
+        "created_at": "2026-05-08T01:22:40Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2075,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.7607
+      },
+      {
+        "rank": 5,
+        "id": "7633461167788166413",
+        "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+        "author_handle": "onehealthygut",
+        "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+        "play_count": 676100,
+        "like_count": 69200,
+        "comment_count": 524,
+        "share_count": 9309,
+        "created_at": "2026-04-27T15:28:58Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2439,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.5054
+      }
+    ],
+    "excluded_candidates": []
+  },
+  "evidence_bundle_index": {
+    "created_at": "2026-05-08T02:11:24Z",
+    "bundle_count": 5,
+    "bundles": [
+      {
+        "candidate_id": "7637311414616493325",
+        "rank": 1,
+        "prefix": "001_7637311414616493325",
+        "snapshot_path": "data/001_7637311414616493325_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7637311414616493325_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7637311414616493325_source_video.mp4",
+          "bytes": 22788567,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-gutgalz-20260508002917-7637311414616493325.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/001_7637311414616493325_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7637311414616493325_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7637002506635201813",
+        "rank": 2,
+        "prefix": "002_7637002506635201813",
+        "snapshot_path": "data/002_7637002506635201813_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7637002506635201813_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7637002506635201813_source_video.mp4",
+          "bytes": 828128,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-isaaarraa-20260507043026-7637002506635201813.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7637002506635201813_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7637166359733980448",
+        "rank": 3,
+        "prefix": "003_7637166359733980448",
+        "snapshot_path": "data/003_7637166359733980448_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7637166359733980448_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7637166359733980448_source_video.mp4",
+          "bytes": 15865117,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-germanysho-20260507150603-7637166359733980448.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7637166359733980448_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7637325186131397901",
+        "rank": 4,
+        "prefix": "004_7637325186131397901",
+        "snapshot_path": "data/004_7637325186131397901_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7637325186131397901_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/004_7637325186131397901_source_video.mp4",
+          "bytes": 1769918,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-memphisbri-20260508012240-7637325186131397901.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/004_7637325186131397901_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7637325186131397901_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "rank": 5,
+        "prefix": "005_7633461167788166413",
+        "snapshot_path": "data/005_7633461167788166413_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7633461167788166413_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7633461167788166413_source_video.mp4",
+          "bytes": 28031052,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-onehealthy-20260427152858-7633461167788166413.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7633461167788166413_video_evidence_report.md"
+          }
+        }
+      }
+    ]
+  },
+  "cross_video_pattern_summary": {
+    "created_at": "2026-05-08T02:11:24Z",
+    "source_video_count": 5,
+    "priority_score_dimensions": [
+      "viral_strength",
+      "nattome_relevance",
+      "evidence_confidence",
+      "brand_safety",
+      "ease_of_production",
+      "product_fit"
+    ],
+    "pattern_comparison": {
+      "hooks": [
+        {
+          "pattern": "Clear first-three-second problem hook",
+          "video_count": 5,
+          "candidate_ids": [
+            "7633461167788166413",
+            "7637002506635201813",
+            "7637166359733980448",
+            "7637311414616493325",
+            "7637325186131397901"
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "pattern": "voiceover",
+          "video_count": 4,
+          "candidate_ids": [
+            "7633461167788166413",
+            "7637002506635201813",
+            "7637166359733980448",
+            "7637311414616493325"
+          ]
+        },
+        {
+          "pattern": "music_or_reused_sound",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637325186131397901"
+          ]
+        }
+      ],
+      "emotional_triggers": [
+        {
+          "pattern": "Digestive-health curiosity",
+          "video_count": 3,
+          "candidate_ids": [
+            "7637002506635201813",
+            "7637166359733980448",
+            "7637325186131397901"
+          ]
+        },
+        {
+          "pattern": "Digestive discomfort relief",
+          "video_count": 1,
+          "candidate_ids": [
+            "7633461167788166413"
+          ]
+        },
+        {
+          "pattern": "Problem avoidance",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637311414616493325"
+          ]
+        }
+      ],
+      "audio_patterns": [
+        {
+          "pattern": "Gemini hook evidence: The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637002506635201813"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637325186131397901"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7633461167788166413"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637311414616493325"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: Visual of chia seeds being added to a pineapple, followed by a fiery explosion effect. On-screen text: 'ADD CHIA SEEDS TO PINEAPPLE AND SEE WHAT HAPPENS.' Spoken content: 'Add chia seeds to pineapple and see what happens.'",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637166359733980448"
+          ]
+        }
+      ],
+      "risky_claims": [
+        {
+          "pattern": "No risky claims flagged from available evidence",
+          "video_count": 3,
+          "candidate_ids": [
+            "7637002506635201813",
+            "7637311414616493325",
+            "7637325186131397901"
+          ]
+        },
+        {
+          "pattern": "cure_claim",
+          "video_count": 1,
+          "candidate_ids": [
+            "7633461167788166413"
+          ]
+        },
+        {
+          "pattern": "detox_or_cleanse",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637166359733980448"
+          ]
+        }
+      ],
+      "nattome_opportunities": [
+        {
+          "pattern": "DH for daily digestive maintenance and routine support.",
+          "video_count": 5,
+          "candidate_ids": [
+            "7633461167788166413",
+            "7637002506635201813",
+            "7637166359733980448",
+            "7637311414616493325",
+            "7637325186131397901"
+          ]
+        }
+      ]
+    },
+    "top_priority_shootable_angles": [
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 1
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `FOODS THAT HEALED MY GUT` into a safer prompt about food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 2
+      },
+      {
+        "candidate_id": "7633461167788166413",
+        "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+        "avatar": "The Sufferer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 3
+      },
+      {
+        "candidate_id": "7637002506635201813",
+        "source_tiktok_url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 2,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 4
+      },
+      {
+        "candidate_id": "7637002506635201813",
+        "source_tiktok_url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `me everytime i'm bloated` into a safer prompt about #ibs 😻.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 2,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 5
+      },
+      {
+        "candidate_id": "7637002506635201813",
+        "source_tiktok_url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: I feel like I would look so sexy pregnant.",
+        "avatar": "Maintainer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 2,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 6
+      },
+      {
+        "candidate_id": "7637311414616493325",
+        "source_tiktok_url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 3,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 7
+      },
+      {
+        "candidate_id": "7637311414616493325",
+        "source_tiktok_url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `What are the roles of your GI team` into a safer prompt about When you’re dealing with a complex gut health issue, one perspective often isn’t enough. True healing happens when we stop looking at the gut in one symptom or issue at a time and start looking at the whole person. This takes a multidisciplinary approach. In a collaborative care model, your team works like a well-oiled machine. Here is how each “player” on your team brings something unique to the table: The Gastroenterologist: The coach of the team. They’re looking into the internal issues, calling the plays. This may be using scopes and imaging to identify structural issues, inflammation, or disease. 🧑‍⚕️ 🩺 Advanced Practice Provider (NP or PA): The quarterback, running plays. We dive deep into the clinical management, symptom tracking, and the long-term plan, ensuring your treatment fits into your actual life. Continue to monitor and tweak therapies to help manage your care. Nurse 👩🏻‍⚕️ The GI Dietitian: The special teams. They move beyond “avoidance” to help you find a sustainable way to eat that nourishes your body without triggering a flare. 🍎 The GI Psychologist: The offense or the brain-gut specialist. They help manage the literal “nervous system” of the gut, addressing how stress and the brain-gut axis impact your physical symptoms. 🧠 The patient: Team owner. The one who has final say, and has input on how the team is working together to deliver results. When we communicate and collaborate, you get better results, faster. Does your current care plan include a multidisciplinary team? Tell us how your specialists have made a difference in your journey below! 👇 #guthealth #patientadvocacy #gatroenterology #gicare #fyp @socalgastrodoc @gutsygirlMD @Jessie, IBS & FODMAP Dietitian.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 3,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 8
+      },
+      {
+        "candidate_id": "7637311414616493325",
+        "source_tiktok_url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: GI care",
+        "avatar": "Maintainer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `Speech` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 3,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 26,
+          "max_points": 30
+        },
+        "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 9
+      },
+      {
+        "candidate_id": "7637166359733980448",
+        "source_tiktok_url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: Visual of chia seeds being added to a pineapple, followed by a fiery explosion effect. On-screen text: 'ADD CHIA SEEDS TO PINEAPPLE AND SEE WHAT HAPPENS.' Spoken content: 'Add chia seeds to pineapple and see what happens.'",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 10
+      },
+      {
+        "candidate_id": "7637166359733980448",
+        "source_tiktok_url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `ADD CHIA SEEDS TO` into a safer prompt about Add chia seeds to pineapple and see what happens.It can help cleanse your intestines, #ChiaSeeds #PineappleDetox #GutHealth #HealthyDigestion #NaturalCleanse.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 11
+      },
+      {
+        "candidate_id": "7637166359733980448",
+        "source_tiktok_url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: Add chia seeds to pineapple and see what happens.",
+        "avatar": "Maintainer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 4,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 12
+      },
+      {
+        "candidate_id": "7637325186131397901",
+        "source_tiktok_url": "https://www.tiktok.com/@memphisbrittney/video/7637325186131397901",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 2,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 22,
+          "max_points": 30
+        },
+        "why": "22/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 13
+      },
+      {
+        "candidate_id": "7637325186131397901",
+        "source_tiktok_url": "https://www.tiktok.com/@memphisbrittney/video/7637325186131397901",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `Google says dancing helps you digest food quicker` into a safer prompt about Google says dancing helps you digest food quicker #explore.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 2,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 22,
+          "max_points": 30
+        },
+        "why": "22/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 14
+      }
+    ],
+    "recommendation": {
+      "what_to_shoot_first": "Digestive Comfort Routine Check",
+      "candidate_id": "7633461167788166413",
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+    }
+  },
+  "videos": [
+    {
+      "candidate_id": "7637311414616493325",
+      "source_metadata": {
+        "rank": 1,
+        "id": "7637311414616493325",
+        "url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-gutgalz-20260508002917-7637311414616493325.mp4",
+        "author_handle": "gutgalz",
+        "caption": "When you’re dealing with a complex gut health issue, one perspective often isn’t enough. True healing happens when we stop looking at the gut in one symptom or issue at a time and start looking at the whole person. This takes a multidisciplinary approach. \n\nIn a collaborative care model, your team works like a well-oiled machine. Here is how each “player” on your team brings something unique to the table:\n\nThe Gastroenterologist: The coach of the team. They’re looking into the internal issues, calling the plays. This may be using scopes and imaging to identify structural issues, inflammation, or disease. 🧑‍⚕️ 🩺 \n\nAdvanced Practice Provider (NP or PA): The quarterback, running plays. We dive deep into the clinical management, symptom tracking, and the long-term plan, ensuring your treatment fits into your actual life. Continue to monitor and tweak therapies to help manage your care. Nurse 👩🏻‍⚕️ \n\nThe GI Dietitian: The special teams. They move beyond “avoidance” to help you find a sustainable way to eat that nourishes your body without triggering a flare. 🍎\n\nThe GI Psychologist: The offense or the brain-gut specialist. They help manage the literal “nervous system” of the gut, addressing how stress and the brain-gut axis impact your physical symptoms. 🧠\n\nThe patient: Team owner. The one who has final say, and has input on how the team is working together to deliver results.\n\nWhen we communicate and collaborate, you get better results, faster.\n\nDoes your current care plan include a multidisciplinary team? Tell us how your specialists have made a difference in your journey below! 👇\n\n#guthealth #patientadvocacy #gatroenterology #gicare #fyp @socalgastrodoc @gutsygirlMD @Jessie, IBS & FODMAP Dietitian ",
+        "play_count": 146,
+        "like_count": 4,
+        "comment_count": 0,
+        "share_count": 16,
+        "created_at": "2026-05-08T00:29:17Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 1.1233,
+        "nattome_relevance_score": 0.5,
+        "selection_score": 2.9175
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7637311414616493325",
+        "rank": 1,
+        "prefix": "001_7637311414616493325",
+        "snapshot_path": "data/001_7637311414616493325_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7637311414616493325_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7637311414616493325_source_video.mp4",
+          "bytes": 22788567,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-gutgalz-20260508002917-7637311414616493325.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/001_7637311414616493325_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7637311414616493325_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7637311414616493325_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman with curly hair and glasses is speaking directly to the camera. She is wearing a white shirt with black patterns and a purple lanyard.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "A woman with long dark hair is speaking directly to the camera. She is wearing a dark blazer over a white and black striped top and a purple lanyard.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 36,
+            "observation": "A woman with long blonde hair is speaking directly to the camera. She is wearing a tan blazer over a black top with white polka dots and multiple necklaces, along with a purple lanyard.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 56,
+            "observation": "The first woman with curly hair and glasses is speaking directly to the camera again.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 116,
+            "observation": "Two women are standing side-by-side, speaking to the camera. The woman on the left has long dark hair and is wearing a white top and a purple lanyard. The woman on the right has long dark hair and is wearing a dark top and a purple lanyard.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "What are the roles of your GI team",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 6,
+            "text": "GI dietitian\n@Jessie.IBS&FODMAPDietitian",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 37,
+            "text": "GI Psychologist",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 57,
+            "text": "GI nurse practitioner\n@gutgalz",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 117,
+            "text": "Gastroenterologists\n@gutsygirlMD\n@socalgastrodoc",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 1,
+            "text": "GI care",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 1,
+            "end_seconds": 2,
+            "text": "shouldn't be just one person.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 2,
+            "end_seconds": 3,
+            "text": "It's a whole team.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 3,
+            "end_seconds": 5,
+            "text": "Let's meet them and what they do.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 5,
+            "end_seconds": 6,
+            "text": "Hi, I'm a registered",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 6,
+            "end_seconds": 10,
+            "text": "dietitian, and registered dietitians help GI patients",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 10,
+            "end_seconds": 13,
+            "text": "navigate what they can and cannot eat.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 13,
+            "end_seconds": 20,
+            "text": "Usually, we would like patients to see us as soon as they're recommended an elimination diet or any diet to trial.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 25,
+            "text": "However, a lot of the times, we see patients when they come in, they're already very afraid of food.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 25,
+            "end_seconds": 35,
+            "text": "So if you are a GI patient, go see a registered dietitian to help you figure out a diet that works for you, doesn't trigger symptoms, and minimum limitations.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 36,
+            "end_seconds": 43,
+            "text": "The role of GI psychologist is very important because we help patients understand the connection between your brain and your gut.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 43,
+            "end_seconds": 55,
+            "text": "And then we offer evidence-based brain gut behavioral therapies that really target things like motility, your abdominal pain, as well as improving your coping and resilience around the management of these conditions.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 56,
+            "end_seconds": 57,
+            "text": "When I see GI patients,",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 57,
+            "end_seconds": 61,
+            "text": "I'm there to get the history, do a physical.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 61,
+            "end_seconds": 63,
+            "text": "Then I help diagnose.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 63,
+            "end_seconds": 70,
+            "text": "Um, then I will refer to a physician to do an endoscopy or colonoscopy.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 70,
+            "end_seconds": 77,
+            "text": "And often times I will continue to follow and manage them through their clinical course.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 77,
+            "end_seconds": 81,
+            "text": "To provide patient education, medications,",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 81,
+            "end_seconds": 83,
+            "text": "and other treatment modalities.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 116,
+            "end_seconds": 125,
+            "text": "Gastroenterologist takes the lead with diagnosis, um, performing any endoscopies and colonoscopies and then ordering the diagnostic testing.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 125,
+            "end_seconds": 135,
+            "text": "Right. So in addition to that, we have the treatments available as well, which are often dependent on what the endoscopic evaluation is, but also more in terms of just medical therapies as well.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 135,
+            "end_seconds": 157,
+            "text": "And then I think, um, the gastroenterologist helps also take the lead in coordinating the rest of the healthcare team. Um, you're often the first person or we're often the first person that you see and then we can help connect you with any appropriate referrals with a dietitian, a psychologist, um, working with any of our APPs, um, for a follow-up treatment as well.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 157,
+            "end_seconds": 162,
+            "text": "Additionally, we're also care coordinators because often times",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 162,
+            "end_seconds": 172,
+            "text": "we're the first people who are diagnosed with colon cancer, so we are referring to oncologists, talking to the primary care physician, uh, surgeons,",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 172,
+            "end_seconds": 177,
+            "text": "um, and then in terms of metabolic things also endocrinologist as well.",
+            "language": "English",
+            "confidence": 0.98
+          },
+          {
+            "start_seconds": 177,
+            "end_seconds": 183,
+            "text": "So, uh, we are both, you know, physicians, but we also coordinate care for all of our patients.",
+            "language": "English",
+            "confidence": 0.98
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Speech",
+            "confidence": null
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "claim_evidence": [],
+        "missing_evidence": [
+          "claim_evidence"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 146,
+        "weighted_engagement_rate": 1.1233,
+        "selection_score": 2.9175,
+        "nattome_relevance_score": 0.5
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini claim evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_claim_evidence"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7637311414616493325",
+          "source_tiktok_url": "https://www.tiktok.com/@gutgalz/video/7637311414616493325",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a question 'What are the roles of your GI team' and the speaker immediately states 'GI care shouldn't be just one person. It's a whole team. Let's meet them and what they do.' This sets up the premise of the video and encourages viewers to watch to learn about the different roles.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 3,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 26,
+            "max_points": 30
+          },
+          "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 7
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7637002506635201813",
+      "source_metadata": {
+        "rank": 2,
+        "id": "7637002506635201813",
+        "url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-isaaarraa-20260507043026-7637002506635201813.mp4",
+        "author_handle": "isaaarraa",
+        "caption": "#ibs 😻",
+        "play_count": 3424,
+        "like_count": 541,
+        "comment_count": 5,
+        "share_count": 22,
+        "created_at": "2026-05-07T04:30:26Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2296,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.992
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7637002506635201813",
+        "rank": 2,
+        "prefix": "002_7637002506635201813",
+        "snapshot_path": "data/002_7637002506635201813_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7637002506635201813_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7637002506635201813_source_video.mp4",
+          "bytes": 828128,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-isaaarraa-20260507043026-7637002506635201813.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7637002506635201813_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7637002506635201813_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A young woman with long dark hair, wearing a black off-shoulder top and light-colored pants, stands in a room, holding her stomach with both hands. She looks directly at the camera with a serious expression. The background appears to be a bathroom or hallway with white walls and a shower curtain visible.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "me everytime i'm bloated",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 1.4,
+            "text": "I feel like I would look so sexy pregnant.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 1.4,
+            "end_seconds": 2.6,
+            "text": "Nani, please do not get pregnant.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 2.6,
+            "end_seconds": 4,
+            "text": "I wouldn't wear any of those nasty maternity clothes.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 4,
+            "end_seconds": 5,
+            "text": "I would just be me.",
+            "language": "English",
+            "confidence": 0.9
+          },
+          {
+            "start_seconds": 5,
+            "end_seconds": 5.7,
+            "text": "Plus pregnant.",
+            "language": "English",
+            "confidence": 0.9
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 0,
+            "cue": "background music",
+            "confidence": 0.8
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "me everytime i'm bloated",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 3424,
+        "weighted_engagement_rate": 0.2296,
+        "selection_score": 0.992,
+        "nattome_relevance_score": 0.25
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "high",
+        "reason": "source video and Gemini evidence are complete"
+      },
+      "manual_review_flag": {
+        "required": false,
+        "reasons": []
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7637002506635201813",
+          "source_tiktok_url": "https://www.tiktok.com/@isaaarraa/video/7637002506635201813",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "high",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 2,
+              "evidence_confidence": 5,
+              "brand_safety": 5,
+              "ease_of_production": 5,
+              "product_fit": 4
+            },
+            "total": 26,
+            "max_points": 30
+          },
+          "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 4
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7637166359733980448",
+      "source_metadata": {
+        "rank": 3,
+        "id": "7637166359733980448",
+        "url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-germanysho-20260507150603-7637166359733980448.mp4",
+        "author_handle": "germanyshoaib1",
+        "caption": "Add chia seeds to pineapple and see what happens.It can help cleanse your intestines, #ChiaSeeds #PineappleDetox #GutHealth #HealthyDigestion #NaturalCleanse ",
+        "play_count": 839,
+        "like_count": 50,
+        "comment_count": 0,
+        "share_count": 15,
+        "created_at": "2026-05-07T15:06:03Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2384,
+        "nattome_relevance_score": 0.75,
+        "selection_score": 1.4159
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7637166359733980448",
+        "rank": 3,
+        "prefix": "003_7637166359733980448",
+        "snapshot_path": "data/003_7637166359733980448_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7637166359733980448_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7637166359733980448_source_video.mp4",
+          "bytes": 15865117,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-germanysho-20260507150603-7637166359733980448.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7637166359733980448_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7637166359733980448_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A hand pours black chia seeds from a spoon into a hollowed-out pineapple.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 1,
+            "observation": "The pineapple erupts in a fiery, lava-like explosion, with liquid spilling over its sides.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 3,
+            "observation": "An animated view of human intestines shows dark, sticky substances being cleansed by glowing particles.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 6,
+            "observation": "A hand pours black chia seeds into a glass bowl, followed by water.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 9,
+            "observation": "A hand adds pineapple chunks to a blender.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 11,
+            "observation": "A hand adds chopped green apple pieces to the blender.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 12,
+            "observation": "A hand squeezes lime juice into the blender.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "observation": "A hand pours the soaked chia seeds and water into the blender.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 15,
+            "observation": "The blender is shown blending the ingredients.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 16,
+            "observation": "A green smoothie is poured from the blender into a glass.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 17,
+            "observation": "An animated view of human intestines shows dark, sticky substances being cleansed by glowing particles, similar to the earlier animation.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 20,
+            "observation": "A hand uses a hammer to hit the top of a pineapple.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 21,
+            "observation": "A hand adds pineapple peels to a pot on a stove.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 22,
+            "observation": "A hand adds dried hibiscus flowers to the pot.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 23,
+            "observation": "A hand adds cinnamon sticks to the pot.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 24,
+            "observation": "A hand adds sliced ginger and squeezes lime juice into the pot.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 25,
+            "observation": "The pot is shown boiling with a reddish-purple liquid.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 26,
+            "observation": "A hand holds a glass containing a brown liquid.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 27,
+            "observation": "An animated view of kidneys and bladder shows glowing energy flowing through them.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 28,
+            "observation": "An animated view of blood vessels shows glowing particles moving through them.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 29,
+            "observation": "An animated view of a human joint shows glowing energy and a drop of blood.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 30,
+            "observation": "An animated view of a stomach shows glowing energy within it.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 32,
+            "observation": "Green slime is poured onto a person's belly with visible stretch marks, then peeled off.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 36,
+            "observation": "Hot water is poured from a kettle into a glass.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 38,
+            "observation": "A hand adds dried goji berries to the hot water.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 40,
+            "observation": "A hand adds sliced red dates to the glass.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 42,
+            "observation": "A hand drops a cinnamon stick into the glass.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 43,
+            "observation": "A hand pours honey from a dipper into the glass.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 45,
+            "observation": "A hand stirs the contents of the glass with a spoon.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 46,
+            "observation": "An animated view of the human nervous system shows glowing energy.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 47,
+            "observation": "An animated view of the human heart shows glowing energy and blood flow.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 49,
+            "observation": "An animated view of skin with stretch marks shows them fading and healing with glowing particles.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 52,
+            "observation": "Baking soda is poured onto a woman's back covered in acne, then the skin cracks and peels off.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 56,
+            "observation": "A hand adds bright green matcha powder to a glass bowl.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 58,
+            "observation": "A hand adds baking soda to the bowl with matcha powder.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 100,
+            "observation": "A hand adds egg white to the bowl.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 102,
+            "observation": "A hand adds honey to the bowl.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 104,
+            "observation": "A hand mixes the ingredients in the bowl into a green paste.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 106,
+            "observation": "Hands apply a thick green mask to a woman's back.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 109,
+            "observation": "Hands peel off the green mask from the woman's back.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 110,
+            "observation": "An animated view of human skin and cells shows glowing energy.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 112,
+            "observation": "An animated view of skin pores shows oil being removed.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 114,
+            "observation": "An animated view of skin shows it becoming smooth and fresh with steam.",
+            "confidence": 1.0
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "ADD CHIA SEEDS TO",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1,
+            "text": "PINEAPPLE AND SEE WHAT HAPPENS.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "IT CAN HELP CLEANSE YOUR INTESTINES,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "RELIEVE CONSTIPATION, AND REDUCE BLOATING.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 6,
+            "text": "SOAK 2 TABLESPOONS OF",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 8,
+            "text": "CHIA SEEDS FOR A FEW MINUTES,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 9,
+            "text": "THEN IN A BLENDER ADD SOME",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 11,
+            "text": "PINEAPPLE CHUNKS, HALF A GREEN APPLE,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 13,
+            "text": "THE JUICE OF 1 LEMON IN THE CHIA SOAKING WATER.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 15,
+            "text": "BLEND FOR A MINUTE.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "THIS WILL HELP TO COMPLETELY CLEANSE YOUR INTESTINES,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 18,
+            "text": "RELIEVE CONSTIPATION, AND REDUCE BLOATING.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 20,
+            "text": "DID YOU KNOW THAT",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "IF YOU MIX PINEAPPLE PEELS WITH HIBISCUS FLOWERS,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 23,
+            "text": "CINNAMON, GINGER AND LEMON,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "IT IMPROVES INTESTINAL HEALTH,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 27,
+            "text": "PREVENTS AND TREATS URINARY PROBLEMS,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 28,
+            "text": "REDUCES BLOOD SUGAR, REDUCES INFLAMMATION",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 31,
+            "text": "AND RELIEVES STOMACH DISCOMFORT?",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 33,
+            "text": "WHEN YOUR BELLY SHOWS MARKS LIKE THESE,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 35,
+            "text": "YOUR GUT CANNOT REBUILD YOUR SKIN.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 36,
+            "text": "INTO A GLASS OF HOT WATER,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 38,
+            "text": "ADD TWO SPOONS OF DRIED GOJI BERRIES.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 40,
+            "text": "THEN ADD FOUR SLICED RED DATES.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 42,
+            "text": "THEN DROP IN ONE CINNAMON STICK AND POUR",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 44,
+            "text": "ONE SPOON OF HONEY.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "DRINK THIS ONCE A DAY.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 46,
+            "text": "THE GOJI REBUILDS YOUR COLLAGEN,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 48,
+            "text": "THE DATES FEED YOUR BLOOD, AND YOUR STRETCH MARKS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 50,
+            "text": "FADE FROM INSIDE OUT.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 52,
+            "text": "WHEN YOUR BACK LOOKS LIKE THIS,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 54,
+            "text": "DON'T OVERUSE THIS REMEDY.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 56,
+            "text": "ADD 2 TABLESPOONS OF BRIGHT GREEN MATCHA POWDER.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 59,
+            "text": "THEN ADD 2 TABLESPOONS OF BAKING SODA INTO",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 101,
+            "text": "THEN ADD ONE EGG WHITE AND ADD 2 TABLESPOONS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 103,
+            "text": "OF HONEY.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 105,
+            "text": "MIX EVERYTHING TOGETHER INTO A SMOOTH.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 107,
+            "text": "APPLY IT ANYWHERE ON YOUR SKIN, LEAVE IT FOR 20",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 109,
+            "text": "MINUTES, THEN PEEL IT OFF.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 110,
+            "text": "THIS MASK CAN HELP CLEANSE THE SKIN,",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 112,
+            "text": "REMOVE EXCESS OIL AND LEAVE IT",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 114,
+            "text": "FEELING FRESH AND SMOOTH.",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 2.5,
+            "text": "Add chia seeds to pineapple and see what happens.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 3,
+            "end_seconds": 6,
+            "text": "It can help cleanse your intestines, relieve constipation, and reduce bloating.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 6.6,
+            "end_seconds": 9,
+            "text": "Soak two tablespoons of chia seeds for a few minutes.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 9.4,
+            "end_seconds": 15,
+            "text": "Then in a blender, add some pineapple chunks, half a green apple, the juice of one lemon and the chia soaking water.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 15.2,
+            "end_seconds": 16,
+            "text": "Blend for a minute.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 16.3,
+            "end_seconds": 19.5,
+            "text": "This will help to completely cleanse your intestines, relieve constipation, and reduce bloating.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 20.3,
+            "end_seconds": 25,
+            "text": "Did you know that if you mix pineapple peels with hibiscus flowers, cinnamon, ginger and lemon,",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 25.3,
+            "end_seconds": 32,
+            "text": "it improves intestinal health, prevents and treats urinary problems, reduces blood sugar, reduces inflammation and relieves stomach discomfort?",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 33,
+            "end_seconds": 35.8,
+            "text": "When your belly shows marks like these, your gut cannot rebuild your skin.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 36.3,
+            "end_seconds": 39.8,
+            "text": "Into a glass of hot water, add two spoons of dried goji berries.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 40.3,
+            "end_seconds": 42,
+            "text": "Then add four sliced red dates.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 42.4,
+            "end_seconds": 45,
+            "text": "Then drop in one cinnamon stick and pour one spoon of honey.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 45.4,
+            "end_seconds": 46.4,
+            "text": "Drink this once a day.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 46.7,
+            "end_seconds": 51,
+            "text": "The goji rebuilds your collagen, the dates feed your blood, and your stretch marks fade from inside out.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 52,
+            "end_seconds": 55,
+            "text": "When your back looks like this, don't overuse this remedy.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 56,
+            "end_seconds": 58.5,
+            "text": "Add two tablespoons of bright green matcha powder.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 59,
+            "end_seconds": 100.8,
+            "text": "Then add two tablespoons of baking soda into the bowl.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 101.2,
+            "end_seconds": 104,
+            "text": "Then add one egg white and add two tablespoons of honey.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 104.8,
+            "end_seconds": 106,
+            "text": "Mix everything together into a smooth.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 106.6,
+            "end_seconds": 110,
+            "text": "Apply it anywhere on your skin, leave it for 20 minutes, then peel it off.",
+            "language": "English",
+            "confidence": 0.96
+          },
+          {
+            "start_seconds": 110.4,
+            "end_seconds": 115,
+            "text": "This mask can help cleanse the skin, remove excess oil and leave it feeling fresh and smooth.",
+            "language": "English",
+            "confidence": 0.96
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 3,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 6,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 9,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 11,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 12,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 15,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 16,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 17,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 20,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 21,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 23,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 25,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 27,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 28,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 31,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 33,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 35,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 36,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 38,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 40,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 42,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 44,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 45,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 46,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 48,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 50,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 52,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 54,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 56,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 58,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 100,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 102,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 104,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 106,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 109,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 110,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 112,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 114,
+            "cue": "voiceover",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "Visual of chia seeds being added to a pineapple, followed by a fiery explosion effect. On-screen text: 'ADD CHIA SEEDS TO PINEAPPLE AND SEE WHAT HAPPENS.' Spoken content: 'Add chia seeds to pineapple and see what happens.'",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 3,
+            "text": "It can help cleanse your intestines, relieve constipation, and reduce bloating.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "This will help to completely cleanse your intestines, relieve constipation, and reduce bloating.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "it improves intestinal health, prevents and treats urinary problems, reduces blood sugar, reduces inflammation and relieves stomach discomfort?",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 35,
+            "text": "your gut cannot rebuild your skin.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 46,
+            "text": "The goji rebuilds your collagen, the dates feed your blood, and your stretch marks fade from inside out.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 54,
+            "text": "don't overuse this remedy.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 110,
+            "text": "This mask can help cleanse the skin, remove excess oil and leave it feeling fresh and smooth.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: Visual of chia seeds being added to a pineapple, followed by a fiery explosion effect. On-screen text: 'ADD CHIA SEEDS TO PINEAPPLE AND SEE WHAT HAPPENS.' Spoken content: 'Add chia seeds to pineapple and see what happens.'",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 839,
+        "weighted_engagement_rate": 0.2384,
+        "selection_score": 1.4159,
+        "nattome_relevance_score": 0.75
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [
+          {
+            "category": "detox_or_cleanse",
+            "claim_text": "cleanse",
+            "evidence_source": {
+              "artifact": "gemini_claim_evidence",
+              "timestamp_seconds": 3
+            },
+            "guidance": {
+              "action": "reframe",
+              "reason": "Detox and cleanse language can sound pseudoscientific.",
+              "nattome_safe_language": "Use digestive balance, comfort, or routine support language instead."
+            }
+          }
+        ],
+        "summary": {
+          "flagged_count": 1,
+          "guidance_actions": [
+            "reframe"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "claim safety review flagged unsafe claims"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "claim_safety_review_flagged_claims"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7637166359733980448",
+          "source_tiktok_url": "https://www.tiktok.com/@germanyshoaib1/video/7637166359733980448",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: Visual of chia seeds being added to a pineapple, followed by a fiery explosion effect. On-screen text: 'ADD CHIA SEEDS TO PINEAPPLE AND SEE WHAT HAPPENS.' Spoken content: 'Add chia seeds to pineapple and see what happens.'",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Do not reuse flagged claim categories directly: detox_or_cleanse.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 4,
+              "evidence_confidence": 3,
+              "brand_safety": 3,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 25,
+            "max_points": 30
+          },
+          "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 10
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 4,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7637325186131397901",
+      "source_metadata": {
+        "rank": 4,
+        "id": "7637325186131397901",
+        "url": "https://www.tiktok.com/@memphisbrittney/video/7637325186131397901",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-memphisbri-20260508012240-7637325186131397901.mp4",
+        "author_handle": "memphisbrittney",
+        "caption": "Google says dancing helps you digest food quicker #explore ",
+        "play_count": 294,
+        "like_count": 51,
+        "comment_count": 2,
+        "share_count": 0,
+        "created_at": "2026-05-08T01:22:40Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2075,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.7607
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7637325186131397901",
+        "rank": 4,
+        "prefix": "004_7637325186131397901",
+        "snapshot_path": "data/004_7637325186131397901_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7637325186131397901_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/004_7637325186131397901_source_video.mp4",
+          "bytes": 1769918,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-memphisbri-20260508012240-7637325186131397901.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/004_7637325186131397901_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7637325186131397901_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7637325186131397901_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman in a lime green dress is dancing in a living room while holding a bag of chips.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The woman continues to dance and move her body while holding the bag of chips.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 10,
+            "observation": "The woman is still dancing, moving her arms and hips, with the bag of chips in her hand.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "observation": "The woman makes a kissing gesture towards the camera while dancing.",
+            "confidence": 1.0
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Google says dancing helps you digest food quicker",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Music is playing.",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Google says dancing helps you digest food quicker",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": [
+          "spoken_content"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 294,
+        "weighted_engagement_rate": 0.2075,
+        "selection_score": 0.7607,
+        "nattome_relevance_score": 0.25
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7637325186131397901",
+          "source_tiktok_url": "https://www.tiktok.com/@memphisbrittney/video/7637325186131397901",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 2,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 4
+            },
+            "total": 22,
+            "max_points": 30
+          },
+          "why": "22/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 13
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 2,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 22,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_metadata": {
+        "rank": 5,
+        "id": "7633461167788166413",
+        "url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-onehealthy-20260427152858-7633461167788166413.mp4",
+        "author_handle": "onehealthygut",
+        "caption": "food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. \n\n** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! \n\n#bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips ",
+        "play_count": 676100,
+        "like_count": 69200,
+        "comment_count": 524,
+        "share_count": 9309,
+        "created_at": "2026-04-27T15:28:58Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": null,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.2439,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.5054
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7633461167788166413",
+        "rank": 5,
+        "prefix": "005_7633461167788166413",
+        "snapshot_path": "data/005_7633461167788166413_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7633461167788166413_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7633461167788166413_source_video.mp4",
+          "bytes": 28031052,
+          "source": "https://api.apify.com/v2/key-value-stores/PLAMgag3YV9WN21zh/records/video-onehealthy-20260427152858-7633461167788166413.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7633461167788166413_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7633461167788166413_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman with long brown hair is sitting in a car, looking at the camera and talking. She gestures with her hands as she speaks.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 14,
+            "observation": "The woman is still in the car, looking to her left and talking. She gestures with her right hand.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 37,
+            "observation": "The woman is still in the car, looking to her left and talking. She gestures with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 105,
+            "observation": "The woman is still in the car, looking at the camera and talking. She gestures with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 129,
+            "observation": "The woman is still in the car, looking at the camera and talking. She gestures with her right hand.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 150,
+            "observation": "The woman is still in the car, looking at the camera and talking. She gestures with her hands.",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 236,
+            "observation": "A white text overlay with a list of foods appears on the screen, covering most of the woman's face. The woman is still visible in the bottom right corner.",
+            "confidence": 1.0
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "FOODS THAT HEALED MY GUT",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "Here's a list of foods I would start eating everyday",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "I'll explain why + a full list you can screenshot at the end!!",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 16,
+            "text": "ENZYME RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "PROBIOTIC RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 107,
+            "text": "EAST TO DIGEST FIBER RICH FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 131,
+            "text": "GASTRIC JUICE PROMOTING FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 152,
+            "text": "ANTI-INFLAMMATORY/ SOOTHING FOODS",
+            "confidence": 1.0,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 237,
+            "text": "FOODS THAT HEAL YOUR GUT\n\n✨ Enzyme rich foods:\n- Kiwis\n- Pineapple\n- Papaya\n- Probiotic rich foods\n\n🌱 Probiotic rich foods:\n- Sauerkraut\n- Kimchi\n- Kefir\n- A2 yogurt\n\n🫘 Fiber rich foods:\n- Sweet potatoes\n- Oats\n- Brown rice\n- Quinoa\n\n🌶️ Gastric juice promoting foods:\n- Apple cider vinegar\n- Bitters (kale, arugula, dandelion, burdock, yarrow)\n\n❤️ Healing/soothing foods:\n- Bone broth (comment BONE BROTH and I'll send you my favorite drink!)\n- Peppermint\n- Fennel\n- Ginger\n\nSCREENSHOT FOR LATER!",
+            "confidence": 1.0,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 3,
+            "text": "Here's a list of foods I would start eating every day if I was trying to heal my gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 4,
+            "end_seconds": 9,
+            "text": "These foods specifically have gut healing properties and I'm going to break down each one for you and explain why they help.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 9,
+            "end_seconds": 13,
+            "text": "Get used to eating these things on a regular basis and watch bloating and constipation disappear.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 14,
+            "end_seconds": 15,
+            "text": "Let's start with our enzyme rich foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 16,
+            "end_seconds": 19,
+            "text": "So enzymes are little proteins that help you to break down and digest food.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 26,
+            "text": "When you increase enzyme rich foods in your diet, you help your gut digest better. It'll stop bloating before it even happens.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 27,
+            "end_seconds": 31,
+            "text": "My favorite enzyme rich foods to tell people to include are kiwis, papayas and pineapple.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 31,
+            "end_seconds": 36,
+            "text": "There's actually a lot of research on two kiwis a day being one of the most helpful things that you can do to heal IBS.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 37,
+            "end_seconds": 39,
+            "text": "Now we're moving on to probiotic rich foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 39,
+            "end_seconds": 44,
+            "text": "And probiotic rich foods can also be high in enzymes, like sauerkraut, kimchi or kefir.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 45,
+            "end_seconds": 48,
+            "text": "Only need about a tablespoon of these foods every day, so don't overdo it, you can tolerate it.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 49,
+            "end_seconds": 53,
+            "text": "I also really like a two yogurt that's filled with probiotics for the gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 53,
+            "end_seconds": 59,
+            "text": "So those probiotic rich foods are high in enzymes, but they're also high in probiotics, which is good bacteria for your gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 59,
+            "end_seconds": 105,
+            "text": "Adding in good bacteria can help alleviate digestive symptoms, and you don't necessarily have to take a probiotic supplement to do that. Now, let's talk fiber rich foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 107,
+            "end_seconds": 111,
+            "text": "You want to include a lot of fiber, so that it feeds the good bacteria in your gut and it keeps things moving.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 112,
+            "end_seconds": 115,
+            "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 115,
+            "end_seconds": 120,
+            "text": "You kill two birds with one stone with kiwis. Both a high enzyme food and also a high fiber food.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 121,
+            "end_seconds": 129,
+            "text": "Some other high fiber foods that are easy to digest and generally well tolerated are sweet potatoes, oats, brown rice and quinoa.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 129,
+            "end_seconds": 131,
+            "text": "We have our gastric juice promoting foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 132,
+            "end_seconds": 138,
+            "text": "The more you can increase gastric juice production, the better your digestion is going to be and the less bloating you're going to have.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 139,
+            "end_seconds": 144,
+            "text": "This is going to be apple cider vinegar, bitter foods like kale, arugula, dandelion.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 144,
+            "end_seconds": 150,
+            "text": "And know, you don't have to eat a whole salad of these things, but just chewing on them a little bit before you eat a meal is going to be super helpful.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 150,
+            "end_seconds": 152,
+            "text": "And lastly, we have our anti-inflammatory foods.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 153,
+            "end_seconds": 157,
+            "text": "These are foods that actually soothe and repair the lining of the gut.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 157,
+            "end_seconds": 159,
+            "text": "Bone broth is my number one.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 160,
+            "end_seconds": 163,
+            "text": "You can get bone broth powders and drink them.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 164,
+            "end_seconds": 168,
+            "text": "Uh, I know Costco has one, Just Ingredients has one that I drink every single morning.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 168,
+            "end_seconds": 170,
+            "text": "I think it's delicious.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 170,
+            "end_seconds": 173,
+            "text": "Make your own bone broth using a chicken carcass.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 173,
+            "end_seconds": 179,
+            "text": "Anytime I make, like, a whole chicken or I buy a rotisserie chicken, I will make bone broth with that.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 180,
+            "end_seconds": 184,
+            "text": "I also buy cartons of bone broth at Trader Joe's or Walmart.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 185,
+            "end_seconds": 190,
+            "text": "Ginger, fennel and peppermint are my other favorite foods that actually help soothe and stop bloating.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 191,
+            "end_seconds": 193,
+            "text": "If you're actively bloated.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 193,
+            "end_seconds": 195,
+            "text": "Those are foods I love to turn to.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 196,
+            "end_seconds": 200,
+            "text": "You can drink these as teas, ginger you can obviously cook with,",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 200,
+            "end_seconds": 205,
+            "text": "and fennel is great in like casseroles or soups, but you can get any of them in tea form as well.",
+            "language": "English",
+            "confidence": 1.0
+          },
+          {
+            "start_seconds": 205,
+            "end_seconds": 209,
+            "text": "Here's the full list of everything that I talked about if you want to screenshot it for later.",
+            "language": "English",
+            "confidence": 1.0
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "voiceover",
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 0,
+            "cue": "music",
+            "confidence": 1.0
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Foods that healed my gut",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 2,
+            "text": "if I was trying to heal my gut.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "These foods specifically have gut healing properties",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 12,
+            "text": "watch bloating and constipation disappear.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "It'll stop bloating before it even happens.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 33,
+            "text": "two kiwis a day being one of the most helpful things that you can do to heal I B S.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 59,
+            "text": "Adding in good bacteria can help alleviate digestive symptoms",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 112,
+            "text": "Stagnation in the gut breeds bloating, gas and constipation.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 135,
+            "text": "the better your digestion is gonna be and the less bloating you're gonna have.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 153,
+            "text": "These are foods that actually soothe and repair the lining of the gut.",
+            "source": null,
+            "confidence": 1.0
+          },
+          {
+            "timestamp_seconds": 223,
+            "text": "that actually help soothe and Stop bloating if you're actively bloated.",
+            "source": null,
+            "confidence": 1.0
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": null
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 676100,
+        "weighted_engagement_rate": 0.2439,
+        "selection_score": 1.5054,
+        "nattome_relevance_score": 1.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [
+          {
+            "category": "cure_claim",
+            "claim_text": "heal",
+            "evidence_source": {
+              "artifact": "gemini_claim_evidence",
+              "timestamp_seconds": 2
+            },
+            "guidance": {
+              "action": "avoid",
+              "reason": "Nattome should not reuse cure or disease-treatment promises.",
+              "nattome_safe_language": "Talk about supporting digestive comfort and daily gut routines."
+            }
+          }
+        ],
+        "summary": {
+          "flagged_count": 1,
+          "guidance_actions": [
+            "avoid"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "claim safety review flagged unsafe claims"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "claim_safety_review_flagged_claims"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7633461167788166413",
+          "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a clear statement about 'Foods that healed my gut' and promises a list of foods to eat daily for gut healing, immediately setting the expectation for health-related advice.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 5,
+              "evidence_confidence": 3,
+              "brand_safety": 3,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 26,
+            "max_points": 30
+          },
+          "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 1
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      }
+    }
+  ]
+}

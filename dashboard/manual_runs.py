@@ -207,7 +207,7 @@ def _commands_for_run(
 ) -> list[list[str]]:
     scrape_command = [
         sys.executable,
-        "skills/nattome-daily-discovery/scripts/scrape_tiktok.py",
+        "skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py",
         "--config",
         config_path,
         "--output",
@@ -236,12 +236,12 @@ def _commands_for_run(
 
 
 def _ensure_scraper_config(workspace: Path, version: int, settings: dict[str, object]) -> str:
-    relative_path = Path("skills") / "nattome-daily-discovery" / "config.json"
+    relative_path = Path("skills") / "nattome-tiktok-candidate-discovery" / "config.json"
     config_path = workspace / relative_path
     config_path.parent.mkdir(parents=True, exist_ok=True)
     selection = {
         "minimum_views": settings.get("minimum_views", 10000),
-        "maximum_age_days": settings.get("maximum_age_days", 30),
+        "maximum_age_days": settings.get("maximum_age_days", 150),
         "minimum_weighted_engagement_rate": settings.get("minimum_weighted_engagement_rate", 0.03),
         "requires_downloadable_video": settings.get("requires_downloadable_video", True),
         "exclusion_terms": settings.get("exclusion_terms", []),
@@ -278,9 +278,12 @@ def _paths_exist(workspace: Path, output_paths: dict[str, str]) -> bool:
 def _output_paths(timestamp: datetime, run_type: str) -> dict[str, str]:
     stamp = timestamp.strftime("%Y%m%dT%H%M%SZ")
     date = timestamp.strftime("%Y-%m-%d")
+    run_id = _run_id(timestamp, run_type)
+    run_root = f"data/daily_runs/{run_id}"
     paths = {
-        "raw_scrape": f"data/raw_scrapes/manual_{stamp}_{run_type}_top30.json",
-        "daily_selection": f"data/daily_selections/manual_{stamp}_top5.json",
+        "run_data_folder": run_root,
+        "raw_scrape": f"{run_root}/raw_scrape_top30.json",
+        "daily_selection": f"{run_root}/daily_selection_top5.json",
     }
     if run_type == FULL_PIPELINE:
         paths["run_folder"] = f"runs/batch-analysis/{stamp}_daily"

@@ -1,0 +1,839 @@
+{
+  "generated_at": "2026-05-08T06:28:25.681901+00:00",
+  "scope": "all",
+  "inputs": {
+    "hashtags": [
+      "gastrik",
+      "kembungperut",
+      "pedihuluhati",
+      "masalahangin",
+      "sakitperut",
+      "gerdmalaysia"
+    ],
+    "keywords": [
+      "Malaysia gastric",
+      "gastrik Malaysia",
+      "sakit perut gastrik",
+      "pedih ulu hati",
+      "kembung perut",
+      "angin dalam badan",
+      "asid reflux Malaysia",
+      "gerd Malaysia"
+    ],
+    "profiles": []
+  },
+  "total_candidates": 133,
+  "top": [
+    {
+      "id": "7636409473564675348",
+      "url": "https://www.tiktok.com/@redoxhq/video/7636409473564675348",
+      "author_handle": "redoxhq",
+      "author_followers": 54900,
+      "caption": "Tips Kurangkan Asid Reflux / Gerd \n\n@Hafiz Sulaiman @Coach Angin \n\n#redox #masalahangin #gastrik #gerd ",
+      "hashtags": [
+        "redox",
+        "masalahangin",
+        "gastrik",
+        "gerd"
+      ],
+      "duration_s": 69,
+      "music": {
+        "title": "original sound - Redox HQ Solusi Angin GGA",
+        "author": "Redox HQ Solusi Angin GGA",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-redoxhq-20260505140857-7636409473564675348.mp4",
+      "play_count": 420,
+      "like_count": 10,
+      "comment_count": 5,
+      "share_count": 5,
+      "created_at": "2026-05-05T14:08:57+00:00",
+      "source_input": null,
+      "virality_score": 0.4073
+    },
+    {
+      "id": "7637060206584827157",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7637060206584827157",
+      "author_handle": "dannyfitjourney",
+      "author_followers": 8970,
+      "caption": "Alhamdulillah, bila usus sihat, GERD pun dah tak berani singgah. Korang nak tahu cara saya susun jadual makan dengan BGRN & Fusion X?\nBoleh DM danny \n#gerdanxiety #gerdmalaysia #acidreflux #guthealth #gerd ",
+      "hashtags": [
+        "gerdanxiety",
+        "gerdmalaysia",
+        "acidreflux",
+        "guthealth",
+        "gerd"
+      ],
+      "duration_s": 39,
+      "music": {
+        "title": "Buy",
+        "author": "Izabella Creator BM",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260507081410-7637060206584827157.mp4",
+      "play_count": 199,
+      "like_count": 6,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-05-07T08:14:10+00:00",
+      "source_input": null,
+      "virality_score": 0.1688
+    },
+    {
+      "id": "7636384481489784084",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7636384481489784084",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 49,
+      "music": {
+        "title": "Presentation",
+        "author": "wouldliker",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260505123205-7636384481489784084.mp4",
+      "play_count": 556,
+      "like_count": 9,
+      "comment_count": 0,
+      "share_count": 2,
+      "created_at": "2026-05-05T12:32:05+00:00",
+      "source_input": null,
+      "virality_score": 0.1091
+    },
+    {
+      "id": "7631457576462454037",
+      "url": "https://www.tiktok.com/@drateeqjalil/video/7631457576462454037",
+      "author_handle": "drateeqjalil",
+      "author_followers": 5427,
+      "caption": "Selalu pedih ulu hati???\nGERD & Esophageal Ulcer\n#fyp #drateeq #avisenahealthcare #gerd",
+      "hashtags": [
+        "fyp",
+        "drateeq",
+        "avisenahealthcare",
+        "gerd"
+      ],
+      "duration_s": 65,
+      "music": {
+        "title": "original sound - DrAteeqJalil",
+        "author": "DrAteeqJalil",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-drateeqjal-20260422110000-7631457576462454037.mp4",
+      "play_count": 4121,
+      "like_count": 98,
+      "comment_count": 33,
+      "share_count": 28,
+      "created_at": "2026-04-22T11:00:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0995
+    },
+    {
+      "id": "7636379169152044308",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7636379169152044308",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 40,
+      "music": {
+        "title": "Elegant",
+        "author": "Ember",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260505121122-7636379169152044308.mp4",
+      "play_count": 539,
+      "like_count": 10,
+      "comment_count": 1,
+      "share_count": 1,
+      "created_at": "2026-05-05T12:11:22+00:00",
+      "source_input": null,
+      "virality_score": 0.0964
+    },
+    {
+      "id": "7636539280097283342",
+      "url": "https://www.tiktok.com/@sadovskaya_doctor/video/7636539280097283342",
+      "author_handle": "sadovskaya_doctor",
+      "author_followers": 267300,
+      "caption": "What you abdominal pain could mean. ⚠️ Don’t use for self diagnosing! #stomachpain #abdominalpain #healtheducation ",
+      "hashtags": [
+        "stomachpain",
+        "abdominalpain",
+        "healtheducation"
+      ],
+      "duration_s": 5,
+      "music": {
+        "title": "original sound",
+        "author": "LOCK",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-sadovskaya-20260505223309-7636539280097283342.mp4",
+      "play_count": 2100000,
+      "like_count": 13500,
+      "comment_count": 112,
+      "share_count": 2600,
+      "created_at": "2026-05-05T22:33:09+00:00",
+      "source_input": null,
+      "virality_score": 0.0958
+    },
+    {
+      "id": "7635568351246322964",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7635568351246322964",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 35,
+      "music": {
+        "title": "Vaporwave Dreams (Lofi)",
+        "author": "ProdbySkyJackson",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260503074500-7635568351246322964.mp4",
+      "play_count": 1431,
+      "like_count": 32,
+      "comment_count": 0,
+      "share_count": 2,
+      "created_at": "2026-05-03T07:45:00+00:00",
+      "source_input": null,
+      "virality_score": 0.0703
+    },
+    {
+      "id": "7633813855310859541",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7633813855310859541",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 32,
+      "music": {
+        "title": "Bossa in Glow",
+        "author": "Tokyo BossaNova Ensemble",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260428141641-7633813855310859541.mp4",
+      "play_count": 4308,
+      "like_count": 103,
+      "comment_count": 4,
+      "share_count": 8,
+      "created_at": "2026-04-28T14:16:41+00:00",
+      "source_input": null,
+      "virality_score": 0.0657
+    },
+    {
+      "id": "7632663111043910920",
+      "url": "https://www.tiktok.com/@iedamizan/video/7632663111043910920",
+      "author_handle": "iedamizan",
+      "author_followers": 1993,
+      "caption": "Ramai orang panggil semua sakit bahagian atas perut sebagai “gastrik”.\n\nPadahal, tidak semua sakit di kawasan itu datang daripada perut.\n\nAda sakit yang memang lebih cenderung kepada gastrik.\nAda juga sakit yang sebenarnya boleh datang daripada batu karang dalam hempedu.\n\nMacam mana nak bezakan?\n\nKalau sakit gastrik, orang lebih kerap mengadu rasa pedih, tidak selesa atau memulas di bahagian atas tengah perut. Selalunya datang sekali dengan rasa kembung, cepat kenyang, loya, sendawa, rasa tidak hadam, atau perut rasa “tak sedap” lepas makan.\n\nKalau batu karang dalam hempedu pula, sakitnya lebih cenderung datang di bahagian atas kanan perut atau bahagian tengah atas perut, dan kadang-kadang rasa menekan, mencengkam atau menyerang dengan lebih kuat. Ia juga boleh merebak ke belakang atau bahu kanan.\n\nSatu lagi petunjuk penting:\nSakit batu karang hempedu sering datang selepas makan berat atau makanan berlemak, dan boleh bertahan beberapa jam.\nBukan setakat rasa pedih ringan yang datang dan pergi.\n\nMudah kata:\n\nGastrik lebih kerap buat orang rasa\n“pedih, kembung, loya, tak hadam.”\n\nBatu karang dalam hempedu pula lebih kerap buat orang rasa\n“sakit mencengkam di atas kanan perut, lepas makan, boleh sampai ke belakang atau bahu.”\n\nTetapi ini bukan formula untuk diagnosis sendiri.\n\nKalau sakit perut atas itu kuat, kerap berulang, datang bersama muntah, demam, mata atau kulit jadi kuning, atau sakit tak reda-reda, jangan tunggu.\n\nKadang-kadang yang orang panggil “gastrik teruk” itu sebenarnya bukan gastrik pun.\n\nSebab bila bahagian atas perut sakit, perut bukan satu-satunya organ yang boleh bersalah.",
+      "hashtags": [],
+      "duration_s": 0,
+      "music": {
+        "title": "Sad Violin",
+        "author": "Oleg Kirilkov",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-iedamizan-20260425115111-7632663111043910920.mp4",
+      "play_count": 4801,
+      "like_count": 42,
+      "comment_count": 2,
+      "share_count": 25,
+      "created_at": "2026-04-25T11:51:11+00:00",
+      "source_input": null,
+      "virality_score": 0.0654
+    },
+    {
+      "id": "7634404275128519956",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7634404275128519956",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 33,
+      "music": {
+        "title": "BGM perfect for item description",
+        "author": "Mi-on（みおん）",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260430042757-7634404275128519956.mp4",
+      "play_count": 5307,
+      "like_count": 81,
+      "comment_count": 1,
+      "share_count": 8,
+      "created_at": "2026-04-30T04:27:57+00:00",
+      "source_input": null,
+      "virality_score": 0.0523
+    },
+    {
+      "id": "7634848793514577159",
+      "url": "https://www.tiktok.com/@gerd.talk/video/7634848793514577159",
+      "author_handle": "gerd.talk",
+      "author_followers": 3931,
+      "caption": "Kenapa Acid Reflux Menyebabkan Pedih Ulu Hati⁉️\n#fyp #gerd #acidreflux #gga #pedihuluhati ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "gga",
+        "pedihuluhati"
+      ],
+      "duration_s": 47,
+      "music": {
+        "title": "Don't worry",
+        "author": "Shin Giwon Piano",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-gerdtalk-20260501091245-7634848793514577159.mp4",
+      "play_count": 491,
+      "like_count": 8,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-05-01T09:12:45+00:00",
+      "source_input": null,
+      "virality_score": 0.0499
+    },
+    {
+      "id": "7630535088601566485",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7630535088601566485",
+      "author_handle": "dannyfitjourney",
+      "author_followers": 8970,
+      "caption": "Makanan ‘safe’ untuk perut versi Malaysia.\nSiapa ada GERD wajib save. \n#gerdmalaysia #acidreflux #gerd #malaysia #gerdanxiety ",
+      "hashtags": [
+        "gerdmalaysia",
+        "acidreflux",
+        "gerd",
+        "malaysia",
+        "gerdanxiety"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Aesthetic",
+        "author": "BoominBeats",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260419181325-7630535088601566485.mp4",
+      "play_count": 11100,
+      "like_count": 218,
+      "comment_count": 5,
+      "share_count": 38,
+      "created_at": "2026-04-19T18:13:25+00:00",
+      "source_input": null,
+      "virality_score": 0.0363
+    },
+    {
+      "id": "7634035701415398676",
+      "url": "https://www.tiktok.com/@thisisreflux/video/7634035701415398676",
+      "author_handle": "thisisreflux",
+      "author_followers": 2288,
+      "caption": "#fyp #gerd #acidreflux #malaysiatiktok #kualalumpur ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "acidreflux",
+        "malaysiatiktok",
+        "kualalumpur"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "nhạc nền - HoanVuu",
+        "author": "HoanVuu",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-thisisrefl-20260429043731-7634035701415398676.mp4",
+      "play_count": 1959,
+      "like_count": 28,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-04-29T04:37:31+00:00",
+      "source_input": null,
+      "virality_score": 0.026
+    },
+    {
+      "id": "7632666796763614484",
+      "url": "https://www.tiktok.com/@intanjimat941/video/7632666796763614484",
+      "author_handle": "intanjimat941",
+      "author_followers": 1271,
+      "caption": "Kalau sering merasa “masuk angin” padahal cuaca biasa saja, biasanya bukan karena angin, tapi ada kondisi tubuh yang lagi “drop” atau sensitif. Istilah “masuk angin” sendiri bukan diagnosis medis, tapi kumpulan gejala seperti meriang, kembung, pegal, dan tidak enak badan.\nIni penjelasan yang paling sering terjadi 👇\n🌡️ 1. Daya tahan tubuh lagi turun\nKalau imun lemah:\ngampang capek\nbadan meriang\nmudah terserang virus ringan\n👉 Tubuh jadi terasa seperti “masuk angin” walau cuaca normal\n😴 2. Kurang tidur & kelelahan\nBegadang\nAktivitas padat\n➡️ Tubuh belum pulih → muncul pegal, meriang, tidak enak badan\n🍽️ 3. Pola makan tidak teratur\nSering telat makan\nMakan tidak bergizi\n👉 Bisa bikin:\nperut kembung\nlemas\nmual\n➡️ Sering disangka masuk angin\n💨 4. Masalah pencernaan (banyak gas)\nContohnya:\nterlalu banyak minum kopi\nmakan pedas/berlemak\nmakan terburu-buru\n👉 Perut terasa penuh, begah, sendawa\n😰 5. Stres & pikiran\nPercaya atau tidak:\nstres bisa bikin badan pegal\ndada tidak nyaman\nperut ikut terganggu\n➡️ Gejalanya mirip “masuk angin”\n🦠 6. Infeksi ringan (flu ringan)\nKadang itu sebenarnya:\nflu ringan\nvirus biasa\n👉 Gejalanya:\nmeriang\nhidung tidak enak\nbadan loyo\n⚠️ Kapan harus waspada?\nKalau sering banget atau disertai:\ndemam tinggi\nnyeri dada\nsesak napas\nlemas berlebihan\n👉 Jangan dianggap masuk angin biasa, sebaiknya cek ke dokter\n🧠 Tips biar tidak gampang “masuk angin”\nTidur cukup (minimal 6–7 jam)\nMakan teratur & bergizi\nKurangi kopi berlebihan\nMinum air putih cukup\nKelola stres\nJaga perut tetap hangat\n🔥 Intinya:\n👉 “Masuk angin” = tanda tubuh lagi tidak fit\n👉 Penyebabnya sering dari imun, pola hidup, dan pencernaan\n#fyp #kesehatan #apotek #masukangin #gejala ",
+      "hashtags": [
+        "fyp",
+        "kesehatan",
+        "apotek",
+        "masukangin",
+        "gejala"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Mine",
+        "author": "Taylor Swift",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-intanjimat-20260425120532-7632666796763614484.mp4",
+      "play_count": 1217,
+      "like_count": 5,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-04-25T12:05:32+00:00",
+      "source_input": null,
+      "virality_score": 0.0107
+    },
+    {
+      "id": "7627166192410561799",
+      "url": "https://www.tiktok.com/@iznimazlin/video/7627166192410561799",
+      "author_handle": "iznimazlin",
+      "author_followers": 1784,
+      "caption": "Emosi pulak malam2 ni.. 🥲\n\n#bariatricmalaysia #myweightloosejourney #bariatricjourney #sleevegastrectomy #fyp ",
+      "hashtags": [
+        "bariatricmalaysia",
+        "myweightloosejourney",
+        "bariatricjourney",
+        "sleevegastrectomy",
+        "fyp"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Terus Berjuang",
+        "author": "Jemari Besi",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-iznimazlin-20260410162021-7627166192410561799.mp4",
+      "play_count": 603600,
+      "like_count": 7449,
+      "comment_count": 253,
+      "share_count": 633,
+      "created_at": "2026-04-10T16:20:21+00:00",
+      "source_input": null,
+      "virality_score": 0.0094
+    },
+    {
+      "id": "7622692802853473558",
+      "url": "https://www.tiktok.com/@wills_health/video/7622692802853473558",
+      "author_handle": "wills_health",
+      "author_followers": 41300,
+      "caption": "You welcome\n\n#ibs #gutissues #gastritis ",
+      "hashtags": [
+        "ibs",
+        "gutissues",
+        "gastritis"
+      ],
+      "duration_s": 57,
+      "music": {
+        "title": "in the bleak midwinter (Super Slowed)",
+        "author": ".diedlonely",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-wills_heal-20260329150117-7622692802853473558.mp4",
+      "play_count": 125600,
+      "like_count": 4294,
+      "comment_count": 211,
+      "share_count": 297,
+      "created_at": "2026-03-29T15:01:17+00:00",
+      "source_input": null,
+      "virality_score": 0.0067
+    },
+    {
+      "id": "7622232363908500744",
+      "url": "https://www.tiktok.com/@therapist_house/video/7622232363908500744",
+      "author_handle": "therapist_house",
+      "author_followers": 111100,
+      "caption": "Anda ada punca punca seperti ini ? #fyp #gerd #therapisthouse #rawatan ",
+      "hashtags": [
+        "fyp",
+        "gerd",
+        "therapisthouse",
+        "rawatan"
+      ],
+      "duration_s": 91,
+      "music": {
+        "title": "Suspense, horror, piano and music box",
+        "author": "takaya",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-therapist_-20260328091434-7622232363908500744.mp4",
+      "play_count": 980100,
+      "like_count": 9725,
+      "comment_count": 193,
+      "share_count": 4333,
+      "created_at": "2026-03-28T09:14:34+00:00",
+      "source_input": null,
+      "virality_score": 0.0058
+    },
+    {
+      "id": "7622528352355814663",
+      "url": "https://www.tiktok.com/@nia.acid.reflux/video/7622528352355814663",
+      "author_handle": "nia.acid.reflux",
+      "author_followers": 9,
+      "caption": "How acid reflux cause mouth odor#acidrefluxstruggles #acidreflux #Malaysia #fyp",
+      "hashtags": [
+        "acidrefluxstruggles",
+        "acidreflux",
+        "malaysia",
+        "fyp"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Come Check This (Quickie Edit)",
+        "author": "FETISH",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-niaacidref-20260329042309-7622528352355814663.mp4",
+      "play_count": 738,
+      "like_count": 13,
+      "comment_count": 0,
+      "share_count": 5,
+      "created_at": "2026-03-29T04:23:09+00:00",
+      "source_input": null,
+      "virality_score": 0.0046
+    },
+    {
+      "id": "7625475024186625301",
+      "url": "https://www.tiktok.com/@kampoengsehatholistik/video/7625475024186625301",
+      "author_handle": "kampoengsehatholistik",
+      "author_followers": 225800,
+      "caption": "Kondisi yang sering kita sebut sebagai \"masuk angin\" sebenarnya adalah alarm alami dari tubuh yang sedang mengalami penurunan stamina atau gangguan fungsi organ, seperti pencernaan yang tidak optimal. Alih-alih hanya meredam gejala luarnya, sangat penting untuk memberikan waktu bagi tubuh untuk beristirahat secara total dan mengonsumsi asupan yang ringan agar sistem imun dapat pulih kembali.\n\n​Dalam pandangan kesehatan holistik, gejala ini adalah tanda adanya ketidakseimbangan energi atau sirkulasi dalam tubuh. Jika kondisi tidak kunjung membaik dengan istirahat, diperlukan pemeriksaan lebih mendalam untuk menemukan akar penyebabnya. Jangan abaikan sinyal kecil dari tubuh Anda, karena pemulihan yang tuntas dimulai dari pemahaman yang tepat terhadap kondisi kesehatan kita sendiri.\n​#kampoengsehatholistik #doktercahyono #pengobatanholistik #masukangin #tipssehat",
+      "hashtags": [
+        "kampoengsehatholistik",
+        "doktercahyono",
+        "pengobatanholistik",
+        "masukangin",
+        "tipssehat"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Health Care",
+        "author": "Sunny Vibes",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-kampoengse-20260414023234-7625475024186625301.mp4",
+      "play_count": 846,
+      "like_count": 12,
+      "comment_count": 0,
+      "share_count": 0,
+      "created_at": "2026-04-14T02:32:34+00:00",
+      "source_input": null,
+      "virality_score": 0.0038
+    },
+    {
+      "id": "7617381341327297813",
+      "url": "https://www.tiktok.com/@cadarviral.jj/video/7617381341327297813",
+      "author_handle": "cadarviral.jj",
+      "author_followers": 5378,
+      "caption": "Jika anda juga menghadapi masalah-masalah ini, pastikan menonton video ini sehingga tamat-LYR",
+      "hashtags": [],
+      "duration_s": 249,
+      "music": {
+        "title": "原声 - Cadarviral JJ",
+        "author": "Cadarviral JJ",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-cadarviral-20260315073015-7617381341327297813.mp4",
+      "play_count": 216400,
+      "like_count": 3018,
+      "comment_count": 74,
+      "share_count": 2713,
+      "created_at": "2026-03-15T07:30:15+00:00",
+      "source_input": null,
+      "virality_score": 0.0036
+    },
+    {
+      "id": "7614088578410253589",
+      "url": "https://www.tiktok.com/@official_kakmeklegacyhq/video/7614088578410253589",
+      "author_handle": "official_kakmeklegacyhq",
+      "author_followers": 92100,
+      "caption": "#petua buang angin ! #angin #gastrik #gerd ",
+      "hashtags": [
+        "petua",
+        "angin",
+        "gastrik",
+        "gerd"
+      ],
+      "duration_s": 102,
+      "music": {
+        "title": "original sound - Kakmek Legacy HQ",
+        "author": "Kakmek Legacy HQ",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-official_k-20260306103232-7614088578410253589.mp4",
+      "play_count": 1300000,
+      "like_count": 32700,
+      "comment_count": 542,
+      "share_count": 21000,
+      "created_at": "2026-03-06T10:32:32+00:00",
+      "source_input": null,
+      "virality_score": 0.0023
+    },
+    {
+      "id": "7621014727069551893",
+      "url": "https://www.tiktok.com/@anstips6/video/7621014727069551893",
+      "author_handle": "anstips6",
+      "author_followers": 13700,
+      "caption": "Perut terasa penuh, begah, dan nggak nyaman? Itu tanda kamu lagi kembung! 😖\nTenang, ada beberapa cara simpel yang bisa bantu meredakannya 👇\n✨ Minum air hangat\n✨ Konsumsi jahe atau teh herbal\n✨ Pijat perut perlahan\n✨ Hindari langsung rebahan\n✨ Kompres hangat di perut\n✨ Kurangi makanan pemicu gas\n✨ Lakukan posisi child pose\nDan ingat ya, kentut atau sendawa itu wajar—tanda gas keluar dan perut mulai lega 😄\nKalau kembung terus-terusan atau makin parah, jangan ragu untuk periksa ke dokter ya!\nSave dulu biar nggak lupa, dan share ke teman yang sering ngalamin kembung juga 💚\n#TipsSehat #KesehatanPencernaan #PerutKembung #SehatAlami #TipsHarian ",
+      "hashtags": [
+        "tipssehat",
+        "kesehatanpencernaan",
+        "perutkembung",
+        "sehatalami",
+        "tipsharian"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "suara asli - another relvan—",
+        "author": "zekytzy.",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-anstips6-20260325022938-7621014727069551893.mp4",
+      "play_count": 27300,
+      "like_count": 211,
+      "comment_count": 1,
+      "share_count": 48,
+      "created_at": "2026-03-25T02:29:38+00:00",
+      "source_input": null,
+      "virality_score": 0.0014
+    },
+    {
+      "id": "7623211181871877396",
+      "url": "https://www.tiktok.com/@momskystore3/video/7623211181871877396",
+      "author_handle": "momskystore3",
+      "author_followers": 2725,
+      "caption": "atasi perut kembung 🌿 \n#fypシ゚ \n#herbal \n#healthylifestyle \n#perutkembung \n#trendingvideo ",
+      "hashtags": [
+        "fypシ゚",
+        "herbal",
+        "healthylifestyle",
+        "perutkembung",
+        "trendingvideo"
+      ],
+      "duration_s": 17,
+      "music": {
+        "title": "suara asli - momsky",
+        "author": "momsky",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-momskystor-20260331003302-7623211181871877396.mp4",
+      "play_count": 955,
+      "like_count": 10,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-03-31T00:33:02+00:00",
+      "source_input": null,
+      "virality_score": 0.0014
+    },
+    {
+      "id": "7622483703314255125",
+      "url": "https://www.tiktok.com/@lactomex.mmiherbs/video/7622483703314255125",
+      "author_handle": "lactomex.mmiherbs",
+      "author_followers": 3872,
+      "caption": "Bukan semua sebab makanan…cara makan & rutin harian pun sangat beri kesan.\n❗ Ini kesilapan yang ramai buat setiap hari:\n\n❌ Minum kopi waktu perut kosong\nPerut terus “terkejut”, asid mudah naik\n\n❌ Makan terlalu cepat\nTak kunyah betul → penghadaman jadi berat\n\n❌ Terus baring lepas makan\nAsid lebih mudah naik ke dada\n\n❌ Ambil makanan pedas & berminyak waktu pagi\nPerut belum “bersedia” terima makanan berat\n\n❌ Minum air terlalu sejuk\nBoleh ganggu proses penghadaman\n\n💡 Apa patut buat sebagai gantian:\n✔ Mulakan pagi dengan makanan ringan & lembut\n✔ Minum air suam dulu sebelum makan\n✔ Makan perlahan & dalam kuantiti sederhana\n✔ Elakkan makan lewat malam\n\n💡 Ringkasnya:\nBukan sekadar apa yang kita makan…\ntapi bagaimana kita makan tu yang tentukan perut kita selesa atau tidak. Ramai dah jaga makan…\ntapi masih sakit sebab cara makan masih sama.\n\n#fyp #tipskesihatan #sarapansehat #lactomex ",
+      "hashtags": [
+        "fyp",
+        "tipskesihatan",
+        "sarapansehat",
+        "lactomex"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Dramatic",
+        "author": "Big Dreams",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-lactomexmm-20260329013009-7622483703314255125.mp4",
+      "play_count": 1645,
+      "like_count": 9,
+      "comment_count": 0,
+      "share_count": 1,
+      "created_at": "2026-03-29T01:30:09+00:00",
+      "source_input": null,
+      "virality_score": 0.0007
+    },
+    {
+      "id": "7614163025603333397",
+      "url": "https://www.tiktok.com/@lactomexhq/video/7614163025603333397",
+      "author_handle": "lactomexhq",
+      "author_followers": 10500,
+      "caption": "Rahsia ni tak ramai orang tahu #gastrik #masalahangin #tipskesehatan #lactomex ",
+      "hashtags": [
+        "gastrik",
+        "masalahangin",
+        "tipskesehatan",
+        "lactomex"
+      ],
+      "duration_s": 50,
+      "music": {
+        "title": "original sound - Lactomex",
+        "author": "LactomexHq",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-lactomexhq-20260306152124-7614163025603333397.mp4",
+      "play_count": 2627,
+      "like_count": 49,
+      "comment_count": 9,
+      "share_count": 14,
+      "created_at": "2026-03-06T15:21:24+00:00",
+      "source_input": null,
+      "virality_score": 0.0006
+    },
+    {
+      "id": "7612842834424646933",
+      "url": "https://www.tiktok.com/@lactomexhq/video/7612842834424646933",
+      "author_handle": "lactomexhq",
+      "author_followers": 10500,
+      "caption": "‼️ 1. Perut kembung & rasa tegang\nLepas makan sikit pun rasa penuh, sendawa tak berhenti.\n\n\t‼️ 2. Dada rasa ketat / berdebar\nKadang rasa macam simptom jantung, tapi sebenarnya angin terperangkap.\n\n\t‼️ 3. Sakit kepala & badan lemah\nAngin naik ke atas boleh buat pening dan cepat letih.\n\n\t‼️ 4. Sukar membuang air besar\nUsus jadi perlahan, perut rasa tak selesa berhari-hari.\n\n\t‼️ 5.Pedih ulu hati & rasa panas sampai ke dada. Ini paling ramai tak sangka.\n\nRamai umur 30–40an ingat biasa saja, rupanya tanda awal gastrik atau GERD kalau dibiarkan.\n\n✨ BONUS:\nSelalu berdebar, gelisah & susah tidur waktu malam. Ramai tak sangka, angin dalam badan pun boleh ganggu tidur & buat jantung rasa tak selesa.",
+      "hashtags": [],
+      "duration_s": 0,
+      "music": {
+        "title": "The Epic",
+        "author": "OlexandrMusic",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-lactomexhq-20260303015826-7612842834424646933.mp4",
+      "play_count": 490300,
+      "like_count": 8420,
+      "comment_count": 167,
+      "share_count": 2769,
+      "created_at": "2026-03-03T01:58:26+00:00",
+      "source_input": null,
+      "virality_score": 0.0006
+    },
+    {
+      "id": "7616650973922250004",
+      "url": "https://www.tiktok.com/@refluxreset/video/7616650973922250004",
+      "author_handle": "refluxreset",
+      "author_followers": 4103,
+      "caption": "#fyp #acidreflux #gerd #seafood #malaysia ",
+      "hashtags": [
+        "fyp",
+        "acidreflux",
+        "gerd",
+        "seafood",
+        "malaysia"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Pretty Eyes",
+        "author": "zehdi",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-refluxrese-20260313081606-7616650973922250004.mp4",
+      "play_count": 3379,
+      "like_count": 73,
+      "comment_count": 2,
+      "share_count": 4,
+      "created_at": "2026-03-13T08:16:06+00:00",
+      "source_input": null,
+      "virality_score": 0.0005
+    },
+    {
+      "id": "7610293057908428052",
+      "url": "https://www.tiktok.com/@klinikwakafsiku/video/7610293057908428052",
+      "author_handle": "klinikwakafsiku",
+      "author_followers": 1886,
+      "caption": "Pukul 12 tengah hari, perut mula berbunyi. Tiba-tiba datang rasa pedih mencucuk kat ulu hati, naik sampai ke dada. Muka dah pucat, dahi berpeluh sejuk menahan sakit kat meja ofis.\n\nTapi dalam hati berbisik, \"Sikit je lagi nak Maghrib ni, rugi kalau buka. Tahan jelah.\"\n\nIni adalah dilema biasa pesakit gastrik di bulan puasa. Ramai yang sanggup seksa diri sebab rasa berdosa kalau berbuka. Tapi tahukah anda, dari sudut perubatan, anda mungkin sedang membiarkan perut anda berlubang?\n\nRasa lapar biasa dan serangan gastrik kronik adalah dua benda berbeza. Waktu anda kena gastrik teruk, asid hidroklorik dalam perut sedang menggelegak dan menghakis dinding perut anda yang kosong tu. \n\nBila keadaan dah sampai tahap amaran, anda WAJIB berbuka puasa. Jangan paksa diri. \n\nTolong perhatikan 3 tanda amaran (Lampu Merah) ini. Kalau ada salah satu, terus pergi cari air:\n\n1. Pedih Tajam Dan Sukar Bernafas\nSakit di ulu hati yang sangat tajam macam dihiris pisau, dan asid naik ke dada (GERD) sampai anda rasa sesak nafas atau pedih tekak.\n\n2. Menggeletar Dan Hampir Pitam\nBadan jadi terlalu lemah, tangan menggeletar (tremor), pandangan jadi gelap, dan anda rasa tak boleh nak berdiri seimbang lagi. Ini tanda gula dalam darah dah terlalu rendah (hipoglikemia) bergabung dengan stres gastrik.\n\n3. Muntah Air Asid\nKalau anda mula muntah-muntah mengeluarkan cecair kuning pahit (asid) atau lebih teruk, muntah berwarna gelap macam serbuk kopi (tanda pendarahan ulser), wajib batal puasa serta merta dan terus ke klinik!\n\nAgama kita sangat menitikberatkan kesihatan nyawa (Maqasid Syariah). Allah beri kelonggaran untuk pesakit berbuka kalau puasa tu bawa mudarat. Ganti balik puasa tu bila perut dah sihat lepas raya nanti.\n\nKalau terpaksa berbuka, mula dengan air suam dan kurma atau biskut tawar. Jangan terus balun nasi kandar atau air bergas, terkejut perut tu nanti.\n\n Kesihatan Anda Keperihatinan Kami\n\n#klinikpakarkanserpayudar \n#klinikpakarkansertyhroid \n#klinikkesihatanutksemua \n#klinikpanelanda \n#klinikwakafsiku ",
+      "hashtags": [
+        "klinikpakarkanserpayudar",
+        "klinikpakarkansertyhroid",
+        "klinikkesihatanutksemua",
+        "klinikpanelanda",
+        "klinikwakafsiku"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "bunyi asal - 𝑆𝑌𝐼𝐹𝐴",
+        "author": "ʂყιϝα♡",
+        "original": true
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-klinikwaka-20260224050402-7610293057908428052.mp4",
+      "play_count": 209100,
+      "like_count": 7698,
+      "comment_count": 110,
+      "share_count": 1896,
+      "created_at": "2026-02-24T05:04:02+00:00",
+      "source_input": null,
+      "virality_score": 0.0005
+    },
+    {
+      "id": "7615144488758955284",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7615144488758955284",
+      "author_handle": "dannyfitjourney",
+      "author_followers": 8970,
+      "caption": "Ramai fokus apa yang dimakan masa berbuka.\nTapi cara kita berbuka pun sangat penting.\n\n5 tabiat ni boleh buat GERD makin teruk tanpa sedar.\n\n#gerdmalaysia #acidreflux #gerd #ramadansihat #guthealth ",
+      "hashtags": [
+        "gerdmalaysia",
+        "acidreflux",
+        "gerd",
+        "ramadansihat",
+        "guthealth"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Old Film",
+        "author": "Kairo Vibe",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260309065004-7615144488758955284.mp4",
+      "play_count": 1441,
+      "like_count": 20,
+      "comment_count": 0,
+      "share_count": 0,
+      "created_at": "2026-03-09T06:50:04+00:00",
+      "source_input": null,
+      "virality_score": 0.0001
+    },
+    {
+      "id": "7611201049214373141",
+      "url": "https://www.tiktok.com/@dannyfitjourney/video/7611201049214373141",
+      "author_handle": "dannyfitjourney",
+      "author_followers": 8970,
+      "caption": "Ada GERD bukan bermaksud tak boleh enjoy bazaar.\nCuma kena pilih dengan bijak.\n#gerdanxiety #GERDmalaysia  #malaysia #GERDVSREFLUX #pedihuluhati ",
+      "hashtags": [
+        "gerdanxiety",
+        "gerdmalaysia",
+        "malaysia",
+        "gerdvsreflux",
+        "pedihuluhati"
+      ],
+      "duration_s": 0,
+      "music": {
+        "title": "Ramadan Kareem",
+        "author": "SILVANA INSPIRA",
+        "original": false
+      },
+      "video_download_url": "https://api.apify.com/v2/key-value-stores/83yXP3D58ZDcnOoWK/records/video-dannyfitjo-20260226154725-7611201049214373141.mp4",
+      "play_count": 2257,
+      "like_count": 29,
+      "comment_count": 1,
+      "share_count": 2,
+      "created_at": "2026-02-26T15:47:25+00:00",
+      "source_input": null,
+      "virality_score": 0.0001
+    }
+  ]
+}

@@ -156,7 +156,8 @@ class Top5CreativeReportTest(unittest.TestCase):
                 "reports/2026-05-07/top5_creative_production_report_2026-05-07.md",
             )
             report = (output_root / status["path"]).read_text(encoding="utf-8")
-            self.assertTrue(report.startswith("# What We Learned From These 5 Videos"))
+            self.assertTrue(report.startswith("## 1. rank-1 Daily Digestive Check"))
+            self.assertNotIn("What We Learned From These 5 Videos", report)
             self.assertLess(report.index("## 1. rank-1 Daily Digestive Check"), report.index("## 2. rank-2 Daily Digestive Check"))
             self.assertNotIn("rank-6", report)
             self.assertIn("- Creator: creator1", report)
@@ -206,11 +207,13 @@ class Top5CreativeReportTest(unittest.TestCase):
                 output_root
                 / "reports"
                 / "2026-05-07"
+                / "20260507T080000Z_daily"
                 / "top5_creative_production_report_2026-05-07.md"
             )
             self.assertTrue(report_path.is_file())
             report = report_path.read_text(encoding="utf-8")
-            self.assertTrue(report.startswith("# What We Learned From These 5 Videos"))
+            self.assertTrue(report.startswith("## 1. Digestive Comfort Routine Check"))
+            self.assertNotIn("What We Learned From These 5 Videos", report)
             self.assertEqual(report.count("### Source Reference"), 5)
 
     def test_recommended_shoot_gets_the_only_full_script_with_cta_ending(self):
