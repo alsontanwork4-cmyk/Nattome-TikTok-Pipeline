@@ -30,10 +30,13 @@ WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
+from batch_analysis.candidates import select_candidates
+from batch_analysis.config import DEFAULT_CONFIG, deep_merge
 from batch_analysis.env import load_dotenv_files
 
 APIFY_ACTOR_ID = "clockworks~tiktok-scraper"
 APIFY_BASE = "https://api.apify.com/v2"
+DAILY_SELECTION_POOL_SIZE = 30
 
 # Engagement weighting — comments and shares are stronger signals than likes.
 LIKE_WEIGHT = 1
@@ -259,16 +262,68 @@ def build_daily_selection_payload(
     full_payload: dict,
     source_scrape: Path,
     selection_size: int,
+    configuration: dict,
+    run_timestamp: datetime,
 ) -> dict:
     top = full_payload.get("top") if isinstance(full_payload.get("top"), list) else []
-    selected = top[:selection_size]
+    candidate_pool = top[:DAILY_SELECTION_POOL_SIZE]
+    selected_batch = select_candidates(
+        candidate_pool,
+        discovery_selection_configuration(configuration),
+        run_timestamp,
+        selection_size,
+        source_scrape,
+    )
+    selected = selected_batch["selected_candidates"]
     return {
         "generated_at": full_payload.get("generated_at"),
         "source_scrape": str(source_scrape),
         "selection_purpose": "daily_evidence_analysis_handoff",
+        "selection_strategy": selected_batch["selection_strategy"],
+        "selection_pool_size": len(candidate_pool),
+        "input_candidate_count": selected_batch["input_candidate_count"],
+        "eligible_candidate_count": selected_batch["eligible_candidate_count"],
         "selection_count": len(selected),
+        "minimum_eligibility_filter": selected_batch["minimum_eligibility_filter"],
         "top": selected,
+        "excluded_candidates": selected_batch["excluded_candidates"],
     }
+
+
+def discovery_selection_configuration(config: dict) -> dict:
+    """Build the batch-analysis selection config from discovery settings.
+
+    Dashboard-saved scraper config stores eligibility under "selection". Older
+    or hand-edited config may keep those values at the top level, so accept both
+    while preserving batch-analysis defaults such as requires_tiktok_link.
+    """
+    selection = {}
+    configured_selection = config.get("selection")
+    if isinstance(configured_selection, dict):
+        selection.update(configured_selection)
+    for key in (
+        "minimum_views",
+        "maximum_age_days",
+        "minimum_weighted_engagement_rate",
+        "requires_tiktok_link",
+        "requires_downloadable_video",
+        "exclusion_terms",
+    ):
+        if key in config:
+            selection[key] = config[key]
+    return deep_merge(DEFAULT_CONFIG, {"selection": selection})
+
+
+def assert_output_paths_available(*paths: Path, overwrite: bool = False) -> None:
+    if overwrite:
+        return
+    existing = [path for path in paths if path and path.exists()]
+    if existing:
+        formatted = ", ".join(str(path) for path in existing)
+        raise FileExistsError(
+            "refusing to overwrite existing scrape output; use a unique run folder "
+            f"or pass --overwrite: {formatted}"
+        )
 
 
 def deduplicate(items: list[dict]) -> list[dict]:
@@ -285,7 +340,7 @@ def deduplicate(items: list[dict]) -> list[dict]:
 
 
 def main() -> int:
-    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT])
+    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT], override=True)
     ap = argparse.ArgumentParser(description="Nattome TikTok discovery scraper")
     ap.add_argument("--config", type=Path, default=Path(__file__).parent.parent / "config.json",
                     help="Path to config.json (defaults to ../config.json then bundled example)")
@@ -302,6 +357,8 @@ def main() -> int:
                     help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 5)")
     ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default=None,
                     help="Limit which inputs to run (default: config scope, then all)")
+    ap.add_argument("--overwrite", action="store_true",
+                    help="Allow replacing existing output files. Defaults to refusing overwrites.")
     args = ap.parse_args()
 
     token = os.environ.get("APIFY_TOKEN")
@@ -319,6 +376,15 @@ def main() -> int:
 
     if not (hashtags or keywords or profiles):
         print("error: nothing to scrape (config has no hashtags/keywords/profiles for this scope)", file=sys.stderr)
+        return 2
+
+    try:
+        output_paths = [args.output]
+        if args.daily_selection_output:
+            output_paths.append(args.daily_selection_output)
+        assert_output_paths_available(*output_paths, overwrite=args.overwrite)
+    except FileExistsError as exc:
+        print(f"error: {exc}", file=sys.stderr)
         return 2
 
     print(f"[info] scraping: {len(hashtags)} hashtags, {len(keywords)} keywords, {len(profiles)} profiles", file=sys.stderr)
@@ -358,6 +424,8 @@ def main() -> int:
             full_payload=payload,
             source_scrape=args.output,
             selection_size=options["daily_selection_size"],
+            configuration=config,
+            run_timestamp=now,
         )
         args.daily_selection_output.parent.mkdir(parents=True, exist_ok=True)
         args.daily_selection_output.write_text(

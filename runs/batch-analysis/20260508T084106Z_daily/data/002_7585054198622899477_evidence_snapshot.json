@@ -1,0 +1,51 @@
+{
+  "candidate_id": "7585054198622899477",
+  "rank": 2,
+  "prefix": "002_7585054198622899477",
+  "snapshot_path": "data/002_7585054198622899477_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/002_7585054198622899477_source_metadata.json"
+  },
+  "source_video": {
+    "state": "available",
+    "path": "evidence/002_7585054198622899477_source_video.mp4",
+    "bytes": 695831,
+    "source": "https://api.apify.com/v2/key-value-stores/8YQDcPEcMfqDIr97C/records/video-refluxrese-20251218044422-7585054198622899477.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "partial",
+      "path": "data/002_7585054198622899477_gemini_evidence.json",
+      "reason": null,
+      "missing_evidence": [
+        "spoken_content"
+      ]
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/002_7585054198622899477_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/002_7585054198622899477_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/002_7585054198622899477_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/002_7585054198622899477_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/002_7585054198622899477_video_evidence_report.md"
+    }
+  }
+}

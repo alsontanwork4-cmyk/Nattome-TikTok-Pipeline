@@ -61,7 +61,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT])
+    load_dotenv_files([Path.cwd(), WORKSPACE_ROOT], override=True)
     args = parse_args()
     try:
         run_folder = create_run(args)

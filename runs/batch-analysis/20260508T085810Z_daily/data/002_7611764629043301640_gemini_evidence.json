@@ -1,0 +1,784 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman with dark hair, red lipstick, and a bindi on her forehead is speaking to the camera. She is wearing a dark blue collared shirt and a gold watch. A medical diagram of human organs is visible on the wall behind her.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1,
+      "observation": "The woman raises her right index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2,
+      "observation": "The woman touches her forehead with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 3,
+      "observation": "The woman holds up her right hand with fingers spread.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 10,
+      "observation": "The woman raises her right index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 14,
+      "observation": "The woman gives a thumbs up with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 26,
+      "observation": "The woman raises her right index finger, then her middle finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 32,
+      "observation": "The woman raises her right index, middle, and ring fingers.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 38,
+      "observation": "The woman raises her right index and middle fingers.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 41,
+      "observation": "The woman gives a thumbs up with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 43,
+      "observation": "The woman raises her right index and middle fingers.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 50,
+      "observation": "The woman gestures with her right hand, palm facing up.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 54,
+      "observation": "The woman raises her right index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 56,
+      "observation": "The woman gestures with her right hand, palm facing up.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 59,
+      "observation": "The woman raises her right index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 107,
+      "observation": "The woman raises her right index and middle fingers.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 111,
+      "observation": "The woman gestures with her right hand, palm facing up.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 115,
+      "observation": "The woman raises her right index, middle, ring, and pinky fingers.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 120,
+      "observation": "The woman makes a fist with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 126,
+      "observation": "The woman gestures with her right hand, palm facing up.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 131,
+      "observation": "The woman makes a pinching gesture with her right thumb and index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 136,
+      "observation": "The woman makes a pinching gesture with her right thumb and index finger.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 142,
+      "observation": "The woman makes an 'OK' gesture with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 150,
+      "observation": "The woman gives a thumbs up with her right hand.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 156,
+      "observation": "The woman smiles and waves goodbye.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Gastric Tips",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 1,
+      "text": "One of my video",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 1,
+      "end_seconds": 3,
+      "text": "ல வந்துட்டு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 3,
+      "end_seconds": 5,
+      "text": "கமெண்ட் வந்திருந்தது",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 5,
+      "end_seconds": 6,
+      "text": "கேஸ்ட்ரிக் பத்தி பேசுங்க டாக்டர்னு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 6,
+      "end_seconds": 7,
+      "text": "ஓகே நான் இன்னைக்கு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 7,
+      "end_seconds": 8,
+      "text": "கேஸ்ட்ரிக் பத்தி பேசுறேன்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 8,
+      "end_seconds": 9,
+      "text": "ஹாய் எவ்ரிஒன்",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 9,
+      "end_seconds": 10,
+      "text": "ஐம் டாக்டர் ஜி",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 10,
+      "end_seconds": 11,
+      "text": "ஃபவுண்டர் ஆஃப் டாக்டர் லைஃப்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 11,
+      "end_seconds": 13,
+      "text": "ஓகே முதல் விஷயம் வந்து",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 13,
+      "end_seconds": 14,
+      "text": "நீங்க சாப்பிடக்கூடாததை சொல்றேன்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 14,
+      "end_seconds": 15,
+      "text": "சோ சாப்பிடக்கூடாதுன்னா",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 15,
+      "end_seconds": 16,
+      "text": "நீங்க வந்து",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 16,
+      "end_seconds": 17,
+      "text": "காஃபி",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 17,
+      "end_seconds": 17,
+      "text": "டீ",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 17,
+      "end_seconds": 18,
+      "text": "மில்க்",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 18,
+      "end_seconds": 20,
+      "text": "சோ பாலு வந்து",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 20,
+      "end_seconds": 22,
+      "text": "நீங்க சாப்பிட்டதுக்கு அப்புறம்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 22,
+      "end_seconds": 23,
+      "text": "வேணா குடிங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 23,
+      "end_seconds": 25,
+      "text": "ஆனா நீங்க எம்டி ஸ்டமக்ல",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 25,
+      "end_seconds": 26,
+      "text": "குடிக்கிறதை தவிர்த்துருங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 26,
+      "end_seconds": 27,
+      "text": "ஓகேவா தென் நம்பர் ஒன்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 27,
+      "end_seconds": 28,
+      "text": "நம்பர் டூ வந்து",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 28,
+      "end_seconds": 29,
+      "text": "ஸ்பைசி ஃபுட்",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 29,
+      "end_seconds": 30,
+      "text": "உரப்பான சாப்பாட",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 30,
+      "end_seconds": 31,
+      "text": "சாப்பிடாதீங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 31,
+      "end_seconds": 32,
+      "text": "இல்லன்னா குறைச்சிருங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 32,
+      "end_seconds": 34,
+      "text": "மூணாவது வந்து ஆயிலியான ஃபுட்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 34,
+      "end_seconds": 37,
+      "text": "ரொம்ப எண்ணெயான சாப்பாடு சாப்பிட்டீங்கன்னா அதுவும் கேஸ்ட்ரிக் உண்டாக்கும்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 37,
+      "end_seconds": 39,
+      "text": "ஓகே இது ரெண்டு வந்து",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 39,
+      "end_seconds": 40,
+      "text": "பிராக்டிசஸ்",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 40,
+      "end_seconds": 42,
+      "text": "சோ ஸ்மோக் பண்றவங்களுக்கும் கண்டிப்பா கேஸ்ட்ரிக் படும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 42,
+      "end_seconds": 44,
+      "text": "ரெண்டாவது வந்து ஆல்கஹால் குடிக்கிறவங்களுக்கும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 44,
+      "end_seconds": 46,
+      "text": "கண்டிப்பா கேஸ்ட்ரிக் பண்ணும் படும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 46,
+      "end_seconds": 50,
+      "text": "சோ நீங்க வந்து எவ்வளவுக்கு எவ்வளவு முடியுமோ குறைங்க ஓகேவா",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 50,
+      "end_seconds": 52,
+      "text": "சோ சாப்பிடக்கூடிய விஷயம்னா",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 52,
+      "end_seconds": 54,
+      "text": "இன்னைக்கு நான் உங்களுக்கு மூணு கொடுக்கிறேன்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 54,
+      "end_seconds": 55,
+      "text": "சோ நம்பர் ஒன் வந்து",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 55,
+      "end_seconds": 56,
+      "text": "மோர்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 56,
+      "end_seconds": 59,
+      "text": "ஆனா மோர் வந்து சாப்பிட்டதுக்கு அப்புறம்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 59,
+      "end_seconds": 59,
+      "text": "குடிங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 59,
+      "end_seconds": 100,
+      "text": "சோ நம்பர் ஒன் இஸ் மோர்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 100,
+      "end_seconds": 101,
+      "text": "ஏன்னா ப்ரோபயாடிக்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 101,
+      "end_seconds": 103,
+      "text": "நிறைய இருக்கு உங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 103,
+      "end_seconds": 105,
+      "text": "உங்க கட் ஹெல்த்த ரொம்ப சப்போர்ட் பண்ணும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 105,
+      "end_seconds": 107,
+      "text": "உங்களோட கேஸ்ட்ரைட்டிஸையும் ரொம்ப குறைக்கும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 107,
+      "end_seconds": 108,
+      "text": "ஓகே ரெண்டாவது வந்து",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 108,
+      "end_seconds": 109,
+      "text": "பழைய சோறு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 109,
+      "end_seconds": 110,
+      "text": "பழைய சோறு இஸ் மை ஃபேவரட்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 110,
+      "end_seconds": 112,
+      "text": "எனக்கு கேஸ்ட்ரிக் பிரச்சனை இருந்தப்போ",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 112,
+      "end_seconds": 115,
+      "text": "நான் ஒரு வாரத்துல ஒரு மூணு இல்லன்னா நாலு வாட்டியாச்சும் சாப்பிட்டுருவேன்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 115,
+      "end_seconds": 116,
+      "text": "பழைய சோற",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 116,
+      "end_seconds": 117,
+      "text": "சோ வெரி ஈஸி",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 117,
+      "end_seconds": 118,
+      "text": "ஓவர்நைட் சோக் பண்ணுங்க",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 118,
+      "end_seconds": 120,
+      "text": "அடுத்த நாள் வந்து அதை நல்லா",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 120,
+      "end_seconds": 122,
+      "text": "நசுக்கிட்டு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 122,
+      "end_seconds": 124,
+      "text": "அப்புறம் கொஞ்சம்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 124,
+      "end_seconds": 125,
+      "text": "தயிர்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 125,
+      "end_seconds": 125,
+      "text": "வெங்காயம்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 126,
+      "end_seconds": 127,
+      "text": "சோ கொஞ்சோண்டு ஹலிய போட்டுட்டு",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 127,
+      "end_seconds": 129,
+      "text": "கொஞ்சோண்டு சீரகம் போட்டுட்டு கொஞ்சோண்டு உப்பு போட்டுட்டு",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 129,
+      "end_seconds": 133,
+      "text": "நான் கொஞ்சம் எக்ஸ்ட்ராவா ஒன் பிஞ்ச் ஆஃப் மஞ்சள் போடுவேன்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 133,
+      "end_seconds": 135,
+      "text": "மஞ்சள்ல ஆன்டிபாக்டீரியல் ப்ராப்பர்டீஸ் இருக்கு",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 135,
+      "end_seconds": 141,
+      "text": "அண்ட் ஆல்சோ கொஞ்சோண்டு பெப்பர் போடுவேன் ஏன்னா பெப்பர் வந்து மஞ்சளோட அப்சார்ப்ஷனை இன்கிரீஸ் பண்ணும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 141,
+      "end_seconds": 143,
+      "text": "சோ இப்படித்தான் நான் என் பழைய சோறு செய்வேன்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 143,
+      "end_seconds": 144,
+      "text": "மூணாவது வந்து பசலைக்கீரை",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 144,
+      "end_seconds": 146,
+      "text": "பசலைக்கீரை வந்து வில் ஹெல்ப் அ லாட் வித்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 146,
+      "end_seconds": 148,
+      "text": "உங்க ஸ்டமக்கோட புண்ணு ஏதாச்சும் இருந்துச்சுன்னா",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 148,
+      "end_seconds": 150,
+      "text": "உங்களுக்கு ரொம்பவே ஹெல்ப் பண்ணும்",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 150,
+      "end_seconds": 153,
+      "text": "சோ இந்த மூணு சாப்பாடு நீங்க ட்ரை பண்ணி பாருங்க",
+      "language": "Tamil",
+      "confidence": null
+    },
+    {
+      "start_seconds": 153,
+      "end_seconds": 155,
+      "text": "உங்களுக்கு கண்டிப்பா ரொம்ப ஹெல்ப்ஃபுல்லா இருக்கும்",
+      "language": "Manglish",
+      "confidence": null
+    },
+    {
+      "start_seconds": 155,
+      "end_seconds": 156,
+      "text": "ஐ சீ யூ இன் மை நெக்ஸ்ட் வீடியோ",
+      "language": "English",
+      "confidence": null
+    },
+    {
+      "start_seconds": 156,
+      "end_seconds": 157,
+      "text": "பாய்",
+      "language": "English",
+      "confidence": null
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "voiceover",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The speaker immediately addresses a viewer's request about 'gastric tips', setting the topic for the video.",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The on-screen text 'Gastric Tips' clearly states the video's topic.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 13,
+      "text": "நீங்க சாப்பிடக்கூடாததை சொல்றேன்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "நீங்க வந்து காஃபி, டீ, மில்க்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 23,
+      "text": "ஆனா நீங்க எம்டி ஸ்டமக்ல குடிக்கிறதை தவிர்த்துருங்க",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 28,
+      "text": "ஸ்பைசி ஃபுட் உரப்பான சாப்பாட சாப்பிடாதீங்க இல்லன்னா குறைச்சிருங்க",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 34,
+      "text": "ரொம்ப எண்ணெயான சாப்பாடு சாப்பிட்டீங்கன்னா அதுவும் கேஸ்ட்ரிக் உண்டாக்கும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 40,
+      "text": "ஸ்மோக் பண்றவங்களுக்கும் கண்டிப்பா கேஸ்ட்ரிக் படும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 42,
+      "text": "ஆல்கஹால் குடிக்கிறவங்களுக்கும் கண்டிப்பா கேஸ்ட்ரிக் பண்ணும் படும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 52,
+      "text": "இன்னைக்கு நான் உங்களுக்கு மூணு கொடுக்கிறேன்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 55,
+      "text": "மோர்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 100,
+      "text": "ஏன்னா ப்ரோபயாடிக் நிறைய இருக்கு உங்க உங்க கட் ஹெல்த்த ரொம்ப சப்போர்ட் பண்ணும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 105,
+      "text": "உங்களோட கேஸ்ட்ரைட்டிஸையும் ரொம்ப குறைக்கும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 108,
+      "text": "பழைய சோறு",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 110,
+      "text": "எனக்கு கேஸ்ட்ரிக் பிரச்சனை இருந்தப்போ",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 133,
+      "text": "மஞ்சள்ல ஆன்டிபாக்டீரியல் ப்ராப்பர்டீஸ் இருக்கு",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 135,
+      "text": "பெப்பர் வந்து மஞ்சளோட அப்சார்ப்ஷனை இன்கிரீஸ் பண்ணும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 143,
+      "text": "பசலைக்கீரை",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 144,
+      "text": "பசலைக்கீரை வந்து வில் ஹெல்ப் அ லாட் வித் உங்க ஸ்டமக்கோட புண்ணு ஏதாச்சும் இருந்துச்சுன்னா உங்களுக்கு ரொம்பவே ஹெல்ப் பண்ணும்",
+      "source": null,
+      "confidence": 0.8
+    },
+    {
+      "timestamp_seconds": 153,
+      "text": "உங்களுக்கு கண்டிப்பா ரொம்ப ஹெல்ப்ஃபுல்லா இருக்கும்",
+      "source": null,
+      "confidence": 0.8
+    }
+  ],
+  "missing_evidence": []
+}

@@ -1,0 +1,240 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A person is lying on their back, covered with a maroon towel. Another person is performing a treatment on their abdomen. A dough ring is placed around the navel, and a hand is pouring oil into the ring.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "Close-up of the dough ring around the navel, filled with oil.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 7,
+      "observation": "A hand is stirring the oil within the dough ring on the navel.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 8,
+      "observation": "The dough ring has been removed, and a hand is massaging oil into the abdomen around the navel.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 14,
+      "observation": "A black herbal pouch is being pressed and massaged onto the oiled abdomen.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 18,
+      "observation": "A hand is massaging the oiled abdomen with circular motions.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 22,
+      "observation": "The black herbal pouch is again being pressed and massaged onto the oiled abdomen.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 25,
+      "observation": "A hand is massaging the oiled abdomen with broad strokes.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Jeevaa Ayur Spa & Massage",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "Nabhi Vasti",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "The Best Therapy for Gut Health",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 9,
+      "text": "Improves digestion",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "Relieves abdominal pain and Reduces belly fat",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "Helps menstrual cramps & supports menstrual health",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 18,
+      "text": "Navel is considered an important energy in Ayurveda",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 21,
+      "text": "70% of your immune system lives in your gut and The gut and brain are linked",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 24,
+      "text": "A healthy gut can Reduce stress & anxiety Improve focus Support better sleep Better digestion",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 0,
+      "text": "Nabhi Vasti",
+      "language": "Tamil",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 4,
+      "end_seconds": 4,
+      "text": "Nabhi Vasti",
+      "language": "Tamil",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 7,
+      "end_seconds": 7,
+      "text": "Nabhi Vasti",
+      "language": "Tamil",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 8,
+      "end_seconds": 14,
+      "text": "வயிற்றுப்பகுதியின் நாபிமீது சூடான மூலிகை எண்ணெயை வைத்து வைத்து செய்யப்படும் ஆயுர்வேத சிகிச்சை",
+      "language": "Tamil",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 18,
+      "end_seconds": 20,
+      "text": "Book your appointment now",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 20,
+      "end_seconds": 21,
+      "text": "at Penang, Ipoh and Johor Bahru",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 24,
+      "end_seconds": 28,
+      "text": "வயிற்று வலி, வாயு தொல்லை, மாதவிடாய் கோளாறுகளை குறைக்க உதவும்",
+      "language": "Tamil",
+      "confidence": 0.9
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Background music with a calming, spiritual tone.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "cue": "Female voiceover in Tamil.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 18,
+      "cue": "Female voiceover in English.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 24,
+      "cue": "Female voiceover in Tamil.",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately shows a close-up of an Ayurvedic treatment (Nabhi Vasti) being performed on a person's abdomen, with oil being poured into a dough ring around the navel. The text 'Nabhi Vasti' is displayed, clearly indicating the subject of the video.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 4,
+      "text": "The Best Therapy for Gut Health",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 9,
+      "text": "Improves digestion",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 12,
+      "text": "Relieves abdominal pain and Reduces belly fat",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 15,
+      "text": "Helps menstrual cramps & supports menstrual health",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 18,
+      "text": "Navel is considered an important energy in Ayurveda",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 21,
+      "text": "70% of your immune system lives in your gut and The gut and brain are linked",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 24,
+      "text": "A healthy gut can Reduce stress & anxiety Improve focus Support better sleep Better digestion",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 8,
+      "text": "வயிற்றுப்பகுதியின் நாபிமீது சூடான மூலிகை எண்ணெயை வைத்து வைத்து செய்யப்படும் ஆயுர்வேத சிகிச்சை",
+      "source": null,
+      "confidence": 0.9
+    },
+    {
+      "timestamp_seconds": 24,
+      "text": "வயிற்று வலி, வாயு தொல்லை, மாதவிடாய் கோளாறுகளை குறைக்க உதவும்",
+      "source": null,
+      "confidence": 0.9
+    }
+  ],
+  "missing_evidence": []
+}

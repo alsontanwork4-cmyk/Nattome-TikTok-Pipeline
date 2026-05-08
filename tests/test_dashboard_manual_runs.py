@@ -100,11 +100,11 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertEqual(record.triggered_at, "2026-05-07T09:15:00Z")
             self.assertEqual(
                 record.output_paths["raw_scrape"],
-                "data/raw_scrapes/manual_20260507T091500Z_scrape_only_top30.json",
+                "data/daily_runs/manual_20260507T091500Z_scrape_only/raw_scrape_top30.json",
             )
             self.assertEqual(
                 record.output_paths["daily_selection"],
-                "data/daily_selections/manual_20260507T091500Z_top5.json",
+                "data/daily_runs/manual_20260507T091500Z_scrape_only/daily_selection_top5.json",
             )
             self.assertEqual(len(executor.calls), 1)
             command, cwd = executor.calls[0]
@@ -191,7 +191,13 @@ class DashboardManualRunsTest(unittest.TestCase):
     def test_manual_runs_do_not_reuse_existing_output_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
-            existing = workspace / "data" / "raw_scrapes" / "manual_20260507T091500Z_scrape_only_top30.json"
+            existing = (
+                workspace
+                / "data"
+                / "daily_runs"
+                / "manual_20260507T091500Z_scrape_only"
+                / "raw_scrape_top30.json"
+            )
             existing.parent.mkdir(parents=True)
             existing.write_text("{}", encoding="utf-8")
             executor = FakeExecutor(stdout="ok")
@@ -206,7 +212,7 @@ class DashboardManualRunsTest(unittest.TestCase):
 
             self.assertEqual(
                 record.output_paths["raw_scrape"],
-                "data/raw_scrapes/manual_20260507T091501Z_scrape_only_top30.json",
+                "data/daily_runs/manual_20260507T091501Z_scrape_only/raw_scrape_top30.json",
             )
 
     def _request(

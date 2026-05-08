@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": false
+  },
+  "audio_format": "music_or_reused_sound",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video immediately displays on-screen text about 'Gastric issues' and how they've 'ruined my life', combined with a visual of a person eating, creating an emotional and relatable hook.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Audio evidence is limited; adapt only after human review."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

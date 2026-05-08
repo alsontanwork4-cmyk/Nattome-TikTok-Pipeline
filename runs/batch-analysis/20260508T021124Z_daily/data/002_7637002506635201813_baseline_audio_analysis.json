@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "sound": {
+    "title": null,
+    "author": null,
+    "is_reused_sound": null
+  },
+  "audio_format": "voiceover",
+  "mood": "gemini_described",
+  "hook_support": "Gemini hook evidence: The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+  "nattome_recommendation": {
+    "action": "adapt",
+    "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+  },
+  "evidence_basis": {
+    "source": "evidence_bundle_snapshot",
+    "gemini_sections": [
+      "audio_cues",
+      "hook_evidence",
+      "spoken_content"
+    ]
+  },
+  "manual_review": {
+    "required": false,
+    "reason": null
+  },
+  "deep_sound_research": {
+    "status": "not_implemented"
+  }
+}

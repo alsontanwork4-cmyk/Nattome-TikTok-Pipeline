@@ -1,0 +1,106 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman is looking at the camera, outdoors with lush green trees in the background. She is wearing a light blue top.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 1,
+      "observation": "A woman is walking towards the camera in an indoor setting, possibly a cafe or restaurant. She is wearing a light-colored vest and white pants.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 2,
+      "observation": "A woman is looking at the camera, indoors with a white wall background. She is holding a small microphone and smiling.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 3,
+      "observation": "A woman is looking at the camera, indoors with a white wall background. She is holding a small microphone and smiling.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 4,
+      "observation": "A woman is looking at the camera, indoors with a white wall background. She is holding a small microphone and smiling.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "A woman is looking at the camera, indoors with a white wall background. She is holding a small microphone and smiling.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 6,
+      "observation": "A woman is looking up and smiling, indoors with a white wall background. She is holding a small microphone.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Hi!",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1,
+      "text": "my name i",
+      "confidence": 0.9,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 1,
+      "text": "Preshana",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 2,
+      "text": "i am",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 3,
+      "text": "content creator",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 4,
+      "text": "beauty enthusiast",
+      "confidence": 1.0,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 5,
+      "text": "travel vlogger",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Upbeat background music starts",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video starts with a woman looking directly at the camera with 'Hi!' text appearing, immediately followed by her name 'Preshana' and a quick transition to her introducing herself as a content creator.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [],
+  "missing_evidence": [
+    "spoken_content",
+    "claim_evidence"
+  ]
+}

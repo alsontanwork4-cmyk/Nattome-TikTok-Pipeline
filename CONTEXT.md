@@ -32,20 +32,20 @@ _Avoid_: mandatory sound scrape
 The fixed section structure used by every **Video Evidence Report**, covering video reference, executive creative read, hook audit, hybrid timeline, OCR summary, transcript summary, audio/music analysis, virality breakdown, Nattome POV, shootable angles, and evidence quality.
 _Avoid_: loose notes, ad hoc report
 
-**Batch Analysis Run**:
-A processing run that takes a selected set of TikTok videos and produces one **Video Evidence Report** per video, plus a cross-video pattern summary.
-_Avoid_: one-off video audit as the default
+**Daily Evidence Run**:
+The normal Nattome TikTok pipeline run: discover candidates, select the daily top 5, analyze source-video evidence, and produce one **Video Evidence Report** per video plus a cross-video pattern summary.
+_Avoid_: metadata-only scrape, one-off video audit as the default
 
 **Cross-Video Pattern Summary**:
-A batch-level report that compares analyzed videos to identify repeatable hooks, formats, emotional triggers, audio patterns, risky claims, and priority Nattome shoot opportunities.
+A run-level report that compares analyzed videos to identify repeatable hooks, formats, emotional triggers, audio patterns, risky claims, and priority Nattome shoot opportunities.
 _Avoid_: folder of disconnected reports
 
-**Default Batch**:
-The standard **Batch Analysis Run** size of 10 TikTok videos for pattern discovery.
-_Avoid_: unlimited batch, all scraped videos
+**Daily Top-5 Selection**:
+The standard daily set of five TikTok videos selected for source-video evidence analysis.
+_Avoid_: oversized run, unlimited batch, all scraped videos
 
 **Viral Relevance Selection**:
-The rule for choosing videos for a **Batch Analysis Run** by ranking candidates on virality, recency, and relevance to Nattome, without forcing category quotas.
+The rule for choosing videos for a **Daily Evidence Run** by ranking candidates on virality, recency, and relevance to Nattome, without forcing category quotas.
 _Avoid_: fixed topic quotas, top views only
 
 **Minimum Eligibility Filter**:
@@ -53,19 +53,19 @@ The baseline filter applied before selection to remove videos that are too small
 _Avoid_: selecting every scraped result
 
 **Minimum Filter Thresholds**:
-The default eligibility thresholds for batch selection: at least 10,000 views, no older than 30 days, at least 3% weighted engagement rate, a usable TikTok link, a downloadable video, and relevance to Nattome.
+The default eligibility thresholds for daily selection: at least 10,000 views, no older than 30 days, at least 3% weighted engagement rate, a usable TikTok link, a downloadable video, and relevance to Nattome.
 _Avoid_: no-threshold selection
 
 **Evidence Quality Score**:
 A confidence rating for one **Video Evidence Report** based on OCR quality, transcript quality, video download quality, subtitle availability, timeline completeness, and manual review needs.
 _Avoid_: hidden confidence, unqualified analysis
 
-**Batch Output Set**:
-The required deliverables from one **Batch Analysis Run**: markdown reports, structured JSON, and a spreadsheet summary.
+**Daily Output Set**:
+The required deliverables from one **Daily Evidence Run**: markdown reports, structured JSON, and a spreadsheet summary.
 _Avoid_: markdown-only output
 
 **Run Folder**:
-The timestamped folder containing one **Batch Output Set** and all per-video **Evidence Bundles** for a **Batch Analysis Run**.
+The timestamped folder containing one **Daily Output Set** and all per-video **Evidence Bundles** for a **Daily Evidence Run**.
 _Avoid_: loose output files, shared evidence folder
 
 **Multilingual Evidence Capture**:
@@ -105,16 +105,16 @@ The replaceable technical tool set used by the pipeline: Apify for TikTok discov
 _Avoid_: hard-wired vendor lock-in
 
 **Scheduled Analysis Run**:
-A recurring **Batch Analysis Run** triggered by an automation runner such as Codex or Claude Code.
+A recurring **Daily Evidence Run** triggered by an automation runner such as Codex or Claude Code.
 _Avoid_: manual-only workflow
 
 **Telegram Delivery**:
-The automated sending of batch results to a Telegram bot or chat after a **Batch Analysis Run** completes.
+The automated sending of daily results to a Telegram bot or chat after a **Daily Evidence Run** completes.
 _Avoid_: local-only report delivery
 
-**Weekly Evidence Brief**:
-A scheduled weekly **Cross-Video Pattern Summary** delivered through markdown, JSON, spreadsheet, and Telegram notification.
-_Avoid_: daily-only brief, metadata-only weekly summary
+**Daily Evidence Brief**:
+A scheduled daily **Cross-Video Pattern Summary** delivered through markdown, JSON, spreadsheet, and optional Telegram notification.
+_Avoid_: metadata-only brief
 
 **Markdown Report Output**:
 The required human-readable markdown output for each **Video Evidence Report** and the **Cross-Video Pattern Summary**.
@@ -141,22 +141,22 @@ _Avoid_: optional internal dump
 - An **Audio/Music Trend Analysis** includes **Deep Sound Research** only when the sound itself appears to be part of the video's viral mechanism.
 - Every **Video Evidence Report** follows the same **Report Form**.
 - A **Report Form** separates evidence sections from creative recommendation sections.
-- A **Batch Analysis Run** produces one or more **Video Evidence Reports**.
-- A **Batch Analysis Run** produces exactly one **Cross-Video Pattern Summary**.
+- A **Daily Evidence Run** produces one or more **Video Evidence Reports**.
+- A **Daily Evidence Run** produces exactly one **Cross-Video Pattern Summary**.
 - A **Cross-Video Pattern Summary** compares evidence from multiple **Video Evidence Reports**.
-- A **Default Batch** contains 10 selected TikTok videos.
-- A **Batch Analysis Run** may run as one video for debugging, 5 videos for quick mode, 10 videos as the default, or 20 videos for deep weekly research.
-- A **Default Batch** is chosen with **Viral Relevance Selection**.
+- A **Daily Top-5 Selection** contains five selected TikTok videos.
+- A **Daily Evidence Run** normally analyzes the **Daily Top-5 Selection**. One-video mode is for debugging only.
+- A **Daily Top-5 Selection** is chosen with **Viral Relevance Selection**.
 - A **Minimum Eligibility Filter** is applied before **Viral Relevance Selection**.
 - A **Minimum Eligibility Filter** excludes videos under the chosen view threshold, older than the chosen recency threshold, weakly relevant to Nattome, or clearly unsafe because of crude humor, fearmongering, medical overclaims, or pseudoscience.
 - The default **Minimum Filter Thresholds** are 10,000 views, 30-day maximum age, and 3% weighted engagement rate.
 - The **Minimum Eligibility Filter** requires an original TikTok link and a usable video download.
 - Every **Video Evidence Report** includes one **Evidence Quality Score**.
 - An **Evidence Quality Score** is rated high, medium, or low confidence with a short reason.
-- A **Batch Analysis Run** produces one **Batch Output Set**.
-- A **Batch Output Set** must include human-readable markdown, machine-readable JSON, and a spreadsheet summary.
-- A **Batch Analysis Run** is stored in exactly one **Run Folder**.
-- A **Run Folder** contains batch-level markdown, JSON, and spreadsheet outputs plus one subfolder per analyzed video.
+- A **Daily Evidence Run** produces one **Daily Output Set**.
+- A **Daily Output Set** must include human-readable markdown, machine-readable JSON, and a spreadsheet summary.
+- A **Daily Evidence Run** is stored in exactly one **Run Folder**.
+- A **Run Folder** contains run-level markdown, JSON, and spreadsheet outputs plus evidence files for each analyzed video.
 - Each per-video folder inside a **Run Folder** contains that video's **Evidence Bundle** and **Video Evidence Report**.
 - Every **Evidence Bundle** requires **Multilingual Evidence Capture**.
 - **Multilingual Evidence Capture** includes English, Malay, Mandarin Chinese, Simplified Chinese, Traditional Chinese, and Manglish or code-mixed English-Malay-Chinese.
@@ -175,20 +175,20 @@ _Avoid_: optional internal dump
 - Downloaded TikTok videos and extracted frames are **Evidence Artifacts**, not final marketing assets.
 - **Evidence Artifacts** may be cleaned up after reports are approved, but JSON outputs, markdown reports, and spreadsheet summaries are durable records.
 - The OCR analysis system is built through four **Implementation Phases**: Download + Run Folder, Evidence Extraction, Report Generation, and Refinement.
-- Phase 1 creates the **Run Folder**, selects the **Default Batch**, downloads videos, stores metadata, and outputs a basic batch index.
+- Phase 1 selects the **Daily Top-5 Selection**, downloads videos where possible, stores metadata, and outputs the daily handoff.
 - Phase 2 extracts **Hybrid Timeline** frames, runs OCR, transcribes audio, captures **Baseline Audio Analysis**, and stores evidence as JSON.
 - Phase 3 generates **Video Evidence Reports**, the **Cross-Video Pattern Summary**, spreadsheet summary, **Evidence Quality Scores**, **Manual Review Flags**, and **Claim Safety Reviews**.
 - Phase 4 adds **Deep Sound Research**, multilingual improvements, evidence cleanup, and full-script generation for selected **Shootable Angles**.
 - The pipeline uses **Evidence-First Analysis** for all creative recommendations.
 - **Evidence-First Analysis** depends on an **Evidence Bundle**, not metadata alone.
 - The default **Tool Stack** uses Apify, Gemini 2.5 Flash evidence extraction, markdown, JSON, XLSX, and local Nattome analysis.
-- A **Scheduled Analysis Run** runs a **Batch Analysis Run** on a recurring schedule.
-- A **Weekly Evidence Brief** is produced by a weekly **Scheduled Analysis Run**.
-- **Telegram Delivery** sends the **Weekly Evidence Brief** summary, report links, and priority **Shootable Angles** after the run completes.
-- Codex or Claude Code may act as the automation runner, but the domain output remains the same **Batch Output Set**.
-- Every **Batch Analysis Run** produces **Markdown Report Output**.
-- Every **Batch Analysis Run** produces one **Spreadsheet Summary Output**.
-- Every **Batch Analysis Run** produces **Structured JSON Output**.
+- A **Scheduled Analysis Run** runs a **Daily Evidence Run** on a recurring schedule.
+- A **Daily Evidence Brief** is produced by a daily **Scheduled Analysis Run**.
+- **Telegram Delivery** sends the **Daily Evidence Brief** summary, report links, and priority **Shootable Angles** after the run completes when Telegram is configured.
+- Codex or Claude Code may act as the automation runner, but the domain output remains the same **Daily Output Set**.
+- Every **Daily Evidence Run** produces **Markdown Report Output**.
+- Every **Daily Evidence Run** produces one **Spreadsheet Summary Output**.
+- Every **Daily Evidence Run** produces **Structured JSON Output**.
 - **Structured JSON Output** is required even though markdown and spreadsheet outputs are the primary human-facing outputs.
 
 ## Example Dialogue
@@ -209,25 +209,25 @@ _Avoid_: optional internal dump
 > **Domain expert:** "No. Use one **Report Form** so every TikTok can be compared consistently and the marketing team can scan evidence before recommendations."
 >
 > **Dev:** "Should we analyze videos one at a time?"
-> **Domain expert:** "Default to a **Batch Analysis Run** because the goal is finding repeatable patterns across many videos, not only understanding one TikTok."
+> **Domain expert:** "Default to a **Daily Evidence Run** because the goal is finding repeatable patterns across the day's strongest videos, not only understanding one TikTok."
 >
-> **Dev:** "How many videos should a normal batch include?"
-> **Domain expert:** "Use a **Default Batch** of 10 videos. Use 5 for a quick pilot, 1 for debugging, and 20 only for deeper weekly research."
+> **Dev:** "How many videos should a normal daily run include?"
+> **Domain expert:** "Use the **Daily Top-5 Selection**. One-video mode is only for debugging."
 >
-> **Dev:** "Should the default batch force a mix like 3 education videos and 2 POV videos?"
+> **Dev:** "Should the daily selection force a mix like 3 education videos and 2 POV videos?"
 > **Domain expert:** "No. Use **Viral Relevance Selection**: rank by virality, recency, and Nattome relevance after applying a **Minimum Eligibility Filter**."
 >
-> **Dev:** "What makes a TikTok eligible for the default batch?"
+> **Dev:** "What makes a TikTok eligible for the daily top 5?"
 > **Domain expert:** "Apply the **Minimum Filter Thresholds** first: 10,000+ views, 30 days old or newer, 3%+ weighted engagement, usable link, downloadable video, and Nattome relevance."
 >
 > **Dev:** "Can we trust every OCR report equally?"
 > **Domain expert:** "No. Every **Video Evidence Report** needs an **Evidence Quality Score** so the team knows whether OCR, transcript, and timeline evidence are reliable enough for creative decisions."
 >
 > **Dev:** "Is markdown enough as the output?"
-> **Domain expert:** "No. A **Batch Output Set** must include markdown reports, structured JSON, and a spreadsheet summary so both humans and automation can use the analysis."
+> **Domain expert:** "No. A **Daily Output Set** must include markdown reports, structured JSON, and a spreadsheet summary so both humans and automation can use the analysis."
 >
 > **Dev:** "Where should all the OCR outputs go?"
-> **Domain expert:** "Use one **Run Folder** per batch run, with batch-level outputs at the top and one evidence/report folder per video."
+> **Domain expert:** "Use one **Run Folder** per daily run, with run-level outputs and per-video evidence files."
 >
 > **Dev:** "Can the OCR and transcript assume English only?"
 > **Domain expert:** "No. Use **Multilingual Evidence Capture** because Nattome's Malaysian TikTok content may use English, Malay, Mandarin Chinese, Simplified Chinese, Traditional Chinese, and Manglish or code-mixed speech."
@@ -238,7 +238,7 @@ _Avoid_: optional internal dump
 > **Dev:** "Can Nattome reuse a viral health claim if it performed well?"
 > **Domain expert:** "No. Every **Video Evidence Report** needs a **Claim Safety Review** to decide whether the claim should be reused, softened, avoided, or reframed for Nattome."
 >
-> **Dev:** "Should the batch report produce full scripts for every angle?"
+> **Dev:** "Should the daily report produce full scripts for every angle?"
 > **Domain expert:** "No. Default to **Shootable Angles** so the team gets hooks, formats, product tie-ins, beats, CTAs, and guardrails without bloating the report."
 >
 > **Dev:** "How do we decide what Nattome should shoot first?"
@@ -253,10 +253,10 @@ _Avoid_: optional internal dump
 > **Dev:** "Can the LLM infer the video structure from captions and stats?"
 > **Domain expert:** "No. Use **Evidence-First Analysis**: the LLM should analyze downloaded video evidence, OCR, transcript, audio analysis, and metadata."
 >
-> **Dev:** "Should the team manually run this every week?"
-> **Domain expert:** "No. Use a **Scheduled Analysis Run** and **Telegram Delivery** so the **Weekly Evidence Brief** reaches the team automatically."
+> **Dev:** "Should the team manually run this every day?"
+> **Domain expert:** "No. Use a **Scheduled Analysis Run** and **Telegram Delivery** so the **Daily Evidence Brief** reaches the team automatically when Telegram is configured."
 >
-> **Dev:** "What should the team receive after a batch run?"
+> **Dev:** "What should the team receive after a daily run?"
 > **Domain expert:** "They need **Markdown Report Output** for detailed reading, **Spreadsheet Summary Output** for fast comparison, and **Structured JSON Output** for automation and future reuse."
 
 ## Flagged Ambiguities
@@ -266,22 +266,22 @@ _Avoid_: optional internal dump
 - "Evidence" was clarified to include audio/music trend analysis as mandatory, not optional.
 - "Audio analysis" was split into **Baseline Audio Analysis** for every report and **Deep Sound Research** only when the sound is a likely viral driver.
 - "Report" was clarified as a fixed **Report Form**, not ad hoc notes, with evidence first and Nattome recommendations after.
-- "Video analysis" was clarified as batch-first because the business goal is pattern discovery across many videos.
-- Batch size was resolved as 10 videos by default, with 1, 5, and 20-video modes for debug, quick, and deep research use cases.
+- "Video analysis" was clarified as daily evidence-first because the business goal is pattern discovery across the day's strongest videos.
+- Normal run size was resolved as the **Daily Top-5 Selection**, with one-video mode kept only for debugging.
 - Selection was resolved as **Viral Relevance Selection**, not fixed content quotas.
 - "Anatomy relevance" was interpreted as Nattome relevance.
 - Minimum filters are part of selection and should run before ranking.
 - Minimum filter thresholds were resolved as 10,000 views, 30-day maximum age, 3% weighted engagement, original TikTok link, downloadable video, and Nattome relevance.
 - Evidence confidence was resolved as a required **Evidence Quality Score** on every **Video Evidence Report**.
-- Batch output was resolved as markdown, JSON, and spreadsheet summary, all required.
-- Batch storage was resolved as one **Run Folder** per **Batch Analysis Run**.
+- Daily output was resolved as markdown, JSON, and spreadsheet summary, all required.
+- Daily storage was resolved as one **Run Folder** per **Daily Evidence Run**.
 - Language support was resolved as required **Multilingual Evidence Capture** for English, Malay, Mandarin Chinese, Simplified Chinese, Traditional Chinese, and Manglish/code-mixed English-Malay-Chinese.
 - Manual review was resolved as automation-first with a required **Manual Review Flag** for medium/low confidence evidence or uncertain claim interpretation.
 - Health and product claim handling was resolved as a required **Claim Safety Review** on every **Video Evidence Report**.
 - Creative output was resolved as **Shootable Angles** by default, with full scripts deferred to selected winners.
-- Batch prioritization was resolved as a **Nattome Priority Score** with six dimensions and a 30-point total.
+- Daily prioritization was resolved as a **Nattome Priority Score** with six dimensions and a 30-point total.
 - Downloaded videos, frames, subtitles, OCR, transcripts, and audio outputs were resolved as **Evidence Artifacts**, with optional cleanup after report approval.
 - Implementation was resolved as four phases: Download + Run Folder, Evidence Extraction, Report Generation, and Refinement.
 - Tooling was resolved as Apify, Gemini 2.5 Flash evidence extraction, markdown, JSON, XLSX, and local **Evidence-First Analysis**.
-- Recurring delivery was added as a **Scheduled Analysis Run** with **Telegram Delivery** for a **Weekly Evidence Brief**.
+- Recurring delivery was added as a **Scheduled Analysis Run** with optional **Telegram Delivery** for a **Daily Evidence Brief**.
 - Output was resolved as required markdown reports, required structured JSON, and a required spreadsheet summary.

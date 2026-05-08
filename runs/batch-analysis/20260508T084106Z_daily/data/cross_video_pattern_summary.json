@@ -1,0 +1,469 @@
+{
+  "created_at": "2026-05-08T08:41:06Z",
+  "source_video_count": 5,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Clear first-three-second problem hook",
+        "video_count": 5,
+        "candidate_ids": [
+          "7585054198622899477",
+          "7594030165886291201",
+          "7611575745441402133",
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "music_or_reused_sound",
+        "video_count": 3,
+        "candidate_ids": [
+          "7585054198622899477",
+          "7611575745441402133",
+          "7637071570086726932"
+        ]
+      },
+      {
+        "pattern": "voiceover",
+        "video_count": 2,
+        "candidate_ids": [
+          "7594030165886291201",
+          "7630160987693321479"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive-health curiosity",
+        "video_count": 4,
+        "candidate_ids": [
+          "7594030165886291201",
+          "7611575745441402133",
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      },
+      {
+        "pattern": "Digestive discomfort relief",
+        "video_count": 1,
+        "candidate_ids": [
+          "7585054198622899477"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "Gemini hook evidence: A young woman in athletic wear is posing and subtly dancing to music, making eye contact with the camera, which is a common hook for dance or fashion content.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7611575745441402133"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The text 'Wife Effect' appears immediately, setting up a comedic premise about a man's behavior changing when his wife is present or nearby.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7637071570086726932"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video immediately displays text: 'Most people don't see this side of acid reflux. It's not just physical pain.' This statement aims to capture the attention of individuals who experience acid reflux by highlighting a less commonly discussed aspect of the condition.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7585054198622899477"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video starts with a direct address to the camera with the text 'Hi!' and the spoken word 'Hi!'.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7630160987693321479"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video starts with a woman making a pained sound and looking up, with text 'How Korean treat Indigestion (traditional way)' immediately visible, setting up the premise of a traditional remedy for a common ailment.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7594030165886291201"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "No risky claims flagged from available evidence",
+        "video_count": 5,
+        "candidate_ids": [
+          "7585054198622899477",
+          "7594030165886291201",
+          "7611575745441402133",
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 3,
+        "candidate_ids": [
+          "7611575745441402133",
+          "7630160987693321479",
+          "7637071570086726932"
+        ]
+      },
+      {
+        "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "video_count": 2,
+        "candidate_ids": [
+          "7585054198622899477",
+          "7594030165886291201"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7594030165886291201",
+      "source_tiktok_url": "https://www.tiktok.com/@tara_choi_/video/7594030165886291201",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman making a pained sound and looking up, with text 'How Korean treat Indigestion (traditional way)' immediately visible, setting up the premise of a traditional remedy for a common ailment.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7594030165886291201",
+      "source_tiktok_url": "https://www.tiktok.com/@tara_choi_/video/7594030165886291201",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `How Korean treat Indigestion (traditional way)` into a safer prompt about when you tell a korean dad you have indigestion this is what he will do 😳🪡 #koreaninmalaysia #indigestion #bloodletting #traditionalmedicine.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7594030165886291201",
+      "source_tiktok_url": "https://www.tiktok.com/@tara_choi_/video/7594030165886291201",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: right now",
+      "avatar": "Maintainer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Borrow the audio pacing cue `Speech` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 28,
+        "max_points": 30
+      },
+      "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    },
+    {
+      "candidate_id": "7585054198622899477",
+      "source_tiktok_url": "https://www.tiktok.com/@refluxreset/video/7585054198622899477",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately displays text: 'Most people don't see this side of acid reflux. It's not just physical pain.' This statement aims to capture the attention of individuals who experience acid reflux by highlighting a less commonly discussed aspect of the condition.",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 4
+    },
+    {
+      "candidate_id": "7585054198622899477",
+      "source_tiktok_url": "https://www.tiktok.com/@refluxreset/video/7585054198622899477",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Most people don't see this side of acid reflux. It's not just physical pain. Out of nowhere, you get anxiety attacks. Your heart races, your chest feels weird, and you start panicking then you become afraid of having another attack, and that fear itself creates even more anxiety. It's not \"in your head.\" It's not a myth. It's real. And for anyone fighting acid reflux, it can honestly feel like a nightmare.` into a safer prompt about Acid reflux fighters will understand this without any explanation… #gerd #acidreflux #viral #malaysia #cravingssatisfied.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 5
+    },
+    {
+      "candidate_id": "7630160987693321479",
+      "source_tiktok_url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a direct address to the camera with the text 'Hi!' and the spoken word 'Hi!'.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 23,
+        "max_points": 30
+      },
+      "why": "23/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 6
+    },
+    {
+      "candidate_id": "7630160987693321479",
+      "source_tiktok_url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Hi!` into a safer prompt about Introducing Preshana 😌😇 #contentcreator #vlogger #malaysianinfluencer #beautytok #lifestyleblogger.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 23,
+        "max_points": 30
+      },
+      "why": "23/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 7
+    },
+    {
+      "candidate_id": "7630160987693321479",
+      "source_tiktok_url": "https://www.tiktok.com/@preshana_dbella/video/7630160987693321479",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Hi!",
+      "avatar": "Maintainer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `Voiceover (woman's voice)` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 23,
+        "max_points": 30
+      },
+      "why": "23/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 8
+    },
+    {
+      "candidate_id": "7611575745441402133",
+      "source_tiktok_url": "https://www.tiktok.com/@nishalor1/video/7611575745441402133",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: A young woman in athletic wear is posing and subtly dancing to music, making eye contact with the camera, which is a common hook for dance or fashion content.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 21,
+        "max_points": 30
+      },
+      "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 9
+    },
+    {
+      "candidate_id": "7637071570086726932",
+      "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The text 'Wife Effect' appears immediately, setting up a comedic premise about a man's behavior changing when his wife is present or nearby.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      },
+      "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 10
+    },
+    {
+      "candidate_id": "7637071570086726932",
+      "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Wife Effect` into a safer prompt about auraa #iwc #malaysiacreator.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      },
+      "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 11
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7594030165886291201",
+    "why": "28/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

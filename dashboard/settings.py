@@ -37,7 +37,7 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
     "top_n": 30,
     "daily_selection_size": 5,
     "minimum_views": 10000,
-    "maximum_age_days": 30,
+    "maximum_age_days": 150,
     "minimum_weighted_engagement_rate": 0.03,
     "requires_downloadable_video": True,
     "exclusion_terms": [],

@@ -1,0 +1,2929 @@
+{
+  "batch_metadata": {
+    "run_timestamp": "2026-05-08T09:12:07Z",
+    "mode": "daily",
+    "requested_batch_size": 5,
+    "configuration": {
+      "selection": {
+        "minimum_views": 10000,
+        "maximum_age_days": 150,
+        "minimum_weighted_engagement_rate": 0.03,
+        "requires_tiktok_link": true,
+        "requires_downloadable_video": true
+      },
+      "outputs": {
+        "markdown": "reports",
+        "json": "data",
+        "spreadsheet": "data",
+        "evidence_bundles": "data/evidence_bundle_index.json",
+        "logs": "logs"
+      },
+      "tool_stack": {
+        "primary_adapter": "gemini_2_5_flash",
+        "gemini_model": "gemini-2.5-flash",
+        "gemini_api_key_env": "GEMINI_API_KEY",
+        "discovery_download": "Apify",
+        "evidence_extraction": "Gemini 2.5 Flash"
+      },
+      "telegram": {
+        "enabled": true,
+        "bot_token_env": "TELEGRAM_BOT_TOKEN",
+        "chat_id_env": "TELEGRAM_CHAT_ID"
+      },
+      "cleanup": {
+        "enabled": false,
+        "requires_report_approval": true,
+        "report_approved": false,
+        "remove_source_videos": true,
+        "remove_frames": true
+      }
+    },
+    "implementation_status": {
+      "candidate_selection": "implemented",
+      "video_download": "implemented",
+      "gemini_evidence": "implemented",
+      "audio_music_trend_analysis": "implemented",
+      "claim_safety_review": "implemented",
+      "evidence_quality": "implemented",
+      "video_evidence_reports": "implemented",
+      "cross_video_pattern_summary": "implemented",
+      "structured_json_output": "implemented",
+      "telegram_delivery": "implemented",
+      "evidence_artifact_cleanup": "implemented",
+      "refinement_hooks": "implemented"
+    },
+    "notes": [
+      "This run records missing setup or missing evidence instead of fabricating analysis.",
+      "Cross-video summaries compare only captured evidence and selected candidate metadata."
+    ]
+  },
+  "selection_decisions": {
+    "selected_at": "2026-05-08T09:12:07Z",
+    "candidate_source": "data\\daily_runs\\nattome_20260508T171010\\daily_selection_top5.json",
+    "selection_strategy": "input_order",
+    "requested_batch_size": 5,
+    "input_candidate_count": 5,
+    "eligible_candidate_count": 5,
+    "selected_candidate_count": 5,
+    "minimum_eligibility_filter": {
+      "minimum_views": 10000,
+      "maximum_age_days": 150,
+      "minimum_weighted_engagement_rate": 0.03,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true
+    },
+    "selected_candidates": [
+      {
+        "rank": 1,
+        "id": "7618055525665623316",
+        "url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-superkuala-20260317030618-7618055525665623316.mp4",
+        "author_handle": "superkualalumpur",
+        "caption": "🇲🇾 We Stopped His Acid Reflux (Here’s How) 😉\n\n📍 ZettaCare Protec-G @ZettaCare MY \nAvailable at Big Pharmacy, Caring Pharmacy, Georgetown Pharmacy & Wellings Pharmacy! 🤩\n\nBuy 5 FREE 1 – Now available at pharmacies selected stores! Don’t miss out! ✨\n\n#gastric #acidreflux #bloating #health #awareness ",
+        "play_count": 33500,
+        "like_count": 428,
+        "comment_count": 10,
+        "share_count": 405,
+        "created_at": "2026-03-17T03:06:18Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.1352,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.0035
+      },
+      {
+        "rank": 2,
+        "id": "7589593108338330901",
+        "url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-refluxrese-20251230101738-7589593108338330901.mp4",
+        "author_handle": "refluxreset",
+        "caption": "Tea tips for acid reflux🫖🍃 #acidreflux #gerd #tea #malaysia #foryou ",
+        "play_count": 10900,
+        "like_count": 207,
+        "comment_count": 3,
+        "share_count": 16,
+        "created_at": "2025-12-30T10:17:38Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.035,
+        "nattome_relevance_score": 0.5,
+        "selection_score": 0.5
+      },
+      {
+        "rank": 3,
+        "id": "7637071570086726932",
+        "url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-muhammadha-20260507085815-7637071570086726932.mp4",
+        "author_handle": "muhammadhaziqhaiqal",
+        "caption": "auraa \n#iwc #malaysiacreator ",
+        "play_count": 32900,
+        "like_count": 1722,
+        "comment_count": 15,
+        "share_count": 74,
+        "created_at": "2026-05-07T08:58:15Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0771,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.3152
+      },
+      {
+        "rank": 4,
+        "id": "7600382988030872852",
+        "url": "https://www.tiktok.com/@nickreflux/video/7600382988030872852",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nickreflux-20260128120748-7600382988030872852.mp4",
+        "author_handle": "nickreflux",
+        "caption": "#acidreflux #acidrefluxdiet #fypmalaysia #kualalumpur #gerd ",
+        "play_count": 42300,
+        "like_count": 1170,
+        "comment_count": 50,
+        "share_count": 408,
+        "created_at": "2026-01-28T12:07:48Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.13,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.25
+      },
+      {
+        "rank": 5,
+        "id": "7609229170551393558",
+        "url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nomadsprit-20260221081538-7609229170551393558.mp4",
+        "author_handle": "nomadspritz",
+        "caption": "The best food scene in the entire word is in MALAYSIA 🇲🇾 there’s no competition. #georgetown #penang #malaysiatravel #malaysiatiktok #travelcreator ",
+        "play_count": 368000,
+        "like_count": 20900,
+        "comment_count": 333,
+        "share_count": 1404,
+        "created_at": "2026-02-21T08:15:38Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0995,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.0003
+      }
+    ],
+    "excluded_candidates": []
+  },
+  "evidence_bundle_index": {
+    "created_at": "2026-05-08T09:12:07Z",
+    "bundle_count": 5,
+    "bundles": [
+      {
+        "candidate_id": "7618055525665623316",
+        "rank": 1,
+        "prefix": "001_7618055525665623316",
+        "snapshot_path": "data/001_7618055525665623316_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7618055525665623316_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7618055525665623316_source_video.mp4",
+          "bytes": 5736707,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-superkuala-20260317030618-7618055525665623316.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7618055525665623316_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7589593108338330901",
+        "rank": 2,
+        "prefix": "002_7589593108338330901",
+        "snapshot_path": "data/002_7589593108338330901_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7589593108338330901_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7589593108338330901_source_video.mp4",
+          "bytes": 289735,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-refluxrese-20251230101738-7589593108338330901.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/002_7589593108338330901_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7589593108338330901_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7637071570086726932",
+        "rank": 3,
+        "prefix": "003_7637071570086726932",
+        "snapshot_path": "data/003_7637071570086726932_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7637071570086726932_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7637071570086726932_source_video.mp4",
+          "bytes": 1677775,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-muhammadha-20260507085815-7637071570086726932.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/003_7637071570086726932_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content",
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7637071570086726932_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7600382988030872852",
+        "rank": 4,
+        "prefix": "004_7600382988030872852",
+        "snapshot_path": "data/004_7600382988030872852_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7600382988030872852_source_metadata.json"
+        },
+        "source_video": {
+          "state": "failed",
+          "path": null,
+          "reason": "HTTP Error 404: Not Found",
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nickreflux-20260128120748-7600382988030872852.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "HTTP Error 404: Not Found",
+            "missing_evidence": [
+              "visual_observations",
+              "visible_text",
+              "spoken_content",
+              "audio_cues",
+              "hook_evidence",
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7600382988030872852_video_evidence_report.md"
+          }
+        }
+      },
+      {
+        "candidate_id": "7609229170551393558",
+        "rank": 5,
+        "prefix": "005_7609229170551393558",
+        "snapshot_path": "data/005_7609229170551393558_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7609229170551393558_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7609229170551393558_source_video.mp4",
+          "bytes": 4163654,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nomadsprit-20260221081538-7609229170551393558.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7609229170551393558_video_evidence_report.md"
+          }
+        }
+      }
+    ]
+  },
+  "cross_video_pattern_summary": {
+    "created_at": "2026-05-08T09:12:07Z",
+    "source_video_count": 5,
+    "priority_score_dimensions": [
+      "viral_strength",
+      "nattome_relevance",
+      "evidence_confidence",
+      "brand_safety",
+      "ease_of_production",
+      "product_fit"
+    ],
+    "pattern_comparison": {
+      "hooks": [
+        {
+          "pattern": "Clear first-three-second problem hook",
+          "video_count": 4,
+          "candidate_ids": [
+            "7589593108338330901",
+            "7609229170551393558",
+            "7618055525665623316",
+            "7637071570086726932"
+          ]
+        },
+        {
+          "pattern": "Unclear hook requiring manual review",
+          "video_count": 1,
+          "candidate_ids": [
+            "7600382988030872852"
+          ]
+        }
+      ],
+      "formats": [
+        {
+          "pattern": "music_or_reused_sound",
+          "video_count": 2,
+          "candidate_ids": [
+            "7589593108338330901",
+            "7637071570086726932"
+          ]
+        },
+        {
+          "pattern": "voiceover",
+          "video_count": 2,
+          "candidate_ids": [
+            "7609229170551393558",
+            "7618055525665623316"
+          ]
+        },
+        {
+          "pattern": "unknown",
+          "video_count": 1,
+          "candidate_ids": [
+            "7600382988030872852"
+          ]
+        }
+      ],
+      "emotional_triggers": [
+        {
+          "pattern": "Digestive discomfort relief",
+          "video_count": 3,
+          "candidate_ids": [
+            "7589593108338330901",
+            "7600382988030872852",
+            "7618055525665623316"
+          ]
+        },
+        {
+          "pattern": "Digestive-health curiosity",
+          "video_count": 2,
+          "candidate_ids": [
+            "7609229170551393558",
+            "7637071570086726932"
+          ]
+        }
+      ],
+      "audio_patterns": [
+        {
+          "pattern": "Gemini hook evidence: The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7637071570086726932"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video immediately shows tea being poured into a cup, accompanied by text overlaying the screen that states 'Best teas for acid reflux:', directly addressing a common health concern.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7589593108338330901"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts by introducing 'my boyfriend' and immediately states he has 'really bad acid reflux' while showing him drinking coffee, setting up a problem and a potential solution.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7618055525665623316"
+          ]
+        },
+        {
+          "pattern": "Gemini hook evidence: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+          "video_count": 1,
+          "candidate_ids": [
+            "7609229170551393558"
+          ]
+        },
+        {
+          "pattern": "Gemini hook or audio evidence is unavailable; manual review required",
+          "video_count": 1,
+          "candidate_ids": [
+            "7600382988030872852"
+          ]
+        }
+      ],
+      "risky_claims": [
+        {
+          "pattern": "No risky claims flagged from available evidence",
+          "video_count": 4,
+          "candidate_ids": [
+            "7589593108338330901",
+            "7600382988030872852",
+            "7609229170551393558",
+            "7637071570086726932"
+          ]
+        },
+        {
+          "pattern": "cure_claim",
+          "video_count": 1,
+          "candidate_ids": [
+            "7618055525665623316"
+          ]
+        }
+      ],
+      "nattome_opportunities": [
+        {
+          "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+          "video_count": 3,
+          "candidate_ids": [
+            "7589593108338330901",
+            "7600382988030872852",
+            "7618055525665623316"
+          ]
+        },
+        {
+          "pattern": "DH for daily digestive maintenance and routine support.",
+          "video_count": 2,
+          "candidate_ids": [
+            "7609229170551393558",
+            "7637071570086726932"
+          ]
+        }
+      ]
+    },
+    "top_priority_shootable_angles": [
+      {
+        "candidate_id": "7609229170551393558",
+        "source_tiktok_url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 1,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 1
+      },
+      {
+        "candidate_id": "7609229170551393558",
+        "source_tiktok_url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `you wanna know why Malaysia` into a safer prompt about The best food scene in the entire word is in MALAYSIA 🇲🇾 there’s no competition. #georgetown #penang #malaysiatravel #malaysiatiktok #travelcreator.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 1,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 2
+      },
+      {
+        "candidate_id": "7609229170551393558",
+        "source_tiktok_url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: You wanna know why Malaysia is the best country in the world if you are a foodie?",
+        "avatar": "Maintainer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Borrow the audio pacing cue `Voiceover by the man speaking` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "high",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 5,
+            "nattome_relevance": 1,
+            "evidence_confidence": 5,
+            "brand_safety": 5,
+            "ease_of_production": 5,
+            "product_fit": 4
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 3
+      },
+      {
+        "candidate_id": "7618055525665623316",
+        "source_tiktok_url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video starts by introducing 'my boyfriend' and immediately states he has 'really bad acid reflux' while showing him drinking coffee, setting up a problem and a potential solution.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 4,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 4
+      },
+      {
+        "candidate_id": "7618055525665623316",
+        "source_tiktok_url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `BOYFRIEND` into a safer prompt about 🇲🇾 We Stopped His Acid Reflux (Here’s How) 😉 📍 ZettaCare Protec-G @ZettaCare MY Available at Big Pharmacy, Caring Pharmacy, Georgetown Pharmacy & Wellings Pharmacy! 🤩 Buy 5 FREE 1 – Now available at pharmacies selected stores! Don’t miss out! ✨ #gastric #acidreflux #bloating #health #awareness.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 4,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 5
+      },
+      {
+        "candidate_id": "7618055525665623316",
+        "source_tiktok_url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+        "angle_title": "Voiceover Pattern Adaptation",
+        "hook": "Use a calm voiceover opener based on: This is my boyfriend. And he had really bad acid reflux.",
+        "avatar": "The Sufferer",
+        "format": "Voiceover with simple B-roll and product-safe captions.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Borrow the audio pacing cue `Voiceover` while rewriting the advice for a digestive routine.",
+        "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+        "source_evidence": [
+          "audio_cues",
+          "spoken_content"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 4,
+            "nattome_relevance": 5,
+            "evidence_confidence": 3,
+            "brand_safety": 3,
+            "ease_of_production": 5,
+            "product_fit": 5
+          },
+          "total": 25,
+          "max_points": 30
+        },
+        "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 6
+      },
+      {
+        "candidate_id": "7589593108338330901",
+        "source_tiktok_url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows tea being poured into a cup, accompanied by text overlaying the screen that states 'Best teas for acid reflux:', directly addressing a common health concern.",
+        "avatar": "The Sufferer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 2,
+            "nattome_relevance": 3,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 21,
+          "max_points": 30
+        },
+        "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 7
+      },
+      {
+        "candidate_id": "7589593108338330901",
+        "source_tiktok_url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `Best teas for acid reflux:` into a safer prompt about Tea tips for acid reflux🫖🍃 #acidreflux #gerd #tea #malaysia #foryou.",
+        "avatar": "The Sufferer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text",
+          "claim_evidence"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 2,
+            "nattome_relevance": 3,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 5
+          },
+          "total": 21,
+          "max_points": 30
+        },
+        "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 8
+      },
+      {
+        "candidate_id": "7637071570086726932",
+        "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+        "angle_title": "Digestive Comfort Routine Check",
+        "hook": "Reframe the observed hook as a Nattome-safe question: The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+        "avatar": "Maintainer",
+        "format": "Talking-head explainer with simple on-screen text.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "hook_evidence",
+          "visual_observations"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 3,
+            "nattome_relevance": 1,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 19,
+          "max_points": 30
+        },
+        "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 9
+      },
+      {
+        "candidate_id": "7637071570086726932",
+        "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+        "angle_title": "On-Screen Claim Rewrite",
+        "hook": "Turn `Wife Effect` into a safer prompt about auraa #iwc #malaysiacreator.",
+        "avatar": "Maintainer",
+        "format": "Text-led explainer with claim-safe overlays.",
+        "product_fit": "DH for daily digestive maintenance and routine support.",
+        "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+        "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+        "source_evidence": [
+          "visible_text"
+        ],
+        "evidence_quality": "medium",
+        "priority_score": {
+          "dimensions": {
+            "viral_strength": 3,
+            "nattome_relevance": 1,
+            "evidence_confidence": 3,
+            "brand_safety": 5,
+            "ease_of_production": 3,
+            "product_fit": 4
+          },
+          "total": 19,
+          "max_points": 30
+        },
+        "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+        "rank": 10
+      }
+    ],
+    "recommendation": {
+      "what_to_shoot_first": "Digestive Comfort Routine Check",
+      "candidate_id": "7609229170551393558",
+      "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+    }
+  },
+  "videos": [
+    {
+      "candidate_id": "7618055525665623316",
+      "source_metadata": {
+        "rank": 1,
+        "id": "7618055525665623316",
+        "url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-superkuala-20260317030618-7618055525665623316.mp4",
+        "author_handle": "superkualalumpur",
+        "caption": "🇲🇾 We Stopped His Acid Reflux (Here’s How) 😉\n\n📍 ZettaCare Protec-G @ZettaCare MY \nAvailable at Big Pharmacy, Caring Pharmacy, Georgetown Pharmacy & Wellings Pharmacy! 🤩\n\nBuy 5 FREE 1 – Now available at pharmacies selected stores! Don’t miss out! ✨\n\n#gastric #acidreflux #bloating #health #awareness ",
+        "play_count": 33500,
+        "like_count": 428,
+        "comment_count": 10,
+        "share_count": 405,
+        "created_at": "2026-03-17T03:06:18Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.1352,
+        "nattome_relevance_score": 1.0,
+        "selection_score": 1.0035
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7618055525665623316",
+        "rank": 1,
+        "prefix": "001_7618055525665623316",
+        "snapshot_path": "data/001_7618055525665623316_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/001_7618055525665623316_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/001_7618055525665623316_source_video.mp4",
+          "bytes": 5736707,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-superkuala-20260317030618-7618055525665623316.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/001_7618055525665623316_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/001_7618055525665623316_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A woman is taking a selfie with a man. The man is drinking coffee.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 3,
+            "observation": "A man is lying on a bed while a cartoon doctor character performs an ultrasound on his abdomen. An ultrasound screen is visible, showing internal organs.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The ultrasound screen shows an image of internal organs.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 8,
+            "observation": "A cartoon doctor character is checking the man's blood pressure. The man is then shown eating noodles.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 10,
+            "observation": "The man is walking away, and another hand is giving him a white bag. The man appears to be in discomfort.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 13,
+            "observation": "A woman is walking through an aisle in a pharmacy.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 16,
+            "observation": "A woman's hand is pointing at a chart on a counter while talking to a pharmacist (only hands visible).",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 20,
+            "observation": "A pharmacist's hand is pointing at the chart.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 22,
+            "observation": "A pharmacist's hand is holding a box of 'ZettaCare Protec-G'.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 26,
+            "observation": "A man is pouring tablets from a bottle into its cap.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 29,
+            "observation": "A hand is holding the 'ZettaCare Protec-G' box, showing its nutritional information.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 32,
+            "observation": "A hand is pouring tablets from a bottle into its cap.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 34,
+            "observation": "A woman is taking a tablet. Another woman is smiling and taking a tablet.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 38,
+            "observation": "A man is smiling and taking a tablet.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 40,
+            "observation": "A hand is holding a 'ZettaCare Protec-G' box in a pharmacy aisle.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 43,
+            "observation": "The exterior of a 'Caring Pharmacy' is shown. A hand is holding a 'ZettaCare Protec-G' box.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 46,
+            "observation": "A hand is holding a 'ZettaCare Protec-G' bottle and its box.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 49,
+            "observation": "A man is getting his blood pressure checked and smiling.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "BOYFRIEND",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 1,
+            "text": "Coffee Everyday!!",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 2,
+            "text": "BAD ACID REFLUX",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 4,
+            "text": "Not scanning For a Baby ❌",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "The Abdomen Scan Shows it is",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 7,
+            "text": "STRUGGLING TO DIGEST FOOD!!",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 8,
+            "text": "Stomach Pain",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 10,
+            "text": "Bloating",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 11,
+            "text": "Relying on Painkillers",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 12,
+            "text": "Isn't a Long Term Solution",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 14,
+            "text": "Until we meet A Pharmacist",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 17,
+            "text": "We just had a Bad Acid Reflux",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 18,
+            "text": "Is there anything Good for our Guts?",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 20,
+            "text": "Find the ingredient",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "Zinc L Carnosine",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 23,
+            "text": "This have the ingredient (Zinc L Carnosine)",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 24,
+            "text": "I think the Whole Malaysia",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "Only this product Have this Ingredient",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 27,
+            "text": "We like this so much",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 28,
+            "text": "it has Patented Ingredient",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 30,
+            "text": "To Repair and Protect The Gut Lining",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 32,
+            "text": "Please Take Note*",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 33,
+            "text": "it's not an Emergency Pain Relief",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 35,
+            "text": "Daily Supplement",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 37,
+            "text": "Repair and Heal Your Guts",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 38,
+            "text": "Chewable ✅",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "Fruity ✅",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 40,
+            "text": "Super Easy to Take ✅",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 41,
+            "text": "ZettaCare Protec-G",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 41,
+            "text": "BIG Pharmacy",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 42,
+            "text": "CARING Pharmacy",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 42,
+            "text": "Georgetown Pharmacy",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 42,
+            "text": "Wellings Pharmacy",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 43,
+            "text": "(Only at Selected Branch)",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "Buy 5 Free 1 Promotion (For the whole 2026)!",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 47,
+            "text": "Tag your Friends Who needs it",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 49,
+            "text": "My Boyfriend's Acid Reflux Journey",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 50,
+            "text": "No More Acid Reflux",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 3,
+            "text": "This is my boyfriend. And he had really bad acid reflux.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 3,
+            "end_seconds": 7,
+            "text": "This is not scanning for a baby, but the abdomen scan shows he is struggling to digest food!",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 8,
+            "end_seconds": 10,
+            "text": "He got stomach pain and bloating quite often.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 11,
+            "end_seconds": 13,
+            "text": "But relying on painkiller isn't a long-term solution.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 14,
+            "end_seconds": 15,
+            "text": "Until we meet a pharmacist.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 16,
+            "end_seconds": 19,
+            "text": "Hi, we just had really bad acid reflux. Is there anything good for our guts?",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 22,
+            "text": "I think you need to find the ingredient called Zinc L Carnosine.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 22,
+            "end_seconds": 26,
+            "text": "So this is the ingredient Zinc L Carnosine. I think the whole Malaysia only it has this ingredient.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 27,
+            "end_seconds": 31,
+            "text": "We like this so much. It has patented ingredients to repair and protect the gut lining.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 32,
+            "end_seconds": 34,
+            "text": "Please take note that it's not an emergency pain relief.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 35,
+            "end_seconds": 37,
+            "text": "But a daily supplement to repair and heal your guts.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 38,
+            "end_seconds": 40,
+            "text": "It is chewable, fruity and easy to take.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 41,
+            "end_seconds": 43,
+            "text": "This is ZettaCare Protec-G and we found this in Caring Pharmacy.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 45,
+            "end_seconds": 46,
+            "text": "They are having buy 5 free 1 promotion now.",
+            "language": null,
+            "confidence": null
+          },
+          {
+            "start_seconds": 47,
+            "end_seconds": 48,
+            "text": "Tag your friend who needs it.",
+            "language": null,
+            "confidence": null
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Voiceover",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0,
+            "cue": "Background music",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 6,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 16,
+            "cue": "Dialogue",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 22,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 30,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 37,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 45,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 47,
+            "cue": "Sound effect (sparkle/star)",
+            "confidence": null
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts by introducing 'my boyfriend' and immediately states he has 'really bad acid reflux' while showing him drinking coffee, setting up a problem and a potential solution.",
+            "source": null,
+            "confidence": null
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 2,
+            "text": "BAD ACID REFLUX",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 3,
+            "text": "he had really bad acid reflux.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 7,
+            "text": "STRUGGLING TO DIGEST FOOD!!",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 8,
+            "text": "He got stomach pain and bloating quite often.",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 12,
+            "text": "Relying on Painkillers Isn't a Long Term Solution",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 21,
+            "text": "Zinc L Carnosine",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 23,
+            "text": "This have the ingredient (Zinc L Carnosine)",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "Only this product Have this Ingredient",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 28,
+            "text": "it has Patented Ingredient",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 30,
+            "text": "To Repair and Protect The Gut Lining",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 33,
+            "text": "it's not an Emergency Pain Relief",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 35,
+            "text": "Daily Supplement",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 37,
+            "text": "Repair and Heal Your Guts",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 38,
+            "text": "Chewable ✅",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 39,
+            "text": "Fruity ✅",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 40,
+            "text": "Super Easy to Take ✅",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 45,
+            "text": "Buy 5 Free 1 Promotion (For the whole 2026)!",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 50,
+            "text": "No More Acid Reflux",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": false
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts by introducing 'my boyfriend' and immediately states he has 'really bad acid reflux' while showing him drinking coffee, setting up a problem and a potential solution.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 33500,
+        "weighted_engagement_rate": 0.1352,
+        "selection_score": 1.0035,
+        "nattome_relevance_score": 1.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [
+          {
+            "category": "cure_claim",
+            "claim_text": "Heal",
+            "evidence_source": {
+              "artifact": "gemini_claim_evidence",
+              "timestamp_seconds": 37
+            },
+            "guidance": {
+              "action": "avoid",
+              "reason": "Nattome should not reuse cure or disease-treatment promises.",
+              "nattome_safe_language": "Talk about supporting digestive comfort and daily gut routines."
+            }
+          }
+        ],
+        "summary": {
+          "flagged_count": 1,
+          "guidance_actions": [
+            "avoid"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "claim safety review flagged unsafe claims"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "claim_safety_review_flagged_claims"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7618055525665623316",
+          "source_tiktok_url": "https://www.tiktok.com/@superkualalumpur/video/7618055525665623316",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts by introducing 'my boyfriend' and immediately states he has 'really bad acid reflux' while showing him drinking coffee, setting up a problem and a potential solution.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 4,
+              "nattome_relevance": 5,
+              "evidence_confidence": 3,
+              "brand_safety": 3,
+              "ease_of_production": 5,
+              "product_fit": 5
+            },
+            "total": 25,
+            "max_points": 30
+          },
+          "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 4
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7589593108338330901",
+      "source_metadata": {
+        "rank": 2,
+        "id": "7589593108338330901",
+        "url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-refluxrese-20251230101738-7589593108338330901.mp4",
+        "author_handle": "refluxreset",
+        "caption": "Tea tips for acid reflux🫖🍃 #acidreflux #gerd #tea #malaysia #foryou ",
+        "play_count": 10900,
+        "like_count": 207,
+        "comment_count": 3,
+        "share_count": 16,
+        "created_at": "2025-12-30T10:17:38Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.035,
+        "nattome_relevance_score": 0.5,
+        "selection_score": 0.5
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7589593108338330901",
+        "rank": 2,
+        "prefix": "002_7589593108338330901",
+        "snapshot_path": "data/002_7589593108338330901_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/002_7589593108338330901_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/002_7589593108338330901_source_video.mp4",
+          "bytes": 289735,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-refluxrese-20251230101738-7589593108338330901.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/002_7589593108338330901_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/002_7589593108338330901_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/002_7589593108338330901_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A hand pours tea from a metal teapot into a teacup on a saucer with a spoon. The teacup and saucer have a floral pattern. The background is a dark red surface.",
+            "confidence": 0.95
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Best teas for acid reflux:",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "✅ Chamomile tea – calms stomach & reduces inflammation",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "✅ Ginger tea – helps digestion (use mild strength)",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "☕ Tips",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "• Drink warm, not hot",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "• Avoid drinking on an empty stomach",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "• Sip slowly, not large amounts",
+            "confidence": 0.95,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "background music",
+            "confidence": 0.9
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video immediately shows tea being poured into a cup, accompanied by text overlaying the screen that states 'Best teas for acid reflux:', directly addressing a common health concern.",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Best teas for acid reflux:",
+            "source": null,
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "Chamomile tea – calms stomach & reduces inflammation",
+            "source": null,
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "Ginger tea – helps digestion",
+            "source": null,
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0,
+            "text": "Tips: Drink warm, not hot; Avoid drinking on an empty stomach; Sip slowly, not large amounts",
+            "source": null,
+            "confidence": 0.95
+          }
+        ],
+        "missing_evidence": [
+          "spoken_content"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": false
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video immediately shows tea being poured into a cup, accompanied by text overlaying the screen that states 'Best teas for acid reflux:', directly addressing a common health concern.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 10900,
+        "weighted_engagement_rate": 0.035,
+        "selection_score": 0.5,
+        "nattome_relevance_score": 0.5
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7589593108338330901",
+          "source_tiktok_url": "https://www.tiktok.com/@refluxreset/video/7589593108338330901",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video immediately shows tea being poured into a cup, accompanied by text overlaying the screen that states 'Best teas for acid reflux:', directly addressing a common health concern.",
+          "avatar": "The Sufferer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 2,
+              "nattome_relevance": 3,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 5
+            },
+            "total": 21,
+            "max_points": 30
+          },
+          "why": "21/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 7
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 2,
+          "nattome_relevance": 3,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 5
+        },
+        "total": 21,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7637071570086726932",
+      "source_metadata": {
+        "rank": 3,
+        "id": "7637071570086726932",
+        "url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-muhammadha-20260507085815-7637071570086726932.mp4",
+        "author_handle": "muhammadhaziqhaiqal",
+        "caption": "auraa \n#iwc #malaysiacreator ",
+        "play_count": 32900,
+        "like_count": 1722,
+        "comment_count": 15,
+        "share_count": 74,
+        "created_at": "2026-05-07T08:58:15Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0771,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.3152
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7637071570086726932",
+        "rank": 3,
+        "prefix": "003_7637071570086726932",
+        "snapshot_path": "data/003_7637071570086726932_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/003_7637071570086726932_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/003_7637071570086726932_source_video.mp4",
+          "bytes": 1677775,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-muhammadha-20260507085815-7637071570086726932.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "partial",
+            "path": "data/003_7637071570086726932_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": [
+              "spoken_content",
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/003_7637071570086726932_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/003_7637071570086726932_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "partial",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A man is in a kitchen, placing a cutting board on a counter. A woman walks by in the background.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 5,
+            "observation": "The man opens a refrigerator and takes out a container.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 9,
+            "observation": "The man pours water from a jug into a cup and drinks it.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 12,
+            "observation": "The woman walks by in the background again while the man is still in the kitchen.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 17,
+            "observation": "The man is sitting on a wooden bench, playing with a small blue object. There is a small white trash can next to him and a container of colorful candies.",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 25,
+            "observation": "The woman walks into the frame, looking at her phone. The man quickly throws the blue object into the trash can and changes his posture to appear relaxed, looking surprised as she passes.",
+            "confidence": null
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Wife Effect",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 5,
+            "text": "Wife Effect",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 10,
+            "text": "Wife Effect",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 17,
+            "text": "Wife Effect",
+            "confidence": null,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 25,
+            "text": "Wife Effect",
+            "confidence": null,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "background music (calm, instrumental piano)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 0.5,
+            "cue": "sound effect (object being placed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 1.5,
+            "cue": "sound effect (object being placed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 2.5,
+            "cue": "sound effect (object being placed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 5.5,
+            "cue": "sound effect (refrigerator door opening)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 7.5,
+            "cue": "sound effect (refrigerator door closing)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 8.5,
+            "cue": "sound effect (lid being removed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 9.5,
+            "cue": "sound effect (liquid pouring)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 11.5,
+            "cue": "sound effect (drinking)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 12.5,
+            "cue": "sound effect (lid being placed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 13.5,
+            "cue": "sound effect (liquid pouring)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 15.5,
+            "cue": "sound effect (lid being placed)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 20.5,
+            "cue": "sound effect (chewing/eating)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 23.5,
+            "cue": "sound effect (chewing/eating)",
+            "confidence": null
+          },
+          {
+            "timestamp_seconds": 26.5,
+            "cue": "sound effect (object thrown into trash can)",
+            "confidence": null
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+            "source": null,
+            "confidence": null
+          }
+        ],
+        "claim_evidence": [],
+        "missing_evidence": [
+          "spoken_content",
+          "claim_evidence"
+        ]
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": false
+        },
+        "audio_format": "music_or_reused_sound",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 32900,
+        "weighted_engagement_rate": 0.0771,
+        "selection_score": 0.3152,
+        "nattome_relevance_score": 0.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "medium",
+        "reason": "missing Gemini spoken evidence; missing Gemini claim evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_medium",
+          "missing_gemini_spoken_content",
+          "missing_gemini_claim_evidence"
+        ]
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7637071570086726932",
+          "source_tiktok_url": "https://www.tiktok.com/@muhammadhaziqhaiqal/video/7637071570086726932",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "medium",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 3,
+              "nattome_relevance": 1,
+              "evidence_confidence": 3,
+              "brand_safety": 5,
+              "ease_of_production": 3,
+              "product_fit": 4
+            },
+            "total": 19,
+            "max_points": 30
+          },
+          "why": "19/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 9
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 3,
+          "nattome_relevance": 1,
+          "evidence_confidence": 3,
+          "brand_safety": 5,
+          "ease_of_production": 3,
+          "product_fit": 4
+        },
+        "total": 19,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7600382988030872852",
+      "source_metadata": {
+        "rank": 4,
+        "id": "7600382988030872852",
+        "url": "https://www.tiktok.com/@nickreflux/video/7600382988030872852",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nickreflux-20260128120748-7600382988030872852.mp4",
+        "author_handle": "nickreflux",
+        "caption": "#acidreflux #acidrefluxdiet #fypmalaysia #kualalumpur #gerd ",
+        "play_count": 42300,
+        "like_count": 1170,
+        "comment_count": 50,
+        "share_count": 408,
+        "created_at": "2026-01-28T12:07:48Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.13,
+        "nattome_relevance_score": 0.25,
+        "selection_score": 0.25
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7600382988030872852",
+        "rank": 4,
+        "prefix": "004_7600382988030872852",
+        "snapshot_path": "data/004_7600382988030872852_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/004_7600382988030872852_source_metadata.json"
+        },
+        "source_video": {
+          "state": "failed",
+          "path": null,
+          "reason": "HTTP Error 404: Not Found",
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nickreflux-20260128120748-7600382988030872852.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "HTTP Error 404: Not Found",
+            "missing_evidence": [
+              "visual_observations",
+              "visible_text",
+              "spoken_content",
+              "audio_cues",
+              "hook_evidence",
+              "claim_evidence"
+            ]
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/004_7600382988030872852_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/004_7600382988030872852_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": null,
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": false
+        },
+        "audio_format": "unknown",
+        "mood": "manual_review_required",
+        "hook_support": "Gemini hook or audio evidence is unavailable; manual review required",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Audio evidence is limited; adapt only after human review."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": true,
+          "reason": "Gemini audio cues are unavailable"
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 42300,
+        "weighted_engagement_rate": 0.13,
+        "selection_score": 0.25,
+        "nattome_relevance_score": 0.25
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": true,
+          "reason": "HTTP Error 404: Not Found"
+        }
+      },
+      "quality_score": {
+        "level": "low",
+        "reason": "source video unavailable; HTTP Error 404: Not Found; missing Gemini visual evidence"
+      },
+      "manual_review_flag": {
+        "required": true,
+        "reasons": [
+          "evidence_quality_low",
+          "gemini_evidence_unavailable",
+          "missing_gemini_visual_observations",
+          "missing_gemini_visible_text",
+          "missing_gemini_spoken_content",
+          "missing_gemini_audio_cues",
+          "missing_gemini_hook_evidence",
+          "missing_gemini_claim_evidence",
+          "first_three_second_hook_unclear"
+        ]
+      },
+      "shootable_angles": [],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 2,
+          "evidence_confidence": 1,
+          "brand_safety": 5,
+          "ease_of_production": 4,
+          "product_fit": 4
+        },
+        "total": 20,
+        "max_points": 30
+      }
+    },
+    {
+      "candidate_id": "7609229170551393558",
+      "source_metadata": {
+        "rank": 5,
+        "id": "7609229170551393558",
+        "url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+        "video_download_url": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nomadsprit-20260221081538-7609229170551393558.mp4",
+        "author_handle": "nomadspritz",
+        "caption": "The best food scene in the entire word is in MALAYSIA 🇲🇾 there’s no competition. #georgetown #penang #malaysiatravel #malaysiatiktok #travelcreator ",
+        "play_count": 368000,
+        "like_count": 20900,
+        "comment_count": 333,
+        "share_count": 1404,
+        "created_at": "2026-02-21T08:15:38Z",
+        "duration_seconds": null,
+        "sound_title": null,
+        "sound_author": null,
+        "is_reused_sound": false,
+        "audio_format_hint": null,
+        "audio_mood": null,
+        "visible_text_expected": null,
+        "has_visible_text": null,
+        "text_overlay_expected": null,
+        "weighted_engagement_rate": 0.0995,
+        "nattome_relevance_score": 0.0,
+        "selection_score": 0.0003
+      },
+      "evidence_bundle_index": {
+        "candidate_id": "7609229170551393558",
+        "rank": 5,
+        "prefix": "005_7609229170551393558",
+        "snapshot_path": "data/005_7609229170551393558_evidence_snapshot.json",
+        "source_metadata": {
+          "state": "available",
+          "path": "data/005_7609229170551393558_source_metadata.json"
+        },
+        "source_video": {
+          "state": "available",
+          "path": "evidence/005_7609229170551393558_source_video.mp4",
+          "bytes": 4163654,
+          "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nomadsprit-20260221081538-7609229170551393558.mp4"
+        },
+        "artifacts": {
+          "gemini_evidence": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_gemini_evidence.json",
+            "reason": null,
+            "missing_evidence": []
+          },
+          "derived_evidence": {
+            "state": "missing",
+            "path": null,
+            "reason": "Derived evidence has not been captured in this slice"
+          },
+          "baseline_audio_analysis": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_baseline_audio_analysis.json"
+          },
+          "claim_safety_review": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_claim_safety_review.json"
+          },
+          "evidence_quality": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_evidence_quality.json"
+          },
+          "shootable_angles": {
+            "state": "completed",
+            "path": "data/005_7609229170551393558_shootable_angles.json"
+          },
+          "video_evidence_report": {
+            "state": "completed",
+            "path": "reports/005_7609229170551393558_video_evidence_report.md"
+          }
+        }
+      },
+      "gemini_evidence": {
+        "status": "completed",
+        "model": "gemini-2.5-flash",
+        "visual_observations": [
+          {
+            "timestamp_seconds": 0,
+            "observation": "A man with a mustache and short hair, wearing a black tank top, is sitting at a table with food in front of him, looking directly at the camera and talking. There are other people and food stalls in the background.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.01,
+            "observation": "The man is gesturing with his right hand while talking to the camera.",
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 0.04,
+            "observation": "The camera pans down to show a table with multiple dishes of food, including chicken rice, soup, and vegetables. The man's hand points to the food.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.07,
+            "observation": "A wide shot of a bustling food court is shown, with many people seated at tables and various food stalls lining the sides. Numerous flags from different countries are strung across the ceiling.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.1,
+            "observation": "The man is back in the frame, looking at the camera and talking, with the food still on the table in front of him.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.14,
+            "observation": "The camera again shows a close-up of the food on the table, with the man's hand pointing to different dishes.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.2,
+            "observation": "The man is talking to the camera, then the shot transitions to a wide view of the food court.",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0.26,
+            "observation": "The man is eating the chicken rice with chopsticks, looking satisfied.",
+            "confidence": 0.95
+          }
+        ],
+        "visible_text": [
+          {
+            "timestamp_seconds": 0,
+            "text": "you wanna know why Malaysia",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.01,
+            "text": "is the best country in the world",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.02,
+            "text": "if you are a foodie",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.04,
+            "text": "it's because look",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.05,
+            "text": "I just got all of this in this insane",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.07,
+            "text": "wait for location",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.09,
+            "text": "amazing place for only 10 RM",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.1,
+            "text": "wait for location",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.12,
+            "text": "which is €2 like $2.5 for all of this chicken",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.17,
+            "text": "rice with the soup as well",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.2,
+            "text": "and the vegetables in this incredible place",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.23,
+            "text": "New World Park Food City",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.24,
+            "text": "in Georgetown Penang",
+            "confidence": 0.95,
+            "source": "visible_text"
+          },
+          {
+            "timestamp_seconds": 0.28,
+            "text": "incomparable I love you Malaysia",
+            "confidence": 0.95,
+            "source": "visible_text"
+          }
+        ],
+        "spoken_content": [
+          {
+            "start_seconds": 0,
+            "end_seconds": 4,
+            "text": "You wanna know why Malaysia is the best country in the world if you are a foodie?",
+            "language": "English",
+            "confidence": 0.95
+          },
+          {
+            "start_seconds": 4,
+            "end_seconds": 6,
+            "text": "It's because look, I just got all of this in this insane",
+            "language": "English",
+            "confidence": 0.95
+          },
+          {
+            "start_seconds": 9,
+            "end_seconds": 14,
+            "text": "amazing place for only 10 RM, which is like €2, like $2.5 for all of this chicken",
+            "language": "English",
+            "confidence": 0.95
+          },
+          {
+            "start_seconds": 17,
+            "end_seconds": 20,
+            "text": "rice with the soup as well and the vegetables",
+            "language": "English",
+            "confidence": 0.95
+          },
+          {
+            "start_seconds": 20,
+            "end_seconds": 25,
+            "text": "in this incredible place in Georgetown, Penang.",
+            "language": "English",
+            "confidence": 0.95
+          },
+          {
+            "start_seconds": 28,
+            "end_seconds": 31,
+            "text": "Incomparable. I love you, Malaysia.",
+            "language": "English",
+            "confidence": 0.95
+          }
+        ],
+        "audio_cues": [
+          {
+            "timestamp_seconds": 0,
+            "cue": "Voiceover by the man speaking",
+            "confidence": 0.95
+          },
+          {
+            "timestamp_seconds": 0,
+            "cue": "Background chatter and ambient noise of a busy food court",
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 26,
+            "cue": "Sound of eating with chopsticks",
+            "confidence": 0.85
+          }
+        ],
+        "hook_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "evidence": "The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+            "source": null,
+            "confidence": 0.95
+          }
+        ],
+        "claim_evidence": [
+          {
+            "timestamp_seconds": 0,
+            "text": "Malaysia is the best country in the world if you are a foodie",
+            "source": null,
+            "confidence": 0.9
+          },
+          {
+            "timestamp_seconds": 0.09,
+            "text": "I just got all of this in this insane amazing place for only 10 RM which is €2 like $2.5 for all of this chicken rice with the soup as well and the vegetables",
+            "source": null,
+            "confidence": 0.9
+          }
+        ],
+        "missing_evidence": []
+      },
+      "audio_analysis": {
+        "status": "completed",
+        "sound": {
+          "title": null,
+          "author": null,
+          "is_reused_sound": false
+        },
+        "audio_format": "voiceover",
+        "mood": "gemini_described",
+        "hook_support": "Gemini hook evidence: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+        "nattome_recommendation": {
+          "action": "adapt",
+          "reason": "Use the audio style as inspiration while rewriting claims for Nattome-safe language."
+        },
+        "evidence_basis": {
+          "source": "evidence_bundle_snapshot",
+          "gemini_sections": [
+            "audio_cues",
+            "hook_evidence",
+            "spoken_content"
+          ]
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        },
+        "deep_sound_research": {
+          "status": "not_implemented"
+        }
+      },
+      "virality_analysis": {
+        "views": 368000,
+        "weighted_engagement_rate": 0.0995,
+        "selection_score": 0.0003,
+        "nattome_relevance_score": 0.0
+      },
+      "claim_safety_review": {
+        "status": "completed",
+        "source_artifacts": [
+          "gemini_claim_evidence",
+          "gemini_visible_text",
+          "gemini_spoken_content"
+        ],
+        "flagged_claims": [],
+        "summary": {
+          "flagged_count": 0,
+          "guidance_actions": []
+        },
+        "manual_review": {
+          "required": false,
+          "reason": null
+        }
+      },
+      "quality_score": {
+        "level": "high",
+        "reason": "source video and Gemini evidence are complete"
+      },
+      "manual_review_flag": {
+        "required": false,
+        "reasons": []
+      },
+      "shootable_angles": [
+        {
+          "candidate_id": "7609229170551393558",
+          "source_tiktok_url": "https://www.tiktok.com/@nomadspritz/video/7609229170551393558",
+          "angle_title": "Digestive Comfort Routine Check",
+          "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the speaker directly addressing the viewer with a question: 'You wanna know why Malaysia is the best country in the world if you are a foodie?' This immediately engages the audience and sets up the premise of the video.",
+          "avatar": "Maintainer",
+          "format": "Talking-head explainer with simple on-screen text.",
+          "product_fit": "DH for daily digestive maintenance and routine support.",
+          "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+          "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+          "source_evidence": [
+            "hook_evidence",
+            "visual_observations"
+          ],
+          "evidence_quality": "high",
+          "priority_score": {
+            "dimensions": {
+              "viral_strength": 5,
+              "nattome_relevance": 1,
+              "evidence_confidence": 5,
+              "brand_safety": 5,
+              "ease_of_production": 5,
+              "product_fit": 4
+            },
+            "total": 25,
+            "max_points": 30
+          },
+          "why": "25/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+          "rank": 1
+        }
+      ],
+      "nattome_priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 25,
+        "max_points": 30
+      }
+    }
+  ]
+}

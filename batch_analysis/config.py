@@ -23,7 +23,7 @@ RUN_SUBDIRECTORIES = [
 DEFAULT_CONFIG: dict[str, Any] = {
     "selection": {
         "minimum_views": 10000,
-        "maximum_age_days": 30,
+        "maximum_age_days": 150,
         "minimum_weighted_engagement_rate": 0.03,
         "requires_tiktok_link": True,
         "requires_downloadable_video": True,

@@ -1,0 +1,49 @@
+{
+  "candidate_id": "7609229170551393558",
+  "rank": 5,
+  "prefix": "005_7609229170551393558",
+  "snapshot_path": "data/005_7609229170551393558_evidence_snapshot.json",
+  "source_metadata": {
+    "state": "available",
+    "path": "data/005_7609229170551393558_source_metadata.json"
+  },
+  "source_video": {
+    "state": "available",
+    "path": "evidence/005_7609229170551393558_source_video.mp4",
+    "bytes": 4163654,
+    "source": "https://api.apify.com/v2/key-value-stores/bcGythlN9G8qihBSh/records/video-nomadsprit-20260221081538-7609229170551393558.mp4"
+  },
+  "artifacts": {
+    "gemini_evidence": {
+      "state": "completed",
+      "path": "data/005_7609229170551393558_gemini_evidence.json",
+      "reason": null,
+      "missing_evidence": []
+    },
+    "derived_evidence": {
+      "state": "missing",
+      "path": null,
+      "reason": "Derived evidence has not been captured in this slice"
+    },
+    "baseline_audio_analysis": {
+      "state": "completed",
+      "path": "data/005_7609229170551393558_baseline_audio_analysis.json"
+    },
+    "claim_safety_review": {
+      "state": "completed",
+      "path": "data/005_7609229170551393558_claim_safety_review.json"
+    },
+    "evidence_quality": {
+      "state": "completed",
+      "path": "data/005_7609229170551393558_evidence_quality.json"
+    },
+    "shootable_angles": {
+      "state": "completed",
+      "path": "data/005_7609229170551393558_shootable_angles.json"
+    },
+    "video_evidence_report": {
+      "state": "completed",
+      "path": "reports/005_7609229170551393558_video_evidence_report.md"
+    }
+  }
+}

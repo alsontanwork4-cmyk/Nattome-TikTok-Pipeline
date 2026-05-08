@@ -1,0 +1,85 @@
+{
+  "status": "completed",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A young woman with long dark hair, wearing a black off-shoulder top and light-colored pants, stands in a room, holding her stomach with both hands. She looks directly at the camera with a serious expression. The background appears to be a bathroom or hallway with white walls and a shower curtain visible.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "me everytime i'm bloated",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 1.4,
+      "text": "I feel like I would look so sexy pregnant.",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 1.4,
+      "end_seconds": 2.6,
+      "text": "Nani, please do not get pregnant.",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 2.6,
+      "end_seconds": 4,
+      "text": "I wouldn't wear any of those nasty maternity clothes.",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 4,
+      "end_seconds": 5,
+      "text": "I would just be me.",
+      "language": "English",
+      "confidence": 0.9
+    },
+    {
+      "start_seconds": 5,
+      "end_seconds": 5.7,
+      "text": "Plus pregnant.",
+      "language": "English",
+      "confidence": 0.9
+    }
+  ],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "voiceover",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "cue": "background music",
+      "confidence": 0.8
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately displays on-screen text 'me everytime i'm bloated' and shows the woman holding her stomach, visually representing the concept of bloating. The voiceover starts with a humorous and attention-grabbing statement about looking 'so sexy pregnant' in the context of bloating.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "me everytime i'm bloated",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": []
+}

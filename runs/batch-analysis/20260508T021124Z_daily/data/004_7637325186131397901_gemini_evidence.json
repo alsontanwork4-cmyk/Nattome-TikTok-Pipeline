@@ -1,0 +1,61 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A woman in a lime green dress is dancing in a living room while holding a bag of chips.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "The woman continues to dance and move her body while holding the bag of chips.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 10,
+      "observation": "The woman is still dancing, moving her arms and hips, with the bag of chips in her hand.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 14,
+      "observation": "The woman makes a kissing gesture towards the camera while dancing.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Google says dancing helps you digest food quicker",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Music is playing.",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately shows a woman dancing with a bag of chips, accompanied by on-screen text making a health claim about dancing and digestion.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Google says dancing helps you digest food quicker",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": [
+    "spoken_content"
+  ]
+}

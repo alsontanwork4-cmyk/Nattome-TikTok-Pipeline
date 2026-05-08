@@ -224,7 +224,10 @@ class DashboardWebShellTest(unittest.TestCase):
 
             self.assertEqual(response.status, 200)
             self.assertIn("strong scrape", body)
-            self.assertIn("Pipeline outputs are ready for marketer review.", body)
+            self.assertIn("Score Logic", body)
+            self.assertIn("Candidate volume", body)
+            self.assertNotIn("Pipeline Health", body)
+            self.assertNotIn("Pipeline outputs are ready for marketer review.", body)
             self.assertIn("2026-05-07T01:00:00Z", body)
             self.assertIn("default", body)
             self.assertIn("v7", body)
@@ -275,7 +278,10 @@ class DashboardWebShellTest(unittest.TestCase):
 
             self.assertEqual(response.status, 200)
             self.assertIn("needs attention", body)
-            self.assertIn("Pipeline is blocked before marketer-ready outputs can be trusted.", body)
+            self.assertIn("Score Logic", body)
+            self.assertIn("Eligibility yield", body)
+            self.assertNotIn("Pipeline Health", body)
+            self.assertNotIn("Pipeline is blocked before marketer-ready outputs can be trusted.", body)
             self.assertIn("No usable raw candidates", body)
             self.assertIn("Random lifestyle clip", body)
 

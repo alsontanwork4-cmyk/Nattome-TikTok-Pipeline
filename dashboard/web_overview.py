@@ -11,7 +11,6 @@ from .settings import get_active_settings_version
 from .store import DASHBOARD_DB_PATH, connect_dashboard_store
 from .web_components import (
     _format_count,
-    _health_panel_class,
     _json_loads,
     _render_empty_state,
     _render_page_header,
@@ -365,27 +364,20 @@ def _render_run_switch_option(option: dict[str, str], is_selected: bool) -> str:
 
 def _render_hero_strip(snapshot: _Snapshot) -> str:
     score = snapshot.score
-    health_summary = snapshot.health
     run = snapshot.run
     config = snapshot.config
     quality_metric = str(score["score"]) if score else "--"
     quality_band = score["band"] if score else "not scored"
-    health_status = health_summary["status"] if health_summary else "unknown"
-    health_impact = health_summary["impact_summary"] if health_summary else "Pipeline health has not been computed."
     config_version = config.get("version") or "Not recorded"
     next_scheduled_run = config.get("next_scheduled_run") or "Not scheduled"
     return f"""
-      <section class="grid overview-hero" aria-label="Run health snapshot">
+      <section class="grid overview-hero" aria-label="Run snapshot">
         <article class="panel feature">
           <h2>Scrape Quality Score</h2>
           <p class="metric">{html.escape(str(quality_metric))}</p>
           <p class="muted">{html.escape(str(quality_band))}</p>
         </article>
-        <article class="panel feature {_health_panel_class(health_summary)}">
-          <h2>Pipeline Health</h2>
-          <p class="metric">{html.escape(health_status)}</p>
-          <p class="muted">{html.escape(health_impact)}</p>
-        </article>
+        {_render_score_logic_card(score)}
         <article class="panel feature">
           <h2>Latest Run</h2>
           <p class="run-id-metric"><code>{html.escape(str(run["run_id"]))}</code></p>
@@ -394,6 +386,46 @@ def _render_hero_strip(snapshot: _Snapshot) -> str:
         </article>
       </section>
     """
+
+
+def _render_score_logic_card(score: dict[str, Any] | None) -> str:
+    if not score:
+        return """
+        <article class="panel feature">
+          <h2>Score Logic</h2>
+          <p class="muted">Score components will appear once a run is indexed.</p>
+        </article>
+        """
+    components = [
+        ("Candidate volume", score.get("candidate_volume_score"), 25),
+        ("Eligibility yield", score.get("eligibility_yield_score"), 20),
+        ("Nattome relevance", score.get("nattome_relevance_score"), 20),
+        ("Freshness", score.get("freshness_score"), 15),
+        ("Engagement", score.get("engagement_strength_score"), 15),
+        ("Noise control", score.get("duplicate_noise_control_score"), 5),
+    ]
+    items = "".join(
+        f"""
+        <li>
+          <span>{html.escape(label)}</span>
+          <strong>{html.escape(str(_int_or_zero(value)))}/{maximum}</strong>
+        </li>
+        """
+        for label, value, maximum in components
+    )
+    return f"""
+        <article class="panel feature">
+          <h2>Score Logic</h2>
+          <ul class="score-logic-list">{items}</ul>
+        </article>
+    """
+
+
+def _int_or_zero(value: object) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
 
 
 # ---------- Section 1: search inputs ----------
@@ -845,16 +877,15 @@ def _render_empty_overview(workspace: Path, header: str, settings: dict[str, Any
     return f"""
       {header}
       <p class="lede" style="margin-top:-12px;">No indexed runs yet. The dashboard is ready once a Batch Analysis Run is available.</p>
-      <section class="grid overview-hero" aria-label="Run health snapshot">
+      <section class="grid overview-hero" aria-label="Run snapshot">
         <article class="panel feature">
           <h2>Scrape Quality Score</h2>
           <p class="metric muted">--</p>
           <p class="muted">No raw scrape candidates have been indexed.</p>
         </article>
         <article class="panel feature">
-          <h2>Pipeline Health</h2>
-          <p class="metric">Ready</p>
-          <p class="muted">Overview loads without Apify, Gemini, or run artifacts.</p>
+          <h2>Score Logic</h2>
+          <p class="muted">Score components will appear once a run is indexed.</p>
         </article>
         <article class="panel feature">
           <h2>Dashboard Store</h2>

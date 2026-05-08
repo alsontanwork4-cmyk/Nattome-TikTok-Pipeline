@@ -1106,6 +1106,32 @@ _THEME_STYLES = '''
     }
     /* ---- Overview marketer view ---- */
     .overview-hero { margin-bottom: 18px; }
+    .score-logic-list {
+      display: grid;
+      gap: 7px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .score-logic-list li {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      display: flex;
+      font-size: 12.5px;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+    }
+    .score-logic-list li:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .score-logic-list strong {
+      color: var(--ink-2);
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
     .overview-grid-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));

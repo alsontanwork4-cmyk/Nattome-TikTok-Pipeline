@@ -1,0 +1,62 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A young man is holding and eating a sandwich or wrap.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "observation": "He is sitting at a table, possibly in a cafe or restaurant, with another person visible in the background.",
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "observation": "He takes a bite of the sandwich and chews, looking somewhat pensive.",
+      "confidence": 1.0
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "when someone jokes about Gastric issues but they don't know how badly it's ruined my life",
+      "confidence": 1.0,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "Melancholic instrumental music plays.",
+      "confidence": 1.0
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The video immediately displays on-screen text about 'Gastric issues' and how they've 'ruined my life', combined with a visual of a person eating, creating an emotional and relatable hook.",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "claim_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Gastric issues",
+      "source": null,
+      "confidence": 1.0
+    },
+    {
+      "timestamp_seconds": 0,
+      "text": "it's ruined my life",
+      "source": null,
+      "confidence": 1.0
+    }
+  ],
+  "missing_evidence": [
+    "spoken_content"
+  ]
+}

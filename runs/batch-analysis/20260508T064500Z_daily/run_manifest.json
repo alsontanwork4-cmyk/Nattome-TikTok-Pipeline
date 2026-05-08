@@ -1,0 +1,153 @@
+{
+  "run_timestamp": "2026-05-08T06:45:00Z",
+  "mode": "daily",
+  "requested_batch_size": 5,
+  "configuration": {
+    "selection": {
+      "minimum_views": 10000,
+      "maximum_age_days": 30,
+      "minimum_weighted_engagement_rate": 0.03,
+      "requires_tiktok_link": true,
+      "requires_downloadable_video": true
+    },
+    "outputs": {
+      "markdown": "reports",
+      "json": "data",
+      "spreadsheet": "data",
+      "evidence_bundles": "data/evidence_bundle_index.json",
+      "logs": "logs"
+    },
+    "tool_stack": {
+      "primary_adapter": "gemini_2_5_flash",
+      "gemini_model": "gemini-2.5-flash",
+      "gemini_api_key_env": "GEMINI_API_KEY",
+      "discovery_download": "Apify",
+      "evidence_extraction": "Gemini 2.5 Flash"
+    },
+    "telegram": {
+      "enabled": true,
+      "bot_token_env": "TELEGRAM_BOT_TOKEN",
+      "chat_id_env": "TELEGRAM_CHAT_ID"
+    },
+    "cleanup": {
+      "enabled": false,
+      "requires_report_approval": true,
+      "report_approved": false,
+      "remove_source_videos": true,
+      "remove_frames": true
+    }
+  },
+  "folders": [
+    "reports",
+    "data",
+    "evidence",
+    "logs"
+  ],
+  "phases": [
+    {
+      "name": "run_folder",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "folders": [
+          "reports",
+          "data",
+          "evidence",
+          "logs"
+        ]
+      }
+    },
+    {
+      "name": "candidate_selection",
+      "status": "completed",
+      "inputs": {
+        "candidates_path": "data\\daily_runs\\apify_recovery_20260508T142444\\recovered_daily_selection_top5.json",
+        "requested_batch_size": 5
+      },
+      "outputs": {
+        "json": "data/selected_batch.json",
+        "markdown": "reports/selected_batch.md"
+      }
+    },
+    {
+      "name": "evidence_bundles",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "index": "data/evidence_bundle_index.json"
+      }
+    },
+    {
+      "name": "gemini_evidence",
+      "status": "failed",
+      "inputs": {
+        "primary_adapter": "gemini_2_5_flash",
+        "model": "gemini-2.5-flash"
+      },
+      "outputs": {
+        "evidence": "data/*_gemini_evidence.json"
+      },
+      "notes": [
+        "7636964432131853588: The read operation timed out",
+        "7630535088601566485: HTTP Error 404: Not Found",
+        "7635660968009157901: Extra data: line 32 column 4 (char 1043)"
+      ]
+    },
+    {
+      "name": "cross_video_pattern_summary",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "json": "data/cross_video_pattern_summary.json"
+      }
+    },
+    {
+      "name": "structured_outputs",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "json": "data/structured_batch_analysis.json"
+      }
+    },
+    {
+      "name": "telegram_delivery",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "log": "logs/telegram_delivery.json"
+      }
+    },
+    {
+      "name": "evidence_artifact_cleanup",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "log": "logs/evidence_artifact_cleanup.json"
+      }
+    },
+    {
+      "name": "refinement_hooks",
+      "status": "completed",
+      "inputs": {},
+      "outputs": {
+        "json": "data/refinement_hooks.json"
+      }
+    }
+  ],
+  "outputs": {
+    "output_root": "outputs",
+    "final_outputs": [
+      {
+        "label": "Top 5 Creative Production Report",
+        "kind": "markdown",
+        "path": "reports/2026-05-08/20260508T064500Z_daily/top5_creative_production_report_2026-05-08.md"
+      },
+      {
+        "label": "Excel Planning Workbook",
+        "kind": "spreadsheet",
+        "path": "reports/2026-05-08/20260508T064500Z_daily/top5_angle_planning_sheet_2026-05-08.xlsx"
+      }
+    ],
+    "batch_index": "batch_index.md"
+  }
+}

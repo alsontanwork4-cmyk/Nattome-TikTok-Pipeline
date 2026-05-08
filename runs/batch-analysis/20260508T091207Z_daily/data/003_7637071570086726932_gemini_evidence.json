@@ -1,0 +1,159 @@
+{
+  "status": "partial",
+  "model": "gemini-2.5-flash",
+  "visual_observations": [
+    {
+      "timestamp_seconds": 0,
+      "observation": "A man is in a kitchen, placing a cutting board on a counter. A woman walks by in the background.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 5,
+      "observation": "The man opens a refrigerator and takes out a container.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 9,
+      "observation": "The man pours water from a jug into a cup and drinks it.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 12,
+      "observation": "The woman walks by in the background again while the man is still in the kitchen.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 17,
+      "observation": "The man is sitting on a wooden bench, playing with a small blue object. There is a small white trash can next to him and a container of colorful candies.",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 25,
+      "observation": "The woman walks into the frame, looking at her phone. The man quickly throws the blue object into the trash can and changes his posture to appear relaxed, looking surprised as she passes.",
+      "confidence": null
+    }
+  ],
+  "visible_text": [
+    {
+      "timestamp_seconds": 0,
+      "text": "Wife Effect",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 5,
+      "text": "Wife Effect",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 10,
+      "text": "Wife Effect",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 17,
+      "text": "Wife Effect",
+      "confidence": null,
+      "source": "visible_text"
+    },
+    {
+      "timestamp_seconds": 25,
+      "text": "Wife Effect",
+      "confidence": null,
+      "source": "visible_text"
+    }
+  ],
+  "spoken_content": [],
+  "audio_cues": [
+    {
+      "timestamp_seconds": 0,
+      "cue": "background music (calm, instrumental piano)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 0.5,
+      "cue": "sound effect (object being placed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 1.5,
+      "cue": "sound effect (object being placed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 2.5,
+      "cue": "sound effect (object being placed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 5.5,
+      "cue": "sound effect (refrigerator door opening)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 7.5,
+      "cue": "sound effect (refrigerator door closing)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 8.5,
+      "cue": "sound effect (lid being removed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 9.5,
+      "cue": "sound effect (liquid pouring)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 11.5,
+      "cue": "sound effect (drinking)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 12.5,
+      "cue": "sound effect (lid being placed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 13.5,
+      "cue": "sound effect (liquid pouring)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 15.5,
+      "cue": "sound effect (lid being placed)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 20.5,
+      "cue": "sound effect (chewing/eating)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 23.5,
+      "cue": "sound effect (chewing/eating)",
+      "confidence": null
+    },
+    {
+      "timestamp_seconds": 26.5,
+      "cue": "sound effect (object thrown into trash can)",
+      "confidence": null
+    }
+  ],
+  "hook_evidence": [
+    {
+      "timestamp_seconds": 0,
+      "evidence": "The text 'Wife Effect' is displayed prominently, immediately setting the premise for the video's comedic skit about a husband's behavior when his wife is around versus not.",
+      "source": null,
+      "confidence": null
+    }
+  ],
+  "claim_evidence": [],
+  "missing_evidence": [
+    "spoken_content",
+    "claim_evidence"
+  ]
+}

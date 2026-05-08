@@ -1,0 +1,321 @@
+{
+  "created_at": "2026-05-08T06:45:00Z",
+  "source_video_count": 5,
+  "priority_score_dimensions": [
+    "viral_strength",
+    "nattome_relevance",
+    "evidence_confidence",
+    "brand_safety",
+    "ease_of_production",
+    "product_fit"
+  ],
+  "pattern_comparison": {
+    "hooks": [
+      {
+        "pattern": "Unclear hook requiring manual review",
+        "video_count": 3,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7635660968009157901",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "Clear first-three-second problem hook",
+        "video_count": 2,
+        "candidate_ids": [
+          "7632626379581869333",
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "pattern": "unknown",
+        "video_count": 3,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7635660968009157901",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "voiceover",
+        "video_count": 2,
+        "candidate_ids": [
+          "7632626379581869333",
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "emotional_triggers": [
+      {
+        "pattern": "Digestive-health curiosity",
+        "video_count": 3,
+        "candidate_ids": [
+          "7632626379581869333",
+          "7635660968009157901",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "Digestive discomfort relief",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "audio_patterns": [
+      {
+        "pattern": "Gemini hook or audio evidence is unavailable; manual review required",
+        "video_count": 3,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7635660968009157901",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video starts with a woman showing discomfort, holding her stomach, immediately followed by on-screen text 'Petua Hilangkan Perut Kembung (Acid, Gerd, Gastrik)' which directly addresses a common problem and promises a solution.",
+        "video_count": 1,
+        "candidate_ids": [
+          "7632626379581869333"
+        ]
+      },
+      {
+        "pattern": "Gemini hook evidence: The video starts with the title 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating everyday if I was trying to heal my gut.'",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "risky_claims": [
+      {
+        "pattern": "No risky claims flagged from available evidence",
+        "video_count": 4,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7632626379581869333",
+          "7635660968009157901",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "cure_claim",
+        "video_count": 1,
+        "candidate_ids": [
+          "7633461167788166413"
+        ]
+      }
+    ],
+    "nattome_opportunities": [
+      {
+        "pattern": "DH for daily digestive maintenance and routine support.",
+        "video_count": 3,
+        "candidate_ids": [
+          "7632626379581869333",
+          "7633461167788166413",
+          "7636964432131853588"
+        ]
+      },
+      {
+        "pattern": "DR for faster relief moments around reflux, heartburn, or gastric discomfort.",
+        "video_count": 2,
+        "candidate_ids": [
+          "7630535088601566485",
+          "7635660968009157901"
+        ]
+      }
+    ]
+  },
+  "top_priority_shootable_angles": [
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with the title 'FOODS THAT HEALED MY GUT' and the speaker immediately states, 'Here's a list of foods I would start eating everyday if I was trying to heal my gut.'",
+      "avatar": "The Sufferer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 1
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `FOODS THAT HEALED MY GUT` into a safer prompt about food is so poweful when it comes to fixing the gut!! here’s a pretty comprehensive list of foods I started eating consistently to heal my IBS, bloating, and constipation. My hope is this video makes it really easy to see WHY each food can be helpful for different reasons. ** the bone broth I love to drink that tastes like hot chocolate is in my bi0!! #bloatingrelief #ibsrelief #bloatedstomach #bloatingtips #guthealthtips.",
+      "avatar": "The Sufferer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 2
+    },
+    {
+      "candidate_id": "7633461167788166413",
+      "source_tiktok_url": "https://www.tiktok.com/@onehealthygut/video/7633461167788166413",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Here's a list of foods I would start eating everyday if I was trying to heal my gut.",
+      "avatar": "The Sufferer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `Voiceover by the woman speaking.` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Do not reuse flagged claim categories directly: cure_claim.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "medium",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 5,
+          "nattome_relevance": 5,
+          "evidence_confidence": 3,
+          "brand_safety": 3,
+          "ease_of_production": 5,
+          "product_fit": 5
+        },
+        "total": 26,
+        "max_points": 30
+      },
+      "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 3
+    },
+    {
+      "candidate_id": "7632626379581869333",
+      "source_tiktok_url": "https://www.tiktok.com/@official_kakmeklegacyhq/video/7632626379581869333",
+      "angle_title": "Digestive Comfort Routine Check",
+      "hook": "Reframe the observed hook as a Nattome-safe question: The video starts with a woman showing discomfort, holding her stomach, immediately followed by on-screen text 'Petua Hilangkan Perut Kembung (Acid, Gerd, Gastrik)' which directly addresses a common problem and promises a solution.",
+      "avatar": "Maintainer",
+      "format": "Talking-head explainer with simple on-screen text.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Open with the same problem moment, then move into routine support language instead of promises.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "hook_evidence",
+        "visual_observations"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 4
+    },
+    {
+      "candidate_id": "7632626379581869333",
+      "source_tiktok_url": "https://www.tiktok.com/@official_kakmeklegacyhq/video/7632626379581869333",
+      "angle_title": "On-Screen Claim Rewrite",
+      "hook": "Turn `Petua Hilangkan Perut Kembung (Acid, Gerd, Gastrik)` into a safer prompt about hilangkan kembung perut dengan satu bahan, #gga sangat baik !.",
+      "avatar": "Maintainer",
+      "format": "Text-led explainer with claim-safe overlays.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Keep the audience tension, remove unsupported outcomes, and use Nattome product-fit language.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "visible_text",
+        "claim_evidence"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 5
+    },
+    {
+      "candidate_id": "7632626379581869333",
+      "source_tiktok_url": "https://www.tiktok.com/@official_kakmeklegacyhq/video/7632626379581869333",
+      "angle_title": "Voiceover Pattern Adaptation",
+      "hook": "Use a calm voiceover opener based on: Asid serang lepas",
+      "avatar": "Maintainer",
+      "format": "Voiceover with simple B-roll and product-safe captions.",
+      "product_fit": "DH for daily digestive maintenance and routine support.",
+      "recommended_angle": "Borrow the audio pacing cue `Voiceover by a female speaker.` while rewriting the advice for a digestive routine.",
+      "claim_guardrails": "Avoid cure, guaranteed outcome, overnight relief, detox, and unsupported clinical claims.",
+      "source_evidence": [
+        "audio_cues",
+        "spoken_content"
+      ],
+      "evidence_quality": "high",
+      "priority_score": {
+        "dimensions": {
+          "viral_strength": 4,
+          "nattome_relevance": 1,
+          "evidence_confidence": 5,
+          "brand_safety": 5,
+          "ease_of_production": 5,
+          "product_fit": 4
+        },
+        "total": 24,
+        "max_points": 30
+      },
+      "why": "24/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease.",
+      "rank": 6
+    }
+  ],
+  "recommendation": {
+    "what_to_shoot_first": "Digestive Comfort Routine Check",
+    "candidate_id": "7633461167788166413",
+    "why": "26/30 score balances viral signal, Nattome fit, evidence confidence, brand safety, and production ease."
+  }
+}

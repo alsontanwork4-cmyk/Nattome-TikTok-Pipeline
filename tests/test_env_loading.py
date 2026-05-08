@@ -33,6 +33,18 @@ class EnvLoadingTest(unittest.TestCase):
                 self.assertEqual(loaded["GEMINI_API_KEY"], str(dotenv))
                 self.assertNotIn("APIFY_TOKEN", loaded)
 
+    def test_load_dotenv_files_can_override_process_env(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            dotenv = root / ".env"
+            dotenv.write_text("APIFY_TOKEN=from-file\n", encoding="utf-8")
+
+            with patch.dict(os.environ, {"APIFY_TOKEN": "already-exported"}, clear=True):
+                loaded = load_dotenv_files([root], override=True)
+
+                self.assertEqual(os.environ["APIFY_TOKEN"], "from-file")
+                self.assertEqual(loaded["APIFY_TOKEN"], str(dotenv))
+
     def test_load_dotenv_files_can_be_disabled_for_missing_credential_tests(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

@@ -1,0 +1,48 @@
+{
+  "status": "completed",
+  "evidence_quality_score": {
+    "level": "medium",
+    "reason": "missing Gemini claim evidence"
+  },
+  "manual_review_flag": {
+    "required": true,
+    "reasons": [
+      "evidence_quality_medium",
+      "missing_gemini_claim_evidence"
+    ]
+  },
+  "checks": {
+    "source_video": {
+      "status": "available",
+      "passed": true
+    },
+    "gemini_visual_evidence": {
+      "count": 5,
+      "passed": true
+    },
+    "gemini_visible_text": {
+      "count": 5,
+      "visible_text_expected": false,
+      "passed": true
+    },
+    "gemini_spoken_content": {
+      "count": 26,
+      "passed": true
+    },
+    "gemini_audio_cues": {
+      "count": 1,
+      "passed": true
+    },
+    "first_three_second_hook": {
+      "clear": true
+    },
+    "gemini_claim_evidence": {
+      "count": 0,
+      "passed": false
+    },
+    "claim_uncertainty": {
+      "status": "clear",
+      "flagged_count": 0
+    }
+  }
+}
