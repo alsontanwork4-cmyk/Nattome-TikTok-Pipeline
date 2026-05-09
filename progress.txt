@@ -1775,3 +1775,36 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0072` can replace the shell empty state with the latest published run summary and artifact links.
+
+## 2026-05-09 - 0072 Show Latest Daily Evidence Run In Vercel Dashboard
+
+Task completed from `docs/issues/0072-show-latest-daily-evidence-run-in-vercel-dashboard.md`.
+
+Key decisions made:
+- Loaded only cloud-published Daily Evidence Runs in the Vercel dashboard by filtering `publication_status` to `published`.
+- Kept artifact handling behind a typed view model so missing artifact rows render as `Unavailable` instead of failing the page.
+- Derived artifact links from the published Supabase storage path and the configured public Supabase URL.
+- Kept the private dashboard read-only and limited this slice to the latest-run summary plus Daily Output Set links.
+
+Files changed:
+- `docs/issues/done/0072-show-latest-daily-evidence-run-in-vercel-dashboard.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/package.json`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.test.mjs`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+
+Feedback:
+- RED: `npm test` failed because `dailyEvidenceRuns.ts` did not expose the latest-run artifact view contract.
+- GREEN: `npm test` passed with 4 Node tests covering latest published run loading, complete artifact links, missing artifact availability, and no-run state.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `python tests\test_vercel_dashboard_shell.py` passed with 6 tests.
+- `python tests\test_daily_evidence_cloud_publication.py` passed with 3 tests using `PYTHONPATH` set to the workspace root.
+- `python tests\test_cloud_publication.py` passed with 5 tests using `PYTHONPATH` set to the workspace root.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Browser check: local `/login` rendered the Supabase-auth access boundary on `http://127.0.0.1:3001/login`.
+
+Notes for next iteration:
+- Issue `0073` can add run history and direct artifact download flows now that the latest published run surface is in place.

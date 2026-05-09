@@ -1,9 +1,14 @@
-import { createDailyEvidenceRunRepository } from "../lib/dailyEvidenceRuns";
+import {
+  buildDailyEvidenceRunView,
+  createDailyEvidenceRunRepository
+} from "../lib/dailyEvidenceRuns";
 import { requireAuthenticatedUser } from "../lib/auth";
+import { requireSupabaseEnv } from "../lib/env";
 
 export default async function DashboardPage() {
   const { supabase, user } = await requireAuthenticatedUser();
   const latestRun = await createDailyEvidenceRunRepository(supabase).getLatestRun();
+  const runView = buildDailyEvidenceRunView(latestRun, requireSupabaseEnv().url);
 
   return (
     <main className="shell">
@@ -31,35 +36,58 @@ export default async function DashboardPage() {
         <div className="grid">
           <section className="panel" aria-labelledby="latest-run-heading">
             <h2 id="latest-run-heading">Latest Daily Evidence Run</h2>
-            {latestRun ? (
+            {runView.state === "available" ? (
               <>
                 <p className="muted">
-                  Latest published run metadata is available. Detailed artifact links are
-                  added in the next dashboard slice.
+                  Latest published run {runView.runId} is ready for review.
                 </p>
                 <div className="stat-grid">
-                  <div className="stat">
-                    <span>Run status</span>
-                    <strong>{latestRun.status}</strong>
-                  </div>
-                  <div className="stat">
-                    <span>Publication</span>
-                    <strong>{latestRun.publication_status}</strong>
-                  </div>
-                  <div className="stat">
-                    <span>Report date</span>
-                    <strong>{latestRun.report_date}</strong>
-                  </div>
-                  <div className="stat">
-                    <span>Mode</span>
-                    <strong>{latestRun.mode}</strong>
-                  </div>
+                  {[
+                    runView.runStatus,
+                    runView.publicationStatus,
+                    runView.runTimestamp,
+                    runView.reportDate,
+                    runView.mode,
+                    runView.requestedBatchSize
+                  ].map((field) => (
+                    <div className="stat" key={field.label}>
+                      <span>{field.label}</span>
+                      <strong>{field.value}</strong>
+                    </div>
+                  ))}
                 </div>
+                <section className="detail-section" aria-labelledby="summary-heading">
+                  <h3 id="summary-heading">Summary</h3>
+                  <div className="summary-list">
+                    {runView.summaryFields.map((field) => (
+                      <div className="summary-row" key={field.label}>
+                        <span>{field.label}</span>
+                        <strong>{field.value}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+                <section className="detail-section" aria-labelledby="artifacts-heading">
+                  <h3 id="artifacts-heading">Daily Output Set</h3>
+                  <ul className="artifact-list">
+                    {runView.artifacts.map((artifact) => (
+                      <li className="artifact-row" key={artifact.label}>
+                        <span>
+                          <strong>{artifact.label}</strong>
+                          <small>{artifact.status}</small>
+                        </span>
+                        {artifact.available ? (
+                          <a href={artifact.href}>{artifact.filename}</a>
+                        ) : (
+                          <em>Unavailable</em>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               </>
             ) : (
-              <p className="empty">
-                No cloud-published Daily Evidence Run is available yet.
-              </p>
+              <p className="empty">{runView.message}</p>
             )}
           </section>
 

@@ -41,6 +41,8 @@ class VercelDashboardShellTest(unittest.TestCase):
         self.assertIn("export interface DailyEvidenceRunRepository", data_access)
         self.assertIn("getLatestRun", data_access)
         self.assertIn("daily_evidence_runs", data_access)
+        self.assertIn("daily_evidence_artifacts", data_access)
+        self.assertIn('.eq("publication_status", "published")', data_access)
         self.assertIn("run_timestamp", data_access)
         self.assertIn("maybeSingle", data_access)
 
@@ -51,8 +53,30 @@ class VercelDashboardShellTest(unittest.TestCase):
         self.assertIn("Nattome Daily Evidence Dashboard", page)
         self.assertIn("Signed in as", page)
         self.assertIn("Latest Daily Evidence Run", page)
-        self.assertIn("No cloud-published Daily Evidence Run is available yet.", page)
+        self.assertIn("Daily Output Set", page)
+        self.assertIn("runView.message", page)
         self.assertIn("metadata", layout)
+
+    def test_latest_run_view_covers_daily_output_set_states(self):
+        data_access = (APP_ROOT / "src" / "lib" / "dailyEvidenceRuns.ts").read_text(
+            encoding="utf-8"
+        )
+        view_tests = (
+            APP_ROOT / "src" / "lib" / "dailyEvidenceRuns.test.mjs"
+        ).read_text(encoding="utf-8")
+
+        for label in (
+            "Cross-Video Pattern Summary",
+            "Final Markdown",
+            "Structured JSON",
+            "Spreadsheet",
+            "Raw Scrape",
+            "Daily Top-5 Selection",
+        ):
+            self.assertIn(label, data_access)
+        self.assertIn("No cloud-published Daily Evidence Run is available yet.", data_access)
+        self.assertIn("marks missing artifacts unavailable", view_tests)
+        self.assertIn("returns the empty state", view_tests)
 
     def test_vercel_supabase_environment_is_documented(self):
         readme = README.read_text(encoding="utf-8")

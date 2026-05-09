@@ -2,9 +2,11 @@
   "name": "nattome-vercel-dashboard",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "node --test --experimental-strip-types src/lib/*.test.mjs",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },

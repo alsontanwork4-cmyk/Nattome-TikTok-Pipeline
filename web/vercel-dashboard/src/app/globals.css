@@ -100,6 +100,12 @@ h2 {
   letter-spacing: 0;
 }
 
+h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -150,6 +156,7 @@ h2 {
   display: block;
   margin-top: 4px;
   font-size: 18px;
+  overflow-wrap: anywhere;
 }
 
 .empty {
@@ -158,6 +165,58 @@ h2 {
   padding: 18px;
   background: #fbfcfa;
   color: var(--muted);
+}
+
+.detail-section {
+  margin-top: 24px;
+}
+
+.summary-list,
+.artifact-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.summary-row,
+.artifact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.summary-row span,
+.artifact-row small,
+.artifact-row em {
+  color: var(--muted);
+}
+
+.summary-row strong,
+.artifact-row a,
+.artifact-row em {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.artifact-list {
+  list-style: none;
+}
+
+.artifact-row span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.artifact-row a {
+  color: var(--accent-strong);
+  font-weight: 700;
 }
 
 .login-page {
