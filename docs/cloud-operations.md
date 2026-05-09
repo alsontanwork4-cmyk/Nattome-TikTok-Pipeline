@@ -1,10 +1,10 @@
 # Cloud Operations
 
-This guide describes the cloud Daily Evidence Run v1 system for operators. It covers how new runs are produced, where cloud outputs live, what the Vercel dashboard reads, and what remains local or deferred.
+This guide describes the cloud Daily Evidence Run v1 system for operators. It covers how new runs are produced, where cloud outputs live, and what remains local or deferred.
 
 ## Runtime Boundaries
 
-Python remains the worker for Apify discovery, Gemini evidence analysis, and Daily Output Set generation. The cloud workflow does not move scraping or evidence generation into Vercel. It runs the same project Python pipeline that local operators use:
+Python remains the worker for Apify discovery, Gemini evidence analysis, Daily Output Set generation, and the operational dashboard. The cloud workflow runs the same project Python pipeline that local operators use:
 
 - Apify discovery creates a raw scrape and Daily Top-5 Selection handoff.
 - Gemini evidence analysis reads the selected source videos and writes timestamped evidence outputs.
@@ -18,11 +18,11 @@ Supabase is the cloud publication target:
 - Supabase Postgres stores artifact records in `daily_evidence_artifacts`, including artifact type, storage path, filename, and content type.
 - Supabase Storage stores generated artifacts such as final markdown, structured JSON, spreadsheet workbook, raw scrape, Daily Top-5 Selection, and supporting batch-analysis files.
 
-Vercel hosts the public read-only Next.js dashboard in `web/vercel-dashboard/`. The dashboard does not require login, reads run and artifact records through the public anon key under Row Level Security, and links to Supabase Storage artifact downloads. Vercel does not run the Python worker and does not hold service-role credentials.
+The Python dashboard in `dashboard/` is the operational dashboard. Host it on a VPS or other long-running app host when remote access is needed. It requires durable access to the dashboard SQLite database and local pipeline folders such as `data/`, `runs/`, and `outputs/`.
 
 ## Cloud v1 Data Policy
 
-Cloud v1 shows new runs only. It does not import historical local runs into Supabase or the Vercel dashboard. Old local history is preserved locally and remains available through the existing local dashboard and filesystem artifacts.
+Cloud v1 publishes new runs only. It does not import historical local runs into Supabase. Old local history is preserved locally and remains available through the Python dashboard and filesystem artifacts.
 
 Operators should use the local backup process for old data preservation before migration or cleanup work. The current backup policy and receipt location are documented in `docs/cloud-migration-safety-checklist.md`; that checklist points to the timestamped backup archive under `local-backups/` and records that historical local data is backed up but not imported into cloud dashboard v1.
 
@@ -37,7 +37,7 @@ Required GitHub Actions secrets:
 | `APIFY_TOKEN` | Runs Apify TikTok discovery. |
 | `GEMINI_API_KEY` | Runs Gemini evidence analysis. |
 | `SUPABASE_URL` | Publishes run metadata and artifact records to Supabase. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Lets the Python worker publish to Supabase. Never expose this in Vercel. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Lets the Python worker publish to Supabase. Never expose this in client-side code or dashboard pages. |
 
 Optional GitHub Actions secrets:
 
@@ -46,20 +46,13 @@ Optional GitHub Actions secrets:
 | `TELEGRAM_BOT_TOKEN` | Enables optional Telegram delivery. |
 | `TELEGRAM_CHAT_ID` | Selects the optional Telegram target chat. |
 
-Required Vercel environment variables:
-
-| Variable | Purpose |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Lets the Next.js dashboard connect to Supabase read APIs. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Lets the Next.js dashboard read permitted run and artifact records under Row Level Security. |
-
-Do not configure `SUPABASE_SERVICE_ROLE_KEY` in Vercel. The service-role key belongs only in the GitHub Actions worker environment.
+There is no separate web dashboard configuration. The removed Next.js dashboard is no longer part of this repository.
 
 ## Deferred Control-Room Scope
 
 Cloud dashboard v1 is read-only. It intentionally defers manual run triggers, scrape setting edits, curation labels, rollback controls, and full control-room behavior.
 
-Those capabilities remain in the local Python dashboard for now:
+Those capabilities remain in the Python dashboard:
 
 - Manual run triggers stay local.
 - Scrape setting edits stay local.
@@ -67,4 +60,4 @@ Those capabilities remain in the local Python dashboard for now:
 - Rollback controls stay local.
 - Full control-room behavior stays local.
 
-Future cloud control-room work should be planned as a separate slice with explicit write permissions, audit trails, and rollback behavior. Do not add cloud write controls to the Vercel dashboard as incidental UI while working on read-only reporting.
+Future cloud control-room work should be planned as a separate slice with explicit write permissions, audit trails, and rollback behavior.

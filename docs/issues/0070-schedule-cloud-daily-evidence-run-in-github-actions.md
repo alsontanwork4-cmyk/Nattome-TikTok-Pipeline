@@ -7,7 +7,7 @@ Type: HITL
 
 Add a GitHub Actions workflow that runs the Python Daily Evidence Run on a daily schedule and publishes new results to Supabase.
 
-The completed slice should move the recurring worker responsibility out of Vercel and onto GitHub Actions while keeping the run cadence aligned to 09:00 Singapore time.
+The completed slice should put recurring worker responsibility in GitHub Actions while keeping the run cadence aligned to 09:00 Singapore time.
 
 ## Acceptance criteria
 

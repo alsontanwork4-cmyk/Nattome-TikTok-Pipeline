@@ -7,7 +7,7 @@ Type: AFK
 
 Add the first end-to-end publication path from a completed Daily Evidence Run into Supabase using a compact cloud schema and a testable publication interface.
 
-The completed slice should prove that run metadata and artifact references can be written to cloud-facing adapters without requiring the full scheduled worker or Vercel dashboard to exist yet.
+The completed slice should prove that run metadata and artifact references can be written to cloud-facing adapters without requiring the full scheduled worker or hosted dashboard to exist yet.
 
 ## Acceptance criteria
 
