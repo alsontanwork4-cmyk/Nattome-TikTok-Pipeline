@@ -1,6 +1,6 @@
 ---
 name: nattome-tiktok-candidate-discovery
-description: Supporting reference skill for Phase 1 of the Nattome Daily Evidence Run. Use directly only for discovery-only debugging, scraper configuration, or creating a fresh daily top-5 candidate handoff without running Gemini evidence analysis. Normal operation should use `nattome-viral-intelligence-run`.
+description: Supporting reference skill for Phase 1 of the Nattome Daily Evidence Run. Use directly only for discovery-only debugging, scraper configuration, or creating a fresh Daily Top-5 Selection handoff without running Gemini evidence analysis. Normal operation should use `nattome-viral-intelligence-run`.
 user-invocable: false
 ---
 
@@ -10,7 +10,7 @@ This is a supporting phase reference. It owns the scraper command, scraper confi
 
 ## Role
 
-Phase 1 finds evidence-ready TikTok candidates and writes the daily top-5 handoff for Gemini analysis.
+Phase 1 finds evidence-ready TikTok candidates and writes the Daily Top-5 Selection handoff for Gemini analysis.
 
 Discovery may produce candidate previews, but it must not produce production-ready Shootable Angles. Before Gemini evidence exists, all content reads are metadata inferences.
 
@@ -47,7 +47,7 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
 Outputs:
 
 - Full ranked scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
-- Daily evidence handoff: `data/daily_runs/<run_id>/daily_selection_top5.json`
+- Daily Top-5 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top5.json`
 - Optional discovery markdown: `outputs/daily_briefs/daily_brief_<YYYY-MM-DD>.md`
 
 Keep JSON, Markdown, config, and brief files in UTF-8.
@@ -71,7 +71,9 @@ Do not claim exact visible text, spoken content, pacing, scene changes, audio cu
 Before Gemini:
 
 - Say `candidate preview`, `likely hook direction`, and `metadata inference`.
-- Do not say `Shootable Angle`, `Nattome Priority Score`, or `production-ready`.
+- Do not say `Shootable Angle`.
+- Do not say `Nattome Priority Score`.
+- Do not say `production-ready`.
 
 After Gemini evidence exists, use `nattome-evidence-insight-analysis` or the main `nattome-viral-intelligence-run` reporting rules.
 

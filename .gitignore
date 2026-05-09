@@ -18,3 +18,7 @@ env/
 *.log
 data/dashboard/*.sqlite3
 data/dashboard/*.sqlite3-*
+
+/outputs/
+/runs/
+/local-backups/

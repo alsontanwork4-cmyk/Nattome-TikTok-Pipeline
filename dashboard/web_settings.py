@@ -342,6 +342,94 @@ def _percent_value(value: object) -> str:
     return f"{percent:g}"
 
 
+def _render_current_settings(settings: dict[str, object]) -> str:
+    items = [
+        ("Hashtags", _settings_list(settings.get("hashtags"), prefix="#"), _list_count(settings.get("hashtags"))),
+        ("Keywords", _settings_list(settings.get("keywords")), _list_count(settings.get("keywords"))),
+        ("Competitor profiles", _settings_list(settings.get("competitor_profiles"), prefix="@"), _list_count(settings.get("competitor_profiles"))),
+        ("Exclusion terms", _settings_list(settings.get("exclusion_terms")) or "None", _list_count(settings.get("exclusion_terms"))),
+        ("Scrape scope", str(settings.get("scope") or "all"), ""),
+        ("Results per input", str(settings.get("results_per_input") or ""), ""),
+        ("Top N", str(settings.get("top_n") or ""), ""),
+        ("Daily selection size", str(settings.get("daily_selection_size") or ""), ""),
+        ("Minimum views", _format_views(settings.get("minimum_views")), ""),
+        ("Freshness window (days)", str(settings.get("maximum_age_days") or ""), ""),
+        (
+            "Minimum engagement rate",
+            _format_engagement_rate(settings.get("minimum_weighted_engagement_rate")),
+            "",
+        ),
+        (
+            "Require downloadable video",
+            "Yes" if settings.get("requires_downloadable_video") else "No",
+            "",
+        ),
+    ]
+    rows = [
+        f"""
+        <div class="current-setting-row">
+          <dt>{html.escape(label)}{_count_suffix(count)}</dt>
+          <dd>{html.escape(value)}</dd>
+        </div>
+        """
+        for label, value, count in items
+    ]
+    return f"""
+      <section class="panel wide-panel current-settings" aria-label="Current scrape settings">
+        <h2>Your current settings</h2>
+        <p class="muted current-settings-helper">Reference what the next run will use today; edit below to change them.</p>
+        <dl class="current-settings-grid">{"".join(rows)}</dl>
+      </section>
+    """
+
+
+def _list_count(value: object) -> str:
+    if isinstance(value, list):
+        meaningful = [item for item in value if str(item).strip()]
+        return str(len(meaningful))
+    text = str(value or "").strip()
+    return "1" if text else "0"
+
+
+def _count_suffix(count: str) -> str:
+    if not count:
+        return ""
+    return f' <span class="setting-count">({html.escape(count)})</span>'
+
+
+def _format_engagement_rate(value: object) -> str:
+    try:
+        rate = float(value)
+    except (TypeError, ValueError):
+        return ""
+    if rate <= 0:
+        return "0%"
+    return f"{rate * 100:g}% (decimal {rate:g})"
+
+
+def _format_views(value: object) -> str:
+    try:
+        views = int(value)
+    except (TypeError, ValueError):
+        return str(value or "")
+    return f"{views:,}"
+
+
+def _settings_list(value: object, *, prefix: str = "") -> str:
+    if not isinstance(value, list):
+        text = str(value or "").strip()
+        return f"{prefix}{text}" if text and prefix and not text.startswith(prefix) else text
+    tokens = []
+    for item in value:
+        token = str(item).strip()
+        if not token:
+            continue
+        if prefix and not token.startswith(prefix):
+            token = f"{prefix}{token}"
+        tokens.append(token)
+    return ", ".join(tokens)
+
+
 def _render_advanced_history(versions: list[object]) -> str:
     return f"""
       <details class="panel wide-panel advanced-settings">

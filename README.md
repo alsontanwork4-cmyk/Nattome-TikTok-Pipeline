@@ -8,11 +8,11 @@ Discovery creates the data. Evidence analysis turns that data into actionable in
 
 | Use case | Skill | Purpose / artifact | Runtime |
 |---|---|---|---|
-| **Normal daily run** | `nattome-tiktok-run-coordinate` | Runs discovery, creates the daily top-5 handoff, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
+| **Normal daily run** | `nattome-viral-intelligence-run` | Runs discovery, creates the Daily Top-5 Selection handoff, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
 | **Discovery-only debugging** | `nattome-tiktok-candidate-discovery` | Supporting phase reference for scraper config and top-5 candidate handoff creation. | 3-8 min |
 | **Evidence-only debugging** | `nattome-evidence-insight-analysis` | Supporting phase reference for rerunning `--mode daily` on an existing candidate JSON. | 15-30 min |
 
-Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are supporting references, not alternative normal workflows.
+Use `nattome-viral-intelligence-run` for normal operation. The phase skills are supporting references, not alternative normal workflows.
 
 ## Folder Layout
 
@@ -23,13 +23,14 @@ Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are s
 ├── progress.txt                   <- chronological execution log
 ├── .claude/settings.json          <- registers skills/ as a skill directory
 ├── skills/
-│   ├── nattome-tiktok-run-coordinate/        <- primary daily run skill
+│   ├── nattome-viral-intelligence-run/       <- primary daily run skill
 │   ├── nattome-tiktok-candidate-discovery/   <- supporting phase 1 docs/scripts/assets
 │   └── nattome-evidence-insight-analysis/    <- supporting phase 2 docs
 ├── batch_analysis/                <- importable evidence analysis package
 ├── scripts/
 │   └── run_batch_analysis.py      <- thin compatibility CLI
 ├── dashboard/                     <- local marketer-facing control room
+├── web/vercel-dashboard/          <- private Next.js dashboard shell for Vercel
 ├── tests/
 ├── docs/
 │   ├── prd/
@@ -51,6 +52,8 @@ Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are s
 | `GEMINI_API_KEY` | Evidence analysis | Gemini key used for source-video evidence extraction. |
 | `TELEGRAM_BOT_TOKEN` | Optional | Telegram bot token. Skip silently if unset. |
 | `TELEGRAM_CHAT_ID` | Optional | Target chat. Both Telegram variables must be set together. |
+| `SUPABASE_URL` | Optional cloud publication | Required only when `run_batch_analysis.py --publish-cloud` is used. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Optional cloud publication | Required only when `run_batch_analysis.py --publish-cloud` is used. Never print this value. |
 
 The project loads credentials from exported environment variables and from the project root `.env`. Do not print token values in logs or reports.
 
@@ -110,6 +113,8 @@ Use the actual `$runId` created by the scrape command. `daily` mode preserves th
 
 Completed daily runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
 
+Cloud publication is disabled by default. To publish a newly completed Daily Evidence Run to Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then add `--publish-cloud` to the evidence-analysis command. The worker registers the run metadata plus raw scrape, Daily Top-5 Selection, final markdown report, structured JSON, spreadsheet workbook, and batch-analysis artifacts. If publication fails, the local Run Folder remains available and `logs/cloud_publication.json` records the failure instead of marking the cloud run complete.
+
 Useful optional flags:
 
 | Command | Flag | Purpose |
@@ -122,6 +127,7 @@ Useful optional flags:
 | `run_batch_analysis.py` | `--runs-dir <path>` | Change where timestamped Run Folders are created. |
 | `run_batch_analysis.py` | `--outputs-dir <path>` | Change where final dated reports and workbooks are written. |
 | `run_batch_analysis.py` | `--timestamp <ISO8601Z>` | Use a deterministic timestamp for tests or controlled reruns. |
+| `run_batch_analysis.py` | `--publish-cloud` | Publish the completed run and artifact records to Supabase after local output generation succeeds. |
 
 ## Local Dashboard
 
@@ -158,21 +164,53 @@ Rebuild the dashboard's artifact-derived SQLite index from existing repo files:
 C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"
 ```
 
+## Vercel Dashboard
+
+The private Vercel Dashboard lives in `web/vercel-dashboard/` as a separate Next.js TypeScript app. It does not replace the Python dashboard or change pipeline behavior.
+
+Required Vercel-side Supabase configuration:
+
+| Variable | Required for | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Auth and read access | Use the project URL from Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Auth and read access | Use the anon key, with Supabase Row Level Security controlling access. |
+
+Run locally from the app directory:
+
+```powershell
+cd web/vercel-dashboard
+npm install
+npm run dev
+```
+
+The app uses Supabase Auth to protect dashboard routes. Anonymous users are redirected to `/login`; authenticated users can open the minimal read-only shell and the dashboard data-access layer can request the latest cloud-published Daily Evidence Run.
+
 ## Running On a Schedule
 
-Use one scheduled prompt for the normal pipeline. The prompt wording should trigger `nattome-tiktok-run-coordinate` so discovery and evidence run together.
+Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-5 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
 
-| Cadence | Prompt | Matches skill |
+For the full Cloud Operations guide, including Supabase storage boundaries, Vercel dashboard behavior, the new-runs-only cloud v1 policy, local backup expectations, and deferred control-room scope, see `docs/cloud-operations.md`.
+
+Required GitHub Actions secrets:
+
+| Secret | Required for | Notes |
 |---|---|---|
-| Daily 09:00 local | "Run the end-to-end Nattome TikTok viral intelligence pipeline for today." | `nattome-tiktok-run-coordinate` |
+| `APIFY_TOKEN` | Discovery | Required for scheduled and manual workflow runs. |
+| `GEMINI_API_KEY` | Evidence analysis | Required for source-video evidence extraction. |
+| `SUPABASE_URL` | Cloud publication | Required for `--publish-cloud`. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Cloud publication | Required for `--publish-cloud`; never print this value. |
+| `TELEGRAM_BOT_TOKEN` | Optional delivery | Used only when Telegram delivery is configured. |
+| `TELEGRAM_CHAT_ID` | Optional delivery | Used only when Telegram delivery is configured. |
 
-Manage schedules via the automation tool available in your runner.
+The workflow checks required secret names before running and does not print secret values. It does not commit generated artifacts back to the repository; raw scrapes, Run Folders, reports, workbooks, and logs live only in the workflow runner and in Supabase publication records.
+
+Manual verification for this HITL slice: run **Daily Evidence Run Cloud Publisher** from GitHub Actions after configuring the required secrets, then confirm the summary shows a Run Folder, `final_outputs`, and cloud publication status `published`.
 
 ## Key Reading Order For New Contributors
 
 1. `CONTEXT.md` - what every domain term means.
 2. `docs/prd/gemini-two-layer-evidence-pipeline-architecture-prd.md` - current Gemini/two-layer architecture.
-3. `skills/nattome-tiktok-run-coordinate/SKILL.md` - primary daily automation workflow.
+3. `skills/nattome-viral-intelligence-run/SKILL.md` - primary daily automation workflow.
 4. `skills/nattome-tiktok-candidate-discovery/SKILL.md` - supporting phase 1 workflow.
 5. `skills/nattome-evidence-insight-analysis/SKILL.md` - supporting phase 2 workflow.
 6. `skills/nattome-tiktok-candidate-discovery/references/nattome_brand.md` - voice and claim guardrails.

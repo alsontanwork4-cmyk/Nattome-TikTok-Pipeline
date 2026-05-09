@@ -6,7 +6,7 @@ user-invocable: false
 
 # Nattome Evidence Insight Analysis
 
-This is a supporting phase reference. It analyzes an existing daily top-5 candidate handoff and produces evidence-backed Nattome outputs. Normal users should trigger `nattome-viral-intelligence-run` instead.
+This is a supporting phase reference. It analyzes an existing Daily Top-5 Selection handoff and produces evidence-backed Nattome outputs. Normal users should trigger `nattome-viral-intelligence-run` instead.
 
 ## Role
 
@@ -29,7 +29,7 @@ Phase 2 turns downloaded TikTok candidates into evidence-first strategic researc
 
 Required:
 
-- Existing candidates JSON, normally `data/daily_selections/nattome_daily_<YYYYMMDD>_top5.json`.
+- Existing Daily Top-5 Selection JSON, normally `data/daily_runs/<run_id>/daily_selection_top5.json`.
 - `GEMINI_API_KEY` in the environment or project root `.env`.
 - Downloadable video sources in candidate rows. Missing `video_download_url` means the candidate is not evidence-ready.
 
@@ -47,7 +47,7 @@ From the project root:
 ```powershell
 python scripts/run_batch_analysis.py `
   --mode daily `
-  --candidates data/daily_selections/nattome_daily_<YYYYMMDD>_top5.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top5.json
 ```
 
 Daily mode preserves the discovery handoff order and analyzes only the daily-selected videos that pass the Minimum Eligibility Filter.

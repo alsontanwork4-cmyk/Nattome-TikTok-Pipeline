@@ -7,6 +7,13 @@ from typing import Any
 
 from .candidates import load_candidates, select_candidates
 from .cleanup import cleanup_evidence_artifacts
+from .cloud_publication import (
+    CloudPublicationConfigurationError,
+    CloudPublicationError,
+    publish_completed_run_outputs,
+    supabase_publication_adapter_from_env,
+    write_cloud_publication_log,
+)
 from .config import (
     MODE_DEFAULT_BATCH_SIZE,
     RUN_SUBDIRECTORIES,
@@ -342,4 +349,31 @@ def create_run(args: argparse.Namespace) -> Path:
     if selected_batch is not None:
         write_selected_batch(run_folder, selected_batch)
     write_batch_index_from_manifest(run_folder, manifest)
+    if getattr(args, "cloud_publication_enabled", False):
+        if not has_structured_outputs:
+            raise CloudPublicationError(
+                "cloud publication requires completed Daily Output Set files",
+                run_folder=run_folder,
+            )
+        cloud_adapter = getattr(args, "cloud_publication_adapter", None)
+        if cloud_adapter is None:
+            try:
+                cloud_adapter = supabase_publication_adapter_from_env()
+            except CloudPublicationConfigurationError as exc:
+                write_cloud_publication_log(
+                    run_folder,
+                    status="failed",
+                    artifact_count=0,
+                    errors=[str(exc)],
+                )
+                raise CloudPublicationError(str(exc), run_folder=run_folder) from exc
+        publish_completed_run_outputs(
+            run_folder=run_folder,
+            metadata=metadata,
+            manifest=manifest,
+            summary=cross_video_summary["summary"] if cross_video_summary else {},
+            output_root=output_root_for_args(args),
+            candidates_path=args.candidates,
+            adapter=cloud_adapter,
+        )
     return run_folder

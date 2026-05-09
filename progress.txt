@@ -1608,3 +1608,314 @@ Feedback:
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - Issue `0060` completes the dashboard architecture deepening verification pass. Continue to the next AFK issue only if requested.
+
+## 2026-05-09 - 0067 Protect Local Evidence Data Before Cloud Migration
+
+Task completed from `docs/issues/0067-protect-local-evidence-data-before-cloud-migration.md`.
+
+Key decisions made:
+- Added a public local backup module and CLI for creating a timestamped archive of `data/`, `outputs/`, `runs/`, and `.env`.
+- Wrote a local Markdown backup receipt next to the archive so the protected inputs, archive path, creation time, and cloud-dashboard v1 import policy are recorded without printing secret values.
+- Kept backup artifacts local-only by ignoring `/local-backups/` and tightened generated artifact ignores for `/outputs/` and `/runs/`.
+- Restored full-suite verification before moving on by reintroducing the dashboard current-settings renderer expected by tests and isolating batch subprocess tests from local `.env` and repo-level outputs.
+
+Files changed:
+- `.gitignore`
+- `batch_analysis/local_backup.py`
+- `scripts/create_local_backup.py`
+- `tests/test_local_backup.py`
+- `tests/test_batch_analysis_run.py`
+- `dashboard/web_settings.py`
+- `docs/cloud-migration-safety-checklist.md`
+- `docs/issues/done/0067-protect-local-evidence-data-before-cloud-migration.md`
+- `progress.txt`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p 'test_local_backup.py'` failed because `batch_analysis.local_backup` did not exist.
+- GREEN: `python -m unittest discover -s tests -p 'test_local_backup.py'` passed with 3 tests.
+- Archive verification opened `local-backups/nattome-local-evidence-backup-20260509T021437Z.zip` and confirmed `data/`, `outputs/`, `runs/`, and `.env` are present.
+- `git check-ignore -v .env data/dashboard/dashboard.sqlite3 outputs/AUTOMATION_RUN_SUMMARY_20260509.txt runs/automation-logs/DAILY_RUN_REPORT_20260509.md local-backups/nattome-local-evidence-backup-20260509T021437Z.zip` confirmed secrets, SQLite, generated artifacts, and backups are ignored.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis/local_backup.py scripts/create_local_backup.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_batch_analysis_run` passed with 7 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_web_settings` passed with 2 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 123 tests.
+
+Blockers or notes for the next iteration:
+- The Ralph loop normally works on AFK issues only; issue 0067 was completed because it was explicitly requested.
+- Unrelated untracked issue files `docs/issues/0068` through `docs/issues/0074` were left untouched until the next issue begins.
+
+## 2026-05-09 - 0068 Add Supabase Cloud Run Publication Tracer Bullet
+
+Task completed from `docs/issues/0068-add-supabase-cloud-run-publication-tracer-bullet.md`.
+
+Key decisions made:
+- Added compact cloud publication models for Daily Evidence Run metadata and artifact references without introducing a Supabase runtime dependency.
+- Used the Supabase Python client boundary shape, `client.table(...).upsert(...).execute()`, behind `SupabasePublicationAdapter` so tests can use isolated fake clients.
+- Added a high-level `publish_run_with_artifacts` method that marks a run as `published` only after all artifact upserts succeed and marks it `artifact_failed` when any artifact publication fails.
+- Added explicit builders for new-run publication inputs instead of scanning or importing historical local runs.
+
+Files changed:
+- `batch_analysis/cloud_publication.py`
+- `tests/test_cloud_publication.py`
+- `progress.txt`
+- `docs/issues/done/0068-add-supabase-cloud-run-publication-tracer-bullet.md`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_cloud_publication.py'` failed because `batch_analysis.cloud_publication` did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_cloud_publication.py'` passed with 4 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis/cloud_publication.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 127 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0069` can now wire the Python worker to this publication interface.
+
+## 2026-05-09 - 0069 Publish Daily Evidence Run Outputs From Python Worker
+
+Task completed from `docs/issues/0069-publish-daily-evidence-run-outputs-from-python-worker.md`.
+
+Key decisions made:
+- Kept cloud publication disabled by default and exposed it through `run_batch_analysis.py --publish-cloud`.
+- Published only after local Daily Output Set generation, batch index writing, cleanup, and Telegram log generation have completed.
+- Registered artifacts using the existing cloud publication interface, including raw scrape, Daily Top-5 Selection, final markdown report, planning workbook, structured JSON, and batch-analysis artifacts.
+- Added a standard-library Supabase REST client boundary using `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, with missing-variable checks that report variable names but never secret values.
+- Logged publication status to `logs/cloud_publication.json` so failed cloud publication does not pretend the cloud run is complete while preserving the local Run Folder.
+
+Files changed:
+- `README.md`
+- `batch_analysis/cloud_publication.py`
+- `batch_analysis/run.py`
+- `scripts/run_batch_analysis.py`
+- `tests/test_cloud_publication.py`
+- `tests/test_daily_evidence_cloud_publication.py`
+- `docs/issues/done/0069-publish-daily-evidence-run-outputs-from-python-worker.md`
+- `progress.txt`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_cloud_publication.DailyEvidenceCloudPublicationTest.test_enabled_daily_run_publishes_completed_run_and_required_artifacts` failed because no cloud publication step was invoked.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_cloud_publication` passed with 3 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cloud_publication` passed with 5 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 131 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis\cloud_publication.py batch_analysis\run.py scripts\run_batch_analysis.py` passed.
+
+Notes for next iteration:
+- Issue `0070` can schedule the cloud-publishing worker after this command path is available.
+- Unrelated untracked issue files `docs/issues/0070` through `docs/issues/0074` remain untouched.
+
+## 2026-05-09 - 0070 Schedule Cloud Daily Evidence Run In GitHub Actions
+
+Task partially completed from `docs/issues/0070-schedule-cloud-daily-evidence-run-in-github-actions.md`.
+
+Key decisions made:
+- Added a GitHub Actions workflow with both `workflow_dispatch` and a `0 1 * * *` cron schedule, matching 09:00 Asia/Singapore.
+- Kept generated raw scrapes, Run Folders, reports, workbooks, and logs out of git by using `contents: read` permissions and no git write steps.
+- Checked required GitHub secrets by name before running discovery or publication, without printing secret values.
+- Used the existing discovery script and `scripts/run_batch_analysis.py --mode daily --publish-cloud` path so the workflow follows the same Daily Evidence Run contract as local operation.
+- Wrote workflow summary output for the Run Folder, `final_outputs`, and `logs/cloud_publication.json` status.
+
+Files changed:
+- `.github/workflows/daily-evidence-run.yml`
+- `README.md`
+- `docs/issues/0070-schedule-cloud-daily-evidence-run-in-github-actions.md`
+- `tests/test_github_actions_daily_evidence_workflow.py`
+- `progress.txt`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_github_actions_daily_evidence_workflow` failed because the workflow and README schedule docs did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_github_actions_daily_evidence_workflow` passed with 5 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 136 tests.
+
+Blocker:
+- This issue is HITL. The repository-side workflow is implemented, but the acceptance item requiring a manual GitHub Actions run that publishes at least one test Daily Evidence Run to Supabase cannot be completed from the local workspace without repository secrets and a live Actions run.
+
+Next concrete step:
+- Configure `APIFY_TOKEN`, `GEMINI_API_KEY`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY` in GitHub repository secrets, optionally configure Telegram secrets, run **Daily Evidence Run Cloud Publisher** manually, and confirm the summary reports cloud publication status `published`.
+
+## 2026-05-09 - 0071 Create Private Next.js Vercel Dashboard Shell
+
+Task completed from `docs/issues/0071-create-private-nextjs-vercel-dashboard-shell.md`.
+
+Key decisions made:
+- Added the cloud dashboard as a separate `web/vercel-dashboard/` Next.js TypeScript app so the existing Python dashboard and pipeline code remain untouched.
+- Used Supabase SSR middleware plus a server-side `requireAuthenticatedUser` helper to redirect anonymous dashboard requests to `/login`.
+- Kept the first page read-only and minimal, with an authenticated shell, empty latest-run state, and no artifact-detail UI until issue `0072`.
+- Added a small `DailyEvidenceRunRepository` interface with `getLatestRun()` backed by the `daily_evidence_runs` Supabase table.
+- Documented Vercel-side `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` configuration, relying on Supabase Auth and Row Level Security rather than a service-role key in the web app.
+
+Files changed:
+- `README.md`
+- `docs/issues/done/0071-create-private-nextjs-vercel-dashboard-shell.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/.env.example`
+- `web/vercel-dashboard/.gitignore`
+- `web/vercel-dashboard/next-env.d.ts`
+- `web/vercel-dashboard/next.config.mjs`
+- `web/vercel-dashboard/package-lock.json`
+- `web/vercel-dashboard/package.json`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/layout.tsx`
+- `web/vercel-dashboard/src/app/login/page.tsx`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/lib/auth.ts`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+- `web/vercel-dashboard/src/lib/env.ts`
+- `web/vercel-dashboard/src/lib/supabaseServer.ts`
+- `web/vercel-dashboard/src/middleware.ts`
+- `web/vercel-dashboard/tsconfig.json`
+- `web/vercel-dashboard/vercel.json`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_vercel_dashboard_shell` failed because the Vercel dashboard app did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_vercel_dashboard_shell` passed with 5 tests.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Local runtime check: anonymous `GET /` returned `307` to `/login?redirectedFrom=%2F`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 141 tests.
+- `npm audit --audit-level=high` passed; npm reports moderate Next/PostCSS advisories where the suggested forced fix is breaking.
+
+Notes for next iteration:
+- Issue `0072` can replace the shell empty state with the latest published run summary and artifact links.
+
+## 2026-05-09 - 0072 Show Latest Daily Evidence Run In Vercel Dashboard
+
+Task completed from `docs/issues/0072-show-latest-daily-evidence-run-in-vercel-dashboard.md`.
+
+Key decisions made:
+- Loaded only cloud-published Daily Evidence Runs in the Vercel dashboard by filtering `publication_status` to `published`.
+- Kept artifact handling behind a typed view model so missing artifact rows render as `Unavailable` instead of failing the page.
+- Derived artifact links from the published Supabase storage path and the configured public Supabase URL.
+- Kept the private dashboard read-only and limited this slice to the latest-run summary plus Daily Output Set links.
+
+Files changed:
+- `docs/issues/done/0072-show-latest-daily-evidence-run-in-vercel-dashboard.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/package.json`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.test.mjs`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+
+Feedback:
+- RED: `npm test` failed because `dailyEvidenceRuns.ts` did not expose the latest-run artifact view contract.
+- GREEN: `npm test` passed with 4 Node tests covering latest published run loading, complete artifact links, missing artifact availability, and no-run state.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `python tests\test_vercel_dashboard_shell.py` passed with 6 tests.
+- `python tests\test_daily_evidence_cloud_publication.py` passed with 3 tests using `PYTHONPATH` set to the workspace root.
+- `python tests\test_cloud_publication.py` passed with 5 tests using `PYTHONPATH` set to the workspace root.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Browser check: local `/login` rendered the Supabase-auth access boundary on `http://127.0.0.1:3001/login`.
+
+Notes for next iteration:
+- Issue `0073` can add run history and direct artifact download flows now that the latest published run surface is in place.
+
+## 2026-05-09 - 0073 Add Run History And Artifact Downloads
+
+Task completed from `docs/issues/0073-add-run-history-and-artifact-downloads.md`.
+
+Key decisions made:
+- Added read-only run history to the private Vercel dashboard using the existing Daily Evidence Run repository boundary.
+- Kept history broad enough to show successful, incomplete, and failed publication states instead of filtering only to `published`.
+- Added `/runs/[runId]` as an authenticated detail route that reuses the Daily Evidence Run view model for status, timestamps, summary fields, and artifact availability.
+- Changed artifact links to Supabase public storage download URLs with a `download` query parameter, without introducing service-role credentials into the web app.
+
+Files changed:
+- `docs/issues/done/0073-add-run-history-and-artifact-downloads.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/app/runs/[runId]/page.tsx`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.test.mjs`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+
+Feedback:
+- RED: `npm test` failed because the repository did not expose `listRuns` or `getRunById`, no history view builder existed, and artifact URLs were not download URLs.
+- GREEN: `npm test` passed with 8 Node tests covering latest run, run history, run detail, download URL generation, and missing artifacts.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `.venv\Scripts\python.exe tests\test_vercel_dashboard_shell.py` passed with 7 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 143 tests.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Browser check attempted against local Next routes, but the sandboxed local server process exited before the in-app browser could connect; no server processes remained running afterward.
+
+Notes for next iteration:
+- Issue `0074` can document cloud operations and the deferred control-room scope after the run history and detail surfaces are in place.
+
+## 2026-05-09 - 0074 Document Cloud Operations And Deferred Control Room Scope
+
+Task completed from `docs/issues/0074-document-cloud-operations-and-deferred-control-room-scope.md`.
+
+Key decisions made:
+- Added a dedicated cloud operations guide instead of spreading the v1 operating model across README fragments.
+- Documented the runtime boundaries: Python remains the worker, GitHub Actions schedules it, Supabase stores run metadata and artifacts, and Vercel hosts the private read-only dashboard.
+- Made the cloud v1 data policy explicit: new cloud-published runs only; historical local runs are backed up but not imported.
+- Listed GitHub Actions and Vercel configuration names while repeating that secret values must not be written to docs, logs, summaries, comments, or dashboard pages.
+- Explicitly deferred manual run triggers, scrape setting edits, curation labels, rollback controls, and full control-room behavior from cloud dashboard v1.
+
+Files changed:
+- `README.md`
+- `docs/cloud-operations.md`
+- `docs/issues/done/0074-document-cloud-operations-and-deferred-control-room-scope.md`
+- `progress.txt`
+- `tests/test_cloud_operations_documentation.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_cloud_operations_documentation.py` failed because `docs/cloud-operations.md` did not exist and README did not link it.
+- GREEN: `.venv\Scripts\python.exe tests\test_cloud_operations_documentation.py` passed with 4 tests.
+- `.venv\Scripts\python.exe tests\test_vercel_dashboard_shell.py` passed with 7 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 147 tests.
+
+Notes for next iteration:
+- No remaining AFK issue file is queued under `docs/issues/`.
+
+## 2026-05-09 - 0062 Make Daily Evidence Run The Primary Skill
+
+Task completed from `docs/issues/0062-make-daily-evidence-run-the-primary-skill.md`.
+
+Key decisions made:
+- Treated `nattome-viral-intelligence-run` as the canonical repo-local primary Daily Evidence Run skill because the phase skills already pointed normal users to that name.
+- Renamed the repo-local primary skill folder from `skills/nattome-tiktok-run-coordinate/` to `skills/nattome-viral-intelligence-run/`.
+- Kept the primary skill content focused on the end-to-end daily path: credential checks, discovery command, `--mode daily` Gemini evidence analysis, primary output paths, reporting checklist, and honesty rules.
+- Updated README references so high-level docs no longer describe the old skill name as the normal entry point.
+
+Files changed:
+- `README.md`
+- `docs/issues/done/0062-make-daily-evidence-run-the-primary-skill.md`
+- `progress.txt`
+- `skills/nattome-viral-intelligence-run/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` failed because `skills/nattome-viral-intelligence-run/SKILL.md` did not exist.
+- GREEN: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` passed with 2 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 149 tests.
+- `Get-Content -Raw skills\nattome-tiktok-candidate-discovery\assets\config.example.json | ConvertFrom-Json` passed.
+
+Notes for next iteration:
+- Issue `0063` can now complete the phase-skill supporting-reference checks against the canonical primary skill name.
+
+## 2026-05-09 - 0063 Reframe Phase Skills As Supporting References
+
+Task completed from `docs/issues/0063-reframe-phase-skills-as-supporting-references.md`.
+
+Key decisions made:
+- Kept `nattome-tiktok-candidate-discovery` and `nattome-evidence-insight-analysis` as support-only repo-local skills with `user-invocable: false`.
+- Made both phase skills point normal users back to `nattome-viral-intelligence-run`.
+- Tightened discovery wording around Daily Top-5 Selection and pre-Gemini candidate preview limits.
+- Updated the evidence-only rerun command to use the current `data/daily_runs/<run_id>/daily_selection_top5.json` handoff path.
+
+Files changed:
+- `docs/issues/done/0063-reframe-phase-skills-as-supporting-references.md`
+- `progress.txt`
+- `skills/nattome-tiktok-candidate-discovery/SKILL.md`
+- `skills/nattome-evidence-insight-analysis/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` failed because the phase skills did not consistently use Daily Top-5 Selection wording and the evidence rerun path still referenced `data/daily_selections`.
+- GREEN: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` passed with 5 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 152 tests.
+- `Get-Content -Raw skills\nattome-tiktok-candidate-discovery\assets\config.example.json | ConvertFrom-Json` passed.
+
+Notes for next iteration:
+- Issue `0064` can align README and glossary language with the now-canonical Daily Top-5 operation.

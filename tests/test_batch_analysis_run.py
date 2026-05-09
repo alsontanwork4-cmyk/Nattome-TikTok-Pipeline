@@ -206,7 +206,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                                 "like_count": 5000,
                                 "comment_count": 200,
                                 "share_count": 200,
-                                "created_at": "2026-03-01T00:00:00Z",
+                                "created_at": "2025-11-01T00:00:00Z",
                             },
                             {
                                 "id": "weak-engagement",
@@ -285,7 +285,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             excluded = {item["id"]: item["reason"] for item in selected["excluded_candidates"]}
             self.assertIn("below minimum views", excluded["low-views"])
-            self.assertIn("older than 30 days", excluded["too-old"])
+            self.assertIn("older than", excluded["too-old"])
             self.assertIn("below minimum weighted engagement rate", excluded["weak-engagement"])
             self.assertIn("missing usable TikTok link", excluded["missing-link"])
 
@@ -329,6 +329,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             env = os.environ.copy()
             env.pop("TELEGRAM_BOT_TOKEN", None)
             env.pop("TELEGRAM_CHAT_ID", None)
+            env["NATTOME_DISABLE_DOTENV"] = "1"
             result = subprocess.run(
                 [
                     sys.executable,
@@ -339,6 +340,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                     "1",
                     "--runs-dir",
                     str(runs_dir),
+                    "--outputs-dir",
+                    str(temp_path / "outputs"),
                     "--timestamp",
                     "2026-05-06T13:45:30Z",
                     "--candidates",

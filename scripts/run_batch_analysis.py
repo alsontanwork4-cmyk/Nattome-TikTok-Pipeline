@@ -12,6 +12,10 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
 from batch_analysis.config import MODE_DEFAULT_BATCH_SIZE
+from batch_analysis.cloud_publication import (
+    CloudPublicationConfigurationError,
+    CloudPublicationError,
+)
 from batch_analysis.env import load_dotenv_files
 from batch_analysis.run import create_run
 
@@ -57,6 +61,12 @@ def parse_args() -> argparse.Namespace:
         "--timestamp",
         help="UTC timestamp for deterministic runs or tests, for example 2026-05-06T13:45:30Z.",
     )
+    parser.add_argument(
+        "--publish-cloud",
+        action="store_true",
+        dest="cloud_publication_enabled",
+        help="Publish completed Daily Evidence Run metadata and artifact records to Supabase.",
+    )
     return parser.parse_args()
 
 
@@ -68,6 +78,14 @@ def main() -> int:
     except (FileNotFoundError, FileExistsError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
+    except CloudPublicationConfigurationError as exc:
+        print(f"cloud publication configuration error: {exc}", file=sys.stderr)
+        return 3
+    except CloudPublicationError as exc:
+        if exc.run_folder is not None:
+            print(f"created Batch Analysis Run: {exc.run_folder}")
+        print(f"cloud publication error: {exc}", file=sys.stderr)
+        return 3
 
     print(f"created Batch Analysis Run: {run_folder}")
     return 0
