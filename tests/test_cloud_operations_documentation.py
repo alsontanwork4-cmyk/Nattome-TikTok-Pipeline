@@ -16,11 +16,12 @@ class CloudOperationsDocumentationTest(unittest.TestCase):
             "Apify discovery",
             "Gemini evidence analysis",
             "Daily Output Set generation",
-            "Vercel hosts the private read-only Next.js dashboard",
+            "The Python dashboard in `dashboard/` is the operational dashboard",
+            "Host it on a VPS",
             "Supabase Postgres stores compact run metadata",
             "Supabase Storage stores generated artifacts",
             "09:00 Asia/Singapore",
-            "new runs only",
+            "publishes new runs only",
             "does not import historical local runs",
             "local backup process",
             "docs/cloud-migration-safety-checklist.md",
@@ -35,13 +36,12 @@ class CloudOperationsDocumentationTest(unittest.TestCase):
             "GEMINI_API_KEY",
             "SUPABASE_URL",
             "SUPABASE_SERVICE_ROLE_KEY",
-            "NEXT_PUBLIC_SUPABASE_URL",
-            "NEXT_PUBLIC_SUPABASE_ANON_KEY",
         ):
             self.assertIn(name, text)
         self.assertIn("Secret values must not be written", text)
         self.assertNotIn("your-supabase-anon-key", text)
         self.assertNotIn("example-anon-key", text)
+        self.assertIn("There is no separate web dashboard configuration", text)
 
     def test_deferred_control_room_scope_is_explicit(self):
         text = DOC.read_text(encoding="utf-8")

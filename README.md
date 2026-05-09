@@ -29,8 +29,7 @@ Use `nattome-viral-intelligence-run` for normal operation. The phase skills are 
 ├── batch_analysis/                <- importable evidence analysis package
 ├── scripts/
 │   └── run_batch_analysis.py      <- thin compatibility CLI
-├── dashboard/                     <- local marketer-facing control room
-├── web/vercel-dashboard/          <- public read-only Next.js dashboard shell for Vercel
+├── dashboard/                     <- Python marketer-facing control room
 ├── tests/
 ├── docs/
 │   ├── prd/
@@ -129,7 +128,7 @@ Useful optional flags:
 | `run_batch_analysis.py` | `--timestamp <ISO8601Z>` | Use a deterministic timestamp for tests or controlled reruns. |
 | `run_batch_analysis.py` | `--publish-cloud` | Publish the completed run and artifact records to Supabase after local output generation succeeds. |
 
-## Local Dashboard
+## Python Dashboard
 
 Start the marketer-facing Scrape Quality Dashboard shell locally:
 
@@ -144,6 +143,8 @@ C:\Users\Alson\.venv\Scripts\python.exe -m dashboard.web
 ```
 
 The app runs at `http://127.0.0.1:8765` by default and initializes its dashboard-owned SQLite state at `data/dashboard/dashboard.sqlite3`. Current navigation includes Overview, Report, Run History, Scrape Settings, and Pipeline Architecture. The dashboard can also serve static assets, health checks, CSV exports, scrape-setting saves/rollbacks, curation updates, and manual run triggers.
+
+For hosted use, deploy this Python dashboard on a VPS or long-running app host where the process can keep durable access to `data/dashboard/dashboard.sqlite3`, `data/`, `runs/`, and `outputs/`. Put it behind a reverse proxy such as Caddy or Nginx with authentication. Do not deploy the operational dashboard to a serverless static app platform; the project no longer includes a separate web dashboard app.
 
 Useful dashboard routes:
 
@@ -164,32 +165,11 @@ Rebuild the dashboard's artifact-derived SQLite index from existing repo files:
 C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"
 ```
 
-## Vercel Dashboard
-
-The public read-only Vercel Dashboard lives in `web/vercel-dashboard/` as a separate Next.js TypeScript app. It does not replace the Python dashboard or change pipeline behavior.
-
-Required Vercel-side Supabase configuration:
-
-| Variable | Required for | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase read access | Use the project URL from Supabase. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase read access | Use the publishable anon key, with Supabase Row Level Security controlling access. |
-
-Run locally from the app directory:
-
-```powershell
-cd web/vercel-dashboard
-npm install
-npm run dev
-```
-
-The app does not require dashboard login. It opens directly and uses the public Supabase anon key to request permitted read-only Daily Evidence Run records. Supabase Row Level Security must allow anonymous `select` access for the run and artifact tables if the dashboard should show data without login.
-
 ## Running On a Schedule
 
 Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-5 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
 
-For the full Cloud Operations guide, including Supabase storage boundaries, Vercel dashboard behavior, the new-runs-only cloud v1 policy, local backup expectations, and deferred control-room scope, see `docs/cloud-operations.md`.
+For the full Cloud Operations guide, including Supabase publication behavior, the new-runs-only cloud v1 policy, local backup expectations, and deferred control-room scope, see `docs/cloud-operations.md`.
 
 Required GitHub Actions secrets:
 
