@@ -5,6 +5,8 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parents[1]
 PRIMARY_SKILL = WORKSPACE / "skills" / "nattome-viral-intelligence-run" / "SKILL.md"
 OLD_PRIMARY_SKILL = WORKSPACE / "skills" / "nattome-tiktok-run-coordinate" / "SKILL.md"
+DISCOVERY_SKILL = WORKSPACE / "skills" / "nattome-tiktok-candidate-discovery" / "SKILL.md"
+EVIDENCE_SKILL = WORKSPACE / "skills" / "nattome-evidence-insight-analysis" / "SKILL.md"
 README = WORKSPACE / "README.md"
 
 
@@ -48,6 +50,49 @@ class DailyEvidenceSkillContractTest(unittest.TestCase):
             "references/virality_framework.md",
         ):
             self.assertIn(expected, primary)
+
+    def test_phase_skills_are_supporting_references_only(self):
+        discovery = DISCOVERY_SKILL.read_text(encoding="utf-8")
+        evidence = EVIDENCE_SKILL.read_text(encoding="utf-8")
+
+        for text in (discovery, evidence):
+            self.assertIn("user-invocable: false", text)
+            self.assertIn("supporting phase reference", text)
+            self.assertIn("Normal users should trigger `nattome-viral-intelligence-run`", text)
+            self.assertIn("references/nattome_brand.md", text)
+            self.assertIn("references/virality_framework.md", text)
+
+    def test_discovery_support_skill_keeps_pre_gemini_output_as_preview(self):
+        discovery = DISCOVERY_SKILL.read_text(encoding="utf-8")
+
+        for expected in (
+            "Daily Top-5 Selection",
+            "data/daily_runs/<run_id>/daily_selection_top5.json",
+            "candidate previews",
+            "metadata inferences",
+            "Do not claim exact visible text",
+            "Do not say `Shootable Angle`",
+            "Do not say `Nattome Priority Score`",
+            "Do not say `production-ready`",
+        ):
+            self.assertIn(expected, discovery)
+
+    def test_evidence_support_skill_documents_daily_reruns_and_evidence_reporting(self):
+        evidence = EVIDENCE_SKILL.read_text(encoding="utf-8")
+
+        for expected in (
+            "data/daily_runs/<run_id>/daily_selection_top5.json",
+            "--mode daily",
+            "completed",
+            "partial",
+            "missing_credentials",
+            "missing",
+            "failed",
+            "Manual Review Flags",
+            "Claim Safety Review",
+            "Gemini evidence status exactly",
+        ):
+            self.assertIn(expected, evidence)
 
 
 if __name__ == "__main__":

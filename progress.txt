@@ -1893,3 +1893,29 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0063` can now complete the phase-skill supporting-reference checks against the canonical primary skill name.
+
+## 2026-05-09 - 0063 Reframe Phase Skills As Supporting References
+
+Task completed from `docs/issues/0063-reframe-phase-skills-as-supporting-references.md`.
+
+Key decisions made:
+- Kept `nattome-tiktok-candidate-discovery` and `nattome-evidence-insight-analysis` as support-only repo-local skills with `user-invocable: false`.
+- Made both phase skills point normal users back to `nattome-viral-intelligence-run`.
+- Tightened discovery wording around Daily Top-5 Selection and pre-Gemini candidate preview limits.
+- Updated the evidence-only rerun command to use the current `data/daily_runs/<run_id>/daily_selection_top5.json` handoff path.
+
+Files changed:
+- `docs/issues/done/0063-reframe-phase-skills-as-supporting-references.md`
+- `progress.txt`
+- `skills/nattome-tiktok-candidate-discovery/SKILL.md`
+- `skills/nattome-evidence-insight-analysis/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` failed because the phase skills did not consistently use Daily Top-5 Selection wording and the evidence rerun path still referenced `data/daily_selections`.
+- GREEN: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` passed with 5 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 152 tests.
+- `Get-Content -Raw skills\nattome-tiktok-candidate-discovery\assets\config.example.json | ConvertFrom-Json` passed.
+
+Notes for next iteration:
+- Issue `0064` can align README and glossary language with the now-canonical Daily Top-5 operation.
