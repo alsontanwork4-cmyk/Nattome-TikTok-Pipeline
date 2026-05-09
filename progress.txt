@@ -1608,3 +1608,38 @@ Feedback:
 Blockers or notes for the next iteration:
 - Unrelated working tree change left untouched: `outputs/reports/2026-05-06/top5_angle_planning_sheet_2026-05-06.xlsx`.
 - Issue `0060` completes the dashboard architecture deepening verification pass. Continue to the next AFK issue only if requested.
+
+## 2026-05-09 - 0067 Protect Local Evidence Data Before Cloud Migration
+
+Task completed from `docs/issues/0067-protect-local-evidence-data-before-cloud-migration.md`.
+
+Key decisions made:
+- Added a public local backup module and CLI for creating a timestamped archive of `data/`, `outputs/`, `runs/`, and `.env`.
+- Wrote a local Markdown backup receipt next to the archive so the protected inputs, archive path, creation time, and cloud-dashboard v1 import policy are recorded without printing secret values.
+- Kept backup artifacts local-only by ignoring `/local-backups/` and tightened generated artifact ignores for `/outputs/` and `/runs/`.
+- Restored full-suite verification before moving on by reintroducing the dashboard current-settings renderer expected by tests and isolating batch subprocess tests from local `.env` and repo-level outputs.
+
+Files changed:
+- `.gitignore`
+- `batch_analysis/local_backup.py`
+- `scripts/create_local_backup.py`
+- `tests/test_local_backup.py`
+- `tests/test_batch_analysis_run.py`
+- `dashboard/web_settings.py`
+- `docs/cloud-migration-safety-checklist.md`
+- `docs/issues/done/0067-protect-local-evidence-data-before-cloud-migration.md`
+- `progress.txt`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p 'test_local_backup.py'` failed because `batch_analysis.local_backup` did not exist.
+- GREEN: `python -m unittest discover -s tests -p 'test_local_backup.py'` passed with 3 tests.
+- Archive verification opened `local-backups/nattome-local-evidence-backup-20260509T021437Z.zip` and confirmed `data/`, `outputs/`, `runs/`, and `.env` are present.
+- `git check-ignore -v .env data/dashboard/dashboard.sqlite3 outputs/AUTOMATION_RUN_SUMMARY_20260509.txt runs/automation-logs/DAILY_RUN_REPORT_20260509.md local-backups/nattome-local-evidence-backup-20260509T021437Z.zip` confirmed secrets, SQLite, generated artifacts, and backups are ignored.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis/local_backup.py scripts/create_local_backup.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_batch_analysis_run` passed with 7 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_dashboard_web_settings` passed with 2 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 123 tests.
+
+Blockers or notes for the next iteration:
+- The Ralph loop normally works on AFK issues only; issue 0067 was completed because it was explicitly requested.
+- Unrelated untracked issue files `docs/issues/0068` through `docs/issues/0074` were left untouched until the next issue begins.
