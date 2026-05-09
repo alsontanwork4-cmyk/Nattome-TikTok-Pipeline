@@ -1840,3 +1840,30 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0074` can document cloud operations and the deferred control-room scope after the run history and detail surfaces are in place.
+
+## 2026-05-09 - 0074 Document Cloud Operations And Deferred Control Room Scope
+
+Task completed from `docs/issues/0074-document-cloud-operations-and-deferred-control-room-scope.md`.
+
+Key decisions made:
+- Added a dedicated cloud operations guide instead of spreading the v1 operating model across README fragments.
+- Documented the runtime boundaries: Python remains the worker, GitHub Actions schedules it, Supabase stores run metadata and artifacts, and Vercel hosts the private read-only dashboard.
+- Made the cloud v1 data policy explicit: new cloud-published runs only; historical local runs are backed up but not imported.
+- Listed GitHub Actions and Vercel configuration names while repeating that secret values must not be written to docs, logs, summaries, comments, or dashboard pages.
+- Explicitly deferred manual run triggers, scrape setting edits, curation labels, rollback controls, and full control-room behavior from cloud dashboard v1.
+
+Files changed:
+- `README.md`
+- `docs/cloud-operations.md`
+- `docs/issues/done/0074-document-cloud-operations-and-deferred-control-room-scope.md`
+- `progress.txt`
+- `tests/test_cloud_operations_documentation.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_cloud_operations_documentation.py` failed because `docs/cloud-operations.md` did not exist and README did not link it.
+- GREEN: `.venv\Scripts\python.exe tests\test_cloud_operations_documentation.py` passed with 4 tests.
+- `.venv\Scripts\python.exe tests\test_vercel_dashboard_shell.py` passed with 7 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 147 tests.
+
+Notes for next iteration:
+- No remaining AFK issue file is queued under `docs/issues/`.

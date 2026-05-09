@@ -189,6 +189,8 @@ The app uses Supabase Auth to protect dashboard routes. Anonymous users are redi
 
 Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-5 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
 
+For the full Cloud Operations guide, including Supabase storage boundaries, Vercel dashboard behavior, the new-runs-only cloud v1 policy, local backup expectations, and deferred control-room scope, see `docs/cloud-operations.md`.
+
 Required GitHub Actions secrets:
 
 | Secret | Required for | Notes |
