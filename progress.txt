@@ -1808,3 +1808,35 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0073` can add run history and direct artifact download flows now that the latest published run surface is in place.
+
+## 2026-05-09 - 0073 Add Run History And Artifact Downloads
+
+Task completed from `docs/issues/0073-add-run-history-and-artifact-downloads.md`.
+
+Key decisions made:
+- Added read-only run history to the private Vercel dashboard using the existing Daily Evidence Run repository boundary.
+- Kept history broad enough to show successful, incomplete, and failed publication states instead of filtering only to `published`.
+- Added `/runs/[runId]` as an authenticated detail route that reuses the Daily Evidence Run view model for status, timestamps, summary fields, and artifact availability.
+- Changed artifact links to Supabase public storage download URLs with a `download` query parameter, without introducing service-role credentials into the web app.
+
+Files changed:
+- `docs/issues/done/0073-add-run-history-and-artifact-downloads.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/app/runs/[runId]/page.tsx`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.test.mjs`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+
+Feedback:
+- RED: `npm test` failed because the repository did not expose `listRuns` or `getRunById`, no history view builder existed, and artifact URLs were not download URLs.
+- GREEN: `npm test` passed with 8 Node tests covering latest run, run history, run detail, download URL generation, and missing artifacts.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `.venv\Scripts\python.exe tests\test_vercel_dashboard_shell.py` passed with 7 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 143 tests.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Browser check attempted against local Next routes, but the sandboxed local server process exited before the in-app browser could connect; no server processes remained running afterward.
+
+Notes for next iteration:
+- Issue `0074` can document cloud operations and the deferred control-room scope after the run history and detail surfaces are in place.

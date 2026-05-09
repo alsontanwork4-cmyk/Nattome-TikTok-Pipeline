@@ -40,6 +40,8 @@ class VercelDashboardShellTest(unittest.TestCase):
 
         self.assertIn("export interface DailyEvidenceRunRepository", data_access)
         self.assertIn("getLatestRun", data_access)
+        self.assertIn("getRunById", data_access)
+        self.assertIn("listRuns", data_access)
         self.assertIn("daily_evidence_runs", data_access)
         self.assertIn("daily_evidence_artifacts", data_access)
         self.assertIn('.eq("publication_status", "published")', data_access)
@@ -53,6 +55,7 @@ class VercelDashboardShellTest(unittest.TestCase):
         self.assertIn("Nattome Daily Evidence Dashboard", page)
         self.assertIn("Signed in as", page)
         self.assertIn("Latest Daily Evidence Run", page)
+        self.assertIn("Run History", page)
         self.assertIn("Daily Output Set", page)
         self.assertIn("runView.message", page)
         self.assertIn("metadata", layout)
@@ -77,6 +80,28 @@ class VercelDashboardShellTest(unittest.TestCase):
         self.assertIn("No cloud-published Daily Evidence Run is available yet.", data_access)
         self.assertIn("marks missing artifacts unavailable", view_tests)
         self.assertIn("returns the empty state", view_tests)
+
+    def test_run_history_and_detail_download_surfaces_exist(self):
+        page = (APP_ROOT / "src" / "app" / "page.tsx").read_text(encoding="utf-8")
+        detail_page = (
+            APP_ROOT / "src" / "app" / "runs" / "[runId]" / "page.tsx"
+        ).read_text(encoding="utf-8")
+        data_access = (APP_ROOT / "src" / "lib" / "dailyEvidenceRuns.ts").read_text(
+            encoding="utf-8"
+        )
+        view_tests = (
+            APP_ROOT / "src" / "lib" / "dailyEvidenceRuns.test.mjs"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("buildDailyEvidenceRunHistoryView", page)
+        self.assertIn("repository.listRuns", page)
+        self.assertIn("href={run.href}", page)
+        self.assertIn("getRunById", detail_page)
+        self.assertIn("Back to run history", detail_page)
+        self.assertIn("?download=", data_access)
+        self.assertNotIn("SUPABASE_SERVICE_ROLE_KEY", data_access)
+        self.assertIn("without service role data", view_tests)
+        self.assertIn("repository lists run history across publication states", view_tests)
 
     def test_vercel_supabase_environment_is_documented(self):
         readme = README.read_text(encoding="utf-8")

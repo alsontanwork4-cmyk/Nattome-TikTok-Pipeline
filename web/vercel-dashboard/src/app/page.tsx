@@ -1,14 +1,19 @@
 import {
+  buildDailyEvidenceRunHistoryView,
   buildDailyEvidenceRunView,
   createDailyEvidenceRunRepository
 } from "../lib/dailyEvidenceRuns";
 import { requireAuthenticatedUser } from "../lib/auth";
 import { requireSupabaseEnv } from "../lib/env";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const { supabase, user } = await requireAuthenticatedUser();
-  const latestRun = await createDailyEvidenceRunRepository(supabase).getLatestRun();
+  const repository = createDailyEvidenceRunRepository(supabase);
+  const latestRun = await repository.getLatestRun();
+  const runHistory = await repository.listRuns();
   const runView = buildDailyEvidenceRunView(latestRun, requireSupabaseEnv().url);
+  const historyView = buildDailyEvidenceRunHistoryView(runHistory);
 
   return (
     <main className="shell">
@@ -92,11 +97,22 @@ export default async function DashboardPage() {
           </section>
 
           <aside className="panel" aria-labelledby="access-heading">
-            <h2 id="access-heading">Access</h2>
-            <p className="muted">
-              Anonymous visitors are redirected to the login route before this
-              dashboard renders.
-            </p>
+            <h2 id="access-heading">Run History</h2>
+            {historyView.state === "available" ? (
+              <ul className="history-list">
+                {historyView.runs.map((run) => (
+                  <li className="history-row" key={run.runId}>
+                    <Link href={run.href}>{run.runId}</Link>
+                    <span>{run.reportDate.value}</span>
+                    <small>
+                      {run.status.value} / {run.publication.value}
+                    </small>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="empty">{historyView.message}</p>
+            )}
           </aside>
         </div>
       </section>

@@ -25,6 +25,8 @@ export type DailyEvidenceRun = {
 
 export interface DailyEvidenceRunRepository {
   getLatestRun(): Promise<DailyEvidenceRun | null>;
+  getRunById(runId: string): Promise<DailyEvidenceRun | null>;
+  listRuns(): Promise<DailyEvidenceRun[]>;
 }
 
 export class SupabaseDailyEvidenceRunRepository
@@ -51,6 +53,43 @@ export class SupabaseDailyEvidenceRunRepository
       throw error;
     }
 
+    return this.hydrateRun(data as DailyEvidenceRunRow | null);
+  }
+
+  async getRunById(runId: string): Promise<DailyEvidenceRun | null> {
+    const { data, error } = await this.supabase
+      .from("daily_evidence_runs")
+      .select(RUN_COLUMNS)
+      .eq("run_id", runId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return this.hydrateRun(data as DailyEvidenceRunRow | null);
+  }
+
+  async listRuns(): Promise<DailyEvidenceRun[]> {
+    const { data, error } = await this.supabase
+      .from("daily_evidence_runs")
+      .select(RUN_COLUMNS)
+      .order("run_timestamp", { ascending: false })
+      .limit(25);
+
+    if (error) {
+      throw error;
+    }
+
+    return ((data ?? []) as DailyEvidenceRunRow[]).map((run) => ({
+      ...run,
+      artifacts: []
+    }));
+  }
+
+  private async hydrateRun(
+    data: DailyEvidenceRunRow | null
+  ): Promise<DailyEvidenceRun | null> {
     if (!data) {
       return null;
     }
@@ -67,11 +106,16 @@ export class SupabaseDailyEvidenceRunRepository
     }
 
     return {
-      ...(data as Omit<DailyEvidenceRun, "artifacts">),
+      ...data,
       artifacts: (artifacts ?? []) as DailyEvidenceArtifact[]
     };
   }
 }
+
+type DailyEvidenceRunRow = Omit<DailyEvidenceRun, "artifacts">;
+
+const RUN_COLUMNS =
+  "run_id,status,run_timestamp,report_date,mode,requested_batch_size,summary,publication_status,publication_errors,local_run_folder";
 
 export function createDailyEvidenceRunRepository(
   supabase: SupabaseClient
@@ -121,6 +165,30 @@ type AvailableDailyEvidenceRunView = {
 export type DailyEvidenceRunView =
   | EmptyDailyEvidenceRunView
   | AvailableDailyEvidenceRunView;
+
+type RunHistoryItemView = {
+  runId: string;
+  href: string;
+  status: LabeledValue;
+  publication: LabeledValue;
+  runTimestamp: LabeledValue;
+  reportDate: LabeledValue;
+  selectedCandidates: LabeledValue;
+};
+
+type EmptyDailyEvidenceRunHistoryView = {
+  state: "empty";
+  message: string;
+};
+
+type AvailableDailyEvidenceRunHistoryView = {
+  state: "available";
+  runs: RunHistoryItemView[];
+};
+
+export type DailyEvidenceRunHistoryView =
+  | EmptyDailyEvidenceRunHistoryView
+  | AvailableDailyEvidenceRunHistoryView;
 
 type ArtifactSpec = {
   label: string;
@@ -194,6 +262,39 @@ export function buildDailyEvidenceRunView(
   };
 }
 
+export function buildDailyEvidenceRunHistoryView(
+  runs: DailyEvidenceRun[]
+): DailyEvidenceRunHistoryView {
+  if (runs.length === 0) {
+    return {
+      state: "empty",
+      message: "No cloud-published Daily Evidence Run is available yet."
+    };
+  }
+
+  return {
+    state: "available",
+    runs: runs.map((run) => ({
+      runId: run.run_id,
+      href: `/runs/${encodeURIComponent(run.run_id)}`,
+      status: { label: "Run status", value: formatValue(run.status) },
+      publication: {
+        label: "Publication",
+        value: formatValue(run.publication_status)
+      },
+      runTimestamp: {
+        label: "Run timestamp",
+        value: formatValue(run.run_timestamp)
+      },
+      reportDate: { label: "Report date", value: formatValue(run.report_date) },
+      selectedCandidates: {
+        label: "Selected candidates",
+        value: formatValue(run.summary.selected_candidate_count)
+      }
+    }))
+  };
+}
+
 function buildSummaryFields(summary: Record<string, unknown>): LabeledValue[] {
   const fields: LabeledValue[] = [];
   const selectedCandidateCount = summary.selected_candidate_count;
@@ -258,11 +359,12 @@ function artifactHref(storagePath: string, supabaseUrl: string): string {
     return storagePath;
   }
 
+  const filename = storagePath.split("/").at(-1) ?? "artifact";
   const baseUrl = supabaseUrl.replace(/\/$/, "");
   return `${baseUrl}/storage/v1/object/public/${storagePath
     .split("/")
     .map(encodeURIComponent)
-    .join("/")}`;
+    .join("/")}?download=${encodeURIComponent(filename)}`;
 }
 
 function formatValue(value: unknown): string {

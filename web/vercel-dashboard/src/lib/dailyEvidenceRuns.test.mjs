@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  buildDailyEvidenceRunHistoryView,
   buildDailyEvidenceRunView,
   createDailyEvidenceRunRepository
 } from "./dailyEvidenceRuns.ts";
@@ -210,7 +211,7 @@ test("run view exposes summary and available Daily Output Set links", () => {
   assert.equal(
     view.artifacts.find((artifact) => artifact.label === "Cross-Video Pattern Summary")
       .href,
-    "https://example.supabase.co/storage/v1/object/public/daily-runs/20260509T010000Z_daily/run/data/cross_video_pattern_summary.json"
+    "https://example.supabase.co/storage/v1/object/public/daily-runs/20260509T010000Z_daily/run/data/cross_video_pattern_summary.json?download=cross_video_pattern_summary.json"
   );
   assert.ok(view.artifacts.every((artifact) => artifact.available));
 });
@@ -254,4 +255,115 @@ test("run view returns the empty state when no cloud runs exist", () => {
     state: "empty",
     message: "No cloud-published Daily Evidence Run is available yet."
   });
+});
+
+test("repository lists run history across publication states", async () => {
+  const client = new FakeSupabaseClient({
+    runs: [
+      { ...publishedRun, run_id: "published", publication_status: "published" },
+      { ...publishedRun, run_id: "incomplete", publication_status: "pending" },
+      { ...publishedRun, run_id: "failed", publication_status: "artifact_failed" }
+    ]
+  });
+
+  const history = await createDailyEvidenceRunRepository(client).listRuns();
+
+  assert.deepEqual(
+    history.map((run) => run.publication_status),
+    ["published", "pending", "artifact_failed"]
+  );
+  assert.ok(history.every((run) => run.artifacts.length === 0));
+});
+
+test("repository loads a run detail by id with artifacts", async () => {
+  const client = new FakeSupabaseClient({
+    runs: [
+      { ...publishedRun, run_id: "target-run" },
+      { ...publishedRun, run_id: "other-run" }
+    ],
+    artifacts: [
+      {
+        run_id: "target-run",
+        artifact_type: "json",
+        storage_path: "daily-runs/target-run/run/data/structured_batch_analysis.json",
+        source_path: "runs/data/structured_batch_analysis.json",
+        filename: "structured_batch_analysis.json",
+        content_type: "application/json"
+      },
+      {
+        run_id: "other-run",
+        artifact_type: "markdown",
+        storage_path: "daily-runs/other-run/outputs/final.md",
+        source_path: "outputs/final.md",
+        filename: "final.md",
+        content_type: "text/markdown"
+      }
+    ]
+  });
+
+  const run = await createDailyEvidenceRunRepository(client).getRunById("target-run");
+
+  assert.equal(run.run_id, "target-run");
+  assert.equal(run.artifacts.length, 1);
+  assert.equal(run.artifacts[0].filename, "structured_batch_analysis.json");
+});
+
+test("history view links each run to its detail route", () => {
+  const view = buildDailyEvidenceRunHistoryView([
+    { ...publishedRun, run_id: "20260509T010000Z_daily", artifacts: [] },
+    {
+      ...publishedRun,
+      run_id: "20260508T010000Z_daily",
+      status: "partial",
+      publication_status: "artifact_failed",
+      artifacts: []
+    }
+  ]);
+
+  assert.equal(view.state, "available");
+  assert.deepEqual(
+    view.runs.map((run) => [run.runId, run.href, run.status.value, run.publication.value]),
+    [
+      [
+        "20260509T010000Z_daily",
+        "/runs/20260509T010000Z_daily",
+        "completed",
+        "published"
+      ],
+      [
+        "20260508T010000Z_daily",
+        "/runs/20260508T010000Z_daily",
+        "partial",
+        "artifact_failed"
+      ]
+    ]
+  );
+});
+
+test("artifact links are downloadable public Supabase URLs without service role data", () => {
+  const view = buildDailyEvidenceRunView(
+    {
+      ...publishedRun,
+      artifacts: [
+        {
+          run_id: publishedRun.run_id,
+          artifact_type: "markdown",
+          storage_path: "daily-runs/20260509T010000Z_daily/outputs/final.md",
+          source_path: "outputs/final.md",
+          filename: "final.md",
+          content_type: "text/markdown"
+        }
+      ]
+    },
+    "https://example.supabase.co"
+  );
+  const link = view.artifacts.find((artifact) => artifact.label === "Final Markdown");
+
+  assert.equal(link.available, true);
+  assert.equal(
+    link.href,
+    "https://example.supabase.co/storage/v1/object/public/daily-runs/20260509T010000Z_daily/outputs/final.md?download=final.md"
+  );
+  assert.equal(link.href.includes("SUPABASE_SERVICE_ROLE_KEY"), false);
+  assert.equal(link.href.includes("service_role"), false);
 });
