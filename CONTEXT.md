@@ -33,15 +33,15 @@ The fixed section structure used by every **Video Evidence Report**, covering vi
 _Avoid_: loose notes, ad hoc report
 
 **Daily Evidence Run**:
-The normal Nattome TikTok pipeline run: discover candidates, select the daily top 5, analyze source-video evidence, and produce one **Video Evidence Report** per video plus a cross-video pattern summary.
+The normal Nattome TikTok pipeline run: discover candidates, select the daily top 3, analyze source-video evidence, and produce one **Video Evidence Report** per video plus a cross-video pattern summary.
 _Avoid_: metadata-only scrape, one-off video audit as the default
 
 **Cross-Video Pattern Summary**:
 A run-level report that compares analyzed videos to identify repeatable hooks, formats, emotional triggers, audio patterns, risky claims, and priority Nattome shoot opportunities.
 _Avoid_: folder of disconnected reports
 
-**Daily Top-5 Selection**:
-The standard daily set of five TikTok videos selected for source-video evidence analysis.
+**Daily Top-3 Selection**:
+The standard daily set of three TikTok videos selected for source-video evidence analysis.
 _Avoid_: oversized run, unlimited batch, all scraped videos
 
 **Viral Relevance Selection**:
@@ -144,9 +144,9 @@ _Avoid_: optional internal dump
 - A **Daily Evidence Run** produces one or more **Video Evidence Reports**.
 - A **Daily Evidence Run** produces exactly one **Cross-Video Pattern Summary**.
 - A **Cross-Video Pattern Summary** compares evidence from multiple **Video Evidence Reports**.
-- A **Daily Top-5 Selection** contains five selected TikTok videos.
-- A **Daily Evidence Run** normally analyzes the **Daily Top-5 Selection**. One-video mode is for debugging only.
-- A **Daily Top-5 Selection** is chosen with **Viral Relevance Selection**.
+- A **Daily Top-3 Selection** contains three selected TikTok videos.
+- A **Daily Evidence Run** normally analyzes the **Daily Top-3 Selection**. One-video mode is for debugging only.
+- A **Daily Top-3 Selection** is chosen with **Viral Relevance Selection**.
 - A **Minimum Eligibility Filter** is applied before **Viral Relevance Selection**.
 - A **Minimum Eligibility Filter** excludes videos under the chosen view threshold, older than the chosen recency threshold, weakly relevant to Nattome, or clearly unsafe because of crude humor, fearmongering, medical overclaims, or pseudoscience.
 - The default **Minimum Filter Thresholds** are 10,000 views, 30-day maximum age, and 3% weighted engagement rate.
@@ -175,7 +175,7 @@ _Avoid_: optional internal dump
 - Downloaded TikTok videos and extracted frames are **Evidence Artifacts**, not final marketing assets.
 - **Evidence Artifacts** may be cleaned up after reports are approved, but JSON outputs, markdown reports, and spreadsheet summaries are durable records.
 - The OCR analysis system is built through four **Implementation Phases**: Download + Run Folder, Evidence Extraction, Report Generation, and Refinement.
-- Phase 1 selects the **Daily Top-5 Selection**, downloads videos where possible, stores metadata, and outputs the daily handoff.
+- Phase 1 selects the **Daily Top-3 Selection**, downloads videos where possible, stores metadata, and outputs the daily handoff.
 - Phase 2 extracts **Hybrid Timeline** frames, runs OCR, transcribes audio, captures **Baseline Audio Analysis**, and stores evidence as JSON.
 - Phase 3 generates **Video Evidence Reports**, the **Cross-Video Pattern Summary**, spreadsheet summary, **Evidence Quality Scores**, **Manual Review Flags**, and **Claim Safety Reviews**.
 - Phase 4 adds **Deep Sound Research**, multilingual improvements, evidence cleanup, and full-script generation for selected **Shootable Angles**.
@@ -212,12 +212,12 @@ _Avoid_: optional internal dump
 > **Domain expert:** "Default to a **Daily Evidence Run** because the goal is finding repeatable patterns across the day's strongest videos, not only understanding one TikTok."
 >
 > **Dev:** "How many videos should a normal daily run include?"
-> **Domain expert:** "Use the **Daily Top-5 Selection**. One-video mode is only for debugging."
+> **Domain expert:** "Use the **Daily Top-3 Selection**. One-video mode is only for debugging."
 >
 > **Dev:** "Should the daily selection force a mix like 3 education videos and 2 POV videos?"
 > **Domain expert:** "No. Use **Viral Relevance Selection**: rank by virality, recency, and Nattome relevance after applying a **Minimum Eligibility Filter**."
 >
-> **Dev:** "What makes a TikTok eligible for the daily top 5?"
+> **Dev:** "What makes a TikTok eligible for the Daily Top-3 Selection?"
 > **Domain expert:** "Apply the **Minimum Filter Thresholds** first: 10,000+ views, 30 days old or newer, 3%+ weighted engagement, usable link, downloadable video, and Nattome relevance."
 >
 > **Dev:** "Can we trust every OCR report equally?"
@@ -267,7 +267,7 @@ _Avoid_: optional internal dump
 - "Audio analysis" was split into **Baseline Audio Analysis** for every report and **Deep Sound Research** only when the sound is a likely viral driver.
 - "Report" was clarified as a fixed **Report Form**, not ad hoc notes, with evidence first and Nattome recommendations after.
 - "Video analysis" was clarified as daily evidence-first because the business goal is pattern discovery across the day's strongest videos.
-- Normal run size was resolved as the **Daily Top-5 Selection**, with one-video mode kept only for debugging.
+- Normal run size was resolved as the **Daily Top-3 Selection**, with one-video mode kept only for debugging.
 - Selection was resolved as **Viral Relevance Selection**, not fixed content quotas.
 - "Anatomy relevance" was interpreted as Nattome relevance.
 - Minimum filters are part of selection and should run before ranking.

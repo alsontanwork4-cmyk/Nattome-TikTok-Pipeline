@@ -263,8 +263,8 @@ class Top5AnglePlanningWorkbookTest(unittest.TestCase):
             )
             self.assertTrue(workbook_path.is_file())
             self.assertEqual(workbook_sheet_names(workbook_path), ["Angles", "Source Videos"])
-            self.assertEqual(len(sheet_rows(workbook_path, 1)) - 1, 15)
-            self.assertEqual(len(sheet_rows(workbook_path, 2)) - 1, 5)
+            self.assertEqual(len(sheet_rows(workbook_path, 1)) - 1, 9)
+            self.assertEqual(len(sheet_rows(workbook_path, 2)) - 1, 3)
 
 
 if __name__ == "__main__":

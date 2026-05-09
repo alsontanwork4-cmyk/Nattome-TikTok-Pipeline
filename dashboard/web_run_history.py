@@ -76,7 +76,7 @@ def _render_manual_run_controls() -> str:
         <article class="panel">
           <h2>Run scrape now</h2>
           <p class="muted">Estimated runtime: 3-8 minutes.</p>
-          <p class="muted">Expected outputs: raw top-30 scrape JSON and daily top-5 handoff.</p>
+          <p class="muted">Expected outputs: raw top-30 scrape JSON and Daily Top-3 handoff.</p>
           <form class="run-control-form" method="post" action="/manual-runs/trigger">
             <input type="hidden" name="run_type" value="scrape_only">
             <button type="submit">Run scrape now</button>

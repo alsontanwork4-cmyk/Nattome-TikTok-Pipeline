@@ -34,7 +34,7 @@ def default_final_outputs(metadata: dict[str, Any]) -> list[dict[str, str]]:
     report_date = report_date_from_metadata(metadata)
     return [
         {
-            "label": "Top 5 Creative Production Report",
+            "label": "Daily Top-3 Creative Production Report",
             "path": (
                 f"reports/{report_date}/"
                 f"top5_creative_production_report_{report_date}.md"

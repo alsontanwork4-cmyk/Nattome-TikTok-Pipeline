@@ -1,6 +1,6 @@
 ---
 name: nattome-tiktok-candidate-discovery
-description: Supporting reference skill for Phase 1 of the Nattome Daily Evidence Run. Use directly only for discovery-only debugging, scraper configuration, or creating a fresh Daily Top-5 Selection handoff without running Gemini evidence analysis. Normal operation should use `nattome-viral-intelligence-run`.
+description: Supporting reference skill for Phase 1 of the Nattome Daily Evidence Run. Use directly only for discovery-only debugging, scraper configuration, or creating a fresh Daily Top-3 Selection handoff without running Gemini evidence analysis. Normal operation should use `nattome-viral-intelligence-run`.
 user-invocable: false
 ---
 
@@ -10,7 +10,7 @@ This is a supporting phase reference. It owns the scraper command, scraper confi
 
 ## Role
 
-Phase 1 finds evidence-ready TikTok candidates and writes the Daily Top-5 Selection handoff for Gemini analysis.
+Phase 1 finds evidence-ready TikTok candidates and writes the Daily Top-3 Selection handoff for Gemini analysis.
 
 Discovery may produce candidate previews, but it must not produce production-ready Shootable Angles. Before Gemini evidence exists, all content reads are metadata inferences.
 
@@ -41,13 +41,13 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
   --output "$runDir/raw_scrape_top30.json" `
   --top 30 `
   --download-videos `
-  --daily-selection-output "$runDir/daily_selection_top5.json"
+  --daily-selection-output "$runDir/daily_selection_top3.json"
 ```
 
 Outputs:
 
 - Full ranked scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
-- Daily Top-5 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top5.json`
+- Daily Top-3 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top3.json`
 - Optional discovery markdown: `outputs/daily_briefs/daily_brief_<YYYY-MM-DD>.md`
 
 Keep JSON, Markdown, config, and brief files in UTF-8.
@@ -55,7 +55,7 @@ The scraper refuses to overwrite existing JSON outputs unless `--overwrite` is p
 
 ## Candidate Preview Rules
 
-For each top-5 candidate, previews may include:
+For each Daily Top-3 candidate, previews may include:
 
 - Topic.
 - Metadata signals from caption, hashtags, author, engagement, recency, and URL.

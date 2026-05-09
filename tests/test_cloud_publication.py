@@ -94,7 +94,7 @@ class CloudPublicationTest(unittest.TestCase):
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 ),
                 ("raw_scrape", "raw_scrape_top30.json", "application/json"),
-                ("daily_selection", "daily_selection_top5.json", "application/json"),
+                ("daily_selection", "daily_selection_top3.json", "application/json"),
                 ("batch_analysis", "run_manifest.json", "application/json"),
             ]
         ]

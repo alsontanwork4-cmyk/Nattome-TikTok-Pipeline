@@ -25,7 +25,7 @@ class ScrapeSettingsTest(unittest.TestCase):
                 "scope": "hashtags",
                 "results_per_input": "25",
                 "top_n": "30",
-                "daily_selection_size": "5",
+                "daily_selection_size": "3",
                 "minimum_views": "10000",
                 "maximum_age_days": "14",
                 "minimum_weighted_engagement_rate": "0.025",
@@ -40,7 +40,7 @@ class ScrapeSettingsTest(unittest.TestCase):
         self.assertEqual(settings["scope"], "hashtags")
         self.assertEqual(settings["results_per_input"], 25)
         self.assertEqual(settings["top_n"], 30)
-        self.assertEqual(settings["daily_selection_size"], 5)
+        self.assertEqual(settings["daily_selection_size"], 3)
         self.assertEqual(settings["minimum_views"], 10000)
         self.assertEqual(settings["maximum_age_days"], 14)
         self.assertEqual(settings["minimum_weighted_engagement_rate"], 0.025)

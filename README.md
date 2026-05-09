@@ -8,8 +8,8 @@ Discovery creates the data. Evidence analysis turns that data into actionable in
 
 | Use case | Skill | Purpose / artifact | Runtime |
 |---|---|---|---|
-| **Normal daily run** | `nattome-viral-intelligence-run` | Runs discovery, creates the Daily Top-5 Selection handoff, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
-| **Discovery-only debugging** | `nattome-tiktok-candidate-discovery` | Supporting phase reference for scraper config and top-5 candidate handoff creation. | 3-8 min |
+| **Normal daily run** | `nattome-viral-intelligence-run` | Runs discovery, creates the Daily Top-3 Selection handoff, prepares separate backfill candidates when useful, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
+| **Discovery-only debugging** | `nattome-tiktok-candidate-discovery` | Supporting phase reference for scraper config and Daily Top-3 Selection handoff creation. | 3-8 min |
 | **Evidence-only debugging** | `nattome-evidence-insight-analysis` | Supporting phase reference for rerunning `--mode daily` on an existing candidate JSON. | 15-30 min |
 
 Use `nattome-viral-intelligence-run` for normal operation. The phase skills are supporting references, not alternative normal workflows.
@@ -35,7 +35,7 @@ Use `nattome-viral-intelligence-run` for normal operation. The phase skills are 
 │   ├── prd/
 │   ├── adr/
 │   └── issues/{,done/}
-├── data/daily_runs/               <- raw scrapes + top-5 handoffs grouped by run id
+├── data/daily_runs/               <- raw scrapes + Daily Top-3 handoffs grouped by run id
 ├── data/raw_scrapes/              <- raw Apify TikTok scrapes
 ├── data/dashboard/                <- dashboard-owned SQLite state, ignored by git
 ├── outputs/daily_briefs/          <- optional discovery previews
@@ -74,7 +74,7 @@ Implementation logic lives in `batch_analysis/`:
 | `claim_safety.py` | Claim safety review rules and report writing. |
 | `evidence_quality.py` | Evidence Quality Score and manual review flag logic. |
 | `reports.py` | Per-video Video Evidence Report generation. |
-| `outputs.py` | Internal structured summaries plus the Top 5 Creative Production Report. |
+| `outputs.py` | Internal structured summaries plus the Creative Production Report. |
 | `creative_scripts.py` | Script-oriented helpers for approved creative follow-ups. |
 | `planning_workbook.py` | Excel angle planning workbook generation. |
 | `report_dates.py` | Report date and output folder helpers. |
@@ -88,7 +88,7 @@ New code should import from `batch_analysis/` instead of importing the CLI scrip
 
 ## Running Manually
 
-**Daily discovery and top-5 handoff:**
+**Daily discovery and Daily Top-3 handoff:**
 
 ```powershell
 $runId = "nattome_$(Get-Date -Format yyyyMMddTHHmmss)"
@@ -97,7 +97,7 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
   --output "$runDir/raw_scrape_top30.json" `
   --top 30 `
   --download-videos `
-  --daily-selection-output "$runDir/daily_selection_top5.json"
+  --daily-selection-output "$runDir/daily_selection_top3.json"
 ```
 
 **Daily evidence analysis for the same top videos:**
@@ -105,14 +105,14 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
 ```powershell
 python scripts/run_batch_analysis.py `
   --mode daily `
-  --candidates data/daily_runs/<run_id>/daily_selection_top5.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top3.json
 ```
 
 Use the actual `$runId` created by the scrape command. `daily` mode preserves the handoff order and analyzes only the daily-selected videos that pass the Minimum Eligibility Filter. The scraper refuses to overwrite existing JSON outputs unless `--overwrite` is passed, so normal runs should use a fresh run folder.
 
-Completed daily runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
+Completed daily runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Creative Production Report Markdown file and the Excel angle planning workbook. The Daily Top-3 Selection is the canonical evidence-analysis set; up to two backfill candidates may be prepared separately, but they are not part of the canonical selection. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
 
-Cloud publication is disabled by default. To publish a newly completed Daily Evidence Run to Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then add `--publish-cloud` to the evidence-analysis command. The worker registers the run metadata plus raw scrape, Daily Top-5 Selection, final markdown report, structured JSON, spreadsheet workbook, and batch-analysis artifacts. If publication fails, the local Run Folder remains available and `logs/cloud_publication.json` records the failure instead of marking the cloud run complete.
+Cloud publication is disabled by default. To publish a newly completed Daily Evidence Run to Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then add `--publish-cloud` to the evidence-analysis command. The worker registers the run metadata plus raw scrape, Daily Top-3 Selection, final markdown report, structured JSON, spreadsheet workbook, and batch-analysis artifacts. If publication fails, the local Run Folder remains available and `logs/cloud_publication.json` records the failure instead of marking the cloud run complete.
 
 Useful optional flags:
 
@@ -167,7 +167,7 @@ C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_
 
 ## Running On a Schedule
 
-Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-5 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
+Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-3 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
 
 For the full Cloud Operations guide, including Supabase publication behavior, the new-runs-only cloud v1 policy, local backup expectations, and deferred control-room scope, see `docs/cloud-operations.md`.
 

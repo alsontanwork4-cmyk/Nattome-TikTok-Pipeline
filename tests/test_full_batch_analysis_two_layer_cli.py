@@ -137,7 +137,7 @@ class FullBatchAnalysisTwoLayerCliTest(unittest.TestCase):
                 (run_folder / "data" / "selected_batch.json").read_text(encoding="utf-8")
             )
             self.assertEqual(selected["selection_strategy"], "input_order")
-            self.assertEqual(selected["requested_batch_size"], 5)
+            self.assertEqual(selected["requested_batch_size"], 3)
             self.assertEqual(
                 [candidate["id"] for candidate in selected["selected_candidates"]],
                 ["daily-first", "daily-second", "daily-third"],

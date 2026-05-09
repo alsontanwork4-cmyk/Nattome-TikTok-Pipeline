@@ -71,7 +71,7 @@ def effective_scrape_options(config: dict, args) -> dict:
         "daily_selection_size": int(
             args.daily_selection_size
             if args.daily_selection_size is not None
-            else config.get("daily_selection_size", 5)
+            else config.get("daily_selection_size", 3)
         ),
         "download_videos": bool(
             args.download_videos
@@ -354,7 +354,7 @@ def main() -> int:
     ap.add_argument("--daily-selection-output", type=Path,
                     help="Optional handoff JSON containing the daily top videos for daily evidence analysis")
     ap.add_argument("--daily-selection-size", type=int, default=None,
-                    help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 5)")
+                    help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 3)")
     ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default=None,
                     help="Limit which inputs to run (default: config scope, then all)")
     ap.add_argument("--overwrite", action="store_true",

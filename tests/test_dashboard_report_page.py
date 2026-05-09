@@ -207,7 +207,7 @@ class DashboardReportPageTest(unittest.TestCase):
             outputs["output_root"] = "outputs"
             outputs["final_outputs"] = [
                 {
-                    "label": "Top 5 Creative Production Report",
+                    "label": "Daily Top-3 Creative Production Report",
                     "kind": "markdown",
                     "path": str(relative_report_path).replace("\\", "/"),
                 }

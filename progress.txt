@@ -1919,3 +1919,44 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0064` can align README and glossary language with the now-canonical Daily Top-5 operation.
+
+## 2026-05-09 - 0071 Rename Top-5 Operation To Daily Top-3
+
+Task completed from `docs/issues/0071-rename-top-5-operation-to-daily-top-3.md`.
+
+Key decisions made:
+- Treated Daily Top-3 Selection as the current normal operating model while leaving historical done issues and older PRDs unchanged.
+- Changed the canonical discovery handoff path for new normal runs to `daily_selection_top3.json`.
+- Set daily-mode and dashboard/manual-run daily selection defaults to 3.
+- Kept existing `top5_*` production artifact filenames as compatibility surface for this slice, while changing current visible labels to Daily Top-3 or Creative Production Report language.
+
+Files changed:
+- `.github/workflows/daily-evidence-run.yml`
+- `CONTEXT.md`
+- `README.md`
+- `batch_analysis/config.py`
+- `batch_analysis/run.py`
+- `batch_analysis/telegram.py`
+- `dashboard/manual_runs.py`
+- `dashboard/settings.py`
+- `dashboard/web_run_history.py`
+- `docs/cloud-operations.md`
+- `skills/nattome-viral-intelligence-run/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/config.json`
+- `skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py`
+- `skills/nattome-evidence-insight-analysis/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+- Daily selection, dashboard, cloud publication, cleanup, full-run, report, workbook, and settings tests.
+- `docs/issues/done/0071-rename-top-5-operation-to-daily-top-3.md`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_skill_contract -v` failed because current docs and skills still taught Daily Top-5 and `daily_selection_top5.json`.
+- GREEN: `.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_skill_contract -v` passed with 6 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_daily_discovery_handoff tests.test_dashboard_manual_runs tests.test_scrape_settings tests.test_dashboard_web_settings -v` passed with 15 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_cloud_publication tests.test_daily_evidence_cloud_publication tests.test_github_actions_daily_evidence_workflow tests.test_cloud_operations_documentation -v` passed with 17 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_full_batch_analysis_two_layer_cli tests.test_top5_angle_planning_workbook tests.test_top5_creative_report -v` passed with 10 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 147 tests.
+
+Notes for next iteration:
+- Issue `0072` can enforce evidence-qualified production outputs and handle `top5_*` production alias retirement/backfill behavior.

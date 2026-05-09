@@ -35,7 +35,7 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
     "scope": "all",
     "results_per_input": 20,
     "top_n": 30,
-    "daily_selection_size": 5,
+    "daily_selection_size": 3,
     "minimum_views": 10000,
     "maximum_age_days": 150,
     "minimum_weighted_engagement_rate": 0.03,
@@ -49,7 +49,7 @@ READ_ONLY_SETTINGS: dict[str, str] = {
     "Gemini model": "gemini-2.5-flash",
     "Output paths": "data/raw_scrapes, data/daily_selections, outputs/reports, runs/batch-analysis",
     "Cleanup deletion settings": "cleanup.enabled, cleanup.remove_source_videos, cleanup.remove_frames",
-    "Report schema": "Video Evidence Report, Top 5 Creative Production Report, planning workbook",
+    "Report schema": "Video Evidence Report, Creative Production Report, planning workbook",
     "Scoring internals": "Virality scoring, Scrape Quality Score weights, Pipeline Health phase map",
 }
 

@@ -180,7 +180,7 @@ class Top5CreativeReportTest(unittest.TestCase):
             self.assertNotIn("selected_at", report)
             self.assertNotIn("selection_score", report)
 
-    def test_completed_run_writes_dated_top5_report_output(self):
+    def test_completed_run_writes_dated_daily_top3_report_output(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             candidates_path = temp_path / "candidates.json"
@@ -214,7 +214,7 @@ class Top5CreativeReportTest(unittest.TestCase):
             report = report_path.read_text(encoding="utf-8")
             self.assertTrue(report.startswith("## 1. Digestive Comfort Routine Check"))
             self.assertNotIn("What We Learned From These 5 Videos", report)
-            self.assertEqual(report.count("### Source Reference"), 5)
+            self.assertEqual(report.count("### Source Reference"), 3)
 
     def test_recommended_shoot_gets_the_only_full_script_with_cta_ending(self):
         with tempfile.TemporaryDirectory() as temp_dir:

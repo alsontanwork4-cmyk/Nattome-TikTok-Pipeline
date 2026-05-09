@@ -64,7 +64,7 @@ jobs:
           RUN_ID="nattome_$(date -u +'%Y%m%dT%H%M%SZ')"
           RUN_DIR="data/daily_runs/${RUN_ID}"
           RAW_SCRAPE_PATH="${RUN_DIR}/raw_scrape_top30.json"
-          DAILY_SELECTION_PATH="${RUN_DIR}/daily_selection_top5.json"
+          DAILY_SELECTION_PATH="${RUN_DIR}/daily_selection_top3.json"
 
           mkdir -p "$RUN_DIR"
           {

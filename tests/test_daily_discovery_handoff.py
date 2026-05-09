@@ -17,6 +17,22 @@ def load_scraper_module():
 
 
 class DailyDiscoveryHandoffTest(unittest.TestCase):
+    def test_daily_selection_defaults_to_canonical_top_3(self):
+        scraper = load_scraper_module()
+
+        options = scraper.effective_scrape_options(
+            {},
+            SimpleNamespace(
+                scope=None,
+                results_per_input=None,
+                top=None,
+                daily_selection_size=None,
+                download_videos=False,
+            ),
+        )
+
+        self.assertEqual(options["daily_selection_size"], 3)
+
     def test_dashboard_saved_config_can_supply_scrape_option_defaults(self):
         scraper = load_scraper_module()
 

@@ -1,6 +1,6 @@
 ---
 name: nattome-viral-intelligence-run
-description: Primary normal-operation skill for the Nattome Daily Evidence Run. Scrapes TikTok candidates, creates the daily top-5 handoff, runs Gemini evidence analysis on those same five videos, and reports the final evidence-backed Nattome outputs. Use this for recurring automations, "run the Nattome pipeline", "run today's TikTok analysis", "scrape TikTok and give actionable insights", or any request to find viral TikToks and turn them into production-ready Nattome content ideas. Do not split discovery and evidence analysis unless the user explicitly asks for discovery-only or evidence-only debugging.
+description: Primary normal-operation skill for the Nattome Daily Evidence Run. Scrapes TikTok candidates, creates the Daily Top-3 Selection handoff, runs Gemini evidence analysis on those same three videos, and reports the final evidence-backed Nattome outputs. Use this for recurring automations, "run the Nattome pipeline", "run today's TikTok analysis", "scrape TikTok and give actionable insights", or any request to find viral TikToks and turn them into production-ready Nattome content ideas. Do not split discovery and evidence analysis unless the user explicitly asks for discovery-only or evidence-only debugging.
 ---
 
 # Nattome Daily Evidence Run
@@ -9,8 +9,8 @@ This is the only normal-operation skill for the Nattome TikTok pipeline.
 
 The Daily Evidence Run has two phases:
 
-1. `nattome-tiktok-candidate-discovery` creates the evidence-ready Daily Top-5 Selection handoff.
-2. `nattome-evidence-insight-analysis` analyzes those same five videos with Gemini and produces evidence-backed Nattome outputs.
+1. `nattome-tiktok-candidate-discovery` creates the evidence-ready Daily Top-3 Selection handoff.
+2. `nattome-evidence-insight-analysis` analyzes those same three videos with Gemini and produces evidence-backed Nattome outputs.
 
 The phase skills are supporting references, not normal entry points.
 
@@ -40,7 +40,7 @@ Treat the project root `.env` as a valid credential source, alongside already-ex
 
 ## Daily Run
 
-From the project root, create the raw top-30 scrape and daily top-5 handoff:
+From the project root, create the raw top-30 scrape and Daily Top-3 Selection handoff:
 
 ```powershell
 $runId = "nattome_$(Get-Date -Format yyyyMMddTHHmmss)"
@@ -49,7 +49,7 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
   --output "$runDir/raw_scrape_top30.json" `
   --top 30 `
   --download-videos `
-  --daily-selection-output "$runDir/daily_selection_top5.json"
+  --daily-selection-output "$runDir/daily_selection_top3.json"
 ```
 
 Then analyze the same daily-selected videos:
@@ -57,7 +57,7 @@ Then analyze the same daily-selected videos:
 ```powershell
 python scripts/run_batch_analysis.py `
   --mode daily `
-  --candidates data/daily_runs/<run_id>/daily_selection_top5.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top3.json
 ```
 
 Use the actual `$runId` generated for the scrape command. Preserve UTF-8 reads and writes for JSON, Markdown, manifests, logs, and workbook-adjacent structured data.
@@ -67,7 +67,7 @@ Use the actual `$runId` generated for the scrape command. Preserve UTF-8 reads a
 After a successful run, report these paths:
 
 - Raw scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
-- Daily top-5 handoff: `data/daily_runs/<run_id>/daily_selection_top5.json`
+- Daily Top-3 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top3.json`
 - Final report: `outputs/reports/<YYYY-MM-DD>/top5_creative_production_report_<YYYY-MM-DD>.md`
 - Planning workbook: `outputs/reports/<YYYY-MM-DD>/top5_angle_planning_sheet_<YYYY-MM-DD>.xlsx`
 - Audit/debug Run Folder: `runs/batch-analysis/<timestamp>_daily/`

@@ -6,7 +6,7 @@ This guide describes the cloud Daily Evidence Run v1 system for operators. It co
 
 Python remains the worker for Apify discovery, Gemini evidence analysis, Daily Output Set generation, and the operational dashboard. The cloud workflow runs the same project Python pipeline that local operators use:
 
-- Apify discovery creates a raw scrape and Daily Top-5 Selection handoff.
+- Apify discovery creates a raw scrape and Daily Top-3 Selection handoff.
 - Gemini evidence analysis reads the selected source videos and writes timestamped evidence outputs.
 - Daily Output Set generation writes the final markdown report, structured JSON, spreadsheet workbook, and supporting Run Folder artifacts.
 
@@ -16,7 +16,7 @@ Supabase is the cloud publication target:
 
 - Supabase Postgres stores compact run metadata in `daily_evidence_runs`, including run status, timestamp, report date, summary fields, publication status, and publication errors.
 - Supabase Postgres stores artifact records in `daily_evidence_artifacts`, including artifact type, storage path, filename, and content type.
-- Supabase Storage stores generated artifacts such as final markdown, structured JSON, spreadsheet workbook, raw scrape, Daily Top-5 Selection, and supporting batch-analysis files.
+- Supabase Storage stores generated artifacts such as final markdown, structured JSON, spreadsheet workbook, raw scrape, Daily Top-3 Selection, and supporting batch-analysis files.
 
 The Python dashboard in `dashboard/` is the operational dashboard. Host it on a VPS or other long-running app host when remote access is needed. It requires durable access to the dashboard SQLite database and local pipeline folders such as `data/`, `runs/`, and `outputs/`.
 

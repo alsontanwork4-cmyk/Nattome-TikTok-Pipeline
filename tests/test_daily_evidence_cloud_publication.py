@@ -64,7 +64,7 @@ def write_daily_inputs(temp_path):
     source_video.write_bytes(b"fake mp4 bytes")
     raw_scrape = daily_run_dir / "raw_scrape_top30.json"
     raw_scrape.write_text(json.dumps({"top": []}), encoding="utf-8")
-    daily_selection = daily_run_dir / "daily_selection_top5.json"
+    daily_selection = daily_run_dir / "daily_selection_top3.json"
     daily_selection.write_text(
         json.dumps(
             {

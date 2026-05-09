@@ -74,7 +74,7 @@ class DashboardManualRunsTest(unittest.TestCase):
                     "scope": "all",
                     "results_per_input": 25,
                     "top_n": 30,
-                    "daily_selection_size": 5,
+                    "daily_selection_size": 3,
                     "minimum_views": 10000,
                     "maximum_age_days": 14,
                     "minimum_weighted_engagement_rate": 0.025,
@@ -104,7 +104,7 @@ class DashboardManualRunsTest(unittest.TestCase):
             )
             self.assertEqual(
                 record.output_paths["daily_selection"],
-                "data/daily_runs/manual_20260507T091500Z_scrape_only/daily_selection_top5.json",
+                "data/daily_runs/manual_20260507T091500Z_scrape_only/daily_selection_top3.json",
             )
             self.assertEqual(len(executor.calls), 1)
             command, cwd = executor.calls[0]

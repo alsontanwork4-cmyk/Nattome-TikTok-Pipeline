@@ -39,7 +39,7 @@ class EvidenceArtifactCleanupTest(unittest.TestCase):
                             "output_root": str(output_root),
                             "final_outputs": [
                                 {
-                                    "label": "Top 5 Creative Production Report",
+                                    "label": "Daily Top-3 Creative Production Report",
                                     "kind": "markdown",
                                     "path": (
                                         "reports/2026-05-06/"
