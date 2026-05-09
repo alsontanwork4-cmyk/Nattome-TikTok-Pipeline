@@ -271,6 +271,48 @@ h3 {
   font-size: 28px;
 }
 
+.login-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.login-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.login-form input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--foreground);
+  font: inherit;
+}
+
+.login-form button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent-strong);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.form-error {
+  margin: 0;
+  color: #a33220;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 @media (max-width: 760px) {
   .page-header,
   .topbar-inner {
