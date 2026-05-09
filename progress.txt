@@ -1700,3 +1700,32 @@ Feedback:
 Notes for next iteration:
 - Issue `0070` can schedule the cloud-publishing worker after this command path is available.
 - Unrelated untracked issue files `docs/issues/0070` through `docs/issues/0074` remain untouched.
+
+## 2026-05-09 - 0070 Schedule Cloud Daily Evidence Run In GitHub Actions
+
+Task partially completed from `docs/issues/0070-schedule-cloud-daily-evidence-run-in-github-actions.md`.
+
+Key decisions made:
+- Added a GitHub Actions workflow with both `workflow_dispatch` and a `0 1 * * *` cron schedule, matching 09:00 Asia/Singapore.
+- Kept generated raw scrapes, Run Folders, reports, workbooks, and logs out of git by using `contents: read` permissions and no git write steps.
+- Checked required GitHub secrets by name before running discovery or publication, without printing secret values.
+- Used the existing discovery script and `scripts/run_batch_analysis.py --mode daily --publish-cloud` path so the workflow follows the same Daily Evidence Run contract as local operation.
+- Wrote workflow summary output for the Run Folder, `final_outputs`, and `logs/cloud_publication.json` status.
+
+Files changed:
+- `.github/workflows/daily-evidence-run.yml`
+- `README.md`
+- `docs/issues/0070-schedule-cloud-daily-evidence-run-in-github-actions.md`
+- `tests/test_github_actions_daily_evidence_workflow.py`
+- `progress.txt`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_github_actions_daily_evidence_workflow` failed because the workflow and README schedule docs did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_github_actions_daily_evidence_workflow` passed with 5 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 136 tests.
+
+Blocker:
+- This issue is HITL. The repository-side workflow is implemented, but the acceptance item requiring a manual GitHub Actions run that publishes at least one test Daily Evidence Run to Supabase cannot be completed from the local workspace without repository secrets and a live Actions run.
+
+Next concrete step:
+- Configure `APIFY_TOKEN`, `GEMINI_API_KEY`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY` in GitHub repository secrets, optionally configure Telegram secrets, run **Daily Evidence Run Cloud Publisher** manually, and confirm the summary reports cloud publication status `published`.

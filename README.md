@@ -165,13 +165,22 @@ C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_
 
 ## Running On a Schedule
 
-Use one scheduled prompt for the normal pipeline. The prompt wording should trigger `nattome-tiktok-run-coordinate` so discovery and evidence run together.
+Use the GitHub Actions Daily Evidence Run workflow for cloud publication. It runs at `01:00 UTC`, which is `09:00 Asia/Singapore`, and can also be started manually from the GitHub Actions UI. The workflow runs discovery, creates a Daily Top-5 Selection, runs daily evidence analysis with `--publish-cloud`, and writes final output paths plus `logs/cloud_publication.json` status to the workflow summary.
 
-| Cadence | Prompt | Matches skill |
+Required GitHub Actions secrets:
+
+| Secret | Required for | Notes |
 |---|---|---|
-| Daily 09:00 local | "Run the end-to-end Nattome TikTok viral intelligence pipeline for today." | `nattome-tiktok-run-coordinate` |
+| `APIFY_TOKEN` | Discovery | Required for scheduled and manual workflow runs. |
+| `GEMINI_API_KEY` | Evidence analysis | Required for source-video evidence extraction. |
+| `SUPABASE_URL` | Cloud publication | Required for `--publish-cloud`. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Cloud publication | Required for `--publish-cloud`; never print this value. |
+| `TELEGRAM_BOT_TOKEN` | Optional delivery | Used only when Telegram delivery is configured. |
+| `TELEGRAM_CHAT_ID` | Optional delivery | Used only when Telegram delivery is configured. |
 
-Manage schedules via the automation tool available in your runner.
+The workflow checks required secret names before running and does not print secret values. It does not commit generated artifacts back to the repository; raw scrapes, Run Folders, reports, workbooks, and logs live only in the workflow runner and in Supabase publication records.
+
+Manual verification for this HITL slice: run **Daily Evidence Run Cloud Publisher** from GitHub Actions after configuring the required secrets, then confirm the summary shows a Run Folder, `final_outputs`, and cloud publication status `published`.
 
 ## Key Reading Order For New Contributors
 
