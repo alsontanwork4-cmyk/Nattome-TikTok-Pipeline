@@ -5,8 +5,8 @@ import {
   buildDailyEvidenceRunView,
   createDailyEvidenceRunRepository
 } from "../../../lib/dailyEvidenceRuns";
-import { requireAuthenticatedUser } from "../../../lib/auth";
 import { requireSupabaseEnv } from "../../../lib/env";
+import { createSupabaseServerClient } from "../../../lib/supabaseServer";
 
 type RunDetailPageProps = {
   params: Promise<{
@@ -16,7 +16,7 @@ type RunDetailPageProps = {
 
 export default async function RunDetailPage({ params }: RunDetailPageProps) {
   const { runId } = await params;
-  const { supabase, user } = await requireAuthenticatedUser();
+  const supabase = await createSupabaseServerClient();
   const run = await createDailyEvidenceRunRepository(supabase).getRunById(
     decodeURIComponent(runId)
   );
@@ -32,9 +32,9 @@ export default async function RunDetailPage({ params }: RunDetailPageProps) {
         <div className="topbar-inner">
           <div className="brand">
             <strong>Nattome</strong>
-            <span>Private Daily Evidence Dashboard</span>
+            <span>Daily Evidence Dashboard</span>
           </div>
-          <span className="status-pill">Signed in as {user.email ?? user.id}</span>
+          <span className="status-pill">Public read-only dashboard</span>
         </div>
       </header>
 

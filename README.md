@@ -30,7 +30,7 @@ Use `nattome-viral-intelligence-run` for normal operation. The phase skills are 
 ├── scripts/
 │   └── run_batch_analysis.py      <- thin compatibility CLI
 ├── dashboard/                     <- local marketer-facing control room
-├── web/vercel-dashboard/          <- private Next.js dashboard shell for Vercel
+├── web/vercel-dashboard/          <- public read-only Next.js dashboard shell for Vercel
 ├── tests/
 ├── docs/
 │   ├── prd/
@@ -166,14 +166,14 @@ C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_
 
 ## Vercel Dashboard
 
-The private Vercel Dashboard lives in `web/vercel-dashboard/` as a separate Next.js TypeScript app. It does not replace the Python dashboard or change pipeline behavior.
+The public read-only Vercel Dashboard lives in `web/vercel-dashboard/` as a separate Next.js TypeScript app. It does not replace the Python dashboard or change pipeline behavior.
 
 Required Vercel-side Supabase configuration:
 
 | Variable | Required for | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Auth and read access | Use the project URL from Supabase. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Auth and read access | Use the anon key, with Supabase Row Level Security controlling access. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase read access | Use the project URL from Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase read access | Use the publishable anon key, with Supabase Row Level Security controlling access. |
 
 Run locally from the app directory:
 
@@ -183,7 +183,7 @@ npm install
 npm run dev
 ```
 
-The app uses Supabase Auth to protect dashboard routes. Anonymous users are redirected to `/login`; authenticated users can open the minimal read-only shell and the dashboard data-access layer can request the latest cloud-published Daily Evidence Run.
+The app does not require dashboard login. It opens directly and uses the public Supabase anon key to request permitted read-only Daily Evidence Run records. Supabase Row Level Security must allow anonymous `select` access for the run and artifact tables if the dashboard should show data without login.
 
 ## Running On a Schedule
 

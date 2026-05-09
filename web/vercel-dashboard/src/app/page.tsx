@@ -3,12 +3,12 @@ import {
   buildDailyEvidenceRunView,
   createDailyEvidenceRunRepository
 } from "../lib/dailyEvidenceRuns";
-import { requireAuthenticatedUser } from "../lib/auth";
 import { requireSupabaseEnv } from "../lib/env";
+import { createSupabaseServerClient } from "../lib/supabaseServer";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-  const { supabase, user } = await requireAuthenticatedUser();
+  const supabase = await createSupabaseServerClient();
   const repository = createDailyEvidenceRunRepository(supabase);
   const latestRun = await repository.getLatestRun();
   const runHistory = await repository.listRuns();
@@ -21,9 +21,9 @@ export default async function DashboardPage() {
         <div className="topbar-inner">
           <div className="brand">
             <strong>Nattome</strong>
-            <span>Private Daily Evidence Dashboard</span>
+            <span>Daily Evidence Dashboard</span>
           </div>
-          <span className="status-pill">Signed in as {user.email ?? user.id}</span>
+          <span className="status-pill">Public read-only dashboard</span>
         </div>
       </header>
 
@@ -35,7 +35,7 @@ export default async function DashboardPage() {
               Read-only view for cloud-published TikTok evidence runs.
             </p>
           </div>
-          <span className="status-pill">Supabase Auth protected</span>
+          <span className="status-pill">Supabase public read</span>
         </div>
 
         <div className="grid">

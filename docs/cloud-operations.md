@@ -18,7 +18,7 @@ Supabase is the cloud publication target:
 - Supabase Postgres stores artifact records in `daily_evidence_artifacts`, including artifact type, storage path, filename, and content type.
 - Supabase Storage stores generated artifacts such as final markdown, structured JSON, spreadsheet workbook, raw scrape, Daily Top-5 Selection, and supporting batch-analysis files.
 
-Vercel hosts the private read-only Next.js dashboard in `web/vercel-dashboard/`. The dashboard uses Supabase Auth for access control, reads run and artifact records through the public anon key under Row Level Security, and links to Supabase Storage artifact downloads. Vercel does not run the Python worker and does not hold service-role credentials.
+Vercel hosts the public read-only Next.js dashboard in `web/vercel-dashboard/`. The dashboard does not require login, reads run and artifact records through the public anon key under Row Level Security, and links to Supabase Storage artifact downloads. Vercel does not run the Python worker and does not hold service-role credentials.
 
 ## Cloud v1 Data Policy
 
@@ -50,7 +50,7 @@ Required Vercel environment variables:
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Lets the Next.js dashboard connect to Supabase Auth and read APIs. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Lets the Next.js dashboard connect to Supabase read APIs. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Lets the Next.js dashboard read permitted run and artifact records under Row Level Security. |
 
 Do not configure `SUPABASE_SERVICE_ROLE_KEY` in Vercel. The service-role key belongs only in the GitHub Actions worker environment.
