@@ -1867,3 +1867,29 @@ Feedback:
 
 Notes for next iteration:
 - No remaining AFK issue file is queued under `docs/issues/`.
+
+## 2026-05-09 - 0062 Make Daily Evidence Run The Primary Skill
+
+Task completed from `docs/issues/0062-make-daily-evidence-run-the-primary-skill.md`.
+
+Key decisions made:
+- Treated `nattome-viral-intelligence-run` as the canonical repo-local primary Daily Evidence Run skill because the phase skills already pointed normal users to that name.
+- Renamed the repo-local primary skill folder from `skills/nattome-tiktok-run-coordinate/` to `skills/nattome-viral-intelligence-run/`.
+- Kept the primary skill content focused on the end-to-end daily path: credential checks, discovery command, `--mode daily` Gemini evidence analysis, primary output paths, reporting checklist, and honesty rules.
+- Updated README references so high-level docs no longer describe the old skill name as the normal entry point.
+
+Files changed:
+- `README.md`
+- `docs/issues/done/0062-make-daily-evidence-run-the-primary-skill.md`
+- `progress.txt`
+- `skills/nattome-viral-intelligence-run/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` failed because `skills/nattome-viral-intelligence-run/SKILL.md` did not exist.
+- GREEN: `.venv\Scripts\python.exe tests\test_daily_evidence_skill_contract.py` passed with 2 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests` passed with 149 tests.
+- `Get-Content -Raw skills\nattome-tiktok-candidate-discovery\assets\config.example.json | ConvertFrom-Json` passed.
+
+Notes for next iteration:
+- Issue `0063` can now complete the phase-skill supporting-reference checks against the canonical primary skill name.

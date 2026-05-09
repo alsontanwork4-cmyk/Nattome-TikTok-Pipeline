@@ -1,5 +1,5 @@
 ---
-name: nattome-tiktok-run-coordinate
+name: nattome-viral-intelligence-run
 description: Primary normal-operation skill for the Nattome Daily Evidence Run. Scrapes TikTok candidates, creates the daily top-5 handoff, runs Gemini evidence analysis on those same five videos, and reports the final evidence-backed Nattome outputs. Use this for recurring automations, "run the Nattome pipeline", "run today's TikTok analysis", "scrape TikTok and give actionable insights", or any request to find viral TikToks and turn them into production-ready Nattome content ideas. Do not split discovery and evidence analysis unless the user explicitly asks for discovery-only or evidence-only debugging.
 ---
 
@@ -9,7 +9,7 @@ This is the only normal-operation skill for the Nattome TikTok pipeline.
 
 The Daily Evidence Run has two phases:
 
-1. `nattome-tiktok-candidate-discovery` creates the evidence-ready daily top-5 candidate handoff.
+1. `nattome-tiktok-candidate-discovery` creates the evidence-ready Daily Top-5 Selection handoff.
 2. `nattome-evidence-insight-analysis` analyzes those same five videos with Gemini and produces evidence-backed Nattome outputs.
 
 The phase skills are supporting references, not normal entry points.

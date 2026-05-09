@@ -8,11 +8,11 @@ Discovery creates the data. Evidence analysis turns that data into actionable in
 
 | Use case | Skill | Purpose / artifact | Runtime |
 |---|---|---|---|
-| **Normal daily run** | `nattome-tiktok-run-coordinate` | Runs discovery, creates the daily top-5 handoff, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
+| **Normal daily run** | `nattome-viral-intelligence-run` | Runs discovery, creates the Daily Top-5 Selection handoff, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
 | **Discovery-only debugging** | `nattome-tiktok-candidate-discovery` | Supporting phase reference for scraper config and top-5 candidate handoff creation. | 3-8 min |
 | **Evidence-only debugging** | `nattome-evidence-insight-analysis` | Supporting phase reference for rerunning `--mode daily` on an existing candidate JSON. | 15-30 min |
 
-Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are supporting references, not alternative normal workflows.
+Use `nattome-viral-intelligence-run` for normal operation. The phase skills are supporting references, not alternative normal workflows.
 
 ## Folder Layout
 
@@ -23,7 +23,7 @@ Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are s
 ├── progress.txt                   <- chronological execution log
 ├── .claude/settings.json          <- registers skills/ as a skill directory
 ├── skills/
-│   ├── nattome-tiktok-run-coordinate/        <- primary daily run skill
+│   ├── nattome-viral-intelligence-run/       <- primary daily run skill
 │   ├── nattome-tiktok-candidate-discovery/   <- supporting phase 1 docs/scripts/assets
 │   └── nattome-evidence-insight-analysis/    <- supporting phase 2 docs
 ├── batch_analysis/                <- importable evidence analysis package
@@ -210,7 +210,7 @@ Manual verification for this HITL slice: run **Daily Evidence Run Cloud Publishe
 
 1. `CONTEXT.md` - what every domain term means.
 2. `docs/prd/gemini-two-layer-evidence-pipeline-architecture-prd.md` - current Gemini/two-layer architecture.
-3. `skills/nattome-tiktok-run-coordinate/SKILL.md` - primary daily automation workflow.
+3. `skills/nattome-viral-intelligence-run/SKILL.md` - primary daily automation workflow.
 4. `skills/nattome-tiktok-candidate-discovery/SKILL.md` - supporting phase 1 workflow.
 5. `skills/nattome-evidence-insight-analysis/SKILL.md` - supporting phase 2 workflow.
 6. `skills/nattome-tiktok-candidate-discovery/references/nattome_brand.md` - voice and claim guardrails.
