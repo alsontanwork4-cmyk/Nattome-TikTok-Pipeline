@@ -71,18 +71,11 @@ def _summarize_run(
     candidate_source = selected["candidate_source"] if selected else _candidate_source_from_manifest(manifest)
     bundle_path = run_folder / "data" / "evidence_bundle_index.json"
     bundle_index = _read_json(bundle_path)
-    telegram_log_path = run_folder / "logs" / "telegram_delivery.json"
-    telegram_log = _read_json(telegram_log_path)
-
     items = [
         _apify_scrape_item(connection, workspace, run, raw_count, candidate_source),
         _raw_candidates_item(workspace, run, raw_count, candidate_source),
         _selected_batch_item(workspace, run, selected, selected_json),
         _source_video_item(workspace, run, bundle_path, bundle_index),
-        _gemini_item(workspace, run, phases, bundle_path, bundle_index),
-        _report_item(connection, workspace, run, phases, bundle_index),
-        _excel_item(connection, workspace, run, phases),
-        _telegram_item(workspace, run, phases, telegram_log_path, telegram_log),
     ]
     items.extend(_phase_error_items(workspace, run, phases))
 
@@ -230,159 +223,16 @@ def _source_video_item(
         impact = f"Only {available} of {total} source videos are available; some evidence may be incomplete."
     else:
         severity, status = "blocked", "missing"
-        impact = "No selected source videos are available, blocking evidence review."
+        impact = "No selected source videos are available, blocking source-video review."
     return _item(
         "source_videos",
         severity,
         status,
         impact,
         run,
-        phase="evidence_bundles",
+        phase="source_video_snapshots",
         file_path=_relative_path(workspace, bundle_path) if bundle_path.exists() else None,
         raw_json=details_json,
-    )
-
-
-def _gemini_item(
-    workspace: Path,
-    run: sqlite3.Row,
-    phases: dict[str, dict[str, Any]],
-    bundle_path: Path,
-    bundle_index: dict[str, Any],
-) -> PipelineHealthItem:
-    phase = phases.get("gemini_evidence", {})
-    phase_status = str(phase.get("status") or "")
-    states = _artifact_states(bundle_index, "gemini_evidence")
-    completed = sum(1 for state in states if state == "completed")
-    total = len(states)
-    if total and completed == total and phase_status not in {"failed", "error", "blocked"}:
-        severity, status = "info", "completed"
-        impact = "Gemini evidence is available for every selected candidate."
-    elif phase_status in {"failed", "error"}:
-        severity, status = "error", phase_status
-        impact = "Gemini evidence failed, so marketer-facing analysis may be unavailable."
-    elif phase_status == "blocked":
-        severity, status = "blocked", "blocked"
-        impact = "Gemini evidence is blocked by an earlier pipeline step."
-    elif completed:
-        severity, status = "warning", "partial"
-        impact = f"Gemini evidence is partial: {completed} of {total} candidates completed."
-    else:
-        severity, status = "warning", "missing"
-        impact = "Gemini evidence is not available yet."
-    return _item(
-        "gemini_evidence",
-        severity,
-        status,
-        impact,
-        run,
-        phase="gemini_evidence",
-        file_path=_relative_path(workspace, bundle_path) if bundle_path.exists() else None,
-        raw_json=phase or bundle_index or None,
-        exception_text=_exception_text(phase),
-    )
-
-
-def _report_item(
-    connection: sqlite3.Connection,
-    workspace: Path,
-    run: sqlite3.Row,
-    phases: dict[str, dict[str, Any]],
-    bundle_index: dict[str, Any],
-) -> PipelineHealthItem:
-    reports = _outputs(connection, run["run_id"], ("report_markdown",))
-    run_folder = workspace / str(run["run_folder"])
-    run_reports = sorted((run_folder / "reports").glob("*.md"))
-    states = _artifact_states(bundle_index, "video_evidence_report")
-    completed_states = sum(1 for state in states if state == "completed")
-    completed = len(reports) or len(run_reports) or completed_states
-    if completed:
-        severity, status = "info", "completed"
-        impact = f"{completed} marketer-readable report artifacts are available."
-    else:
-        phase = phases.get("cross_video_pattern_summary") or phases.get("report_generation") or {}
-        status = str(phase.get("status") or "missing")
-        severity = "error" if status in {"failed", "error"} else "warning"
-        impact = "No marketer-readable report artifact was generated."
-    first = reports[0] if reports else None
-    return _item(
-        "report_generation",
-        severity,
-        status,
-        impact,
-        run,
-        phase="report_generation",
-        file_path=first["artifact_path"] if first else (_relative_path(workspace, run_reports[0]) if run_reports else None),
-        raw_json=dict(first) if first else None,
-    )
-
-
-def _excel_item(
-    connection: sqlite3.Connection,
-    workspace: Path,
-    run: sqlite3.Row,
-    phases: dict[str, dict[str, Any]],
-) -> PipelineHealthItem:
-    outputs = _outputs(connection, run["run_id"], ("excel_workbook", "structured_outputs"))
-    csv_path = workspace / str(run["run_folder"]) / "data" / "spreadsheet_summary.csv"
-    if outputs or csv_path.exists():
-        first = outputs[0] if outputs else None
-        return _item(
-            "excel_generation",
-            "info",
-            "completed",
-            "Planning spreadsheet output is available for downstream use.",
-            run,
-            phase="structured_outputs",
-            file_path=first["artifact_path"] if first else _relative_path(workspace, csv_path),
-            raw_json=dict(first) if first else None,
-        )
-    phase = phases.get("structured_outputs") or {}
-    status = str(phase.get("status") or "missing")
-    severity = "error" if status in {"failed", "error"} else "warning"
-    return _item(
-        "excel_generation",
-        severity,
-        status,
-        "No spreadsheet output is available for planning workflows.",
-        run,
-        phase="structured_outputs",
-        raw_json=phase or None,
-        exception_text=_exception_text(phase),
-    )
-
-
-def _telegram_item(
-    workspace: Path,
-    run: sqlite3.Row,
-    phases: dict[str, dict[str, Any]],
-    log_path: Path,
-    telegram_log: dict[str, Any],
-) -> PipelineHealthItem:
-    phase = phases.get("telegram_delivery") or {}
-    status = str(telegram_log.get("status") or phase.get("status") or "missing")
-    if status in {"sent", "completed"}:
-        severity = "info"
-        impact = "Telegram delivery completed."
-    elif status == "skipped":
-        severity = "warning"
-        impact = "Telegram delivery was skipped; marketers may need to read the dashboard or files directly."
-    elif status in {"failed", "error"}:
-        severity = "error"
-        impact = "Telegram delivery failed; marketers may not receive the run summary automatically."
-    else:
-        severity = "warning"
-        impact = "Telegram delivery status is unavailable."
-    return _item(
-        "telegram_delivery",
-        severity,
-        status,
-        impact,
-        run,
-        phase="telegram_delivery",
-        log_path=_relative_path(workspace, log_path) if log_path.exists() else None,
-        raw_json=telegram_log or phase or None,
-        exception_text=_exception_text(telegram_log) or _exception_text(phase),
     )
 
 
@@ -395,16 +245,13 @@ def _phase_error_items(
     covered = {
         "apify_scrape",
         "candidate_selection",
-        "evidence_bundles",
-        "gemini_evidence",
-        "cross_video_pattern_summary",
-        "report_generation",
-        "structured_outputs",
-        "telegram_delivery",
+        "source_video_snapshots",
     }
     for phase_name, phase in phases.items():
         status = str(phase.get("status") or "")
-        if phase_name in covered or status not in {"failed", "error", "blocked"}:
+        if status not in {"failed", "error", "blocked"}:
+            continue
+        if phase_name in covered and status == "blocked":
             continue
         severity = "blocked" if status == "blocked" else "error"
         items.append(
@@ -477,39 +324,6 @@ def _bundle_states(bundle_index: dict[str, Any], key: str) -> list[str]:
     return states
 
 
-def _artifact_states(bundle_index: dict[str, Any], artifact: str) -> list[str]:
-    bundles = bundle_index.get("bundles")
-    if not isinstance(bundles, list):
-        return []
-    states: list[str] = []
-    for bundle in bundles:
-        artifacts = bundle.get("artifacts") if isinstance(bundle, dict) else None
-        artifact_data = artifacts.get(artifact) if isinstance(artifacts, dict) else None
-        if isinstance(artifact_data, dict) and artifact_data.get("state"):
-            states.append(str(artifact_data["state"]))
-    return states
-
-
-def _outputs(
-    connection: sqlite3.Connection,
-    run_id: str,
-    artifact_types: tuple[str, ...],
-) -> list[sqlite3.Row]:
-    placeholders = ",".join("?" for _ in artifact_types)
-    return list(
-        connection.execute(
-            f"""
-            SELECT * FROM run_outputs
-            WHERE run_id = ?
-              AND artifact_type IN ({placeholders})
-              AND exists_on_disk = 1
-            ORDER BY artifact_path
-            """,
-            (run_id, *artifact_types),
-        )
-    )
-
-
 def _summary_status(severity: str, items: list[PipelineHealthItem]) -> str:
     if severity == "blocked":
         return "blocked"
@@ -522,15 +336,15 @@ def _summary_status(severity: str, items: list[PipelineHealthItem]) -> str:
 
 def _impact_summary(status: str, severity: str) -> str:
     if status == "completed":
-        return "Pipeline outputs are ready for marketer review."
+        return "Source video snapshots are ready for review."
     if status == "partial":
-        return "Pipeline outputs are partially ready; review warnings before using the run."
+        return "Source video snapshots are partially ready; review warnings before using the run."
     if status == "warning":
-        return "Pipeline completed with delivery or artifact warnings."
+        return "Pipeline completed with artifact warnings."
     if status == "error":
-        return "Pipeline hit an error that may leave marketer outputs incomplete."
+        return "Pipeline hit an error before source-video snapshot completion."
     if severity == "blocked":
-        return "Pipeline is blocked before marketer-ready outputs can be trusted."
+        return "Pipeline is blocked before source-video snapshots can be trusted."
     return "Pipeline status needs review."
 
 

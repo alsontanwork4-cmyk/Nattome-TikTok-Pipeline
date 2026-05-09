@@ -62,7 +62,7 @@ class DashboardRunHistoryTest(unittest.TestCase):
             self.assertGreater(history.rows[1].average_nattome_relevance, 0)
             self.assertGreater(history.rows[1].average_engagement, 0)
             self.assertEqual(history.rows[1].pipeline_health, "completed")
-            self.assertTrue(any(link.artifact_type == "report_markdown" for link in history.rows[1].output_links))
+            self.assertTrue(any(link.artifact_type == "selected_batch" for link in history.rows[1].output_links))
             self.assertEqual([point.config_version for point in history.trend_points], ["v2", "v3"])
             self.assertEqual([overlay.version for overlay in history.config_overlays], ["v2", "v3"])
             self.assertIn("current-video-1", [video.video_id for video in detail.raw_content])
@@ -70,12 +70,13 @@ class DashboardRunHistoryTest(unittest.TestCase):
             self.assertTrue(detail.quality_drivers)
             self.assertTrue(detail.pipeline_phases)
             self.assertIn("logs/pipeline.log", detail.logs[0])
-            self.assertTrue(any(link.artifact_type == "excel_workbook" for link in detail.output_links))
+            self.assertFalse(any(link.artifact_type == "batch_index" for link in detail.output_links))
             self.assertIn("Scheduled Daily", body)
             self.assertIn("Trend Monitoring", body)
             self.assertIn("Config Overlays", body)
             self.assertIn("20260507T010000Z_daily", body)
-            self.assertIn("reports/current.md", body)
+            self.assertIn("2026-05-07 09:00:00 +0800", body)
+            self.assertIn("data/selected_batch.json", body)
 
     def test_empty_run_history_explains_missing_history(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -106,8 +107,7 @@ class DashboardRunHistoryTest(unittest.TestCase):
     ) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
         run_folder = workspace / "runs" / "batch-analysis" / run_id
-        report_folder = workspace / "outputs" / "reports" / run_timestamp[:10]
-        for folder in [raw_scrapes, run_folder / "data", run_folder / "evidence", run_folder / "logs", report_folder]:
+        for folder in [raw_scrapes, run_folder / "data", run_folder / "evidence", run_folder / "logs"]:
             folder.mkdir(parents=True, exist_ok=True)
 
         candidate_source = f"data/raw_scrapes/{video_prefix}_raw.json"
@@ -136,13 +136,9 @@ class DashboardRunHistoryTest(unittest.TestCase):
                     },
                     "phases": [
                         {"name": "candidate_selection", "status": "completed"},
-                        {"name": "gemini_evidence", "status": "completed"},
-                        {"name": "report_generation", "status": "completed"},
+                        {"name": "source_video_snapshots", "status": "completed"},
                     ],
-                    "outputs": {
-                        "report_markdown": "reports/current.md",
-                        "excel_workbook": "reports/current.xlsx",
-                    },
+                    "outputs": {},
                 }
             ),
             encoding="utf-8",
@@ -170,10 +166,6 @@ class DashboardRunHistoryTest(unittest.TestCase):
             encoding="utf-8",
         )
         (run_folder / "logs" / "pipeline.log").write_text("ok\n", encoding="utf-8")
-        (run_folder / "logs" / "telegram_delivery.json").write_text(
-            json.dumps({"status": "sent"}),
-            encoding="utf-8",
-        )
         (run_folder / "data" / "evidence_bundle_index.json").write_text(
             json.dumps(
                 {
@@ -184,16 +176,7 @@ class DashboardRunHistoryTest(unittest.TestCase):
                                 "state": "available",
                                 "path": f"evidence/{video_prefix}-video-1.mp4",
                             },
-                            "artifacts": {
-                                "gemini_evidence": {
-                                    "state": "completed",
-                                    "path": f"data/{video_prefix}-video-1_gemini.json",
-                                },
-                                "video_evidence_report": {
-                                    "state": "completed",
-                                    "path": "reports/current.md",
-                                },
-                            },
+                            "artifacts": {},
                         },
                         {
                             "candidate_id": f"{video_prefix}-video-2",
@@ -201,16 +184,7 @@ class DashboardRunHistoryTest(unittest.TestCase):
                                 "state": "available",
                                 "path": f"evidence/{video_prefix}-video-2.mp4",
                             },
-                            "artifacts": {
-                                "gemini_evidence": {
-                                    "state": "completed",
-                                    "path": f"data/{video_prefix}-video-2_gemini.json",
-                                },
-                                "video_evidence_report": {
-                                    "state": "completed",
-                                    "path": "reports/current.md",
-                                },
-                            },
+                            "artifacts": {},
                         },
                     ]
                 }
@@ -219,12 +193,6 @@ class DashboardRunHistoryTest(unittest.TestCase):
         )
         (run_folder / "evidence" / f"{video_prefix}-video-1.mp4").write_bytes(b"video")
         (run_folder / "evidence" / f"{video_prefix}-video-2.mp4").write_bytes(b"video")
-        (run_folder / "data" / f"{video_prefix}-video-1_gemini.json").write_text("{}", encoding="utf-8")
-        (run_folder / "data" / f"{video_prefix}-video-2_gemini.json").write_text("{}", encoding="utf-8")
-        (run_folder / "reports").mkdir(exist_ok=True)
-        (run_folder / "reports" / "current.md").write_text("# Report\n", encoding="utf-8")
-        (run_folder / "reports" / "current.xlsx").write_bytes(b"xlsx")
-        (report_folder / f"{video_prefix}.md").write_text("# Existing Markdown Report\n", encoding="utf-8")
 
     def _video(
         self,

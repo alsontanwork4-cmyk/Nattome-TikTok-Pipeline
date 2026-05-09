@@ -1,4 +1,4 @@
-name: Daily Evidence Run Cloud Publisher
+name: Daily Source Video Run
 
 on:
   workflow_dispatch:
@@ -9,19 +9,17 @@ permissions:
   contents: read
 
 concurrency:
-  group: daily-evidence-run-cloud-publisher
+  group: daily-source-video-run
   cancel-in-progress: false
 
 jobs:
-  publish-daily-evidence-run:
-    name: Publish Daily Evidence Run
+  daily-source-video-run:
+    name: Daily Source Video Run
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
     env:
       APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
@@ -43,57 +41,47 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          missing=()
-          for name in APIFY_TOKEN GEMINI_API_KEY SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY; do
-            if [ -z "${!name:-}" ]; then
-              missing+=("$name")
-            fi
-          done
-
-          if [ "${#missing[@]}" -gt 0 ]; then
-            printf 'Missing required GitHub secrets: %s\n' "${missing[*]}" >&2
+          if [ -z "${APIFY_TOKEN:-}" ]; then
+            echo "Missing required GitHub secret: APIFY_TOKEN" >&2
             exit 2
           fi
-
           echo "Required GitHub secrets are configured."
 
       - name: Run daily TikTok discovery
         shell: bash
         run: |
           set -euo pipefail
-          RUN_ID="nattome_$(date -u +'%Y%m%dT%H%M%SZ')"
-          RUN_DIR="data/daily_runs/${RUN_ID}"
-          RAW_SCRAPE_PATH="${RUN_DIR}/raw_scrape_top30.json"
-          DAILY_SELECTION_PATH="${RUN_DIR}/daily_selection_top3.json"
-          DAILY_BACKFILL_PATH="${RUN_DIR}/daily_backfill_candidates.json"
+          RUN_TIMESTAMP="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          RUN_STAMP="$(date -u -d "$RUN_TIMESTAMP" +'%Y%m%dT%H%M%SZ')"
+          RUN_ID="nattome_${RUN_STAMP}"
+          RUN_DIR="runs/batch-analysis/${RUN_STAMP}_daily"
+          RAW_SCRAPE_PATH="${RUN_DIR}/data/raw_scrape_top30.json"
+          DAILY_SELECTION_PATH="${RUN_DIR}/data/daily_selection_top_videos.json"
 
-          mkdir -p "$RUN_DIR"
+          mkdir -p "${RUN_DIR}/data"
           {
+            echo "RUN_TIMESTAMP=$RUN_TIMESTAMP"
             echo "RUN_ID=$RUN_ID"
             echo "RUN_DIR=$RUN_DIR"
             echo "RAW_SCRAPE_PATH=$RAW_SCRAPE_PATH"
             echo "DAILY_SELECTION_PATH=$DAILY_SELECTION_PATH"
-            echo "DAILY_BACKFILL_PATH=$DAILY_BACKFILL_PATH"
           } >> "$GITHUB_ENV"
 
-          python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py \
+          python batch_analysis/scrape_tiktok.py \
             --output "$RAW_SCRAPE_PATH" \
-            --top 30 \
             --download-videos \
             --daily-selection-output "$DAILY_SELECTION_PATH"
 
-      - name: Run evidence analysis and publish cloud records
+      - name: Create source video run folder
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/run_batch_analysis.py \
+          python batch_analysis/run_batch_analysis.py \
             --candidates "$DAILY_SELECTION_PATH" \
-            --backfill-candidates "$DAILY_BACKFILL_PATH" \
-            --runs-dir runs/batch-analysis \
-            --outputs-dir outputs \
-            --publish-cloud | tee "$RUNNER_TEMP/daily_evidence_run.log"
+            --timestamp "$RUN_TIMESTAMP" \
+            --runs-dir runs/batch-analysis | tee "$RUNNER_TEMP/daily_source_video_run.log"
 
-      - name: Summarize final output paths and cloud publication status
+      - name: Summarize run folder
         if: always()
         shell: bash
         run: |
@@ -103,7 +91,7 @@ jobs:
           import os
           from pathlib import Path
 
-          print("### Daily Evidence Run Cloud Publication")
+          print("### Daily Source Video Run")
           print("")
           print(f"- Discovery run id: `{os.environ.get('RUN_ID', 'not recorded')}`")
 
@@ -118,30 +106,8 @@ jobs:
 
           run_folder = run_folders[-1]
           print(f"- Run Folder: `{run_folder}`")
-
-          manifest_path = run_folder / "run_manifest.json"
-          if manifest_path.exists():
-              manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-              final_outputs = manifest.get("outputs", {}).get("final_outputs", [])
-              print("- final_outputs:")
-              if final_outputs:
-                  for output in final_outputs:
-                      label = output.get("label", "Output")
-                      path = output.get("path", "")
-                      kind = output.get("kind", "file")
-                      print(f"  - {label} ({kind}): `{path}`")
-              else:
-                  print("  - none recorded")
-
-          publication_path = run_folder / "logs" / "cloud_publication.json"
-          if publication_path.exists():
-              publication = json.loads(publication_path.read_text(encoding="utf-8"))
-              print(f"- Cloud publication status: `{publication.get('status')}`")
-              print(f"- Cloud artifact count: `{publication.get('artifact_count')}`")
-              if publication.get("errors"):
-                  print("- Cloud publication errors:")
-                  for error in publication["errors"]:
-                      print(f"  - `{error}`")
-          else:
-              print("- Cloud publication status: `not recorded`")
+          index_path = run_folder / "data" / "evidence_bundle_index.json"
+          if index_path.exists():
+              index = json.loads(index_path.read_text(encoding="utf-8"))
+              print(f"- Source snapshot count: `{index.get('bundle_count', 0)}`")
           PY

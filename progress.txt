@@ -426,7 +426,7 @@ Task completed from `docs/issues/0018-create-two-layer-run-folder-and-run-manife
 Key decisions made:
 - Skeleton Batch Analysis Runs now create direct Run Folder child folders for `reports`, `data`, `evidence`, and `logs`.
 - Skeleton runs write `run_manifest.json` with configuration, timestamp, mode, requested batch size, folders, and structured phase records.
-- `batch_index.md` is generated from the Run Manifest and links back to `run_manifest.json`.
+- `run_manifest.json` is the canonical Run Folder index.
 - Existing candidate-run writers keep their legacy nested output folders only when a candidate file is provided, so later migration issues can move evidence and output writers incrementally.
 
 Files changed:

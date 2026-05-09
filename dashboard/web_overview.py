@@ -9,6 +9,7 @@ from .refresh import refresh_dashboard_derivatives
 from .scoring import nattome_relevance, relevance_band, weighted_engagement
 from .settings import get_active_settings_version
 from .store import DASHBOARD_DB_PATH, connect_dashboard_store
+from .time_display import display_datetime
 from .web_components import (
     _format_count,
     _json_loads,
@@ -348,7 +349,7 @@ def _render_run_switch_option(option: dict[str, str], is_selected: bool) -> str:
     classes = "run-switcher-item"
     if is_selected:
         classes += " active"
-    timestamp = option["run_timestamp"] or "Timestamp not recorded"
+    timestamp = display_datetime(option["run_timestamp"], fallback="Timestamp not recorded")
     mode = option["mode"] or "run"
     return f"""
       <li class="{classes}">
@@ -369,7 +370,8 @@ def _render_hero_strip(snapshot: _Snapshot) -> str:
     quality_metric = str(score["score"]) if score else "--"
     quality_band = score["band"] if score else "not scored"
     config_version = config.get("version") or "Not recorded"
-    next_scheduled_run = config.get("next_scheduled_run") or "Not scheduled"
+    next_scheduled_run = display_datetime(config.get("next_scheduled_run"), fallback="Not scheduled")
+    run_timestamp = display_datetime(run["run_timestamp"], fallback="Timestamp not recorded")
     return f"""
       <section class="grid overview-hero" aria-label="Run snapshot">
         <article class="panel feature">
@@ -381,7 +383,7 @@ def _render_hero_strip(snapshot: _Snapshot) -> str:
         <article class="panel feature">
           <h2>Latest Run</h2>
           <p class="run-id-metric"><code>{html.escape(str(run["run_id"]))}</code></p>
-          <p class="muted">{html.escape(str(run["run_timestamp"] or "Timestamp not recorded"))} &middot; {html.escape(str(run["mode"] or "Run type not recorded"))}</p>
+          <p class="muted">{html.escape(run_timestamp)} &middot; {html.escape(str(run["mode"] or "Run type not recorded"))}</p>
           <p class="muted">Config {html.escape(str(config_version))} &middot; next run {html.escape(str(next_scheduled_run))}</p>
         </article>
       </section>

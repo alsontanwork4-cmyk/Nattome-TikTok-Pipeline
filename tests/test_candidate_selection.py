@@ -2,7 +2,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 import unittest
 
-from batch_analysis.candidates import select_candidates
+from batch_analysis.candidates import normalize_scraped_candidate, select_candidates
 from batch_analysis.config import DEFAULT_CONFIG
 
 
@@ -26,6 +26,54 @@ def eligible_candidate(candidate_id, **overrides):
 
 
 class CandidateSelectionTest(unittest.TestCase):
+    def test_normalizes_apify_scraped_candidate_metadata(self):
+        normalized = normalize_scraped_candidate(
+            {
+                "id": "scraped-video",
+                "webVideoUrl": "https://www.tiktok.com/@creator/video/scraped-video",
+                "authorMeta": {"name": "creator", "nickName": "Creator", "fans": 1234},
+                "text": "Bloating routine",
+                "hashtags": [{"name": "guthealth"}, {"name": "bloating"}, {}],
+                "videoMeta": {"duration": 18, "downloadAddr": "https://cdn.example.com/source.mp4"},
+                "musicMeta": {
+                    "musicName": "Original sound",
+                    "musicAuthor": "Creator",
+                    "musicOriginal": True,
+                },
+                "playCount": 120000,
+                "diggCount": 10000,
+                "commentCount": 500,
+                "shareCount": 800,
+                "createTimeISO": "2026-05-05T00:00:00Z",
+                "_source_input": "#guthealth",
+            }
+        )
+
+        self.assertEqual(
+            normalized,
+            {
+                "id": "scraped-video",
+                "url": "https://www.tiktok.com/@creator/video/scraped-video",
+                "author_handle": "creator",
+                "author_followers": 1234,
+                "caption": "Bloating routine",
+                "hashtags": ["guthealth", "bloating"],
+                "duration_s": 18,
+                "music": {
+                    "title": "Original sound",
+                    "author": "Creator",
+                    "original": True,
+                },
+                "video_download_url": "https://cdn.example.com/source.mp4",
+                "play_count": 120000,
+                "like_count": 10000,
+                "comment_count": 500,
+                "share_count": 800,
+                "created_at": "2026-05-05T08:00:00+08:00",
+                "source_input": "#guthealth",
+            },
+        )
+
     def test_excludes_candidates_without_downloadable_video_source_by_default(self):
         configuration = deepcopy(DEFAULT_CONFIG)
 
@@ -43,6 +91,11 @@ class CandidateSelectionTest(unittest.TestCase):
         self.assertEqual(
             [candidate["id"] for candidate in selected_batch["selected_candidates"]],
             ["with-video"],
+        )
+        self.assertEqual(selected_batch["selected_at"], "2026-05-06T21:45:30+08:00")
+        self.assertEqual(
+            selected_batch["selected_candidates"][0]["created_at"],
+            "2026-05-05T08:00:00+08:00",
         )
         self.assertEqual(selected_batch["eligible_candidate_count"], 1)
         excluded = {item["id"]: item["reason"] for item in selected_batch["excluded_candidates"]}
@@ -117,7 +170,7 @@ class CandidateSelectionTest(unittest.TestCase):
         )
         self.assertEqual(selected_batch["selection_strategy"], "input_order")
 
-    def test_default_selection_still_reranks_by_viral_relevance_score(self):
+    def test_default_selection_still_reranks_by_virality_score(self):
         configuration = deepcopy(DEFAULT_CONFIG)
 
         selected_batch = select_candidates(
@@ -135,7 +188,10 @@ class CandidateSelectionTest(unittest.TestCase):
             [candidate["id"] for candidate in selected_batch["selected_candidates"]],
             ["stronger-second", "weaker-first"],
         )
-        self.assertEqual(selected_batch["selection_strategy"], "viral_relevance_score")
+        self.assertEqual(selected_batch["selection_strategy"], "virality_score")
+        self.assertIn("virality_score", selected_batch["selected_candidates"][0])
+        self.assertNotIn("selection_score", selected_batch["selected_candidates"][0])
+        self.assertNotIn("nattome_relevance_score", selected_batch["selected_candidates"][0])
 
 
 if __name__ == "__main__":

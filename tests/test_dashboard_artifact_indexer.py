@@ -100,8 +100,7 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
             self.assertEqual(videos["video-2"]["selection_status"], "raw")
             self.assertEqual(selected["candidate_source"], "data/raw_scrapes/sample_raw.json")
             self.assertIn("manifest", outputs)
-            self.assertIn("report_markdown", outputs)
-            self.assertIn("excel_workbook", outputs)
+            self.assertIn("selected_batch", outputs)
             self.assertIn("README.md", docs)
             self.assertIn("CONTEXT.md", docs)
             self.assertIn("docs/prd/sample-prd.md", docs)
@@ -111,11 +110,10 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
         run_folder = workspace / "runs" / "batch-analysis" / "20260507T000000Z_default"
-        report_folder = workspace / "outputs" / "reports" / "2026-05-07"
         docs_prd = workspace / "docs" / "prd"
         docs_adr = workspace / "docs" / "adr"
         skill_folder = workspace / "skills" / "nattome-tiktok-candidate-discovery"
-        for folder in [raw_scrapes, run_folder / "data", report_folder, docs_prd, docs_adr, skill_folder]:
+        for folder in [raw_scrapes, run_folder / "data", docs_prd, docs_adr, skill_folder]:
             folder.mkdir(parents=True, exist_ok=True)
 
         (raw_scrapes / "sample_raw.json").write_text(
@@ -164,8 +162,8 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
                     "mode": "default",
                     "requested_batch_size": 1,
                     "configuration": {"selection": {"minimum_views": 10000}},
-                    "outputs": {"batch_index": "batch_index.md"},
-                    "phases": [{"name": "report_generation", "status": "completed"}],
+                    "outputs": {},
+                    "phases": [{"name": "source_video_snapshots", "status": "completed"}],
                 }
             ),
             encoding="utf-8",
@@ -191,12 +189,6 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
         )
         (run_folder / "logs").mkdir()
         (run_folder / "logs" / "pipeline.log").write_text("ok\n", encoding="utf-8")
-        (run_folder / "batch_index.md").write_text("# Batch\n", encoding="utf-8")
-        (report_folder / "top5_creative_production_report_2026-05-07.md").write_text(
-            "# Report\n",
-            encoding="utf-8",
-        )
-        (report_folder / "top5_angle_planning_sheet_2026-05-07.xlsx").write_bytes(b"xlsx")
         (workspace / "README.md").write_text("# Readme\n", encoding="utf-8")
         (workspace / "CONTEXT.md").write_text("# Context\n", encoding="utf-8")
         (docs_prd / "sample-prd.md").write_text("# Sample PRD\n", encoding="utf-8")

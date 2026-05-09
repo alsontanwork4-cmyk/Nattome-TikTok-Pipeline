@@ -4,6 +4,7 @@ import html
 from pathlib import Path
 
 from .settings import get_active_settings_version, list_settings_versions
+from .time_display import display_datetime
 from .web_components import (
     _lines,
     _scope_options,
@@ -45,13 +46,6 @@ SETTING_HELP: dict[str, dict[str, str]] = {
         "decrease": "Lower values make the scrape faster but reduce coverage.",
         "default": "Default: 20. Typical range: 10-50.",
         "warning": "Very high values can slow the scrape and create more review work.",
-    },
-    "top_n": {
-        "changes": "Sets how many of the strongest raw candidates stay in the handoff pool.",
-        "increase": "Higher values keep more possibilities for selection.",
-        "decrease": "Lower values make the handoff tighter and easier to review.",
-        "default": "Default: 30. Typical range: 10-100.",
-        "warning": "Too low can drop useful posts before they are reviewed.",
     },
     "minimum_views": {
         "changes": "Filters out TikToks below a view-count threshold.",
@@ -136,7 +130,6 @@ def _render_unified_settings(settings: dict[str, object]) -> str:
             <h3 id="how-much-to-collect">How much to collect</h3>
             <div class="settings-grid">
               {_input_setting("Results per input", "results_per_input", settings.get("results_per_input"))}
-              {_input_setting("Top N", "top_n", settings.get("top_n"))}
             </div>
           </section>
           <section class="settings-group" aria-labelledby="what-to-filter-out">
@@ -342,7 +335,6 @@ def _render_current_settings(settings: dict[str, object]) -> str:
         ("Exclusion terms", _settings_list(settings.get("exclusion_terms")) or "None", _list_count(settings.get("exclusion_terms"))),
         ("Scrape scope", str(settings.get("scope") or "all"), ""),
         ("Results per input", str(settings.get("results_per_input") or ""), ""),
-        ("Top N", str(settings.get("top_n") or ""), ""),
         ("Minimum views", _format_views(settings.get("minimum_views")), ""),
         ("Freshness window (days)", str(settings.get("maximum_age_days") or ""), ""),
         (
@@ -450,7 +442,7 @@ def _render_version_history(versions: list[object]) -> str:
             f"""
             <li class="history-item">
               <p><strong>{html.escape(label)}</strong> - {html.escape(active)} - {html.escape(rollback_text)}{html.escape(version.reason)}</p>
-              <p class="muted">{html.escape(version.changed_by)} {html.escape(version.timestamp)}</p>
+              <p class="muted">{html.escape(version.changed_by)} {html.escape(display_datetime(version.timestamp, fallback=''))}</p>
               <p class="muted">Hashtags: {html.escape(", ".join(settings.get("hashtags") or []))}</p>
               <p class="muted">Keywords: {html.escape(", ".join(settings.get("keywords") or []))}</p>
               {rollback_form}

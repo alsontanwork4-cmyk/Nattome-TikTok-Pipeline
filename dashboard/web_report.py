@@ -6,6 +6,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from .report_view import ReportArtifact, load_selected_report
+from .time_display import display_datetime
 from .web_components import _render_empty_state
 
 _SAFE_URL_CHARS = ":/?#[]@!$&'()*+,;=%"
@@ -20,17 +21,17 @@ def _render_report_page(
     if selected is None:
         return f"""
       <h1>Report</h1>
-      <p class="lede">The latest generated report will appear here after a full pipeline run writes a Markdown report artifact.</p>
+      <p class="lede">The selected-batch snapshot will appear here after a full pipeline run writes the source-video boundary artifacts.</p>
       <section class="panel wide-panel">
-        {_render_empty_state("report", "No report artifact found", "Run the full pipeline to generate the report output.")}
+        {_render_empty_state("report", "No selected-batch snapshot found", "Run the full pipeline to generate source-video snapshots.")}
       </section>
     """
 
     return f"""
       <h1>{html.escape(selected.display_title)}</h1>
-      <p class="lede">Read-only view of the generated Markdown report for this pipeline run.</p>
+      <p class="lede">Read-only view of the selected-batch snapshot for this pipeline run.</p>
       {_render_report_selector(artifacts, selected.run_id)}
-      <article class="panel wide-panel report-reader" aria-label="Generated report">
+      <article class="panel wide-panel report-reader" aria-label="Selected-batch snapshot">
         {_render_markdown(selected.markdown)}
       </article>
     """
@@ -46,15 +47,15 @@ def _render_report_selector(artifacts: list[ReportArtifact], selected_run_id: st
             f'<option value="{html.escape(artifact.run_id)}"{selected}>{html.escape(artifact.display_title)}</option>'
         )
     return f"""
-      <section class="panel report-selector" aria-label="Report selector">
+      <section class="panel report-selector" aria-label="Snapshot selector">
         <form method="get" action="/report">
           <label class="field-label">
-            Choose report
+            Choose snapshot
             <select name="run_id" onchange="this.form.submit()">
               {"".join(options)}
             </select>
           </label>
-          <noscript><button type="submit">Open report</button></noscript>
+          <noscript><button type="submit">Open snapshot</button></noscript>
         </form>
       </section>
     """
@@ -178,7 +179,7 @@ def _table_cells(line: str) -> list[str]:
 
 
 def _inline(text: str) -> str:
-    escaped = html.escape(text)
+    escaped = html.escape(_localize_datetimes(text))
     escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
     return re.sub(
         r"\[([^\]]+)\]\((https?://[^)\s]+)\)",
@@ -187,4 +188,12 @@ def _inline(text: str) -> str:
             f'target="_blank" rel="noopener">{match.group(1)}</a>'
         ),
         escaped,
+    )
+
+
+def _localize_datetimes(text: str) -> str:
+    return re.sub(
+        r"\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})\b",
+        lambda match: display_datetime(match.group(0)),
+        text,
     )

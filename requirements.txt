@@ -1,4 +1,2 @@
-# No third-party Python packages are required.
-# The project currently uses only the Python standard library plus local modules.
-#
 # Runtime note: use Python 3.10+.
+google-genai

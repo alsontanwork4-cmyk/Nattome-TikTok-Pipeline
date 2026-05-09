@@ -17,7 +17,7 @@ This slice proves the architecture works end-to-end for new runs and removes the
 
 - [ ] The Batch Analysis Run CLI executes end-to-end using the new architecture.
 - [ ] New runs use the two-layer Run Folder layout exclusively.
-- [ ] New runs write `run_manifest.json` and generate `batch_index.md` from it.
+- [ ] New runs write `run_manifest.json`.
 - [ ] New runs use Evidence Bundle snapshots for downstream report, review, summary, and output generation.
 - [ ] New runs use the Gemini Tool Stack Adapter seam for evidence extraction.
 - [ ] New runs generate local evidence-backed Shootable Angles.

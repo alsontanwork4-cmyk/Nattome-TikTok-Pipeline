@@ -34,7 +34,6 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
     "competitor_profiles": ["gaviscon", "gutgang", "drwillcole"],
     "scope": "all",
     "results_per_input": 20,
-    "top_n": 30,
     "minimum_views": 10000,
     "maximum_age_days": 150,
     "minimum_weighted_engagement_rate": 0.03,
@@ -43,12 +42,10 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
 }
 
 READ_ONLY_SETTINGS: dict[str, str] = {
-    "API keys": "APIFY_TOKEN, GEMINI_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID",
+    "API keys": "APIFY_TOKEN",
     "Apify actor ID": "clockworks~tiktok-scraper",
-    "Gemini model": "gemini-2.5-flash",
-    "Output paths": "data/raw_scrapes, data/daily_selections, outputs/reports, runs/batch-analysis",
-    "Cleanup deletion settings": "cleanup.enabled, cleanup.remove_source_videos, cleanup.remove_frames",
-    "Report schema": "Video Evidence Report, Creative Production Report, planning workbook",
+    "Output paths": "runs/batch-analysis/<timestamp>_daily",
+    "Pipeline boundary": "source-video snapshots",
     "Scoring internals": "Virality scoring, Scrape Quality Score weights, Pipeline Health phase map",
 }
 
@@ -86,7 +83,6 @@ def validate_scrape_settings(raw_settings: dict[str, Any]) -> dict[str, Any]:
         raw_settings.get("results_per_input", settings["results_per_input"]),
         "results per input",
     )
-    settings["top_n"] = _positive_int(raw_settings.get("top_n", settings["top_n"]), "top N")
     settings["minimum_views"] = _non_negative_int(
         raw_settings.get("minimum_views", settings["minimum_views"]),
         "minimum views",
@@ -306,7 +302,7 @@ def _write_production_settings(
         _json_dumps({"version": version, "settings": settings}) + "\n",
         encoding="utf-8",
     )
-    scraper_config_path = workspace / "skills" / "nattome-tiktok-candidate-discovery" / "config.json"
+    scraper_config_path = workspace / "batch_analysis" / "scrape_config.json"
     if scraper_config_path.parent.exists():
         scraper_config_path.write_text(
             _json_dumps(_scraper_config(settings, version)) + "\n",
@@ -322,7 +318,6 @@ def _scraper_config(settings: dict[str, Any], version: int) -> dict[str, Any]:
         "competitor_profiles": settings["competitor_profiles"],
         "scope": settings["scope"],
         "results_per_input": settings["results_per_input"],
-        "top_n": settings["top_n"],
         "selection": {
             "minimum_views": settings["minimum_views"],
             "maximum_age_days": settings["maximum_age_days"],

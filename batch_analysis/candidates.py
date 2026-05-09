@@ -6,7 +6,30 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .config import isoformat_z
+from .config import isoformat_local
+
+VIRALITY_RECENCY_HALFLIFE_DAYS = 90
+ID_KEYS = ("id", "video_id", "videoId")
+URL_KEYS = ("url", "webVideoUrl", "videoUrl")
+CREATED_AT_KEYS = ("created_at", "createTimeISO", "createTime")
+VIEW_KEYS = ("play_count", "playCount", "views")
+LIKE_KEYS = ("like_count", "diggCount", "likes")
+COMMENT_KEYS = ("comment_count", "commentCount", "comments")
+SHARE_KEYS = ("share_count", "shareCount", "shares")
+DIRECT_VIDEO_SOURCE_KEYS = (
+    "video_download_url",
+    "download_url",
+    "downloadUrl",
+    "downloadLink",
+    "media_url",
+    "mediaUrl",
+)
+SCRAPED_VIDEO_SOURCE_KEYS = (
+    *DIRECT_VIDEO_SOURCE_KEYS,
+    "downloadedVideoUrl",
+    "downloaded_video_url",
+)
+
 
 def load_candidates(candidates_path: Path | None) -> list[dict[str, Any]] | None:
     if candidates_path is None:
@@ -50,6 +73,51 @@ def int_value(candidate: dict[str, Any], *keys: str) -> int:
             continue
     return 0
 
+
+def first_nonempty_string(*values: Any) -> str | None:
+    for value in values:
+        if isinstance(value, list):
+            nested = first_nonempty_string(*value)
+            if nested:
+                return nested
+            continue
+        if isinstance(value, dict):
+            nested = first_nonempty_string(*value.values())
+            if nested:
+                return nested
+            continue
+        if value is not None and value != "":
+            return str(value)
+    return None
+
+
+def candidate_id(candidate: dict[str, Any], fallback_index: int | None = None) -> Any:
+    for key in ID_KEYS:
+        value = candidate.get(key)
+        if value:
+            return value
+    if fallback_index is not None:
+        return f"candidate-{fallback_index}"
+    return None
+
+
+def candidate_url(candidate: dict[str, Any]) -> Any:
+    for key in URL_KEYS:
+        value = candidate.get(key)
+        if value:
+            return value
+    return None
+
+
+def count_values(candidate: dict[str, Any]) -> dict[str, int]:
+    return {
+        "play_count": int_value(candidate, *VIEW_KEYS),
+        "like_count": int_value(candidate, *LIKE_KEYS),
+        "comment_count": int_value(candidate, *COMMENT_KEYS),
+        "share_count": int_value(candidate, *SHARE_KEYS),
+    }
+
+
 def parse_candidate_timestamp(value: Any) -> datetime | None:
     if value is None or value == "":
         return None
@@ -66,82 +134,52 @@ def parse_candidate_timestamp(value: Any) -> datetime | None:
     return None
 
 def candidate_created_at(candidate: dict[str, Any]) -> datetime | None:
-    for key in ("created_at", "createTimeISO", "createTime"):
+    for key in CREATED_AT_KEYS:
         parsed = parse_candidate_timestamp(candidate.get(key))
         if parsed is not None:
             return parsed
     return None
 
 def weighted_engagement_rate(candidate: dict[str, Any]) -> float:
-    views = max(int_value(candidate, "play_count", "playCount", "views"), 1)
-    likes = int_value(candidate, "like_count", "diggCount", "likes")
-    comments = int_value(candidate, "comment_count", "commentCount", "comments")
-    shares = int_value(candidate, "share_count", "shareCount", "shares")
+    counts = count_values(candidate)
+    views = max(counts["play_count"], 1)
+    likes = counts["like_count"]
+    comments = counts["comment_count"]
+    shares = counts["share_count"]
     weighted = likes + comments * 5 + shares * 10
     return weighted / views
 
 def usable_tiktok_link(candidate: dict[str, Any]) -> str:
-    url = str(candidate.get("url") or candidate.get("webVideoUrl") or candidate.get("videoUrl") or "")
+    url = str(candidate_url(candidate) or "")
     if "tiktok.com" not in url or "/video/" not in url:
         return ""
     return url
 
 def downloadable_video_source(candidate: dict[str, Any]) -> str:
-    for key in (
-        "video_download_url",
-        "download_url",
-        "downloadUrl",
-        "downloadLink",
-        "media_url",
-        "mediaUrl",
-    ):
-        value = candidate.get(key)
-        if value:
-            return str(value)
-    return ""
+    return first_nonempty_string(*(candidate.get(key) for key in DIRECT_VIDEO_SOURCE_KEYS)) or ""
 
-def nattome_relevance_score(candidate: dict[str, Any]) -> float:
-    hashtags = candidate.get("hashtags") or []
-    if isinstance(hashtags, list):
-        hashtag_text = " ".join(str(item) for item in hashtags)
-    else:
-        hashtag_text = str(hashtags)
-    haystack = " ".join(
-        [
-            str(candidate.get("caption") or candidate.get("text") or ""),
-            hashtag_text,
-            str(candidate.get("source_input") or ""),
-        ]
-    ).lower()
-    terms = [
-        "acid reflux",
-        "reflux",
-        "bloating",
-        "bloated",
-        "gut",
-        "digest",
-        "digestion",
-        "digestive",
-        "stomach",
-        "heartburn",
-        "ibs",
-        "constipation",
-        "antacid",
-        "gastric",
-    ]
-    matches = sum(1 for term in terms if term in haystack)
-    return min(matches / 4, 1.0)
+def scraped_video_source(item: dict[str, Any]) -> str | None:
+    video_meta = item.get("videoMeta") if isinstance(item.get("videoMeta"), dict) else {}
+    media_urls = item.get("mediaUrls") or item.get("media_urls") or []
+    return first_nonempty_string(
+        *(item.get(key) for key in SCRAPED_VIDEO_SOURCE_KEYS),
+        media_urls,
+        video_meta.get("downloadAddr"),
+        video_meta.get("downloadUrl"),
+        video_meta.get("download_url"),
+        video_meta.get("playAddr"),
+    )
 
-def selection_score(candidate: dict[str, Any], run_timestamp: datetime) -> float:
-    views = max(int_value(candidate, "play_count", "playCount", "views"), 1)
+def virality_score(candidate: dict[str, Any], run_timestamp: datetime) -> float:
+    views = max(int_value(candidate, *VIEW_KEYS), 1)
     reach = math.log10(views + 1)
     created = candidate_created_at(candidate)
     if created is None:
         recency = 0.5
     else:
         age_days = max((run_timestamp - created).total_seconds() / 86400, 0)
-        recency = 0.5 ** (age_days / 7)
-    return weighted_engagement_rate(candidate) * reach * recency + nattome_relevance_score(candidate)
+        recency = 0.5 ** (age_days / VIRALITY_RECENCY_HALFLIFE_DAYS)
+    return weighted_engagement_rate(candidate) * reach * recency
 
 def normalize_candidate(candidate: dict[str, Any], run_timestamp: datetime, rank: int) -> dict[str, Any]:
     created = candidate_created_at(candidate)
@@ -149,18 +187,16 @@ def normalize_candidate(candidate: dict[str, Any], run_timestamp: datetime, rank
         author_handle = candidate.get("author_handle") or candidate["authorMeta"].get("name")
     else:
         author_handle = candidate.get("author_handle")
+    counts = count_values(candidate)
     return {
         "rank": rank,
-        "id": candidate.get("id") or candidate.get("video_id") or candidate.get("videoId"),
+        "id": candidate_id(candidate),
         "url": usable_tiktok_link(candidate),
         "video_download_url": downloadable_video_source(candidate),
         "author_handle": author_handle,
         "caption": candidate.get("caption") or candidate.get("text") or "",
-        "play_count": int_value(candidate, "play_count", "playCount", "views"),
-        "like_count": int_value(candidate, "like_count", "diggCount", "likes"),
-        "comment_count": int_value(candidate, "comment_count", "commentCount", "comments"),
-        "share_count": int_value(candidate, "share_count", "shareCount", "shares"),
-        "created_at": created.strftime("%Y-%m-%dT%H:%M:%SZ") if created else None,
+        **counts,
+        "created_at": isoformat_local(created) if created else None,
         "duration_seconds": parse_duration_seconds(candidate),
         "sound_title": sound_title(candidate),
         "sound_author": sound_author(candidate),
@@ -171,8 +207,34 @@ def normalize_candidate(candidate: dict[str, Any], run_timestamp: datetime, rank
         "has_visible_text": candidate.get("has_visible_text"),
         "text_overlay_expected": candidate.get("text_overlay_expected"),
         "weighted_engagement_rate": round(weighted_engagement_rate(candidate), 4),
-        "nattome_relevance_score": round(nattome_relevance_score(candidate), 4),
-        "selection_score": round(selection_score(candidate, run_timestamp), 4),
+        "virality_score": round(virality_score(candidate, run_timestamp), 4),
+    }
+
+def normalize_scraped_candidate(item: dict[str, Any]) -> dict[str, Any]:
+    author = item.get("authorMeta") if isinstance(item.get("authorMeta"), dict) else {}
+    music = item.get("musicMeta") if isinstance(item.get("musicMeta"), dict) else {}
+    video_meta = item.get("videoMeta") if isinstance(item.get("videoMeta"), dict) else {}
+    created = candidate_created_at(item)
+    return {
+        "id": item.get("id"),
+        "url": item.get("webVideoUrl") or item.get("videoUrl"),
+        "author_handle": author.get("name") or author.get("nickName"),
+        "author_followers": author.get("fans"),
+        "caption": item.get("text") or "",
+        "hashtags": [h.get("name") for h in (item.get("hashtags") or []) if h.get("name")],
+        "duration_s": video_meta.get("duration"),
+        "music": {
+            "title": music.get("musicName"),
+            "author": music.get("musicAuthor"),
+            "original": music.get("musicOriginal"),
+        },
+        "video_download_url": scraped_video_source(item),
+        "play_count": item.get("playCount"),
+        "like_count": item.get("diggCount"),
+        "comment_count": item.get("commentCount"),
+        "share_count": item.get("shareCount"),
+        "created_at": isoformat_local(created) if created else None,
+        "source_input": item.get("_source_input"),
     }
 
 def exclusion_reasons(
@@ -180,7 +242,7 @@ def exclusion_reasons(
 ) -> list[str]:
     selection = configuration["selection"]
     reasons = []
-    views = int_value(candidate, "play_count", "playCount", "views")
+    views = int_value(candidate, *VIEW_KEYS)
     if views < int(selection["minimum_views"]):
         reasons.append(f"below minimum views ({views} < {selection['minimum_views']})")
 
@@ -239,13 +301,12 @@ def select_candidates(
     eligible = []
     excluded = []
     for index, candidate in enumerate(candidates):
-        candidate_id = candidate.get("id") or candidate.get("video_id") or candidate.get("videoId") or f"candidate-{index}"
         reasons = exclusion_reasons(candidate, configuration, run_timestamp)
         if reasons:
             excluded.append(
                 {
-                    "id": candidate_id,
-                    "url": candidate.get("url") or candidate.get("webVideoUrl") or candidate.get("videoUrl"),
+                    "id": candidate_id(candidate, index),
+                    "url": candidate_url(candidate),
                     "reason": "; ".join(reasons),
                 }
             )
@@ -254,7 +315,7 @@ def select_candidates(
 
     ranked = eligible if preserve_order else sorted(
         eligible,
-        key=lambda candidate: selection_score(candidate, run_timestamp),
+        key=lambda candidate: virality_score(candidate, run_timestamp),
         reverse=True,
     )
     selected = [
@@ -263,9 +324,9 @@ def select_candidates(
     ]
 
     return {
-        "selected_at": isoformat_z(run_timestamp),
+        "selected_at": isoformat_local(run_timestamp),
         "candidate_source": str(candidates_path) if candidates_path else None,
-        "selection_strategy": "input_order" if preserve_order else "viral_relevance_score",
+        "selection_strategy": "input_order" if preserve_order else "virality_score",
         "requested_batch_size": batch_size,
         "input_candidate_count": len(candidates),
         "eligible_candidate_count": len(eligible),

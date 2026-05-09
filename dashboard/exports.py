@@ -9,6 +9,7 @@ from typing import Any
 
 from .run_history import load_run_history
 from .store import connect_dashboard_store
+from .time_display import display_datetime
 
 
 RAW_VIDEO_CSV_COLUMNS = [
@@ -116,7 +117,7 @@ def _raw_video_export_row(
         "like_count": _cell(row["like_count"]),
         "comment_count": _cell(row["comment_count"]),
         "share_count": _cell(row["share_count"]),
-        "created_at": str(row["created_at"] or ""),
+        "created_at": display_datetime(row["created_at"], fallback=""),
         "is_downloadable": "yes" if int(row["is_downloadable"] or 0) else "no",
         "run_id": run_id,
         "config_version": str(row["config_version"] or run_config_versions.get(run_id, "")),
@@ -181,7 +182,7 @@ def _run_summary_export_row(row: object) -> dict[str, object]:
     output_links = list(getattr(row, "output_links"))
     return {
         "run_id": getattr(row, "run_id"),
-        "timestamp": getattr(row, "timestamp"),
+        "timestamp": display_datetime(getattr(row, "timestamp"), fallback=""),
         "run_type": getattr(row, "run_type"),
         "source_type": getattr(row, "source_type"),
         "triggered_by": getattr(row, "triggered_by"),

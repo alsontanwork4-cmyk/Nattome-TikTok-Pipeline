@@ -24,26 +24,23 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
             self.assertIn("CONTEXT.md", [doc.path for doc in architecture.documents])
             self.assertIn("docs/prd/sample-prd.md", [doc.path for doc in architecture.documents])
             self.assertIn("docs/adr/0001-sample.md", [doc.path for doc in architecture.documents])
-            self.assertIn("skills/nattome-evidence-insight-analysis/SKILL.md", [doc.path for doc in architecture.documents])
+            self.assertIn("skills/nattome-tiktok-candidate-discovery/SKILL.md", [doc.path for doc in architecture.documents])
             self.assertEqual(
                 [step.name for step in architecture.pipeline_flow],
-                ["Scrape", "Score", "Select", "Analyze", "Report"],
+                ["Scrape", "Score", "Select", "Snapshot"],
             )
             self.assertTrue(any("Apify" in decision.summary for decision in architecture.tool_decisions))
-            self.assertTrue(any("Gemini" in decision.summary for decision in architecture.tool_decisions))
-            self.assertIn("gemini_evidence", [phase.name for phase in architecture.phase_statuses])
+            self.assertTrue(any("source video snapshots" in decision.summary for decision in architecture.tool_decisions))
+            self.assertIn("source_video_snapshots", [phase.name for phase in architecture.phase_statuses])
             self.assertIn("data/raw_scrapes/sample_raw.json", architecture.file_output_map["Raw scrapes"])
             self.assertIn("runs/batch-analysis/20260507T000000Z_default", architecture.file_output_map["Run folders"])
-            self.assertIn("outputs/reports/2026-05-07/top5_report.md", architecture.file_output_map["Reports"])
-            self.assertIn("outputs/reports/2026-05-07/top5_workbook.xlsx", architecture.file_output_map["Workbooks"])
-            self.assertIn("runs/batch-analysis/20260507T000000Z_default/logs/telegram_delivery.json", architecture.file_output_map["Logs"])
             self.assertIn("Raw scrape", [step.name for step in architecture.data_lineage])
             self.assertIn("Selected batch", [step.name for step in architecture.data_lineage])
-            self.assertIn("Final report", [step.name for step in architecture.data_lineage])
+            self.assertIn("Source video snapshots", [step.name for step in architecture.data_lineage])
             self.assertIn("Pipeline Architecture", body)
-            self.assertIn("Scrape to score to select to analyze to report", body)
+            self.assertIn("Scrape to score to select to snapshot", body)
             self.assertIn("Apify discovery/download", body)
-            self.assertIn("Gemini evidence-first analysis", body)
+            self.assertIn("Rebuild boundary", body)
             self.assertIn("sample-prd.md", body)
             self.assertNotIn("<form", body.lower())
             self.assertNotIn("method=\"post\"", body.lower())
@@ -51,11 +48,10 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
         run_folder = workspace / "runs" / "batch-analysis" / "20260507T000000Z_default"
-        report_folder = workspace / "outputs" / "reports" / "2026-05-07"
         docs_prd = workspace / "docs" / "prd"
         docs_adr = workspace / "docs" / "adr"
-        skill_folder = workspace / "skills" / "nattome-evidence-insight-analysis"
-        for folder in [raw_scrapes, run_folder / "data", run_folder / "logs", report_folder, docs_prd, docs_adr, skill_folder]:
+        skill_folder = workspace / "skills" / "nattome-tiktok-candidate-discovery"
+        for folder in [raw_scrapes, run_folder / "data", run_folder / "reports", docs_prd, docs_adr, skill_folder]:
             folder.mkdir(parents=True, exist_ok=True)
 
         (workspace / "README.md").write_text("# Project Readme\n", encoding="utf-8")
@@ -91,12 +87,10 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
                     "requested_batch_size": 1,
                     "phases": [
                         {"name": "candidate_selection", "status": "completed"},
-                        {"name": "gemini_evidence", "status": "completed"},
-                        {"name": "report_generation", "status": "completed"},
+                        {"name": "source_video_snapshots", "status": "completed"},
                     ],
                     "outputs": {
-                        "report_markdown": "reports/current.md",
-                        "excel_workbook": "reports/current.xlsx",
+                        "selected_batch_markdown": "reports/selected_batch.md",
                     },
                 }
             ),
@@ -113,15 +107,7 @@ class DashboardPipelineArchitectureTest(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        (run_folder / "logs" / "telegram_delivery.json").write_text(
-            json.dumps({"status": "sent"}),
-            encoding="utf-8",
-        )
-        (run_folder / "reports").mkdir(exist_ok=True)
-        (run_folder / "reports" / "current.md").write_text("# Current\n", encoding="utf-8")
-        (run_folder / "reports" / "current.xlsx").write_bytes(b"xlsx")
-        (report_folder / "top5_report.md").write_text("# Report\n", encoding="utf-8")
-        (report_folder / "top5_workbook.xlsx").write_bytes(b"xlsx")
+        (run_folder / "reports" / "selected_batch.md").write_text("# Selected batch\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -51,7 +51,12 @@ def _clear_derived_records(connection: Connection) -> None:
 
 
 def _index_raw_scrapes(connection: Connection, workspace: Path) -> None:
-    for raw_path in sorted((workspace / "data" / "raw_scrapes").glob("*.json")):
+    raw_paths = [
+        *(workspace / "data" / "raw_scrapes").glob("*.json"),
+        *(workspace / "runs" / "batch-analysis").glob("*/data/raw_scrape_all.json"),
+        *(workspace / "runs" / "batch-analysis").glob("*/data/raw_scrape_top30.json"),
+    ]
+    for raw_path in sorted(set(raw_paths)):
         data = _read_json(raw_path)
         if data is None:
             continue
@@ -330,15 +335,6 @@ def _index_run_outputs(
         if log_path.is_file():
             _insert_run_output(connection, workspace, run_id, log_path, "log", log_path.name)
 
-    report_root = workspace / "outputs" / "reports"
-    for report_path in sorted(report_root.rglob("*")):
-        if not report_path.is_file():
-            continue
-        artifact_type = _report_artifact_type(report_path)
-        if artifact_type:
-            _insert_run_output(connection, workspace, run_id, report_path, artifact_type, report_path.name)
-
-
 def _insert_run_output(
     connection: Connection,
     workspace: Path,
@@ -447,7 +443,7 @@ def _artifact_metadata(data: Any) -> dict[str, Any]:
     return {
         key: value
         for key, value in data.items()
-        if key not in {"top", "items", "videos", "candidates"}
+        if key not in {"top", "items", "videos", "candidates", "raw_items"}
     }
 
 
@@ -483,17 +479,6 @@ def _doc_type(workspace: Path, path: Path) -> str:
     if relative.startswith("skills/"):
         return "skill"
     return "doc"
-
-
-def _report_artifact_type(path: Path) -> str | None:
-    suffix = path.suffix.lower()
-    if suffix == ".md":
-        return "report_markdown"
-    if suffix in {".xlsx", ".xls"}:
-        return "excel_workbook"
-    if suffix == ".json":
-        return "report_json"
-    return None
 
 
 def _relative_path(workspace: Path, path: Path) -> str:

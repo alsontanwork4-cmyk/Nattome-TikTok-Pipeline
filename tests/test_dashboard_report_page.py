@@ -23,6 +23,7 @@ class DashboardReportPageTest(unittest.TestCase):
                 timestamp="2026-05-07T01:00:00Z",
                 body=(
                     "# What We Learned\n\n"
+                    "- Selected at: 2026-05-07T01:00:00Z\n\n"
                     "- Lead with the stomach moment.\n\n"
                     "## Source Reference\n\n"
                     "| Concept | Hook |\n"
@@ -38,10 +39,10 @@ class DashboardReportPageTest(unittest.TestCase):
             self.assertEqual(selected.run_id, "20260507T010000Z_default")
             self.assertEqual(len(artifacts), 2)
             self.assertIn("Report - 2026-05-07 - Run 20260507T010000Z_default", body)
+            self.assertIn("Selected at: 2026-05-07 09:00:00 +0800", body)
             self.assertIn("Lead with the stomach moment.", body)
             self.assertIn("<table", body)
             self.assertIn("Routine demo", body)
-            self.assertNotIn("Top 5 Creative Production Report - 2026-05-07", body)
 
     def test_report_page_can_select_an_older_run_report(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -78,7 +79,6 @@ class DashboardReportPageTest(unittest.TestCase):
                 timestamp="2026-05-07T17:53:06Z",
                 body="# Local date report\n\n- May 8 Singapore run",
                 report_date="2026-05-08",
-                final_outputs=True,
             )
 
             selected, artifacts = load_selected_report(workspace)
@@ -89,7 +89,7 @@ class DashboardReportPageTest(unittest.TestCase):
             self.assertEqual(selected.report_date, "2026-05-08")
             self.assertIn("Report - 2026-05-08 - Run 20260507T175306Z_daily", body)
 
-    def test_report_page_does_not_attach_modern_final_report_to_legacy_same_date_runs(self):
+    def test_report_page_lists_run_scoped_selected_batch_snapshots(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_report_run(
@@ -104,7 +104,6 @@ class DashboardReportPageTest(unittest.TestCase):
                 timestamp="2026-05-07T17:53:06Z",
                 body="# First daily report\n\n- First scrape",
                 report_date="2026-05-08",
-                final_outputs=True,
             )
             self._write_report_run(
                 workspace,
@@ -112,7 +111,6 @@ class DashboardReportPageTest(unittest.TestCase):
                 timestamp="2026-05-07T17:43:29Z",
                 body="# Second daily report\n\n- Second scrape",
                 report_date="2026-05-08",
-                final_outputs=True,
             )
 
             selected, artifacts = load_selected_report(workspace)
@@ -120,46 +118,31 @@ class DashboardReportPageTest(unittest.TestCase):
             self.assertIsNotNone(selected)
             self.assertEqual(
                 [artifact.run_id for artifact in artifacts],
-                ["20260507T175306Z_daily", "20260507T174329Z_daily"],
+                [
+                    "20260507T175306Z_daily",
+                    "20260507T174329Z_daily",
+                    "20260507T074557Z_default",
+                ],
             )
-            self.assertEqual(len({artifact.path for artifact in artifacts}), 2)
+            self.assertEqual(len({artifact.path for artifact in artifacts}), 3)
 
-    def test_report_page_ignores_duplicate_manifest_report_paths_when_run_scoped_report_exists(self):
+    def test_report_page_selects_run_scoped_snapshot(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
-            shared_path = Path("reports") / "2026-05-08" / "top5_creative_production_report_2026-05-08.md"
             self._write_report_run(
                 workspace,
                 run_id="20260507T175936Z_quick",
                 timestamp="2026-05-07T17:59:36Z",
-                body="# Shared stale report\n\n- Wrong for both runs",
+                body="# Quick run report\n",
                 report_date="2026-05-08",
-                final_outputs=True,
-                final_report_path=shared_path,
             )
             self._write_report_run(
                 workspace,
                 run_id="20260507T175306Z_daily",
                 timestamp="2026-05-07T17:53:06Z",
-                body="# Shared stale report\n\n- Wrong for both runs",
+                body="# Daily run report\n",
                 report_date="2026-05-08",
-                final_outputs=True,
-                final_report_path=shared_path,
             )
-            for run_id, marker in [
-                ("20260507T175936Z_quick", "Quick run report"),
-                ("20260507T175306Z_daily", "Daily run report"),
-            ]:
-                scoped = (
-                    workspace
-                    / "runs"
-                    / "batch-analysis"
-                    / run_id
-                    / "reports"
-                    / "top5_creative_production_report_2026-05-08.md"
-                )
-                scoped.parent.mkdir(parents=True, exist_ok=True)
-                scoped.write_text(f"# {marker}\n", encoding="utf-8")
 
             selected, artifacts = load_selected_report(workspace)
             body = render_page(
@@ -171,7 +154,7 @@ class DashboardReportPageTest(unittest.TestCase):
             self.assertIsNotNone(selected)
             self.assertEqual(len({artifact.path for artifact in artifacts}), 2)
             self.assertIn("Daily run report", body)
-            self.assertNotIn("Shared stale report", body)
+            self.assertNotIn("Quick run report", body)
 
     def test_report_route_is_a_sidebar_navigation_item(self):
         self.assertIn(("Report", "/report"), NAV_ITEMS)
@@ -184,34 +167,15 @@ class DashboardReportPageTest(unittest.TestCase):
         timestamp: str,
         body: str,
         report_date: str | None = None,
-        final_outputs: bool = False,
-        final_report_path: Path | None = None,
     ) -> None:
         report_date = report_date or timestamp[:10]
         run_folder = workspace / "runs" / "batch-analysis" / run_id
-        relative_report_path = final_report_path or (
-            Path("reports")
-            / report_date
-            / run_id
-            / f"top5_creative_production_report_{report_date}.md"
-            if final_outputs
-            else Path("reports")
-            / report_date
-            / f"top5_creative_production_report_{report_date}.md"
-        )
-        report_folder = workspace / "outputs" / relative_report_path.parent
+        report_folder = run_folder / "reports"
         for folder in [run_folder, report_folder]:
             folder.mkdir(parents=True, exist_ok=True)
-        outputs = {"batch_index": "batch_index.md"}
-        if final_outputs:
-            outputs["output_root"] = "outputs"
-            outputs["final_outputs"] = [
-                {
-                    "label": "Daily Top-3 Creative Production Report",
-                    "kind": "markdown",
-                    "path": str(relative_report_path).replace("\\", "/"),
-                }
-            ]
+        outputs = {
+            "selected_batch_markdown": "reports/selected_batch.md",
+        }
         (run_folder / "run_manifest.json").write_text(
             json.dumps(
                 {
@@ -220,15 +184,12 @@ class DashboardReportPageTest(unittest.TestCase):
                     "requested_batch_size": 5,
                     "configuration": {"selection": {"minimum_views": 10000}},
                     "outputs": outputs,
-                    "phases": [{"name": "report_generation", "status": "completed"}],
+                    "phases": [{"name": "source_video_snapshots", "status": "completed"}],
                 }
             ),
             encoding="utf-8",
         )
-        (workspace / "outputs" / relative_report_path).write_text(
-            body,
-            encoding="utf-8",
-        )
+        (report_folder / "selected_batch.md").write_text(body, encoding="utf-8")
 
 
 if __name__ == "__main__":

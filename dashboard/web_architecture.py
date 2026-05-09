@@ -10,12 +10,12 @@ def _render_pipeline_architecture(workspace: Path) -> str:
     architecture = load_pipeline_architecture(workspace)
     return f"""
       <h1>Pipeline Architecture</h1>
-      <p class="lede">Scrape to score to select to analyze to report. This read-only view links the docs, decisions, indexed run phases, outputs, and data lineage behind the Nattome TikTok discovery pipeline.</p>
+      <p class="lede">Scrape to score to select to snapshot. This read-only view links the docs, decisions, indexed run phases, outputs, and data lineage behind the Nattome TikTok discovery pipeline.</p>
       <section class="panel wide-panel pipeline-flow-panel" aria-label="Pipeline flow">
         <h2>High-Level Flow</h2>
-        <p class="pipeline-flow-caption muted">Each stage hands a sharper artifact to the next &mdash; raw scrapes become scored candidates, then a selected batch, then evidence, then a marketer-ready report.</p>
+        <p class="pipeline-flow-caption muted">Each stage hands a sharper artifact to the next &mdash; raw scrapes become scored candidates, then a selected batch, then source-video snapshots.</p>
         {_render_architecture_flow(architecture.pipeline_flow)}
-        <p class="pipeline-flow-legend muted">Raw scrape JSON &rarr; quality score &rarr; selected batch &rarr; evidence bundles &rarr; reports &amp; workbooks</p>
+        <p class="pipeline-flow-legend muted">Raw scrape JSON &rarr; quality score &rarr; selected batch &rarr; source video snapshots</p>
       </section>
       <section class="grid" aria-label="Architecture decisions and status">
         <article class="panel">
@@ -46,8 +46,7 @@ _STAGE_TOOL_LABELS: dict[str, str] = {
     "Scrape": "Apify",
     "Score": "SQLite Scoring",
     "Select": "Eligibility Filters",
-    "Analyze": "Gemini",
-    "Report": "Markdown / Excel / JSON",
+    "Snapshot": "Source Videos",
 }
 
 

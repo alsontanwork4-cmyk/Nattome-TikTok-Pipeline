@@ -12,6 +12,7 @@ from .scoring import (
     score_text as _plain_score_text,
     weighted_engagement,
 )
+from .time_display import display_datetime, display_datetime_field
 from .web_components import _format_count, _hashtag_text, _json_loads
 from .web_constants import CURATION_LABELS
 
@@ -76,7 +77,7 @@ def _render_manual_run_controls() -> str:
         <article class="panel">
           <h2>Run scrape now</h2>
           <p class="muted">Estimated runtime: 3-8 minutes.</p>
-          <p class="muted">Expected outputs: raw top-30 scrape JSON and Daily Top-3 handoff.</p>
+          <p class="muted">Expected outputs: full unique scrape JSON and Daily Top Videos handoff.</p>
           <form class="run-control-form" method="post" action="/manual-runs/trigger">
             <input type="hidden" name="run_type" value="scrape_only">
             <button type="submit">Run scrape now</button>
@@ -85,7 +86,7 @@ def _render_manual_run_controls() -> str:
         <article class="panel">
           <h2>Run full pipeline</h2>
           <p class="muted">Estimated runtime: 15-30 minutes.</p>
-          <p class="muted">Expected outputs: scrape JSON, evidence run folder, reports, workbook, and delivery log.</p>
+          <p class="muted">Expected outputs: scrape JSON, selected batch, and source-video snapshot run folder.</p>
           <form class="run-control-form" method="post" action="/manual-runs/trigger">
             <input type="hidden" name="run_type" value="full_pipeline">
             <button type="submit">Run full pipeline</button>
@@ -127,7 +128,7 @@ def _render_run_selector_row(row: RunHistoryRow, selected_run_id: str) -> str:
     return f"""
       <tr{row_class}>
         <td><a href="/run-history?run_id={html.escape(row.run_id)}">{html.escape(label)}</a><br><code>{html.escape(row.run_id)}</code><br><span class="muted">Source: {html.escape(row.source_type)}. By {html.escape(row.triggered_by)}.</span></td>
-        <td>{html.escape(row.timestamp)}</td>
+        <td>{html.escape(display_datetime(row.timestamp))}</td>
         <td>{row.raw_candidates}</td>
         <td>{row.eligible_candidates}</td>
         <td>{row.selected_count}</td>
@@ -160,7 +161,7 @@ def _render_run_workbench(detail: RunHistoryDetail, active_tab: str) -> str:
         <div>
           <p class="muted run-workbench-eyebrow">Currently inspecting</p>
           <h2>{html.escape(str(row.run_type).title())}</h2>
-          <p class="muted">{html.escape(row.timestamp)} &middot; <code>{html.escape(row.run_id)}</code></p>
+          <p class="muted">{html.escape(display_datetime(row.timestamp))} &middot; <code>{html.escape(row.run_id)}</code></p>
         </div>
         <dl class="run-summary-stats">
           <div><dt>Scanned</dt><dd>{row.raw_candidates}</dd></div>
@@ -341,7 +342,7 @@ def _render_post_row(rank: int, video: dict[str, Any], detail: RunHistoryDetail)
         <td>{_percent_text(weighted_engagement(video))}</td>
         <td>{_percent_text(nattome_relevance(video))}</td>
         <td>{_score_text(selection_score)}</td>
-        <td>{html.escape(str(video.get("created_at") or "--"))}</td>
+        <td>{html.escape(display_datetime(video.get("created_at")))}</td>
         <td>{html.escape(_truncate(music_text, 36))}</td>
         <td>{"Yes" if int(video.get("is_downloadable") or 0) else "No"}</td>
         <td>{_render_risk_flags(risk_flags)}</td>
@@ -505,7 +506,7 @@ def _render_all_fields_tab(detail: RunHistoryDetail) -> str:
         merged = {**video, **raw_payload}
         merged.pop("raw_json", None)
         rows = "".join(
-            f"<tr><th scope=\"row\">{html.escape(_humanize_key(key))}</th><td>{html.escape(_format_field(value))}</td></tr>"
+            f"<tr><th scope=\"row\">{html.escape(_humanize_key(key))}</th><td>{html.escape(_format_field(key, value))}</td></tr>"
             for key, value in sorted(merged.items())
             if value not in (None, "", [], {})
         )
@@ -584,7 +585,7 @@ def _render_trend_points(points: list[object]) -> str:
         items.append(
             f"""
             <li>
-              <strong>{html.escape(getattr(point, "timestamp"))}</strong>:
+              <strong>{html.escape(display_datetime(getattr(point, "timestamp")))}</strong>:
               score {_score_text(getattr(point, "score"))},
               candidates {getattr(point, "candidate_volume")},
               yield {_percent_text(getattr(point, "eligibility_yield"))},
@@ -601,16 +602,13 @@ def _render_config_overlays(overlays: list[object]) -> str:
     if not overlays:
         return '<p class="muted">No config version changes have been indexed yet.</p>'
     items = [
-        f"<li><strong>{html.escape(getattr(overlay, 'version'))}</strong> first appears at {html.escape(getattr(overlay, 'first_seen_at'))} on <code>{html.escape(getattr(overlay, 'run_id'))}</code>.</li>"
+        f"<li><strong>{html.escape(getattr(overlay, 'version'))}</strong> first appears at {html.escape(display_datetime(getattr(overlay, 'first_seen_at')))} on <code>{html.escape(getattr(overlay, 'run_id'))}</code>.</li>"
         for overlay in overlays
     ]
     return f'<ul class="compact-list">{"".join(items)}</ul>'
 
 
 _OUTPUT_PRIORITY: tuple[str, ...] = (
-    "report_markdown",
-    "excel_workbook",
-    "batch_index",
     "selected_batch",
     "manifest",
     "metadata",
@@ -736,13 +734,13 @@ def _truncate(text: str, length: int) -> str:
     return text[: length - 1].rstrip() + "..."
 
 
-def _format_field(value: object) -> str:
+def _format_field(key: str, value: object) -> str:
     if isinstance(value, (dict, list)):
         try:
             return json.dumps(value, ensure_ascii=False)
         except (TypeError, ValueError):
             return str(value)
-    return str(value)
+    return display_datetime_field(key, value)
 
 
 def _score_text(value: object) -> str:

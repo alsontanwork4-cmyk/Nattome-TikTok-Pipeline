@@ -53,7 +53,7 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertIn("Run scrape now", initial_body)
             self.assertIn("Run full pipeline", initial_body)
             self.assertIn("Estimated runtime: 3-8 minutes", initial_body)
-            self.assertIn("Expected outputs: raw top-30 scrape JSON", initial_body)
+            self.assertIn("Expected outputs: full unique scrape JSON", initial_body)
             self.assertEqual(post_response.status, 303)
             self.assertEqual(len(executor.calls), 1)
             self.assertEqual(final_response.status, 200)
@@ -73,7 +73,6 @@ class DashboardManualRunsTest(unittest.TestCase):
                     "competitor_profiles": "@gaviscon",
                     "scope": "all",
                     "results_per_input": 25,
-                    "top_n": 30,
                     "minimum_views": 10000,
                     "maximum_age_days": 14,
                     "minimum_weighted_engagement_rate": 0.025,
@@ -96,21 +95,25 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertEqual(record.status, "completed")
             self.assertEqual(record.config_version, "v1")
             self.assertEqual(record.triggered_by, "marketer@example.com")
-            self.assertEqual(record.triggered_at, "2026-05-07T09:15:00Z")
+            self.assertEqual(record.triggered_at, "2026-05-07T17:15:00+08:00")
             self.assertEqual(
                 record.output_paths["raw_scrape"],
-                "data/daily_runs/manual_20260507T091500Z_scrape_only/raw_scrape_top30.json",
+                "runs/batch-analysis/20260507T171500+0800_daily/data/raw_scrape_all.json",
             )
             self.assertEqual(
                 record.output_paths["daily_selection"],
-                "data/daily_runs/manual_20260507T091500Z_scrape_only/daily_selection_top3.json",
+                "runs/batch-analysis/20260507T171500+0800_daily/data/daily_selection_top_videos.json",
+            )
+            self.assertEqual(
+                record.output_paths["run_folder"],
+                "runs/batch-analysis/20260507T171500+0800_daily",
             )
             self.assertEqual(len(executor.calls), 1)
             command, cwd = executor.calls[0]
             self.assertEqual(cwd, workspace)
-            self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", command)
+            self.assertIn("batch_analysis/scrape_tiktok.py", command)
             self.assertIn("--config", command)
-            self.assertIn("skills/nattome-tiktok-candidate-discovery/config.json", command)
+            self.assertIn("batch_analysis/scrape_config.json", command)
             self.assertIn("--download-videos", command)
 
             rows = list_manual_runs(workspace)
@@ -156,20 +159,17 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertEqual(len(executor.calls), 2)
             scrape_command = executor.calls[0][0]
             batch_command = executor.calls[1][0]
-            self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", scrape_command)
-            self.assertIn("scripts/run_batch_analysis.py", batch_command)
+            self.assertIn("batch_analysis/scrape_tiktok.py", scrape_command)
+            self.assertIn("batch_analysis/run_batch_analysis.py", batch_command)
             self.assertNotIn("--mode", batch_command)
             self.assertIn("--candidates", batch_command)
             self.assertIn(record.output_paths["daily_selection"], batch_command)
-            self.assertIn("--backfill-candidates", batch_command)
-            self.assertIn(record.output_paths["daily_backfill"], batch_command)
             self.assertIn("--timestamp", batch_command)
-            self.assertIn("2026-05-07T09:15:00Z", batch_command)
+            self.assertIn("2026-05-07T17:15:00+08:00", batch_command)
             self.assertEqual(
                 record.output_paths["run_folder"],
-                "runs/batch-analysis/20260507T091500Z_daily",
+                "runs/batch-analysis/20260507T171500+0800_daily",
             )
-            self.assertEqual(record.output_paths["final_reports"], "outputs/reports/2026-05-07")
 
     def test_manual_run_failure_records_failed_status_and_error_text(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -193,10 +193,11 @@ class DashboardManualRunsTest(unittest.TestCase):
             workspace = Path(temp_dir)
             existing = (
                 workspace
+                / "runs"
+                / "batch-analysis"
+                / "20260507T171500+0800_daily"
                 / "data"
-                / "daily_runs"
-                / "manual_20260507T091500Z_scrape_only"
-                / "raw_scrape_top30.json"
+                / "raw_scrape_all.json"
             )
             existing.parent.mkdir(parents=True)
             existing.write_text("{}", encoding="utf-8")
@@ -212,7 +213,7 @@ class DashboardManualRunsTest(unittest.TestCase):
 
             self.assertEqual(
                 record.output_paths["raw_scrape"],
-                "data/daily_runs/manual_20260507T091501Z_scrape_only/raw_scrape_top30.json",
+                "runs/batch-analysis/20260507T171501+0800_daily/data/raw_scrape_all.json",
             )
 
     def _request(

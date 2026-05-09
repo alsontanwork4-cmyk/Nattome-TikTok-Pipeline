@@ -28,8 +28,7 @@ class ScrapeQualityScoreTest(unittest.TestCase):
                 selected_ids=["video-1", "video-2", "video-3"],
                 manifest_extra={
                     "phases": [
-                        {"name": "claim_safety", "status": "failed"},
-                        {"name": "evidence_extraction", "status": "failed"},
+                        {"name": "source_video_snapshots", "status": "failed"},
                     ],
                     "outputs": {},
                 },
@@ -215,33 +214,26 @@ class ScrapeQualityScoreTest(unittest.TestCase):
             self.assertEqual(settings_rows[0]["is_active"], 1)
             self.assertEqual(persisted["needs_attention"], 1)
 
-    def test_downstream_pipeline_failures_do_not_reduce_scrape_quality_score(self):
+    def test_snapshot_phase_status_does_not_reduce_scrape_quality_score(self):
         healthy_score = self._compute_score_with_manifest_extra(
             {
                 "phases": [
-                    {"name": "evidence_extraction", "status": "completed"},
-                    {"name": "claim_safety", "status": "completed"},
-                    {"name": "report_generation", "status": "completed"},
+                    {"name": "source_video_snapshots", "status": "completed"},
                 ],
-                "outputs": {
-                    "report_markdown": "report.md",
-                    "excel_workbook": "planning.xlsx",
-                },
+                "outputs": {},
             }
         )
-        failed_downstream_score = self._compute_score_with_manifest_extra(
+        failed_snapshot_score = self._compute_score_with_manifest_extra(
             {
                 "phases": [
-                    {"name": "evidence_extraction", "status": "failed"},
-                    {"name": "claim_safety", "status": "failed"},
-                    {"name": "report_generation", "status": "failed"},
+                    {"name": "source_video_snapshots", "status": "failed"},
                 ],
                 "outputs": {},
             }
         )
 
-        self.assertEqual(failed_downstream_score.score, healthy_score.score)
-        self.assertEqual(failed_downstream_score.components, healthy_score.components)
+        self.assertEqual(failed_snapshot_score.score, healthy_score.score)
+        self.assertEqual(failed_snapshot_score.components, healthy_score.components)
 
     def _compute_score_with_manifest_extra(self, manifest_extra: dict) -> ScrapeQualityScore:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -24,7 +24,6 @@ class ScrapeSettingsTest(unittest.TestCase):
                 "competitor_profiles": ["@gaviscon", " gutgang "],
                 "scope": "hashtags",
                 "results_per_input": "25",
-                "top_n": "30",
                 "minimum_views": "10000",
                 "maximum_age_days": "14",
                 "minimum_weighted_engagement_rate": "0.025",
@@ -38,7 +37,6 @@ class ScrapeSettingsTest(unittest.TestCase):
         self.assertEqual(settings["competitor_profiles"], ["gaviscon", "gutgang"])
         self.assertEqual(settings["scope"], "hashtags")
         self.assertEqual(settings["results_per_input"], 25)
-        self.assertEqual(settings["top_n"], 30)
         self.assertEqual(settings["minimum_views"], 10000)
         self.assertEqual(settings["maximum_age_days"], 14)
         self.assertEqual(settings["minimum_weighted_engagement_rate"], 0.025)
@@ -133,7 +131,7 @@ class ScrapeSettingsTest(unittest.TestCase):
     def test_read_only_settings_are_declared_for_mvp(self):
         self.assertIn("APIFY_TOKEN", READ_ONLY_SETTINGS["API keys"])
         self.assertIn("clockworks~tiktok-scraper", READ_ONLY_SETTINGS["Apify actor ID"])
-        self.assertIn("gemini-2.5-flash", READ_ONLY_SETTINGS["Gemini model"])
+        self.assertEqual(READ_ONLY_SETTINGS["Pipeline boundary"], "source-video snapshots")
 
 
 if __name__ == "__main__":

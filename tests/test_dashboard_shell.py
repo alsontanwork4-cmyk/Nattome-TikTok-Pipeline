@@ -212,10 +212,7 @@ class DashboardWebShellTest(unittest.TestCase):
                 next_scheduled_run="2026-05-08T01:00:00Z",
                 health_phases=[
                     {"name": "candidate_selection", "status": "completed"},
-                    {"name": "evidence_bundles", "status": "completed"},
-                    {"name": "gemini_evidence", "status": "completed"},
-                    {"name": "structured_outputs", "status": "completed"},
-                    {"name": "telegram_delivery", "status": "completed"},
+                    {"name": "source_video_snapshots", "status": "completed"},
                 ],
                 with_outputs=True,
             )
@@ -228,10 +225,10 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Candidate volume", body)
             self.assertNotIn("Pipeline Health", body)
             self.assertNotIn("Pipeline outputs are ready for marketer review.", body)
-            self.assertIn("2026-05-07T01:00:00Z", body)
+            self.assertIn("2026-05-07 09:00:00 +0800", body)
             self.assertIn("default", body)
             self.assertIn("v7", body)
-            self.assertIn("2026-05-08T01:00:00Z", body)
+            self.assertIn("2026-05-08 09:00:00 +0800", body)
             self.assertIn("Acid reflux bloating gut health hook", body)
             self.assertIn("https://www.tiktok.com/@creator/video/strong-1", body)
             self.assertIn("Top Quality Drivers", body)
@@ -269,7 +266,7 @@ class DashboardWebShellTest(unittest.TestCase):
                 selected_ids=[],
                 health_phases=[
                     {"name": "candidate_selection", "status": "blocked", "reason": "No usable raw candidates"},
-                    {"name": "gemini_evidence", "status": "blocked"},
+                    {"name": "source_video_snapshots", "status": "blocked"},
                 ],
                 with_outputs=False,
             )
@@ -303,6 +300,7 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Weighted Engagement", body)
             self.assertIn("Nattome Relevance", body)
             self.assertIn("Risk Flags", body)
+            self.assertIn("2026-05-06 08:00:00 +0800", body)
             self.assertNotIn("<video", body.lower())
 
     def test_run_history_curation_route_persists_labels_notes_and_exclude_reason(self):
@@ -359,7 +357,6 @@ class DashboardWebShellTest(unittest.TestCase):
                         "competitor_profiles": "@gaviscon",
                         "scope": "all",
                         "results_per_input": "25",
-                        "top_n": "30",
                         "minimum_views": "10000",
                         "maximum_age_days": "14",
                         "minimum_weighted_engagement_rate": "0.025",
@@ -382,7 +379,6 @@ class DashboardWebShellTest(unittest.TestCase):
                         "competitor_profiles": "@gaviscon",
                         "scope": "all",
                         "results_per_input": "25",
-                        "top_n": "30",
                         "minimum_views": "10000",
                         "maximum_age_days": "14",
                         "minimum_weighted_engagement_rate": "0.025",
@@ -484,9 +480,8 @@ class DashboardWebShellTest(unittest.TestCase):
         run_folder = workspace / "runs" / "batch-analysis" / run_id
         data_folder = run_folder / "data"
         evidence_folder = run_folder / "evidence"
-        reports_folder = run_folder / "reports"
         logs_folder = run_folder / "logs"
-        for folder in [raw_scrapes, data_folder, evidence_folder, reports_folder, logs_folder]:
+        for folder in [raw_scrapes, data_folder, evidence_folder, logs_folder]:
             folder.mkdir(parents=True, exist_ok=True)
 
         candidate_source = "data/raw_scrapes/sample_raw.json"
@@ -510,7 +505,7 @@ class DashboardWebShellTest(unittest.TestCase):
                 },
             },
             "phases": health_phases,
-            "outputs": {"batch_index": "batch_index.md"} if with_outputs else {},
+            "outputs": {},
         }
         (run_folder / "run_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         (run_folder / "run_metadata.json").write_text(
@@ -539,10 +534,7 @@ class DashboardWebShellTest(unittest.TestCase):
                         {
                             "candidate_id": f"bundle-{index}",
                             "source_video": {"state": "available" if with_outputs else "missing"},
-                            "artifacts": {
-                                "gemini_evidence": {"state": "completed" if with_outputs else "missing"},
-                                "video_evidence_report": {"state": "completed" if with_outputs else "missing"},
-                            },
+                            "artifacts": {},
                         }
                         for index in range(1, bundle_count + 1)
                     ],
@@ -550,14 +542,6 @@ class DashboardWebShellTest(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        if with_outputs:
-            (reports_folder / "001_video_evidence_report.md").write_text("# Report\n", encoding="utf-8")
-            (data_folder / "spreadsheet_summary.csv").write_text("id\nstrong-1\n", encoding="utf-8")
-            (run_folder / "batch_index.md").write_text("# Batch\n", encoding="utf-8")
-            (logs_folder / "telegram_delivery.json").write_text(json.dumps({"status": "sent"}), encoding="utf-8")
-        else:
-            (logs_folder / "telegram_delivery.json").write_text(json.dumps({"status": "skipped"}), encoding="utf-8")
-
     def _video(
         self,
         video_id: str,

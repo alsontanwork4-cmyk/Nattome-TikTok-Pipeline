@@ -95,11 +95,6 @@ class DashboardRefreshTest(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        (run_folder / "logs" / "telegram_delivery.json").write_text(
-            json.dumps({"status": "sent"}),
-            encoding="utf-8",
-        )
-
     def _count(self, workspace: Path, table_name: str) -> int:
         connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
         try:

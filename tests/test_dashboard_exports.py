@@ -37,11 +37,12 @@ class DashboardExportsTest(unittest.TestCase):
             self.assertEqual(rows[0]["run_id"], "20260507T000000Z_default")
             self.assertEqual(rows[0]["config_version"], "v4")
             self.assertEqual(rows[0]["selection_status"], "analyzed")
+            self.assertEqual(rows[0]["created_at"], "2026-05-07 08:00:00 +0800")
             self.assertEqual(rows[0]["curation_labels"], "Relevant; Good Nattome Fit")
             self.assertEqual(rows[0]["curation_note"], "Keep for Nattome hook planning.")
             self.assertEqual(rows[0]["source_artifact_path"], "data/raw_scrapes/sample_raw.json")
 
-    def test_run_summaries_csv_export_preserves_context_and_linked_deliverables(self):
+    def test_run_summaries_csv_export_preserves_context_and_linked_snapshots(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_fixture_workspace(workspace)
@@ -52,15 +53,13 @@ class DashboardExportsTest(unittest.TestCase):
             rows = list(csv.DictReader(StringIO(exported)))
 
             self.assertEqual([row["run_id"] for row in rows], ["20260507T000000Z_default"])
-            self.assertEqual(rows[0]["timestamp"], "2026-05-07T00:00:00Z")
+            self.assertEqual(rows[0]["timestamp"], "2026-05-07 08:00:00 +0800")
             self.assertEqual(rows[0]["run_type"], "scheduled default")
             self.assertEqual(rows[0]["config_version"], "v4")
             self.assertEqual(rows[0]["raw_candidates"], "2")
             self.assertEqual(rows[0]["selected_count"], "1")
-            self.assertIn("reports/current.md", rows[0]["output_links"])
-            self.assertIn("reports/current.xlsx", rows[0]["output_links"])
-            self.assertIn("report_markdown", rows[0]["output_types"])
-            self.assertIn("excel_workbook", rows[0]["output_types"])
+            self.assertIn("data/selected_batch.json", rows[0]["output_links"])
+            self.assertIn("selected_batch", rows[0]["output_types"])
 
     def test_empty_exports_keep_headers_and_markdown_empty_states(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -111,7 +110,7 @@ class DashboardExportsTest(unittest.TestCase):
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
         run_folder = workspace / "runs" / "batch-analysis" / "20260507T000000Z_default"
-        for folder in [raw_scrapes, run_folder / "data", run_folder / "reports"]:
+        for folder in [raw_scrapes, run_folder / "data"]:
             folder.mkdir(parents=True, exist_ok=True)
 
         (raw_scrapes / "sample_raw.json").write_text(
@@ -158,10 +157,7 @@ class DashboardExportsTest(unittest.TestCase):
                     "mode": "default",
                     "requested_batch_size": 1,
                     "configuration": {"version": "v4"},
-                    "outputs": {
-                        "report_markdown": "reports/current.md",
-                        "excel_workbook": "reports/current.xlsx",
-                    },
+                    "outputs": {},
                 }
             ),
             encoding="utf-8",
@@ -178,8 +174,6 @@ class DashboardExportsTest(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        (run_folder / "reports" / "current.md").write_text("# Report\n", encoding="utf-8")
-        (run_folder / "reports" / "current.xlsx").write_bytes(b"xlsx")
         (run_folder / "data" / "001_video-1_source_metadata.json").write_text(
             json.dumps({"id": "video-1"}),
             encoding="utf-8",

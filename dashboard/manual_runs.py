@@ -7,6 +7,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable, Sequence
 
+from batch_analysis.config import isoformat_local, run_folder_name
+
 from .refresh import refresh_dashboard_derivatives
 from .settings import get_active_settings_version
 from .store import connect_dashboard_store, dump_json, load_json
@@ -49,7 +51,7 @@ def trigger_manual_run(
 
     active_settings = get_active_settings_version(workspace_path)
     config_version = f"v{active_settings.version}"
-    triggered_at = _isoformat_z(now or datetime.now(timezone.utc))
+    triggered_at = isoformat_local(now or datetime.now(timezone.utc))
     timestamp = _available_timestamp(workspace_path, run_type, now or datetime.now(timezone.utc))
     run_id = _run_id(timestamp, run_type)
     output_paths = _output_paths(timestamp, run_type)
@@ -207,13 +209,11 @@ def _commands_for_run(
 ) -> list[list[str]]:
     scrape_command = [
         sys.executable,
-        "skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py",
+        "batch_analysis/scrape_tiktok.py",
         "--config",
         config_path,
         "--output",
         output_paths["raw_scrape"],
-        "--top",
-        "30",
         "--download-videos",
         "--daily-selection-output",
         output_paths["daily_selection"],
@@ -222,21 +222,19 @@ def _commands_for_run(
         return [scrape_command]
     batch_command = [
         sys.executable,
-        "scripts/run_batch_analysis.py",
+        "batch_analysis/run_batch_analysis.py",
         "--candidates",
         output_paths["daily_selection"],
-        "--backfill-candidates",
-        output_paths["daily_backfill"],
         "--config",
         config_path,
         "--timestamp",
-        _isoformat_z(timestamp),
+        isoformat_local(timestamp),
     ]
     return [scrape_command, batch_command]
 
 
 def _ensure_scraper_config(workspace: Path, version: int, settings: dict[str, object]) -> str:
-    relative_path = Path("skills") / "nattome-tiktok-candidate-discovery" / "config.json"
+    relative_path = Path("batch_analysis") / "scrape_config.json"
     config_path = workspace / relative_path
     config_path.parent.mkdir(parents=True, exist_ok=True)
     selection = {
@@ -253,7 +251,6 @@ def _ensure_scraper_config(workspace: Path, version: int, settings: dict[str, ob
         "competitor_profiles": settings.get("competitor_profiles", []),
         "scope": settings.get("scope", "all"),
         "results_per_input": settings.get("results_per_input", 20),
-        "top_n": settings.get("top_n", 30),
         "selection": selection,
     }
     config_path.write_text(_json_dumps(config) + "\n", encoding="utf-8")
@@ -275,24 +272,19 @@ def _paths_exist(workspace: Path, output_paths: dict[str, str]) -> bool:
 
 
 def _output_paths(timestamp: datetime, run_type: str) -> dict[str, str]:
-    stamp = timestamp.strftime("%Y%m%dT%H%M%SZ")
-    date = timestamp.strftime("%Y-%m-%d")
     run_id = _run_id(timestamp, run_type)
-    run_root = f"data/daily_runs/{run_id}"
+    run_root = f"runs/batch-analysis/{run_folder_name(timestamp, 'daily')}"
     paths = {
-        "run_data_folder": run_root,
-        "raw_scrape": f"{run_root}/raw_scrape_top30.json",
-        "daily_selection": f"{run_root}/daily_selection_top3.json",
-        "daily_backfill": f"{run_root}/daily_backfill_candidates.json",
+        "run_folder": run_root,
+        "run_data_folder": f"{run_root}/data",
+        "raw_scrape": f"{run_root}/data/raw_scrape_all.json",
+        "daily_selection": f"{run_root}/data/daily_selection_top_videos.json",
     }
-    if run_type == FULL_PIPELINE:
-        paths["run_folder"] = f"runs/batch-analysis/{stamp}_daily"
-        paths["final_reports"] = f"outputs/reports/{date}"
     return paths
 
 
 def _run_id(timestamp: datetime, run_type: str) -> str:
-    return f"manual_{timestamp.strftime('%Y%m%dT%H%M%SZ')}_{run_type}"
+    return f"manual_{run_folder_name(timestamp, run_type)}"
 
 
 def _row_to_manual_run(row) -> ManualRunRecord:
@@ -319,5 +311,3 @@ def _json_loads(value: str | None, fallback):
     return load_json(value, fallback)
 
 
-def _isoformat_z(timestamp: datetime) -> str:
-    return timestamp.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")

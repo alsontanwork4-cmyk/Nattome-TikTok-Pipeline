@@ -106,8 +106,7 @@ def _pipeline_flow() -> list[PipelineFlowStep]:
         PipelineFlowStep("Scrape", "Apify collects TikTok candidates and downloadable source-video links."),
         PipelineFlowStep("Score", "The dashboard scores candidate volume, relevance, freshness, engagement, and noise."),
         PipelineFlowStep("Select", "The batch run applies eligibility filters and selects the highest-value candidates."),
-        PipelineFlowStep("Analyze", "Gemini produces evidence-first video observations for selected source videos."),
-        PipelineFlowStep("Report", "The pipeline writes marketer-facing reports, workbooks, logs, and audit JSON."),
+        PipelineFlowStep("Snapshot", "The batch run copies/downloads selected source videos and writes flat snapshot JSON."),
     ]
 
 
@@ -118,16 +117,12 @@ def _tool_decisions() -> list[ToolDecision]:
             "Apify is the discovery and download boundary for TikTok candidate metadata and source videos.",
         ),
         ToolDecision(
-            "Gemini evidence-first analysis",
-            "Gemini analyzes source videos before local report generation so creative recommendations cite evidence.",
-        ),
-        ToolDecision(
             "Local dashboard index",
             "SQLite indexes raw scrapes, run folders, outputs, docs, curation, settings, and dashboard-only state.",
         ),
         ToolDecision(
-            "Durable output formats",
-            "Markdown, structured JSON, Excel workbooks, and logs stay linked for marketer review and audit trails.",
+            "Rebuild boundary",
+            "The active pipeline stops after source video snapshots; downstream analysis is intentionally absent.",
         ),
     ]
 
@@ -136,11 +131,7 @@ def _phase_statuses(latest_run: sqlite3.Row | None) -> list[PhaseStatus]:
     default_phases = [
         "apify_scrape",
         "candidate_selection",
-        "evidence_bundles",
-        "gemini_evidence",
-        "report_generation",
-        "excel_generation",
-        "telegram_delivery",
+        "source_video_snapshots",
     ]
     if latest_run is None:
         return [
@@ -175,22 +166,6 @@ def _file_output_map(
         "SELECT path FROM artifact_sources WHERE artifact_type = 'raw_scrape' ORDER BY path",
     )
     run_folders = _column_values(connection, "SELECT run_folder FROM batch_runs ORDER BY run_folder")
-    reports = _column_values(
-        connection,
-        """
-        SELECT artifact_path FROM run_outputs
-        WHERE artifact_type IN ('report_markdown', 'report_json')
-        ORDER BY artifact_path
-        """,
-    )
-    workbooks = _column_values(
-        connection,
-        """
-        SELECT artifact_path FROM run_outputs
-        WHERE artifact_type = 'excel_workbook'
-        ORDER BY artifact_path
-        """,
-    )
     logs = _column_values(
         connection,
         """
@@ -202,8 +177,6 @@ def _file_output_map(
     return {
         "Raw scrapes": raw_scrapes,
         "Run folders": run_folders,
-        "Reports": reports,
-        "Workbooks": workbooks,
         "Logs": logs,
         "Documentation": [doc.path for doc in documents],
     }
@@ -241,28 +214,10 @@ def _data_lineage(
             "Eligibility and ranking reduce the scrape to the analysis set.",
         ),
         LineageStep(
-            "Evidence bundle index",
+            "Source video snapshots",
             _first(outputs, "selected_batch", "manifest", "metadata"),
             "available" if outputs else "missing",
-            "Run metadata and evidence indexes connect selected videos to analysis artifacts.",
-        ),
-        LineageStep(
-            "Final report",
-            _first(outputs, "report_markdown"),
-            "available" if outputs.get("report_markdown") else "missing",
-            "Markdown reports carry the marketer-facing creative read.",
-        ),
-        LineageStep(
-            "Planning workbook",
-            _first(outputs, "excel_workbook"),
-            "available" if outputs.get("excel_workbook") else "missing",
-            "Excel workbooks turn approved angles into production planning rows.",
-        ),
-        LineageStep(
-            "Delivery log",
-            _first(outputs, "log"),
-            "available" if outputs.get("log") else "missing",
-            "Logs preserve delivery and operational status after outputs are generated.",
+            "Run metadata and the bundle index connect selected candidates to downloaded source-video files.",
         ),
     ]
 

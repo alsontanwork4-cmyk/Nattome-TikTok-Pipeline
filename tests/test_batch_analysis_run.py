@@ -1,6 +1,5 @@
 import inspect
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -8,36 +7,11 @@ import unittest
 from argparse import Namespace
 from pathlib import Path
 
-from batch_analysis.run import build_metadata
+from batch_analysis.run import build_metadata, create_run
 
 
 WORKSPACE = Path(__file__).resolve().parents[1]
-SCRIPT = WORKSPACE / "scripts" / "run_batch_analysis.py"
-
-
-class FakeGeminiAdapter:
-    def analyze_source_video(self, source_video_path, candidate_context):
-        return {
-            "status": "completed",
-            "model": "gemini-2.5-flash",
-            "visual_observations": [
-                {"timestamp_seconds": 0.5, "observation": "Creator points at stomach"}
-            ],
-            "visible_text": [{"timestamp_seconds": 0.8, "text": "Bloated after meals?"}],
-            "spoken_content": [
-                {
-                    "start_seconds": 0,
-                    "end_seconds": 2,
-                    "text": "Here is a gentle routine for digestion support",
-                }
-            ],
-            "audio_cues": [{"timestamp_seconds": 0, "cue": "calm voiceover"}],
-            "hook_evidence": [
-                {"timestamp_seconds": 0.5, "evidence": "problem question opens the video"}
-            ],
-            "claim_evidence": [{"timestamp_seconds": 1.2, "text": "supports digestion"}],
-            "missing_evidence": [],
-        }
+SCRIPT = WORKSPACE / "batch_analysis" / "run_batch_analysis.py"
 
 
 def run_cli(*args, cwd=WORKSPACE):
@@ -49,84 +23,32 @@ def run_cli(*args, cwd=WORKSPACE):
     )
 
 
+def candidate(temp_path: Path, **overrides):
+    source_video = temp_path / f"{overrides.get('id', 'video')}.mp4"
+    source_video.write_bytes(b"fake mp4 bytes")
+    payload = {
+        "id": "source-video",
+        "url": "https://www.tiktok.com/@creator/video/source",
+        "video_download_url": str(source_video),
+        "caption": "Bloating after meals gut health routine",
+        "play_count": 120000,
+        "like_count": 12000,
+        "comment_count": 600,
+        "share_count": 700,
+        "created_at": "2026-05-05T00:00:00Z",
+    }
+    payload.update(overrides)
+    return payload
+
+
 class BatchAnalysisRunCliTest(unittest.TestCase):
-    def test_build_metadata_has_no_spreadsheet_summary_status_input(self):
+    def test_build_metadata_is_source_video_boundary_only(self):
         signature = inspect.signature(build_metadata)
 
-        self.assertNotIn("has_spreadsheet_summary", signature.parameters)
+        self.assertIn("has_candidate_selection", signature.parameters)
+        self.assertIn("has_source_video_snapshots", signature.parameters)
 
-    def test_batch_analysis_run_is_callable_from_importable_module(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            runs_dir = Path(temp_dir) / "runs"
-            from batch_analysis.run import create_run
-
-            run_folder = create_run(
-                Namespace(
-                    mode="debug",
-                    batch_size=1,
-                    runs_dir=runs_dir,
-                    config=None,
-                    candidates=None,
-                    timestamp="2026-05-06T13:45:30Z",
-                    ffmpeg_bin="ffmpeg",
-                    ocr_primary_bin="paddleocr",
-                    ocr_fallback_bin="tesseract",
-                    transcription_bin="whisper",
-                )
-            )
-
-            self.assertEqual(run_folder, runs_dir / "20260506T134530Z_debug")
-            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
-            self.assertEqual(metadata["run_timestamp"], "2026-05-06T13:45:30Z")
-            self.assertTrue((run_folder / "batch_index.md").is_file())
-
-    def test_batch_analysis_run_creates_timestamped_run_folder(self):
-        with self.subTest("debug run folder"):
-            with tempfile.TemporaryDirectory() as temp_dir:
-                runs_dir = Path(temp_dir) / "runs"
-
-                result = run_cli(
-                    "--runs-dir",
-                    str(runs_dir),
-                    "--timestamp",
-                    "2026-05-06T13:45:30Z",
-                )
-
-                self.assertEqual(result.returncode, 0, result.stderr)
-
-                run_folders = list(runs_dir.iterdir())
-                self.assertEqual(len(run_folders), 1)
-                run_folder = run_folders[0]
-                self.assertRegex(run_folder.name, r"20260506T134530Z_daily$")
-
-                metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
-                self.assertEqual(metadata["run_timestamp"], "2026-05-06T13:45:30Z")
-                self.assertEqual(metadata["mode"], "daily")
-                self.assertEqual(metadata["requested_batch_size"], 3)
-                self.assertEqual(metadata["configuration"]["outputs"]["markdown"], "reports")
-                self.assertEqual(metadata["implementation_status"]["video_download"], "not_implemented")
-                self.assertEqual(metadata["implementation_status"]["gemini_evidence"], "not_implemented")
-                self.assertEqual(metadata["implementation_status"]["audio_music_trend_analysis"], "not_implemented")
-                self.assertNotIn("spreadsheet_summary", metadata["implementation_status"])
-
-                expected_paths = [
-                    "reports",
-                    "data",
-                    "evidence",
-                    "logs",
-                ]
-                for relative_path in expected_paths:
-                    self.assertTrue((run_folder / relative_path).is_dir(), relative_path)
-                self.assertTrue((run_folder / "run_manifest.json").is_file())
-
-                self.assertTrue(
-                    (run_folder / "batch_index.md").read_text(encoding="utf-8").startswith(
-                        "# Batch Analysis Run"
-                    )
-                )
-                self.assertIn(str(run_folder), result.stdout)
-
-    def test_skeleton_run_uses_two_layer_layout_and_manifest_index(self):
+    def test_skeleton_run_creates_compact_two_layer_layout(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             runs_dir = Path(temp_dir) / "runs"
 
@@ -138,300 +60,86 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
-
-            run_folder = runs_dir / "20260506T134530Z_daily"
+            run_folder = runs_dir / "20260506T214530+0800_daily"
             self.assertEqual(
                 sorted(child.name for child in run_folder.iterdir() if child.is_dir()),
                 ["data", "evidence", "logs", "reports"],
             )
+            self.assertTrue((run_folder / "run_metadata.json").is_file())
+            self.assertTrue((run_folder / "run_manifest.json").is_file())
+            self.assertFalse((run_folder / "batch_index.md").exists())
             self.assertFalse((run_folder / "batch_outputs").exists())
             self.assertFalse((run_folder / "evidence_bundles").exists())
 
-            generated_paths = [
-                path.relative_to(run_folder)
-                for path in run_folder.rglob("*")
-                if path != run_folder
-            ]
-            too_deep_paths = [
-                str(path)
-                for path in generated_paths
-                if len(path.parts) > 2
-            ]
-            self.assertEqual(too_deep_paths, [])
+            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata["run_timestamp"], "2026-05-06T21:45:30+08:00")
+            self.assertEqual(metadata["implementation_status"]["candidate_selection"], "not_implemented")
+            self.assertEqual(metadata["implementation_status"]["source_video_download"], "not_implemented")
+
+    def test_candidates_are_selected_and_source_videos_are_snapshotted(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            expected_run_folder = temp_path / "runs" / "20260506T214530+0800_daily"
+            expected_run_folder.joinpath("data").mkdir(parents=True)
+            expected_run_folder.joinpath("data", "raw_scrape_all.json").write_text(
+                json.dumps({"top": []}),
+                encoding="utf-8",
+            )
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(
+                json.dumps(
+                    {
+                        "top": [
+                            candidate(temp_path, id="first-video", play_count=100000),
+                            candidate(temp_path, id="second-video", play_count=90000),
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            run_folder = create_run(
+                Namespace(
+                    mode="daily",
+                    batch_size=None,
+                    runs_dir=temp_path / "runs",
+                    config=None,
+                    candidates=candidates_path,
+                    timestamp="2026-05-06T13:45:30Z",
+                )
+            )
+
+            self.assertEqual(run_folder, expected_run_folder)
+            self.assertTrue((run_folder / "data" / "selected_batch.json").is_file())
+            self.assertTrue((run_folder / "reports" / "selected_batch.md").is_file())
+            self.assertTrue((run_folder / "data" / "evidence_bundle_index.json").is_file())
+            self.assertEqual(len(list((run_folder / "data").glob("*_evidence_snapshot.json"))), 2)
+            self.assertEqual(len(list((run_folder / "data").glob("*_source_metadata.json"))), 2)
+            self.assertEqual(len(list((run_folder / "evidence").glob("*_source_video.mp4"))), 2)
 
             manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual(manifest["run_timestamp"], "2026-05-06T13:45:30Z")
-            self.assertEqual(manifest["mode"], "daily")
-            self.assertEqual(manifest["requested_batch_size"], 3)
-            self.assertIn("configuration", manifest)
-            self.assertIsInstance(manifest["phases"], list)
-            self.assertTrue(manifest["phases"])
-            self.assertTrue(all(isinstance(phase, dict) for phase in manifest["phases"]))
-            self.assertTrue(all("name" in phase and "status" in phase for phase in manifest["phases"]))
-            self.assertNotIn("implementation_status", manifest)
-
-            batch_index = (run_folder / "batch_index.md").read_text(encoding="utf-8")
-            self.assertIn("# Batch Analysis Run", batch_index)
-            self.assertIn("run_manifest.json", batch_index)
-            self.assertIn("- `reports`", batch_index)
-            self.assertIn("- Candidate selection was not run", batch_index)
+            self.assertEqual(manifest["run_timestamp"], "2026-05-06T21:45:30+08:00")
+            self.assertEqual(
+                next(phase for phase in manifest["phases"] if phase["name"] == "source_video_snapshots")["status"],
+                "completed",
+            )
 
     def test_missing_explicit_config_fails_without_creating_run_folder(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             runs_dir = temp_path / "runs"
-            missing_config = temp_path / "missing.json"
 
             result = run_cli(
                 "--runs-dir",
                 str(runs_dir),
                 "--config",
-                str(missing_config),
+                str(temp_path / "missing.json"),
             )
 
             self.assertEqual(result.returncode, 2)
             self.assertIn("required config file not found", result.stderr)
             self.assertFalse(runs_dir.exists())
 
-    def test_candidates_are_filtered_ranked_and_written_to_run_folder(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            runs_dir = temp_path / "runs"
-            source_video = temp_path / "source.mp4"
-            source_video.write_bytes(b"fake mp4 bytes")
-            candidates_path = temp_path / "candidates.json"
-            candidates_path.write_text(
-                json.dumps(
-                    {
-                        "generated_at": "2026-05-06T00:00:00Z",
-                        "top": [
-                            {
-                                "id": "low-views",
-                                "url": "https://www.tiktok.com/@creator/video/lowviews",
-                                "caption": "Gut health routine",
-                                "play_count": 9999,
-                                "like_count": 900,
-                                "comment_count": 10,
-                                "share_count": 10,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            },
-                            {
-                                "id": "too-old",
-                                "url": "https://www.tiktok.com/@creator/video/tooold",
-                                "caption": "Acid reflux tips",
-                                "play_count": 50000,
-                                "like_count": 5000,
-                                "comment_count": 200,
-                                "share_count": 200,
-                                "created_at": "2025-11-01T00:00:00Z",
-                            },
-                            {
-                                "id": "weak-engagement",
-                                "url": "https://www.tiktok.com/@creator/video/weak",
-                                "caption": "Bloating after meals",
-                                "play_count": 100000,
-                                "like_count": 1000,
-                                "comment_count": 20,
-                                "share_count": 20,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            },
-                            {
-                                "id": "missing-link",
-                                "url": "",
-                                "caption": "Digestive health",
-                                "play_count": 80000,
-                                "like_count": 8000,
-                                "comment_count": 300,
-                                "share_count": 200,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            },
-                            {
-                                "id": "good-relevant",
-                                "url": "https://www.tiktok.com/@creator/video/goodrelevant",
-                                "video_download_url": str(source_video),
-                                "caption": "Acid reflux and bloating routine for gut health",
-                                "play_count": 90000,
-                                "like_count": 7000,
-                                "comment_count": 300,
-                                "share_count": 600,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            },
-                            {
-                                "id": "good-higher-views-less-relevant",
-                                "url": "https://www.tiktok.com/@creator/video/highviews",
-                                "video_download_url": str(source_video),
-                                "caption": "Morning recipe with peas",
-                                "play_count": 300000,
-                                "like_count": 9000,
-                                "comment_count": 500,
-                                "share_count": 500,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            },
-                        ],
-                    }
-                ),
-                encoding="utf-8",
-            )
 
-            result = run_cli(
-                "--runs-dir",
-                str(runs_dir),
-                "--timestamp",
-                "2026-05-06T13:45:30Z",
-                "--candidates",
-                str(candidates_path),
-            )
-
-            self.assertEqual(result.returncode, 0, result.stderr)
-
-            run_folder = runs_dir / "20260506T134530Z_daily"
-            selected = json.loads(
-                (run_folder / "data" / "selected_batch.json").read_text(
-                    encoding="utf-8"
-                )
-            )
-            selected_ids = [candidate["id"] for candidate in selected["selected_candidates"]]
-            self.assertEqual(
-                selected_ids,
-                ["good-relevant", "good-higher-views-less-relevant"],
-            )
-
-            excluded = {item["id"]: item["reason"] for item in selected["excluded_candidates"]}
-            self.assertIn("below minimum views", excluded["low-views"])
-            self.assertIn("older than", excluded["too-old"])
-            self.assertIn("below minimum weighted engagement rate", excluded["weak-engagement"])
-            self.assertIn("missing usable TikTok link", excluded["missing-link"])
-
-            preview = (
-                run_folder / "reports" / "selected_batch.md"
-            ).read_text(encoding="utf-8")
-            self.assertIn("good-relevant", preview)
-            self.assertIn("good-higher-views-less-relevant", preview)
-
-            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
-            self.assertEqual(metadata["implementation_status"]["candidate_selection"], "implemented")
-
-    def test_telegram_delivery_reports_missing_credentials_and_supports_fake_sender(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            runs_dir = temp_path / "runs"
-            source_video = temp_path / "source.mp4"
-            source_video.write_bytes(b"fake mp4 bytes")
-            candidates_path = temp_path / "candidates.json"
-            candidates_path.write_text(
-                json.dumps(
-                    {
-                        "top": [
-                            {
-                                "id": "telegram-video",
-                                "url": "https://www.tiktok.com/@creator/video/telegram",
-                                "video_download_url": str(source_video),
-                                "caption": "Acid reflux stomach tip",
-                                "play_count": 90000,
-                                "like_count": 9000,
-                                "comment_count": 300,
-                                "share_count": 500,
-                                "created_at": "2026-05-05T00:00:00Z",
-                            }
-                        ],
-                    }
-                ),
-                encoding="utf-8",
-            )
-
-            old_token = os.environ.pop("TELEGRAM_BOT_TOKEN", None)
-            old_chat = os.environ.pop("TELEGRAM_CHAT_ID", None)
-            try:
-                from batch_analysis.run import create_run
-
-                run_folder = create_run(
-                    Namespace(
-                        runs_dir=runs_dir,
-                        outputs_dir=temp_path / "outputs",
-                        config=None,
-                        candidates=candidates_path,
-                        timestamp="2026-05-06T13:45:30Z",
-                        gemini_adapter=FakeGeminiAdapter(),
-                    )
-                )
-            finally:
-                if old_token is not None:
-                    os.environ["TELEGRAM_BOT_TOKEN"] = old_token
-                if old_chat is not None:
-                    os.environ["TELEGRAM_CHAT_ID"] = old_chat
-
-            self.assertEqual(
-                run_folder,
-                runs_dir / "20260506T134530Z_daily",
-            )
-            delivery_log = json.loads(
-                (run_folder / "logs" / "telegram_delivery.json").read_text(encoding="utf-8")
-            )
-            self.assertEqual(delivery_log["status"], "skipped")
-            self.assertIn("missing Telegram credentials", delivery_log["reason"])
-            self.assertIn("TELEGRAM_BOT_TOKEN", delivery_log["missing"])
-            self.assertIn("TELEGRAM_CHAT_ID", delivery_log["missing"])
-
-            from batch_analysis.telegram import deliver_telegram_brief
-
-            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
-            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
-            cross_summary = json.loads(
-                (
-                    run_folder
-                    / "data"
-                    / "cross_video_pattern_summary.json"
-                ).read_text(encoding="utf-8")
-            )
-            sent_messages = []
-            sent_documents = []
-
-            def fake_sender(token, chat_id, text):
-                sent_messages.append((token, chat_id, text))
-                return {"ok": True}
-
-            def fake_document_sender(token, chat_id, document_path):
-                sent_documents.append((token, chat_id, Path(document_path).name))
-                return {"ok": True}
-
-            send_status = deliver_telegram_brief(
-                run_folder,
-                metadata,
-                cross_summary,
-                {
-                    "enabled": True,
-                    "bot_token": "fake-token",
-                    "chat_id": "fake-chat",
-                },
-                manifest["outputs"]["final_outputs"],
-                sender=fake_sender,
-                document_sender=fake_document_sender,
-            )
-
-            self.assertEqual(send_status["status"], "sent")
-            self.assertEqual(len(sent_messages), 1)
-            self.assertEqual(len(sent_documents), 2)
-            token, chat_id, message = sent_messages[0]
-            self.assertEqual(token, "fake-token")
-            self.assertEqual(chat_id, "fake-chat")
-            self.assertLess(len(message), 1200)
-            self.assertEqual(
-                message.splitlines(),
-                [
-                    "Nattome Batch Analysis Final Outputs",
-                    "Run: 2026-05-06T13:45:30Z",
-                    "Videos compared: 1",
-                    "Success or Fail: Success",
-                ],
-            )
-            self.assertEqual(
-                [document_name for _token, _chat_id, document_name in sent_documents],
-                [
-                    "production_creative_report_2026-05-06.md",
-                    "production_angle_planning_sheet_2026-05-06.xlsx",
-                ],
-            )
-
-            metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
-            self.assertEqual(metadata["implementation_status"]["telegram_delivery"], "implemented")
-
+if __name__ == "__main__":
+    unittest.main()
