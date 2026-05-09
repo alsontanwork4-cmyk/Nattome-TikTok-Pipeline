@@ -24,6 +24,9 @@ class VercelDashboardShellTest(unittest.TestCase):
         middleware = (APP_ROOT / "src" / "middleware.ts").read_text(encoding="utf-8")
         auth = (APP_ROOT / "src" / "lib" / "auth.ts").read_text(encoding="utf-8")
         page = (APP_ROOT / "src" / "app" / "page.tsx").read_text(encoding="utf-8")
+        login = (APP_ROOT / "src" / "app" / "login" / "page.tsx").read_text(
+            encoding="utf-8"
+        )
 
         self.assertIn("createServerClient", middleware)
         self.assertIn("auth.getUser", middleware)
@@ -32,6 +35,10 @@ class VercelDashboardShellTest(unittest.TestCase):
         self.assertIn("requireAuthenticatedUser", auth)
         self.assertIn("redirect(\"/login\")", auth)
         self.assertIn("requireAuthenticatedUser", page)
+        self.assertIn("signInWithPassword", login)
+        self.assertIn('name="email"', login)
+        self.assertIn('name="password"', login)
+        self.assertIn("Sign in", login)
 
     def test_data_access_layer_exposes_latest_run_interface(self):
         data_access = (APP_ROOT / "src" / "lib" / "dailyEvidenceRuns.ts").read_text(
