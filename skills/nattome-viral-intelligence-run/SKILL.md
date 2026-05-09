@@ -10,7 +10,7 @@ This is the only normal-operation skill for the Nattome TikTok pipeline.
 The Daily Evidence Run has two phases:
 
 1. `nattome-tiktok-candidate-discovery` creates the evidence-ready Daily Top-3 Selection handoff.
-2. `nattome-evidence-insight-analysis` analyzes those same three videos with Gemini and produces evidence-backed Nattome outputs.
+2. `nattome-evidence-insight-analysis` analyzes the Daily Top-3 first, then analyzes up to two backfill candidates only when needed, and produces evidence-qualified Nattome outputs.
 
 The phase skills are supporting references, not normal entry points.
 
@@ -56,8 +56,8 @@ Then analyze the same daily-selected videos:
 
 ```powershell
 python scripts/run_batch_analysis.py `
-  --mode daily `
-  --candidates data/daily_runs/<run_id>/daily_selection_top3.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top3.json `
+  --backfill-candidates data/daily_runs/<run_id>/daily_backfill_candidates.json
 ```
 
 Use the actual `$runId` generated for the scrape command. Preserve UTF-8 reads and writes for JSON, Markdown, manifests, logs, and workbook-adjacent structured data.
@@ -68,8 +68,9 @@ After a successful run, report these paths:
 
 - Raw scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
 - Daily Top-3 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top3.json`
-- Final report: `outputs/reports/<YYYY-MM-DD>/top5_creative_production_report_<YYYY-MM-DD>.md`
-- Planning workbook: `outputs/reports/<YYYY-MM-DD>/top5_angle_planning_sheet_<YYYY-MM-DD>.xlsx`
+- Daily backfill candidates: `data/daily_runs/<run_id>/daily_backfill_candidates.json`
+- Final report: `outputs/reports/<YYYY-MM-DD>/production_creative_report_<YYYY-MM-DD>.md`
+- Planning workbook: `outputs/reports/<YYYY-MM-DD>/production_angle_planning_sheet_<YYYY-MM-DD>.xlsx`
 - Audit/debug Run Folder: `runs/batch-analysis/<timestamp>_daily/`
 
 The markdown discovery brief under `outputs/daily_briefs/` is optional supporting output. Do not treat it as the final production report.
@@ -83,12 +84,14 @@ Return a concise summary with:
 - Claim Safety Review risks.
 - Manual Review Flags from Evidence Quality outputs.
 - Failed downloads, missing `video_download_url`, or low-quality evidence warnings.
+- Production output status, including when no candidate qualified and no production report/workbook was created.
 - Telegram delivery status only if Telegram was configured.
 
 ## Honest Reporting Rules
 
 - Never invent visible text, spoken content, visual observations, audio cues, hook evidence, claim evidence, source video availability, or download success.
 - Do not call an idea a Shootable Angle unless Gemini source-video evidence supports the hook, structure, pacing, and emotional-trigger read.
+- Do not include candidates without at least one evidence-backed Shootable Angle in the final production report or workbook.
 - Before Gemini evidence exists, only discuss candidate previews and metadata inferences.
 - Do not override Claim Safety Review findings.
 - A high-view video with weak engagement is not automatically a viral success; call out paid-push or bait signals when evidence suggests them.

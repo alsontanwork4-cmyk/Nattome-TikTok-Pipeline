@@ -196,7 +196,7 @@ class Top5AnglePlanningWorkbookTest(unittest.TestCase):
 
             self.assertEqual(
                 status["path"],
-                "reports/2026-05-07/top5_angle_planning_sheet_2026-05-07.xlsx",
+                "reports/2026-05-07/production_angle_planning_sheet_2026-05-07.xlsx",
             )
             workbook_path = output_root / status["path"]
             self.assertEqual(workbook_sheet_names(workbook_path), ["Angles", "Source Videos"])
@@ -259,7 +259,7 @@ class Top5AnglePlanningWorkbookTest(unittest.TestCase):
                 / "reports"
                 / "2026-05-07"
                 / "20260507T080000Z_daily"
-                / "top5_angle_planning_sheet_2026-05-07.xlsx"
+                / "production_angle_planning_sheet_2026-05-07.xlsx"
             )
             self.assertTrue(workbook_path.is_file())
             self.assertEqual(workbook_sheet_names(workbook_path), ["Angles", "Source Videos"])

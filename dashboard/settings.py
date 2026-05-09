@@ -35,7 +35,6 @@ DEFAULT_SCRAPE_SETTINGS: dict[str, Any] = {
     "scope": "all",
     "results_per_input": 20,
     "top_n": 30,
-    "daily_selection_size": 3,
     "minimum_views": 10000,
     "maximum_age_days": 150,
     "minimum_weighted_engagement_rate": 0.03,
@@ -88,10 +87,6 @@ def validate_scrape_settings(raw_settings: dict[str, Any]) -> dict[str, Any]:
         "results per input",
     )
     settings["top_n"] = _positive_int(raw_settings.get("top_n", settings["top_n"]), "top N")
-    settings["daily_selection_size"] = _positive_int(
-        raw_settings.get("daily_selection_size", settings["daily_selection_size"]),
-        "daily selection size",
-    )
     settings["minimum_views"] = _non_negative_int(
         raw_settings.get("minimum_views", settings["minimum_views"]),
         "minimum views",
@@ -328,7 +323,6 @@ def _scraper_config(settings: dict[str, Any], version: int) -> dict[str, Any]:
         "scope": settings["scope"],
         "results_per_input": settings["results_per_input"],
         "top_n": settings["top_n"],
-        "daily_selection_size": settings["daily_selection_size"],
         "selection": {
             "minimum_views": settings["minimum_views"],
             "maximum_age_days": settings["maximum_age_days"],

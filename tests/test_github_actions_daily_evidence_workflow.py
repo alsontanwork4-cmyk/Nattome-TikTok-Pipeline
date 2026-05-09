@@ -25,7 +25,9 @@ class GitHubActionsDailyEvidenceWorkflowTest(unittest.TestCase):
         self.assertIn("python -m pip install -r requirements.txt", text)
         self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", text)
         self.assertIn("scripts/run_batch_analysis.py", text)
-        self.assertIn("--mode daily", text)
+        self.assertNotIn("--mode daily", text)
+        self.assertIn("DAILY_BACKFILL_PATH", text)
+        self.assertIn("--backfill-candidates", text)
         self.assertIn("--publish-cloud", text)
 
     def test_workflow_checks_required_secrets_without_echoing_values(self):

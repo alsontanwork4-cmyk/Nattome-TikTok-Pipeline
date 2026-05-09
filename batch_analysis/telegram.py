@@ -37,14 +37,14 @@ def default_final_outputs(metadata: dict[str, Any]) -> list[dict[str, str]]:
             "label": "Daily Top-3 Creative Production Report",
             "path": (
                 f"reports/{report_date}/"
-                f"top5_creative_production_report_{report_date}.md"
+                f"production_creative_report_{report_date}.md"
             ),
         },
         {
             "label": "Excel Planning Workbook",
             "path": (
                 f"reports/{report_date}/"
-                f"top5_angle_planning_sheet_{report_date}.xlsx"
+                f"production_angle_planning_sheet_{report_date}.xlsx"
             ),
         },
     ]
@@ -54,7 +54,8 @@ def run_success_label(
     final_outputs: list[dict[str, Any]] | None = None,
 ) -> str:
     source_video_count = int(cross_video_summary.get("source_video_count") or 0)
-    return "Success" if source_video_count > 0 and (final_outputs or default_final_outputs({})) else "Fail"
+    outputs = default_final_outputs({}) if final_outputs is None else final_outputs
+    return "Success" if source_video_count > 0 and outputs else "Fail"
 
 def build_telegram_brief_message(
     run_folder: Path,
@@ -139,7 +140,7 @@ def resolve_output_document_paths(
     metadata: dict[str, Any],
     final_outputs: list[dict[str, Any]] | None,
 ) -> tuple[list[Path], list[str]]:
-    outputs = final_outputs if final_outputs else default_final_outputs(metadata)
+    outputs = default_final_outputs(metadata) if final_outputs is None else final_outputs
     resolved_paths: list[Path] = []
     missing_paths: list[str] = []
     ancestors = [run_folder, *run_folder.parents]

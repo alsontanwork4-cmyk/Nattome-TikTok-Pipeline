@@ -114,7 +114,7 @@ def ranked_top_five(selected_batch: dict[str, Any]) -> list[dict[str, Any]]:
     return sorted(
         candidates,
         key=lambda candidate: (
-            int(candidate.get("rank") or 9999),
+            int(candidate.get("production_rank") or candidate.get("rank") or 9999),
             str(candidate.get("id") or ""),
         ),
     )[:5]
@@ -187,28 +187,6 @@ def concept_rows_for_report(
             }
         )
 
-    fallback_rows = [
-        {
-            "concept": "Claim-Safe Problem Question",
-            "hook": "Open with the same digestive discomfort tension as a question.",
-            "format": "Talking-head explainer",
-            "why": "Keeps the source's relatable pain point while avoiding unsupported outcomes.",
-        },
-        {
-            "concept": "Daily Routine Support",
-            "hook": "Show the moment someone wants simple digestive support.",
-            "format": "Routine demonstration",
-            "why": "Turns the viral premise into an easy Nattome production setup.",
-        },
-        {
-            "concept": "Simple Overlay Rewrite",
-            "hook": "Use short on-screen text to frame the safe takeaway.",
-            "format": "Text-led explainer",
-            "why": "Preserves clarity without repeating the original caption or claims.",
-        },
-    ]
-    while len(rows) < 3:
-        rows.append(fallback_rows[len(rows)])
     return rows
 
 
@@ -224,7 +202,7 @@ def write_top5_creative_production_report(
     report_path = report_output_path(
         output_root,
         report_date,
-        f"top5_creative_production_report_{report_date}.md",
+        f"production_creative_report_{report_date}.md",
         run_id,
     )
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -255,6 +233,7 @@ def write_top5_creative_production_report(
                 "",
                 "### Source Reference",
                 "",
+                f"- Source selection rank: {candidate.get('rank') or 'Not available'}",
                 f"- Creator: {source_creator(candidate)}",
                 f"- Source video: {compact_markdown_text(candidate.get('url'))}",
                 f"- Views: {candidate_metric(candidate, 'play_count')}",
@@ -614,6 +593,11 @@ def write_structured_json_output(
     evidence_index: dict[str, Any],
     metadata: dict[str, Any],
     cross_video_summary: dict[str, Any],
+    *,
+    original_daily_selection: dict[str, Any] | None = None,
+    daily_backfill_candidates: dict[str, Any] | None = None,
+    analyzed_candidates: list[dict[str, Any]] | None = None,
+    production_qualified_candidates: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     candidates_by_id = {
         str(candidate.get("id")): candidate
@@ -691,6 +675,10 @@ def write_structured_json_output(
     structured = {
         "batch_metadata": metadata,
         "selection_decisions": selected_batch,
+        "original_daily_selection": original_daily_selection or {"top": []},
+        "daily_backfill_candidates": daily_backfill_candidates or {"top": []},
+        "analyzed_candidates": analyzed_candidates or [],
+        "production_qualified_candidates": production_qualified_candidates or [],
         "evidence_bundle_index": evidence_index,
         "cross_video_pattern_summary": cross_video_summary,
         "videos": videos,

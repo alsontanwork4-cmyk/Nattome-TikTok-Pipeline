@@ -7,6 +7,7 @@ PRIMARY_SKILL = WORKSPACE / "skills" / "nattome-viral-intelligence-run" / "SKILL
 OLD_PRIMARY_SKILL = WORKSPACE / "skills" / "nattome-tiktok-run-coordinate" / "SKILL.md"
 DISCOVERY_SKILL = WORKSPACE / "skills" / "nattome-tiktok-candidate-discovery" / "SKILL.md"
 EVIDENCE_SKILL = WORKSPACE / "skills" / "nattome-evidence-insight-analysis" / "SKILL.md"
+PRODUCTION_REPORT_SKILL = WORKSPACE / "skills" / "nattome-production-report-generation" / "SKILL.md"
 README = WORKSPACE / "README.md"
 
 
@@ -33,11 +34,12 @@ class DailyEvidenceSkillContractTest(unittest.TestCase):
             "scrape_tiktok.py",
             "--daily-selection-output",
             "scripts/run_batch_analysis.py",
-            "--mode daily",
+            "--backfill-candidates",
             "raw_scrape_top30.json",
             "daily_selection_top3.json",
-            "top5_creative_production_report",
-            "top5_angle_planning_sheet",
+            "daily_backfill_candidates.json",
+            "production_creative_report",
+            "production_angle_planning_sheet",
             "runs/batch-analysis",
             "Evidence completion status",
             "Shootable Angles",
@@ -68,6 +70,7 @@ class DailyEvidenceSkillContractTest(unittest.TestCase):
         for expected in (
             "Daily Top-3 Selection",
             "data/daily_runs/<run_id>/daily_selection_top3.json",
+            "data/daily_runs/<run_id>/daily_backfill_candidates.json",
             "candidate previews",
             "metadata inferences",
             "Do not claim exact visible text",
@@ -82,7 +85,7 @@ class DailyEvidenceSkillContractTest(unittest.TestCase):
 
         for expected in (
             "data/daily_runs/<run_id>/daily_selection_top3.json",
-            "--mode daily",
+            "--backfill-candidates",
             "completed",
             "partial",
             "missing_credentials",
@@ -110,6 +113,26 @@ class DailyEvidenceSkillContractTest(unittest.TestCase):
                 self.assertNotIn("Daily Top-5 Selection", text)
                 self.assertNotIn("daily_selection_top5.json", text)
                 self.assertNotIn("top-5 handoff", text.lower())
+
+    def test_production_report_generation_skill_defines_evidence_qualified_report_form(self):
+        skill = PRODUCTION_REPORT_SKILL.read_text(encoding="utf-8")
+
+        self.assertTrue(PRODUCTION_REPORT_SKILL.is_file())
+        for expected in (
+            "Production Run Report Workflow",
+            "Manual Single-Video Analysis Workflow",
+            "Evidence-First Analysis",
+            "metadata-only analysis may produce candidate previews and manual-review notes only",
+            "Claim Safety Review",
+            "### Source Reference",
+            "### Inspiration Pattern",
+            "### Why This Works For Nattome Content",
+            "### Recommended Shoot",
+            "`Angles`",
+            "`Source Videos`",
+            "exactly one timed Recommended Shoot",
+        ):
+            self.assertIn(expected, skill)
 
 
 if __name__ == "__main__":

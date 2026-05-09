@@ -31,7 +31,12 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
 from batch_analysis.candidates import select_candidates
-from batch_analysis.config import DEFAULT_CONFIG, deep_merge
+from batch_analysis.config import (
+    DAILY_BACKFILL_LIMIT,
+    DAILY_SELECTION_SIZE,
+    DEFAULT_CONFIG,
+    deep_merge,
+)
 from batch_analysis.env import load_dotenv_files
 
 APIFY_ACTOR_ID = "clockworks~tiktok-scraper"
@@ -67,12 +72,7 @@ def effective_scrape_options(config: dict, args) -> dict:
             if args.results_per_input is not None
             else config.get("results_per_input", 20)
         ),
-        "top": int(args.top if args.top is not None else config.get("top_n", 5)),
-        "daily_selection_size": int(
-            args.daily_selection_size
-            if args.daily_selection_size is not None
-            else config.get("daily_selection_size", 3)
-        ),
+        "top": int(args.top if args.top is not None else config.get("top_n", DAILY_SELECTION_POOL_SIZE)),
         "download_videos": bool(
             args.download_videos
             or config.get("requires_downloadable_video")
@@ -261,7 +261,7 @@ def build_daily_selection_payload(
     *,
     full_payload: dict,
     source_scrape: Path,
-    selection_size: int,
+    selection_size: int = DAILY_SELECTION_SIZE,
     configuration: dict,
     run_timestamp: datetime,
 ) -> dict:
@@ -279,6 +279,38 @@ def build_daily_selection_payload(
         "generated_at": full_payload.get("generated_at"),
         "source_scrape": str(source_scrape),
         "selection_purpose": "daily_evidence_analysis_handoff",
+        "selection_strategy": selected_batch["selection_strategy"],
+        "selection_pool_size": len(candidate_pool),
+        "input_candidate_count": selected_batch["input_candidate_count"],
+        "eligible_candidate_count": selected_batch["eligible_candidate_count"],
+        "selection_count": len(selected),
+        "minimum_eligibility_filter": selected_batch["minimum_eligibility_filter"],
+        "top": selected,
+        "excluded_candidates": selected_batch["excluded_candidates"],
+    }
+
+
+def build_daily_backfill_payload(
+    *,
+    full_payload: dict,
+    source_scrape: Path,
+    configuration: dict,
+    run_timestamp: datetime,
+) -> dict:
+    top = full_payload.get("top") if isinstance(full_payload.get("top"), list) else []
+    candidate_pool = top[:DAILY_SELECTION_POOL_SIZE]
+    selected_batch = select_candidates(
+        candidate_pool,
+        discovery_selection_configuration(configuration),
+        run_timestamp,
+        DAILY_SELECTION_SIZE + DAILY_BACKFILL_LIMIT,
+        source_scrape,
+    )
+    selected = selected_batch["selected_candidates"][DAILY_SELECTION_SIZE:]
+    return {
+        "generated_at": full_payload.get("generated_at"),
+        "source_scrape": str(source_scrape),
+        "selection_purpose": "daily_evidence_backfill_candidates",
         "selection_strategy": selected_batch["selection_strategy"],
         "selection_pool_size": len(candidate_pool),
         "input_candidate_count": selected_batch["input_candidate_count"],
@@ -353,8 +385,8 @@ def main() -> int:
                     help="Ask Apify to include downloadable video sources for evidence-first batch analysis")
     ap.add_argument("--daily-selection-output", type=Path,
                     help="Optional handoff JSON containing the daily top videos for daily evidence analysis")
-    ap.add_argument("--daily-selection-size", type=int, default=None,
-                    help="How many top videos to include in the daily evidence handoff (default: config daily_selection_size, then 3)")
+    ap.add_argument("--daily-backfill-output", type=Path,
+                    help="Optional backfill JSON. Defaults to daily_backfill_candidates.json beside --daily-selection-output")
     ap.add_argument("--scope", choices=["all", "hashtags", "keywords", "profiles"], default=None,
                     help="Limit which inputs to run (default: config scope, then all)")
     ap.add_argument("--overwrite", action="store_true",
@@ -382,6 +414,10 @@ def main() -> int:
         output_paths = [args.output]
         if args.daily_selection_output:
             output_paths.append(args.daily_selection_output)
+            output_paths.append(
+                args.daily_backfill_output
+                or args.daily_selection_output.with_name("daily_backfill_candidates.json")
+            )
         assert_output_paths_available(*output_paths, overwrite=args.overwrite)
     except FileExistsError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -423,7 +459,15 @@ def main() -> int:
         daily_selection = build_daily_selection_payload(
             full_payload=payload,
             source_scrape=args.output,
-            selection_size=options["daily_selection_size"],
+            configuration=config,
+            run_timestamp=now,
+        )
+        daily_backfill_path = args.daily_backfill_output or args.daily_selection_output.with_name(
+            "daily_backfill_candidates.json"
+        )
+        daily_backfill = build_daily_backfill_payload(
+            full_payload=payload,
+            source_scrape=args.output,
             configuration=config,
             run_timestamp=now,
         )
@@ -432,8 +476,17 @@ def main() -> int:
             json.dumps(daily_selection, indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
+        daily_backfill_path.parent.mkdir(parents=True, exist_ok=True)
+        daily_backfill_path.write_text(
+            json.dumps(daily_backfill, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
         print(
             f"[ok] wrote daily selection top {daily_selection['selection_count']} to {args.daily_selection_output}",
+            file=sys.stderr,
+        )
+        print(
+            f"[ok] wrote {daily_backfill['selection_count']} daily backfill candidates to {daily_backfill_path}",
             file=sys.stderr,
         )
     return 0

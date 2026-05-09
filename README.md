@@ -10,7 +10,7 @@ Discovery creates the data. Evidence analysis turns that data into actionable in
 |---|---|---|---|
 | **Normal daily run** | `nattome-viral-intelligence-run` | Runs discovery, creates the Daily Top-3 Selection handoff, prepares separate backfill candidates when useful, runs Gemini evidence analysis, and reports final paths and evidence status. | 20-40 min |
 | **Discovery-only debugging** | `nattome-tiktok-candidate-discovery` | Supporting phase reference for scraper config and Daily Top-3 Selection handoff creation. | 3-8 min |
-| **Evidence-only debugging** | `nattome-evidence-insight-analysis` | Supporting phase reference for rerunning `--mode daily` on an existing candidate JSON. | 15-30 min |
+| **Evidence-only debugging** | `nattome-evidence-insight-analysis` | Supporting phase reference for rerunning evidence analysis on an existing Daily Top-3 JSON and optional backfill JSON. | 15-30 min |
 
 Use `nattome-viral-intelligence-run` for normal operation. The phase skills are supporting references, not alternative normal workflows.
 
@@ -104,13 +104,13 @@ python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
 
 ```powershell
 python scripts/run_batch_analysis.py `
-  --mode daily `
-  --candidates data/daily_runs/<run_id>/daily_selection_top3.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top3.json `
+  --backfill-candidates data/daily_runs/<run_id>/daily_backfill_candidates.json
 ```
 
-Use the actual `$runId` created by the scrape command. `daily` mode preserves the handoff order and analyzes only the daily-selected videos that pass the Minimum Eligibility Filter. The scraper refuses to overwrite existing JSON outputs unless `--overwrite` is passed, so normal runs should use a fresh run folder.
+Use the actual `$runId` created by the scrape command. The Daily Evidence Run preserves the Top-3 handoff order, analyzes those videos first, and analyzes up to two backfill candidates only when needed. The scraper refuses to overwrite existing JSON outputs unless `--overwrite` is passed, so normal runs should use a fresh run folder.
 
-Completed daily runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Creative Production Report Markdown file and the Excel angle planning workbook. The Daily Top-3 Selection is the canonical evidence-analysis set; up to two backfill candidates may be prepared separately, but they are not part of the canonical selection. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
+Completed daily runs write evidence-qualified marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: `production_creative_report_<YYYY-MM-DD>.md` and `production_angle_planning_sheet_<YYYY-MM-DD>.xlsx`. If no candidate qualifies with at least one evidence-backed Shootable Angle, those production files are skipped. The Daily Top-3 Selection is the canonical evidence-analysis set; up to two backfill candidates are prepared separately, but they are not part of the canonical selection. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
 
 Cloud publication is disabled by default. To publish a newly completed Daily Evidence Run to Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then add `--publish-cloud` to the evidence-analysis command. The worker registers the run metadata plus raw scrape, Daily Top-3 Selection, final markdown report, structured JSON, spreadsheet workbook, and batch-analysis artifacts. If publication fails, the local Run Folder remains available and `logs/cloud_publication.json` records the failure instead of marking the cloud run complete.
 
@@ -121,7 +121,7 @@ Useful optional flags:
 | `scrape_tiktok.py` | `--config <path>` | Use a scraper config other than `skills/nattome-tiktok-candidate-discovery/config.json`. |
 | `scrape_tiktok.py` | `--scope all|hashtags|keywords|profiles` | Limit which discovery inputs are scraped. |
 | `scrape_tiktok.py` | `--results-per-input <n>` | Override Apify `resultsPerPage`. |
-| `scrape_tiktok.py` | `--daily-selection-size <n>` | Override the daily handoff size. |
+| `scrape_tiktok.py` | `--daily-backfill-output <path>` | Override where the separate backfill candidate JSON is written. |
 | `run_batch_analysis.py` | `--config <path>` | Merge extra runtime config into the evidence run. |
 | `run_batch_analysis.py` | `--runs-dir <path>` | Change where timestamped Run Folders are created. |
 | `run_batch_analysis.py` | `--outputs-dir <path>` | Change where final dated reports and workbooks are written. |

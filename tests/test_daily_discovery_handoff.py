@@ -26,12 +26,12 @@ class DailyDiscoveryHandoffTest(unittest.TestCase):
                 scope=None,
                 results_per_input=None,
                 top=None,
-                daily_selection_size=None,
                 download_videos=False,
             ),
         )
 
-        self.assertEqual(options["daily_selection_size"], 3)
+        self.assertEqual(options["top"], 30)
+        self.assertNotIn("daily_selection_size", options)
 
     def test_dashboard_saved_config_can_supply_scrape_option_defaults(self):
         scraper = load_scraper_module()
@@ -48,7 +48,6 @@ class DailyDiscoveryHandoffTest(unittest.TestCase):
                 scope=None,
                 results_per_input=None,
                 top=None,
-                daily_selection_size=None,
                 download_videos=False,
             ),
         )
@@ -59,7 +58,6 @@ class DailyDiscoveryHandoffTest(unittest.TestCase):
                 "scope": "hashtags",
                 "results_per_input": 25,
                 "top": 30,
-                "daily_selection_size": 7,
                 "download_videos": True,
             },
         )
@@ -100,7 +98,6 @@ class DailyDiscoveryHandoffTest(unittest.TestCase):
         handoff = scraper.build_daily_selection_payload(
             full_payload=full_payload,
             source_scrape=Path("data/raw_scrapes/nattome_raw_20260507_top30.json"),
-            selection_size=5,
             configuration={
                 "selection": {
                     "minimum_views": 10000,
@@ -132,16 +129,34 @@ class DailyDiscoveryHandoffTest(unittest.TestCase):
             else "data/raw_scrapes/nattome_raw_20260507_top30.json",
         )
 
+        backfill = scraper.build_daily_backfill_payload(
+            full_payload=full_payload,
+            source_scrape=Path("data/raw_scrapes/nattome_raw_20260507_top30.json"),
+            configuration={
+                "selection": {
+                    "minimum_views": 10000,
+                    "maximum_age_days": 30,
+                    "minimum_weighted_engagement_rate": 0.03,
+                    "requires_downloadable_video": True,
+                    "exclusion_terms": ["weight loss"],
+                },
+            },
+            run_timestamp=run_timestamp,
+        )
+        self.assertEqual(backfill["selection_purpose"], "daily_evidence_backfill_candidates")
+        self.assertEqual(backfill["selection_count"], 0)
+
     def test_scraper_refuses_to_overwrite_existing_outputs_by_default(self):
         scraper = load_scraper_module()
         output = WORKSPACE / ".tmp" / "existing_scrape_output.json"
         daily = WORKSPACE / ".tmp" / "existing_daily_selection.json"
+        backfill = WORKSPACE / ".tmp" / "existing_daily_backfill.json"
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text("{}", encoding="utf-8")
         try:
             with self.assertRaises(FileExistsError):
-                scraper.assert_output_paths_available(output, daily)
-            scraper.assert_output_paths_available(output, daily, overwrite=True)
+                scraper.assert_output_paths_available(output, daily, backfill)
+            scraper.assert_output_paths_available(output, daily, backfill, overwrite=True)
         finally:
             output.unlink(missing_ok=True)
 

@@ -406,7 +406,7 @@ def write_top5_angle_planning_workbook(
     workbook_path = report_output_path(
         output_root,
         report_date,
-        f"top5_angle_planning_sheet_{report_date}.xlsx",
+        f"production_angle_planning_sheet_{report_date}.xlsx",
         run_id,
     )
     angle_rows, source_rows = build_planning_workbook_rows(

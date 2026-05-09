@@ -53,13 +53,6 @@ SETTING_HELP: dict[str, dict[str, str]] = {
         "default": "Default: 30. Typical range: 10-100.",
         "warning": "Too low can drop useful posts before they are reviewed.",
     },
-    "daily_selection_size": {
-        "changes": "Sets how many candidates are selected for the daily discovery handoff.",
-        "increase": "Higher values give more videos to review or analyze.",
-        "decrease": "Lower values keep the daily handoff more focused.",
-        "default": "Default: 5. Typical range: 3-10.",
-        "warning": "Too high can create more evidence and review work than needed.",
-    },
     "minimum_views": {
         "changes": "Filters out TikToks below a view-count threshold.",
         "increase": "Higher values favor proven videos but reduce candidate volume.",
@@ -144,7 +137,6 @@ def _render_unified_settings(settings: dict[str, object]) -> str:
             <div class="settings-grid">
               {_input_setting("Results per input", "results_per_input", settings.get("results_per_input"))}
               {_input_setting("Top N", "top_n", settings.get("top_n"))}
-              {_input_setting("Daily selection size", "daily_selection_size", settings.get("daily_selection_size"))}
             </div>
           </section>
           <section class="settings-group" aria-labelledby="what-to-filter-out">
@@ -351,7 +343,6 @@ def _render_current_settings(settings: dict[str, object]) -> str:
         ("Scrape scope", str(settings.get("scope") or "all"), ""),
         ("Results per input", str(settings.get("results_per_input") or ""), ""),
         ("Top N", str(settings.get("top_n") or ""), ""),
-        ("Daily selection size", str(settings.get("daily_selection_size") or ""), ""),
         ("Minimum views", _format_views(settings.get("minimum_views")), ""),
         ("Freshness window (days)", str(settings.get("maximum_age_days") or ""), ""),
         (

@@ -15,6 +15,31 @@ WORKSPACE = Path(__file__).resolve().parents[1]
 SCRIPT = WORKSPACE / "scripts" / "run_batch_analysis.py"
 
 
+class FakeGeminiAdapter:
+    def analyze_source_video(self, source_video_path, candidate_context):
+        return {
+            "status": "completed",
+            "model": "gemini-2.5-flash",
+            "visual_observations": [
+                {"timestamp_seconds": 0.5, "observation": "Creator points at stomach"}
+            ],
+            "visible_text": [{"timestamp_seconds": 0.8, "text": "Bloated after meals?"}],
+            "spoken_content": [
+                {
+                    "start_seconds": 0,
+                    "end_seconds": 2,
+                    "text": "Here is a gentle routine for digestion support",
+                }
+            ],
+            "audio_cues": [{"timestamp_seconds": 0, "cue": "calm voiceover"}],
+            "hook_evidence": [
+                {"timestamp_seconds": 0.5, "evidence": "problem question opens the video"}
+            ],
+            "claim_evidence": [{"timestamp_seconds": 1.2, "text": "supports digestion"}],
+            "missing_evidence": [],
+        }
+
+
 def run_cli(*args, cwd=WORKSPACE):
     return subprocess.run(
         [sys.executable, str(SCRIPT), *args],
@@ -61,10 +86,6 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 runs_dir = Path(temp_dir) / "runs"
 
                 result = run_cli(
-                    "--mode",
-                    "debug",
-                    "--batch-size",
-                    "1",
                     "--runs-dir",
                     str(runs_dir),
                     "--timestamp",
@@ -76,12 +97,12 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 run_folders = list(runs_dir.iterdir())
                 self.assertEqual(len(run_folders), 1)
                 run_folder = run_folders[0]
-                self.assertRegex(run_folder.name, r"20260506T134530Z_debug$")
+                self.assertRegex(run_folder.name, r"20260506T134530Z_daily$")
 
                 metadata = json.loads((run_folder / "run_metadata.json").read_text(encoding="utf-8"))
                 self.assertEqual(metadata["run_timestamp"], "2026-05-06T13:45:30Z")
-                self.assertEqual(metadata["mode"], "debug")
-                self.assertEqual(metadata["requested_batch_size"], 1)
+                self.assertEqual(metadata["mode"], "daily")
+                self.assertEqual(metadata["requested_batch_size"], 3)
                 self.assertEqual(metadata["configuration"]["outputs"]["markdown"], "reports")
                 self.assertEqual(metadata["implementation_status"]["video_download"], "not_implemented")
                 self.assertEqual(metadata["implementation_status"]["gemini_evidence"], "not_implemented")
@@ -110,10 +131,6 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             runs_dir = Path(temp_dir) / "runs"
 
             result = run_cli(
-                "--mode",
-                "debug",
-                "--batch-size",
-                "1",
                 "--runs-dir",
                 str(runs_dir),
                 "--timestamp",
@@ -122,7 +139,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            run_folder = runs_dir / "20260506T134530Z_debug"
+            run_folder = runs_dir / "20260506T134530Z_daily"
             self.assertEqual(
                 sorted(child.name for child in run_folder.iterdir() if child.is_dir()),
                 ["data", "evidence", "logs", "reports"],
@@ -144,8 +161,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(manifest["run_timestamp"], "2026-05-06T13:45:30Z")
-            self.assertEqual(manifest["mode"], "debug")
-            self.assertEqual(manifest["requested_batch_size"], 1)
+            self.assertEqual(manifest["mode"], "daily")
+            self.assertEqual(manifest["requested_batch_size"], 3)
             self.assertIn("configuration", manifest)
             self.assertIsInstance(manifest["phases"], list)
             self.assertTrue(manifest["phases"])
@@ -257,10 +274,6 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             )
 
             result = run_cli(
-                "--mode",
-                "quick",
-                "--batch-size",
-                "2",
                 "--runs-dir",
                 str(runs_dir),
                 "--timestamp",
@@ -271,7 +284,7 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
 
-            run_folder = runs_dir / "20260506T134530Z_quick"
+            run_folder = runs_dir / "20260506T134530Z_daily"
             selected = json.loads(
                 (run_folder / "data" / "selected_batch.json").read_text(
                     encoding="utf-8"
@@ -326,36 +339,31 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            env = os.environ.copy()
-            env.pop("TELEGRAM_BOT_TOKEN", None)
-            env.pop("TELEGRAM_CHAT_ID", None)
-            env["NATTOME_DISABLE_DOTENV"] = "1"
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    str(SCRIPT),
-                    "--mode",
-                    "debug",
-                    "--batch-size",
-                    "1",
-                    "--runs-dir",
-                    str(runs_dir),
-                    "--outputs-dir",
-                    str(temp_path / "outputs"),
-                    "--timestamp",
-                    "2026-05-06T13:45:30Z",
-                    "--candidates",
-                    str(candidates_path),
-                ],
-                cwd=WORKSPACE,
-                text=True,
-                capture_output=True,
-                env=env,
+            old_token = os.environ.pop("TELEGRAM_BOT_TOKEN", None)
+            old_chat = os.environ.pop("TELEGRAM_CHAT_ID", None)
+            try:
+                from batch_analysis.run import create_run
+
+                run_folder = create_run(
+                    Namespace(
+                        runs_dir=runs_dir,
+                        outputs_dir=temp_path / "outputs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        gemini_adapter=FakeGeminiAdapter(),
+                    )
+                )
+            finally:
+                if old_token is not None:
+                    os.environ["TELEGRAM_BOT_TOKEN"] = old_token
+                if old_chat is not None:
+                    os.environ["TELEGRAM_CHAT_ID"] = old_chat
+
+            self.assertEqual(
+                run_folder,
+                runs_dir / "20260506T134530Z_daily",
             )
-
-            self.assertEqual(result.returncode, 0, result.stderr)
-
-            run_folder = runs_dir / "20260506T134530Z_debug"
             delivery_log = json.loads(
                 (run_folder / "logs" / "telegram_delivery.json").read_text(encoding="utf-8")
             )
@@ -419,8 +427,8 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
             self.assertEqual(
                 [document_name for _token, _chat_id, document_name in sent_documents],
                 [
-                    "top5_creative_production_report_2026-05-06.md",
-                    "top5_angle_planning_sheet_2026-05-06.xlsx",
+                    "production_creative_report_2026-05-06.md",
+                    "production_angle_planning_sheet_2026-05-06.xlsx",
                 ],
             )
 

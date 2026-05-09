@@ -15,6 +15,9 @@ from .cloud_publication import (
     write_cloud_publication_log,
 )
 from .config import (
+    DAILY_BACKFILL_LIMIT,
+    DAILY_RUN_MODE,
+    DAILY_SELECTION_SIZE,
     MODE_DEFAULT_BATCH_SIZE,
     RUN_SUBDIRECTORIES,
     isoformat_z,
@@ -34,6 +37,17 @@ from .planning_workbook import write_top5_angle_planning_workbook
 from .run_manifest import build_run_manifest, write_batch_index_from_manifest, write_run_manifest
 from .telegram import deliver_telegram_brief
 from .tool_adapters import GeminiFlashAdapter
+
+
+def runtime_mode(args: argparse.Namespace) -> str:
+    return str(getattr(args, "mode", None) or DAILY_RUN_MODE)
+
+
+def requested_batch_size(args: argparse.Namespace) -> int:
+    explicit_batch_size = getattr(args, "batch_size", None)
+    if explicit_batch_size is not None:
+        return int(explicit_batch_size)
+    return int(MODE_DEFAULT_BATCH_SIZE.get(runtime_mode(args), DAILY_SELECTION_SIZE))
 
 
 def output_root_for_args(args: argparse.Namespace) -> Path:
@@ -98,10 +112,11 @@ def build_metadata(
     has_evidence_artifact_cleanup: bool,
     has_refinement_hooks: bool,
 ) -> dict[str, Any]:
-    batch_size = args.batch_size or MODE_DEFAULT_BATCH_SIZE[args.mode]
+    batch_size = requested_batch_size(args)
+    mode = runtime_mode(args)
     return {
         "run_timestamp": isoformat_z(timestamp),
-        "mode": args.mode,
+        "mode": mode,
         "requested_batch_size": batch_size,
         "configuration": configuration,
         "implementation_status": {
@@ -136,15 +151,95 @@ def build_metadata(
         ],
     }
 
+
+def selected_batch_from_candidates(
+    candidates: list[dict[str, Any]] | None,
+    configuration: dict[str, Any],
+    timestamp: datetime,
+    batch_size: int,
+    candidates_path: Path | None,
+    *,
+    preserve_order: bool,
+) -> dict[str, Any] | None:
+    if candidates is None:
+        return None
+    return select_candidates(
+        candidates,
+        configuration,
+        timestamp,
+        batch_size,
+        candidates_path,
+        preserve_order=preserve_order,
+    )
+
+
+def has_production_qualifying_angle(run_folder: Path, snapshot: dict[str, Any]) -> bool:
+    artifact = snapshot.get("artifacts", {}).get("shootable_angles")
+    if not isinstance(artifact, dict) or not artifact.get("path"):
+        return False
+    try:
+        payload = json.loads((run_folder / str(artifact["path"])).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    angles = payload.get("angles") if isinstance(payload, dict) else []
+    return isinstance(angles, list) and any(isinstance(angle, dict) for angle in angles)
+
+
+def production_selected_batch(
+    selected_batch: dict[str, Any],
+    production_candidates: list[dict[str, Any]],
+) -> dict[str, Any]:
+    batch = dict(selected_batch)
+    batch["selected_candidates"] = []
+    for production_rank, candidate in enumerate(production_candidates, start=1):
+        production_candidate = dict(candidate)
+        production_candidate["production_rank"] = production_rank
+        batch["selected_candidates"].append(production_candidate)
+    batch["selected_candidate_count"] = len(production_candidates)
+    batch["requested_batch_size"] = DAILY_SELECTION_SIZE
+    return batch
+
+
+def evidence_index_for_candidates(
+    evidence_index: dict[str, Any],
+    candidates: list[dict[str, Any]],
+) -> dict[str, Any]:
+    candidate_ids = {str(candidate.get("id") or "") for candidate in candidates}
+    bundles = [
+        bundle
+        for bundle in evidence_index.get("bundles", [])
+        if isinstance(bundle, dict) and str(bundle.get("candidate_id") or "") in candidate_ids
+    ]
+    return {
+        "created_at": evidence_index.get("created_at"),
+        "bundle_count": len(bundles),
+        "bundles": bundles,
+    }
+
+
+def candidate_preview_payload(selected_batch: dict[str, Any] | None) -> dict[str, Any]:
+    if selected_batch is None:
+        return {"top": []}
+    return {
+        "generated_at": selected_batch.get("selected_at"),
+        "selection_strategy": selected_batch.get("selection_strategy"),
+        "selection_count": selected_batch.get("selected_candidate_count", 0),
+        "top": selected_batch.get("selected_candidates", []),
+        "excluded_candidates": selected_batch.get("excluded_candidates", []),
+    }
+
+
 def create_run(args: argparse.Namespace) -> Path:
-    if args.batch_size is not None and args.batch_size < 1:
+    batch_size = requested_batch_size(args)
+    mode = runtime_mode(args)
+    if batch_size < 1:
         raise ValueError("batch size must be at least 1")
 
-    configuration = load_config(args.config)
-    timestamp = parse_run_timestamp(args.timestamp)
-    candidates = load_candidates(args.candidates)
-    batch_size = args.batch_size or MODE_DEFAULT_BATCH_SIZE[args.mode]
-    run_folder = args.runs_dir / run_folder_name(timestamp, args.mode)
+    configuration = load_config(getattr(args, "config", None))
+    timestamp = parse_run_timestamp(getattr(args, "timestamp", None))
+    candidates = load_candidates(getattr(args, "candidates", None))
+    backfill_candidates = load_candidates(getattr(args, "backfill_candidates", None))
+    run_folder = args.runs_dir / run_folder_name(timestamp, mode)
 
     if run_folder.exists():
         raise FileExistsError(f"run folder already exists: {run_folder}")
@@ -153,28 +248,43 @@ def create_run(args: argparse.Namespace) -> Path:
         (run_folder / subdirectory).mkdir(parents=True, exist_ok=False)
 
     selected_batch = None
+    backfill_batch = None
     flat_evidence_index = None
     gemini_evidence_statuses: list[dict[str, Any]] = []
     if candidates is not None:
-        selected_batch = select_candidates(
+        selected_batch = selected_batch_from_candidates(
             candidates,
             configuration,
             timestamp,
             batch_size,
-            args.candidates,
-            preserve_order=args.mode == "daily",
+            getattr(args, "candidates", None),
+            preserve_order=mode == DAILY_RUN_MODE,
+        )
+    if backfill_candidates is not None:
+        backfill_batch = selected_batch_from_candidates(
+            backfill_candidates,
+            configuration,
+            timestamp,
+            DAILY_BACKFILL_LIMIT,
+            getattr(args, "backfill_candidates", None),
+            preserve_order=True,
         )
 
+    analyzed_candidates: list[dict[str, Any]] = []
+    production_qualified_candidates: list[dict[str, Any]] = []
+    run_level_gemini_failure = False
     if selected_batch is not None:
         evidence_store = EvidenceBundleStore(run_folder)
-        evidence_store.write_source_snapshots(selected_batch["selected_candidates"])
         tool_stack_config = configuration.get("tool_stack", {})
         gemini_adapter = getattr(args, "gemini_adapter", None) or GeminiFlashAdapter(
             model=tool_stack_config.get("gemini_model", "gemini-2.5-flash"),
             api_key_env=tool_stack_config.get("gemini_api_key_env", "GEMINI_API_KEY"),
         )
         flat_index_entries = []
-        for candidate in selected_batch["selected_candidates"]:
+
+        def analyze_candidate(candidate: dict[str, Any]) -> bool:
+            nonlocal run_level_gemini_failure
+            evidence_store.write_source_snapshot(candidate)
             snapshot = evidence_store.load_snapshot(candidate)
             source_video = snapshot.get("source_video")
             if isinstance(source_video, dict) and source_video.get("state") == "available":
@@ -190,6 +300,8 @@ def create_run(args: argparse.Namespace) -> Path:
                         "reason": evidence.get("reason"),
                     }
                 )
+                if evidence.get("status") == "missing_credentials":
+                    run_level_gemini_failure = True
             else:
                 reason = (
                     source_video.get("reason")
@@ -224,7 +336,29 @@ def create_run(args: argparse.Namespace) -> Path:
                     }
                 )
             write_snapshot_evidence_outputs(run_folder, candidate, snapshot)
-            flat_index_entries.append(evidence_store.load_snapshot(candidate))
+            final_snapshot = evidence_store.load_snapshot(candidate)
+            flat_index_entries.append(final_snapshot)
+            analyzed_candidates.append(candidate)
+            if has_production_qualifying_angle(run_folder, final_snapshot):
+                production_qualified_candidates.append(candidate)
+                return True
+            return False
+
+        for candidate in selected_batch["selected_candidates"]:
+            analyze_candidate(candidate)
+            if run_level_gemini_failure:
+                break
+
+        if (
+            not run_level_gemini_failure
+            and len(production_qualified_candidates) < DAILY_SELECTION_SIZE
+            and backfill_batch is not None
+        ):
+            for candidate in backfill_batch["selected_candidates"][:DAILY_BACKFILL_LIMIT]:
+                analyze_candidate(candidate)
+                if len(production_qualified_candidates) >= DAILY_SELECTION_SIZE:
+                    break
+
         flat_evidence_index = {
             "created_at": selected_batch["selected_at"],
             "bundle_count": len(flat_index_entries),
@@ -235,12 +369,27 @@ def create_run(args: argparse.Namespace) -> Path:
             encoding="utf-8",
         )
 
+    production_batch = (
+        production_selected_batch(selected_batch, production_qualified_candidates)
+        if selected_batch is not None
+        else None
+    )
+    production_evidence_index = (
+        evidence_index_for_candidates(flat_evidence_index, production_qualified_candidates)
+        if flat_evidence_index is not None
+        else None
+    )
+
     cross_video_summary = None
-    if selected_batch is not None and flat_evidence_index is not None:
+    if (
+        production_batch is not None
+        and production_evidence_index is not None
+        and not run_level_gemini_failure
+    ):
         cross_video_summary = write_cross_video_pattern_summary(
             run_folder,
-            selected_batch,
-            flat_evidence_index,
+            production_batch,
+            production_evidence_index,
         )
 
     has_gemini_evidence = flat_evidence_index is not None
@@ -252,8 +401,15 @@ def create_run(args: argparse.Namespace) -> Path:
         selected_batch is not None
         and flat_evidence_index is not None
         and cross_video_summary is not None
+        and not run_level_gemini_failure
     )
-    has_telegram_delivery = has_structured_outputs
+    has_production_outputs = (
+        has_structured_outputs
+        and production_batch is not None
+        and production_evidence_index is not None
+        and len(production_qualified_candidates) > 0
+    )
+    has_telegram_delivery = selected_batch is not None
     has_evidence_artifact_cleanup = flat_evidence_index is not None
     has_refinement_hooks = has_structured_outputs
     metadata = build_metadata(
@@ -291,28 +447,38 @@ def create_run(args: argparse.Namespace) -> Path:
         gemini_evidence_statuses=gemini_evidence_statuses,
     )
     final_outputs: list[dict[str, Any]] = []
+    manifest["outputs"]["final_outputs"] = []
+    manifest["outputs"]["production_status"] = (
+        "skipped" if selected_batch is not None else "not_requested"
+    )
+    manifest["outputs"]["production_qualified_count"] = len(production_qualified_candidates)
     if has_structured_outputs:
         write_structured_json_output(
             run_folder,
-            selected_batch,
+            production_batch,
             flat_evidence_index,
             metadata,
             cross_video_summary["summary"],
+            original_daily_selection=candidate_preview_payload(selected_batch),
+            daily_backfill_candidates=candidate_preview_payload(backfill_batch),
+            analyzed_candidates=analyzed_candidates,
+            production_qualified_candidates=production_qualified_candidates,
         )
+    if has_production_outputs:
         output_root = output_root_for_args(args)
         report_status = write_top5_creative_production_report(
             run_folder,
             output_root,
-            selected_batch,
-            flat_evidence_index,
+            production_batch,
+            production_evidence_index,
             metadata["run_timestamp"],
             run_folder.name,
         )
         workbook_status = write_top5_angle_planning_workbook(
             run_folder,
             output_root,
-            selected_batch,
-            flat_evidence_index,
+            production_batch,
+            production_evidence_index,
             metadata["run_timestamp"],
             run_folder.name,
         )
@@ -330,13 +496,14 @@ def create_run(args: argparse.Namespace) -> Path:
         ]
         manifest["outputs"]["output_root"] = str(output_root)
         manifest["outputs"]["final_outputs"] = final_outputs
+        manifest["outputs"]["production_status"] = "completed"
         write_run_manifest(run_folder, manifest)
         write_refinement_hooks(run_folder, cross_video_summary["summary"])
     if has_telegram_delivery:
         deliver_telegram_brief(
             run_folder,
             metadata,
-            cross_video_summary["summary"],
+            cross_video_summary["summary"] if cross_video_summary else {"source_video_count": 0},
             configuration.get("telegram", {}),
             final_outputs,
         )
@@ -350,11 +517,6 @@ def create_run(args: argparse.Namespace) -> Path:
         write_selected_batch(run_folder, selected_batch)
     write_batch_index_from_manifest(run_folder, manifest)
     if getattr(args, "cloud_publication_enabled", False):
-        if not has_structured_outputs:
-            raise CloudPublicationError(
-                "cloud publication requires completed Daily Output Set files",
-                run_folder=run_folder,
-            )
         cloud_adapter = getattr(args, "cloud_publication_adapter", None)
         if cloud_adapter is None:
             try:
@@ -373,7 +535,7 @@ def create_run(args: argparse.Namespace) -> Path:
             manifest=manifest,
             summary=cross_video_summary["summary"] if cross_video_summary else {},
             output_root=output_root_for_args(args),
-            candidates_path=args.candidates,
+            candidates_path=getattr(args, "candidates", None),
             adapter=cloud_adapter,
         )
     return run_folder

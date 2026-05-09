@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .config import RUN_SUBDIRECTORIES, isoformat_z
+from .config import DAILY_RUN_MODE, DAILY_SELECTION_SIZE, RUN_SUBDIRECTORIES, isoformat_z
 
 
 def phase_record(
@@ -40,13 +40,13 @@ def build_run_manifest(
     has_refinement_hooks: bool,
     gemini_evidence_statuses: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    batch_size = args.batch_size
+    batch_size = getattr(args, "batch_size", None)
     if batch_size is None:
-        from .config import MODE_DEFAULT_BATCH_SIZE
+        batch_size = DAILY_SELECTION_SIZE
+    mode = str(getattr(args, "mode", None) or DAILY_RUN_MODE)
 
-        batch_size = MODE_DEFAULT_BATCH_SIZE[args.mode]
-
-    candidates_path = str(args.candidates) if args.candidates else None
+    raw_candidates_path = getattr(args, "candidates", None)
+    candidates_path = str(raw_candidates_path) if raw_candidates_path else None
     gemini_statuses = gemini_evidence_statuses or []
     failed_gemini_statuses = [
         status
@@ -147,7 +147,7 @@ def build_run_manifest(
 
     return {
         "run_timestamp": isoformat_z(timestamp),
-        "mode": args.mode,
+        "mode": mode,
         "requested_batch_size": batch_size,
         "configuration": configuration,
         "folders": list(RUN_SUBDIRECTORIES),

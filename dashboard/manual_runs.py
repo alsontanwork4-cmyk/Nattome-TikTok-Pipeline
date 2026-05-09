@@ -223,10 +223,10 @@ def _commands_for_run(
     batch_command = [
         sys.executable,
         "scripts/run_batch_analysis.py",
-        "--mode",
-        "daily",
         "--candidates",
         output_paths["daily_selection"],
+        "--backfill-candidates",
+        output_paths["daily_backfill"],
         "--config",
         config_path,
         "--timestamp",
@@ -254,7 +254,6 @@ def _ensure_scraper_config(workspace: Path, version: int, settings: dict[str, ob
         "scope": settings.get("scope", "all"),
         "results_per_input": settings.get("results_per_input", 20),
         "top_n": settings.get("top_n", 30),
-        "daily_selection_size": settings.get("daily_selection_size", 3),
         "selection": selection,
     }
     config_path.write_text(_json_dumps(config) + "\n", encoding="utf-8")
@@ -284,6 +283,7 @@ def _output_paths(timestamp: datetime, run_type: str) -> dict[str, str]:
         "run_data_folder": run_root,
         "raw_scrape": f"{run_root}/raw_scrape_top30.json",
         "daily_selection": f"{run_root}/daily_selection_top3.json",
+        "daily_backfill": f"{run_root}/daily_backfill_candidates.json",
     }
     if run_type == FULL_PIPELINE:
         paths["run_folder"] = f"runs/batch-analysis/{stamp}_daily"

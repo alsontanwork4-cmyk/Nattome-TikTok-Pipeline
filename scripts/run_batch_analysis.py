@@ -11,7 +11,6 @@ WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
-from batch_analysis.config import MODE_DEFAULT_BATCH_SIZE
 from batch_analysis.cloud_publication import (
     CloudPublicationConfigurationError,
     CloudPublicationError,
@@ -22,18 +21,7 @@ from batch_analysis.run import create_run
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create a runnable Nattome TikTok Batch Analysis Run skeleton."
-    )
-    parser.add_argument(
-        "--mode",
-        choices=sorted(MODE_DEFAULT_BATCH_SIZE),
-        default="default",
-        help="Run mode. Use daily for the daily top-video handoff; defaults to the 10-video Default Batch.",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=int,
-        help="Requested batch size. Defaults to the selected mode's standard size.",
+        description="Run the Nattome Daily Evidence analysis pipeline."
     )
     parser.add_argument(
         "--runs-dir",
@@ -55,7 +43,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--candidates",
         type=Path,
-        help="Apify output, daily handoff, or local fixture JSON containing TikTok candidate metadata.",
+        help="Daily Top-3 Selection JSON containing TikTok candidate metadata.",
+    )
+    parser.add_argument(
+        "--backfill-candidates",
+        type=Path,
+        help="Optional daily backfill candidate JSON. Up to two candidates are analyzed only when Top-3 candidates do not qualify.",
     )
     parser.add_argument(
         "--timestamp",

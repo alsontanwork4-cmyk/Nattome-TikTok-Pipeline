@@ -27,7 +27,7 @@ The completed slice should put recurring worker responsibility in GitHub Actions
 ## Current status
 
 - Added `.github/workflows/daily-evidence-run.yml` with manual dispatch and the daily `01:00 UTC` schedule.
-- The workflow runs discovery, then `scripts/run_batch_analysis.py --mode daily --publish-cloud`.
+- The workflow runs discovery, then `scripts/run_batch_analysis.py --candidates ... --backfill-candidates ... --publish-cloud`.
 - Required secrets are checked by name without printing values.
 - README documents required GitHub Actions secrets and the manual verification step.
 

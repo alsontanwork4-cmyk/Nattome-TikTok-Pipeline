@@ -68,7 +68,6 @@ def _settings_form_payload(form: dict[str, list[str]]) -> dict[str, object]:
         "scope": _first_form_value(form, "scope") or "all",
         "results_per_input": _first_form_value(form, "results_per_input"),
         "top_n": _first_form_value(form, "top_n"),
-        "daily_selection_size": _first_form_value(form, "daily_selection_size"),
         "minimum_views": _first_form_value(form, "minimum_views"),
         "maximum_age_days": _first_form_value(form, "maximum_age_days"),
         "minimum_weighted_engagement_rate": engagement_rate,

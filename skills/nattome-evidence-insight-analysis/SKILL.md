@@ -1,6 +1,6 @@
 ---
 name: nattome-evidence-insight-analysis
-description: Supporting reference skill for Phase 2 of the Nattome Daily Evidence Run. Use directly only for evidence-only reruns, debugging an existing daily candidate JSON, inspecting Gemini evidence outputs, or explaining `scripts/run_batch_analysis.py --mode daily`. Normal operation should use `nattome-viral-intelligence-run`.
+description: Supporting reference skill for Phase 2 of the Nattome Daily Evidence Run. Use directly only for evidence-only reruns, debugging an existing daily candidate JSON, inspecting Gemini evidence outputs, or explaining `scripts/run_batch_analysis.py`. Normal operation should use `nattome-viral-intelligence-run`.
 user-invocable: false
 ---
 
@@ -30,6 +30,7 @@ Phase 2 turns downloaded TikTok candidates into evidence-first strategic researc
 Required:
 
 - Existing Daily Top-3 Selection JSON, normally `data/daily_runs/<run_id>/daily_selection_top3.json`.
+- Optional backfill JSON, normally `data/daily_runs/<run_id>/daily_backfill_candidates.json`.
 - `GEMINI_API_KEY` in the environment or project root `.env`.
 - Downloadable video sources in candidate rows. Missing `video_download_url` means the candidate is not evidence-ready.
 
@@ -46,11 +47,11 @@ From the project root:
 
 ```powershell
 python scripts/run_batch_analysis.py `
-  --mode daily `
-  --candidates data/daily_runs/<run_id>/daily_selection_top3.json
+  --candidates data/daily_runs/<run_id>/daily_selection_top3.json `
+  --backfill-candidates data/daily_runs/<run_id>/daily_backfill_candidates.json
 ```
 
-Daily mode preserves the discovery handoff order and analyzes only the daily-selected videos that pass the Minimum Eligibility Filter.
+The Daily Evidence Run preserves the Daily Top-3 handoff order, analyzes those videos first, and analyzes up to two backfill candidates only when needed to replace non-qualifying Top-3 candidates.
 
 Optional flags:
 
@@ -64,8 +65,10 @@ Do not pass retired local-tool flags such as `--ffmpeg-bin`, `--ocr-primary-bin`
 
 Primary marketer-facing outputs:
 
-- `outputs/reports/<YYYY-MM-DD>/top5_creative_production_report_<YYYY-MM-DD>.md`
-- `outputs/reports/<YYYY-MM-DD>/top5_angle_planning_sheet_<YYYY-MM-DD>.xlsx`
+- `outputs/reports/<YYYY-MM-DD>/production_creative_report_<YYYY-MM-DD>.md`
+- `outputs/reports/<YYYY-MM-DD>/production_angle_planning_sheet_<YYYY-MM-DD>.xlsx`
+
+If no candidate qualifies with at least one evidence-backed Shootable Angle, no production report or workbook is created.
 
 Audit/debug Run Folder:
 

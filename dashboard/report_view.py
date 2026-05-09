@@ -147,6 +147,11 @@ def _candidate_report_paths(
                 / "outputs"
                 / "reports"
                 / report_date
+                / f"production_creative_report_{report_date}.md",
+                workspace
+                / "outputs"
+                / "reports"
+                / report_date
                 / f"top5_creative_production_report_{report_date}.md",
                 workspace / "outputs" / "reports" / report_date / f"report_{report_date}.md",
             ]
@@ -154,6 +159,7 @@ def _candidate_report_paths(
         paths.extend(sorted((workspace / "outputs" / "reports" / report_date).glob("*.md")))
 
     run_path = workspace / run_folder
+    paths.extend(sorted((run_path / "reports").glob("production_creative_report_*.md")))
     paths.extend(sorted((run_path / "reports").glob("top5_creative_production_report_*.md")))
     return _dedupe_paths(paths)
 

@@ -338,6 +338,8 @@ def build_cloud_artifact_records(
         add_artifact("daily_selection", candidates_path)
         raw_scrape = candidates_path.parent / "raw_scrape_top30.json"
         add_artifact("raw_scrape", raw_scrape)
+        backfill = candidates_path.parent / "daily_backfill_candidates.json"
+        add_artifact("daily_backfill", backfill)
 
     for output in manifest.get("outputs", {}).get("final_outputs", []):
         if not isinstance(output, dict) or not output.get("path"):

@@ -5,12 +5,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+DAILY_SELECTION_SIZE = 3
+DAILY_BACKFILL_LIMIT = 2
+DAILY_RUN_MODE = "daily"
+
 MODE_DEFAULT_BATCH_SIZE = {
-    "debug": 1,
-    "daily": 3,
-    "quick": 5,
-    "default": 10,
-    "deep": 20,
+    "daily": DAILY_SELECTION_SIZE,
 }
 
 RUN_SUBDIRECTORIES = [

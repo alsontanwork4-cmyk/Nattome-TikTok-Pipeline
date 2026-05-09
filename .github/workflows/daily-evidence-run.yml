@@ -65,6 +65,7 @@ jobs:
           RUN_DIR="data/daily_runs/${RUN_ID}"
           RAW_SCRAPE_PATH="${RUN_DIR}/raw_scrape_top30.json"
           DAILY_SELECTION_PATH="${RUN_DIR}/daily_selection_top3.json"
+          DAILY_BACKFILL_PATH="${RUN_DIR}/daily_backfill_candidates.json"
 
           mkdir -p "$RUN_DIR"
           {
@@ -72,6 +73,7 @@ jobs:
             echo "RUN_DIR=$RUN_DIR"
             echo "RAW_SCRAPE_PATH=$RAW_SCRAPE_PATH"
             echo "DAILY_SELECTION_PATH=$DAILY_SELECTION_PATH"
+            echo "DAILY_BACKFILL_PATH=$DAILY_BACKFILL_PATH"
           } >> "$GITHUB_ENV"
 
           python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py \
@@ -85,8 +87,8 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/run_batch_analysis.py \
-            --mode daily \
             --candidates "$DAILY_SELECTION_PATH" \
+            --backfill-candidates "$DAILY_BACKFILL_PATH" \
             --runs-dir runs/batch-analysis \
             --outputs-dir outputs \
             --publish-cloud | tee "$RUNNER_TEMP/daily_evidence_run.log"

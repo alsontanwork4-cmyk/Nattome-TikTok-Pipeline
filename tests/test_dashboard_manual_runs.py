@@ -74,7 +74,6 @@ class DashboardManualRunsTest(unittest.TestCase):
                     "scope": "all",
                     "results_per_input": 25,
                     "top_n": 30,
-                    "daily_selection_size": 3,
                     "minimum_views": 10000,
                     "maximum_age_days": 14,
                     "minimum_weighted_engagement_rate": 0.025,
@@ -159,10 +158,11 @@ class DashboardManualRunsTest(unittest.TestCase):
             batch_command = executor.calls[1][0]
             self.assertIn("skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py", scrape_command)
             self.assertIn("scripts/run_batch_analysis.py", batch_command)
-            self.assertIn("--mode", batch_command)
-            self.assertIn("daily", batch_command)
+            self.assertNotIn("--mode", batch_command)
             self.assertIn("--candidates", batch_command)
             self.assertIn(record.output_paths["daily_selection"], batch_command)
+            self.assertIn("--backfill-candidates", batch_command)
+            self.assertIn(record.output_paths["daily_backfill"], batch_command)
             self.assertIn("--timestamp", batch_command)
             self.assertIn("2026-05-07T09:15:00Z", batch_command)
             self.assertEqual(

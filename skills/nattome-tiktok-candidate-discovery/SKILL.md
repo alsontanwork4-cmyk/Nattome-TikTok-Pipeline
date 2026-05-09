@@ -11,6 +11,7 @@ This is a supporting phase reference. It owns the scraper command, scraper confi
 ## Role
 
 Phase 1 finds evidence-ready TikTok candidates and writes the Daily Top-3 Selection handoff for Gemini analysis.
+It also writes a separate two-candidate backfill handoff for replacement analysis when a Top-3 candidate does not qualify for production.
 
 Discovery may produce candidate previews, but it must not produce production-ready Shootable Angles. Before Gemini evidence exists, all content reads are metadata inferences.
 
@@ -48,6 +49,7 @@ Outputs:
 
 - Full ranked scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
 - Daily Top-3 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top3.json`
+- Daily backfill candidates: `data/daily_runs/<run_id>/daily_backfill_candidates.json`
 - Optional discovery markdown: `outputs/daily_briefs/daily_brief_<YYYY-MM-DD>.md`
 
 Keep JSON, Markdown, config, and brief files in UTF-8.
