@@ -1643,3 +1643,29 @@ Feedback:
 Blockers or notes for the next iteration:
 - The Ralph loop normally works on AFK issues only; issue 0067 was completed because it was explicitly requested.
 - Unrelated untracked issue files `docs/issues/0068` through `docs/issues/0074` were left untouched until the next issue begins.
+
+## 2026-05-09 - 0068 Add Supabase Cloud Run Publication Tracer Bullet
+
+Task completed from `docs/issues/0068-add-supabase-cloud-run-publication-tracer-bullet.md`.
+
+Key decisions made:
+- Added compact cloud publication models for Daily Evidence Run metadata and artifact references without introducing a Supabase runtime dependency.
+- Used the Supabase Python client boundary shape, `client.table(...).upsert(...).execute()`, behind `SupabasePublicationAdapter` so tests can use isolated fake clients.
+- Added a high-level `publish_run_with_artifacts` method that marks a run as `published` only after all artifact upserts succeed and marks it `artifact_failed` when any artifact publication fails.
+- Added explicit builders for new-run publication inputs instead of scanning or importing historical local runs.
+
+Files changed:
+- `batch_analysis/cloud_publication.py`
+- `tests/test_cloud_publication.py`
+- `progress.txt`
+- `docs/issues/done/0068-add-supabase-cloud-run-publication-tracer-bullet.md`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_cloud_publication.py'` failed because `batch_analysis.cloud_publication` did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_cloud_publication.py'` passed with 4 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis/cloud_publication.py` passed.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 127 tests.
+
+Blockers or notes for the next iteration:
+- Issue `0069` can now wire the Python worker to this publication interface.
+- Unrelated untracked issue files `docs/issues/0069` through `docs/issues/0074` remain untouched.
