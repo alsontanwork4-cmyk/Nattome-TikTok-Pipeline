@@ -30,6 +30,7 @@ Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are s
 ├── scripts/
 │   └── run_batch_analysis.py      <- thin compatibility CLI
 ├── dashboard/                     <- local marketer-facing control room
+├── web/vercel-dashboard/          <- private Next.js dashboard shell for Vercel
 ├── tests/
 ├── docs/
 │   ├── prd/
@@ -162,6 +163,27 @@ Rebuild the dashboard's artifact-derived SQLite index from existing repo files:
 ```powershell
 C:\Users\Alson\.venv\Scripts\python.exe -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"
 ```
+
+## Vercel Dashboard
+
+The private Vercel Dashboard lives in `web/vercel-dashboard/` as a separate Next.js TypeScript app. It does not replace the Python dashboard or change pipeline behavior.
+
+Required Vercel-side Supabase configuration:
+
+| Variable | Required for | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Auth and read access | Use the project URL from Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Auth and read access | Use the anon key, with Supabase Row Level Security controlling access. |
+
+Run locally from the app directory:
+
+```powershell
+cd web/vercel-dashboard
+npm install
+npm run dev
+```
+
+The app uses Supabase Auth to protect dashboard routes. Anonymous users are redirected to `/login`; authenticated users can open the minimal read-only shell and the dashboard data-access layer can request the latest cloud-published Daily Evidence Run.
 
 ## Running On a Schedule
 

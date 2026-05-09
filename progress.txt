@@ -1729,3 +1729,49 @@ Blocker:
 
 Next concrete step:
 - Configure `APIFY_TOKEN`, `GEMINI_API_KEY`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY` in GitHub repository secrets, optionally configure Telegram secrets, run **Daily Evidence Run Cloud Publisher** manually, and confirm the summary reports cloud publication status `published`.
+
+## 2026-05-09 - 0071 Create Private Next.js Vercel Dashboard Shell
+
+Task completed from `docs/issues/0071-create-private-nextjs-vercel-dashboard-shell.md`.
+
+Key decisions made:
+- Added the cloud dashboard as a separate `web/vercel-dashboard/` Next.js TypeScript app so the existing Python dashboard and pipeline code remain untouched.
+- Used Supabase SSR middleware plus a server-side `requireAuthenticatedUser` helper to redirect anonymous dashboard requests to `/login`.
+- Kept the first page read-only and minimal, with an authenticated shell, empty latest-run state, and no artifact-detail UI until issue `0072`.
+- Added a small `DailyEvidenceRunRepository` interface with `getLatestRun()` backed by the `daily_evidence_runs` Supabase table.
+- Documented Vercel-side `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` configuration, relying on Supabase Auth and Row Level Security rather than a service-role key in the web app.
+
+Files changed:
+- `README.md`
+- `docs/issues/done/0071-create-private-nextjs-vercel-dashboard-shell.md`
+- `progress.txt`
+- `tests/test_vercel_dashboard_shell.py`
+- `web/vercel-dashboard/.env.example`
+- `web/vercel-dashboard/.gitignore`
+- `web/vercel-dashboard/next-env.d.ts`
+- `web/vercel-dashboard/next.config.mjs`
+- `web/vercel-dashboard/package-lock.json`
+- `web/vercel-dashboard/package.json`
+- `web/vercel-dashboard/src/app/globals.css`
+- `web/vercel-dashboard/src/app/layout.tsx`
+- `web/vercel-dashboard/src/app/login/page.tsx`
+- `web/vercel-dashboard/src/app/page.tsx`
+- `web/vercel-dashboard/src/lib/auth.ts`
+- `web/vercel-dashboard/src/lib/dailyEvidenceRuns.ts`
+- `web/vercel-dashboard/src/lib/env.ts`
+- `web/vercel-dashboard/src/lib/supabaseServer.ts`
+- `web/vercel-dashboard/src/middleware.ts`
+- `web/vercel-dashboard/tsconfig.json`
+- `web/vercel-dashboard/vercel.json`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_vercel_dashboard_shell` failed because the Vercel dashboard app did not exist.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_vercel_dashboard_shell` passed with 5 tests.
+- `npm run typecheck` passed in `web/vercel-dashboard`.
+- `npm run build` passed in `web/vercel-dashboard` with placeholder public Supabase env values.
+- Local runtime check: anonymous `GET /` returned `307` to `/login?redirectedFrom=%2F`.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 141 tests.
+- `npm audit --audit-level=high` passed; npm reports moderate Next/PostCSS advisories where the suggested forced fix is breaking.
+
+Notes for next iteration:
+- Issue `0072` can replace the shell empty state with the latest published run summary and artifact links.
