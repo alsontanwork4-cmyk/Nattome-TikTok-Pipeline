@@ -1668,4 +1668,35 @@ Feedback:
 
 Blockers or notes for the next iteration:
 - Issue `0069` can now wire the Python worker to this publication interface.
-- Unrelated untracked issue files `docs/issues/0069` through `docs/issues/0074` remain untouched.
+
+## 2026-05-09 - 0069 Publish Daily Evidence Run Outputs From Python Worker
+
+Task completed from `docs/issues/0069-publish-daily-evidence-run-outputs-from-python-worker.md`.
+
+Key decisions made:
+- Kept cloud publication disabled by default and exposed it through `run_batch_analysis.py --publish-cloud`.
+- Published only after local Daily Output Set generation, batch index writing, cleanup, and Telegram log generation have completed.
+- Registered artifacts using the existing cloud publication interface, including raw scrape, Daily Top-5 Selection, final markdown report, planning workbook, structured JSON, and batch-analysis artifacts.
+- Added a standard-library Supabase REST client boundary using `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, with missing-variable checks that report variable names but never secret values.
+- Logged publication status to `logs/cloud_publication.json` so failed cloud publication does not pretend the cloud run is complete while preserving the local Run Folder.
+
+Files changed:
+- `README.md`
+- `batch_analysis/cloud_publication.py`
+- `batch_analysis/run.py`
+- `scripts/run_batch_analysis.py`
+- `tests/test_cloud_publication.py`
+- `tests/test_daily_evidence_cloud_publication.py`
+- `docs/issues/done/0069-publish-daily-evidence-run-outputs-from-python-worker.md`
+- `progress.txt`
+
+Feedback:
+- RED: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_cloud_publication.DailyEvidenceCloudPublicationTest.test_enabled_daily_run_publishes_completed_run_and_required_artifacts` failed because no cloud publication step was invoked.
+- GREEN: `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_cloud_publication` passed with 3 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest tests.test_cloud_publication` passed with 5 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 131 tests.
+- `C:\Users\Alson\.venv\Scripts\python.exe -m py_compile batch_analysis\cloud_publication.py batch_analysis\run.py scripts\run_batch_analysis.py` passed.
+
+Notes for next iteration:
+- Issue `0070` can schedule the cloud-publishing worker after this command path is available.
+- Unrelated untracked issue files `docs/issues/0070` through `docs/issues/0074` remain untouched.

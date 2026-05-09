@@ -51,6 +51,8 @@ Use `nattome-tiktok-run-coordinate` for normal operation. The phase skills are s
 | `GEMINI_API_KEY` | Evidence analysis | Gemini key used for source-video evidence extraction. |
 | `TELEGRAM_BOT_TOKEN` | Optional | Telegram bot token. Skip silently if unset. |
 | `TELEGRAM_CHAT_ID` | Optional | Target chat. Both Telegram variables must be set together. |
+| `SUPABASE_URL` | Optional cloud publication | Required only when `run_batch_analysis.py --publish-cloud` is used. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Optional cloud publication | Required only when `run_batch_analysis.py --publish-cloud` is used. Never print this value. |
 
 The project loads credentials from exported environment variables and from the project root `.env`. Do not print token values in logs or reports.
 
@@ -110,6 +112,8 @@ Use the actual `$runId` created by the scrape command. `daily` mode preserves th
 
 Completed daily runs write the final marketer-facing deliverables to `outputs/reports/<YYYY-MM-DD>/`: the Top 5 Creative Production Report Markdown file and the Excel angle planning workbook. The run folder remains the audit/debug record for manifests, per-video evidence reports, internal JSON, logs, and cleanup status.
 
+Cloud publication is disabled by default. To publish a newly completed Daily Evidence Run to Supabase, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then add `--publish-cloud` to the evidence-analysis command. The worker registers the run metadata plus raw scrape, Daily Top-5 Selection, final markdown report, structured JSON, spreadsheet workbook, and batch-analysis artifacts. If publication fails, the local Run Folder remains available and `logs/cloud_publication.json` records the failure instead of marking the cloud run complete.
+
 Useful optional flags:
 
 | Command | Flag | Purpose |
@@ -122,6 +126,7 @@ Useful optional flags:
 | `run_batch_analysis.py` | `--runs-dir <path>` | Change where timestamped Run Folders are created. |
 | `run_batch_analysis.py` | `--outputs-dir <path>` | Change where final dated reports and workbooks are written. |
 | `run_batch_analysis.py` | `--timestamp <ISO8601Z>` | Use a deterministic timestamp for tests or controlled reruns. |
+| `run_batch_analysis.py` | `--publish-cloud` | Publish the completed run and artifact records to Supabase after local output generation succeeds. |
 
 ## Local Dashboard
 

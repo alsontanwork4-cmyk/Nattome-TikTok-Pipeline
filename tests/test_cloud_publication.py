@@ -3,10 +3,13 @@ from pathlib import Path
 
 from batch_analysis.cloud_publication import (
     CloudArtifactRecord,
+    CloudPublicationConfigurationError,
     CloudRunRecord,
     SupabasePublicationAdapter,
     artifact_record_from_path,
     build_cloud_run_record,
+    missing_cloud_environment,
+    supabase_publication_adapter_from_env,
 )
 
 
@@ -197,6 +200,21 @@ class CloudPublicationTest(unittest.TestCase):
             artifact.content_type,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
+
+    def test_supabase_environment_check_reports_missing_names_without_secret_values(self):
+        env = {
+            "SUPABASE_URL": "https://project.supabase.co",
+            "SUPABASE_SERVICE_ROLE_KEY": "",
+        }
+
+        missing = missing_cloud_environment(env)
+
+        self.assertEqual(missing, ["SUPABASE_SERVICE_ROLE_KEY"])
+        with self.assertRaises(CloudPublicationConfigurationError) as raised:
+            supabase_publication_adapter_from_env(env)
+        message = str(raised.exception)
+        self.assertIn("SUPABASE_SERVICE_ROLE_KEY", message)
+        self.assertNotIn("https://project.supabase.co", message)
 
 
 if __name__ == "__main__":

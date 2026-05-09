@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import json
+import os
 from pathlib import Path
 from typing import Any
+from urllib import error, parse, request
 
 from .report_dates import report_date_from_timestamp
 
 SPREADSHEET_CONTENT_TYPE = (
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+REQUIRED_CLOUD_ENV_VARS = ("SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY")
 
 
 @dataclass(frozen=True)
@@ -43,6 +47,16 @@ class CloudRunRecord:
 class PublicationResult:
     status: str
     errors: list[str]
+
+
+class CloudPublicationConfigurationError(RuntimeError):
+    pass
+
+
+class CloudPublicationError(RuntimeError):
+    def __init__(self, message: str, *, run_folder: Path | None = None) -> None:
+        super().__init__(message)
+        self.run_folder = run_folder
 
 
 @dataclass(frozen=True)
@@ -142,6 +156,82 @@ class SupabasePublicationAdapter:
         ).execute()
 
 
+class SupabaseRestClient:
+    def __init__(self, supabase_url: str, service_role_key: str) -> None:
+        self.supabase_url = supabase_url.rstrip("/")
+        self.service_role_key = service_role_key
+
+    def table(self, table_name: str) -> "SupabaseRestTable":
+        return SupabaseRestTable(self, table_name)
+
+
+class SupabaseRestTable:
+    def __init__(self, client: SupabaseRestClient, table_name: str) -> None:
+        self.client = client
+        self.table_name = table_name
+        self.payload: dict[str, Any] | None = None
+        self.on_conflict: str | None = None
+
+    def upsert(self, payload: dict[str, Any], on_conflict: str | None = None) -> "SupabaseRestTable":
+        self.payload = payload
+        self.on_conflict = on_conflict
+        return self
+
+    def execute(self) -> dict[str, Any]:
+        if self.payload is None:
+            raise RuntimeError("Supabase upsert payload was not provided")
+        query = ""
+        if self.on_conflict:
+            query = "?" + parse.urlencode({"on_conflict": self.on_conflict})
+        url = f"{self.client.supabase_url}/rest/v1/{self.table_name}{query}"
+        body = json.dumps(self.payload).encode("utf-8")
+        req = request.Request(
+            url,
+            data=body,
+            method="POST",
+            headers={
+                "apikey": self.client.service_role_key,
+                "Authorization": f"Bearer {self.client.service_role_key}",
+                "Content-Type": "application/json",
+                "Prefer": "resolution=merge-duplicates,return=minimal",
+            },
+        )
+        try:
+            with request.urlopen(req, timeout=30) as response:
+                response.read()
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(
+                f"Supabase REST upsert failed with HTTP {exc.code}: {detail}"
+            ) from exc
+        except error.URLError as exc:
+            raise RuntimeError(f"Supabase REST upsert failed: {exc.reason}") from exc
+        return {"data": []}
+
+
+def missing_cloud_environment(env: dict[str, str] | None = None) -> list[str]:
+    values = env if env is not None else os.environ
+    return [key for key in REQUIRED_CLOUD_ENV_VARS if not values.get(key)]
+
+
+def supabase_publication_adapter_from_env(
+    env: dict[str, str] | None = None,
+) -> SupabasePublicationAdapter:
+    values = env if env is not None else os.environ
+    missing = missing_cloud_environment(values)
+    if missing:
+        raise CloudPublicationConfigurationError(
+            "cloud publication is enabled but required environment variables are missing: "
+            + ", ".join(missing)
+        )
+    return SupabasePublicationAdapter(
+        SupabaseRestClient(
+            str(values["SUPABASE_URL"]),
+            str(values["SUPABASE_SERVICE_ROLE_KEY"]),
+        )
+    )
+
+
 def build_cloud_run_record(
     run_folder: Path,
     metadata: dict[str, Any],
@@ -208,3 +298,128 @@ def content_type_for_path(path: Path) -> str:
     if suffix == ".csv":
         return "text/csv"
     return "application/octet-stream"
+
+
+def build_cloud_artifact_records(
+    *,
+    run_folder: Path,
+    manifest: dict[str, Any],
+    output_root: Path,
+    candidates_path: Path | None,
+) -> list[CloudArtifactRecord]:
+    run_id = run_folder.name
+    artifacts: list[CloudArtifactRecord] = []
+    seen: set[Path] = set()
+
+    def add_artifact(artifact_type: str, source_path: Path) -> None:
+        path = source_path.resolve()
+        if path in seen or not path.is_file():
+            return
+        seen.add(path)
+        try:
+            relative_path = path.relative_to(run_folder.resolve())
+            storage_path = f"daily-runs/{run_id}/run/{relative_path.as_posix()}"
+        except ValueError:
+            try:
+                relative_path = path.relative_to(output_root.resolve())
+                storage_path = f"daily-runs/{run_id}/outputs/{relative_path.as_posix()}"
+            except ValueError:
+                storage_path = f"daily-runs/{run_id}/inputs/{path.name}"
+        artifacts.append(
+            artifact_record_from_path(
+                run_id=run_id,
+                artifact_type=artifact_type,
+                source_path=path,
+                storage_path=storage_path,
+            )
+        )
+
+    if candidates_path is not None:
+        add_artifact("daily_selection", candidates_path)
+        raw_scrape = candidates_path.parent / "raw_scrape_top30.json"
+        add_artifact("raw_scrape", raw_scrape)
+
+    for output in manifest.get("outputs", {}).get("final_outputs", []):
+        if not isinstance(output, dict) or not output.get("path"):
+            continue
+        kind = str(output.get("kind") or "")
+        artifact_type = "spreadsheet" if kind == "spreadsheet" else "markdown"
+        add_artifact(artifact_type, output_root / str(output["path"]))
+
+    for relative_path in (
+        "run_manifest.json",
+        "batch_index.md",
+        "data/selected_batch.json",
+        "reports/selected_batch.md",
+        "data/evidence_bundle_index.json",
+        "data/cross_video_pattern_summary.json",
+        "data/structured_batch_analysis.json",
+        "data/refinement_hooks.json",
+        "logs/telegram_delivery.json",
+        "logs/evidence_artifact_cleanup.json",
+    ):
+        path = run_folder / relative_path
+        if relative_path == "data/structured_batch_analysis.json":
+            artifact_type = "json"
+        else:
+            artifact_type = "batch_analysis"
+        add_artifact(artifact_type, path)
+
+    return artifacts
+
+
+def write_cloud_publication_log(
+    run_folder: Path,
+    *,
+    status: str,
+    artifact_count: int,
+    errors: list[str] | None = None,
+) -> None:
+    log_path = run_folder / "logs" / "cloud_publication.json"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    log_path.write_text(
+        json.dumps(
+            {
+                "status": status,
+                "artifact_count": artifact_count,
+                "errors": errors or [],
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def publish_completed_run_outputs(
+    *,
+    run_folder: Path,
+    metadata: dict[str, Any],
+    manifest: dict[str, Any],
+    summary: dict[str, Any],
+    output_root: Path,
+    candidates_path: Path | None,
+    adapter: Any,
+) -> PublicationResult:
+    run = build_cloud_run_record(run_folder, metadata, manifest, summary)
+    artifacts = build_cloud_artifact_records(
+        run_folder=run_folder,
+        manifest=manifest,
+        output_root=output_root,
+        candidates_path=candidates_path,
+    )
+    result = adapter.publish_run_with_artifacts(run, artifacts)
+    write_cloud_publication_log(
+        run_folder,
+        status="published" if result.status == "succeeded" else "failed",
+        artifact_count=len(artifacts),
+        errors=result.errors,
+    )
+    if result.errors:
+        raise CloudPublicationError(
+            "cloud publication failed after local output generation: "
+            + "; ".join(result.errors),
+            run_folder=run_folder,
+        )
+    return result
