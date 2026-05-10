@@ -1,7 +1,15 @@
 # VPS Dashboard Deployment
 
-This dashboard is a Python HTTP app. On a VPS, run it as a private localhost
-service and expose it through Nginx with basic authentication.
+This is the production path for the Supabase-first FastAPI dashboard. The VPS
+runs two private localhost services:
+
+- `nattome-dashboard.service`: the authenticated FastAPI/Jinja web app.
+- `nattome-dashboard-worker.service`: the separate queue worker that claims
+  manual runs, executes pipeline work, uploads artifacts to Supabase Storage,
+  and updates Supabase Postgres status rows.
+
+Supabase is the production system of record. The VPS should not be treated as
+the dashboard database or artifact store.
 
 These commands assume Ubuntu 24.04, root shell access, and this repository:
 
@@ -9,9 +17,10 @@ These commands assume Ubuntu 24.04, root shell access, and this repository:
 https://github.com/alsontanwork4-cmyk/Nattome-TikTok-Pipeline.git
 ```
 
-## 1. Inspect Before Cleaning
+## 1. Inspect The VPS
 
-Do this first so you do not delete active services or data by accident.
+Before replacing an existing deployment, check active services, ports, and disk
+usage.
 
 ```bash
 pwd
@@ -21,26 +30,19 @@ systemctl --type=service --state=running
 ss -tulpn
 ```
 
-If there are old folders you are not sure about, quarantine them instead of
-deleting them:
+If there are old folders you are not sure about, move them into a dated
+quarantine folder instead of deleting them immediately.
 
 ```bash
 mkdir -p /root/vps-cleanup-quarantine/$(date +%F)
 mv /path/to/old-folder /root/vps-cleanup-quarantine/$(date +%F)/
 ```
 
-After the dashboard has been running for a few days and nothing is missing, you
-can remove quarantined folders:
-
-```bash
-rm -rf /root/vps-cleanup-quarantine/YYYY-MM-DD/old-folder
-```
-
 ## 2. Install System Packages
 
 ```bash
 apt update
-apt install -y git python3 python3-venv nginx apache2-utils ufw
+apt install -y git python3 python3-venv nginx ufw
 ```
 
 ## 3. Deploy The Repository
@@ -58,43 +60,86 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-If you need the VPS to use a branch other than the default branch:
+If the VPS should run a specific branch:
 
 ```bash
 git fetch origin
-git checkout codex/run-nattome-discovery-test1
+git checkout YOUR_BRANCH
 ```
 
-## 4. Add Runtime Secrets
+## 4. Configure Supabase
 
-Only add the keys you need. The dashboard can render existing artifacts without
-tokens, but manual pipeline runs need the Apify and Gemini keys.
+Create the Supabase project before starting the services:
+
+- Apply the dashboard data contract from `docs/supabase-dashboard-data-contract.md`.
+- Enable Supabase Auth and create the owner user who may sign in to the dashboard.
+- Create the Storage bucket named by `SUPABASE_STORAGE_BUCKET`; the examples use
+  `dashboard-artifacts`.
+- Keep the service-role key server-side only. It belongs in the VPS
+  `EnvironmentFile`, never in browser-visible templates or client code.
+
+## 5. Add Runtime Environment
+
+Write the service environment file with production mode, Supabase access,
+workspace paths, Storage bucket names, and pipeline credentials.
 
 ```bash
 cat >/opt/nattome-pipeline/.env <<'EOF'
+DASHBOARD_RUNTIME_MODE=production
+DASHBOARD_WORKSPACE_PATH=/opt/nattome-pipeline
+DASHBOARD_RUNS_PATH=/opt/nattome-pipeline/runs
+DASHBOARD_DATA_PATH=/opt/nattome-pipeline/data
+SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+SUPABASE_ANON_KEY=replace_me
+SUPABASE_SERVICE_ROLE_KEY=replace_me
+SUPABASE_STORAGE_BUCKET=dashboard-artifacts
 APIFY_TOKEN=replace_me
 GEMINI_API_KEY=replace_me
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_CHAT_ID=
-SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
 EOF
 chmod 600 /opt/nattome-pipeline/.env
 ```
 
-## 5. Start The Dashboard With systemd
+Environment ownership:
+
+| Variable | Used by | Purpose |
+|---|---|---|
+| `DASHBOARD_RUNTIME_MODE=production` | Web, worker | Enables production dashboard behavior. |
+| `DASHBOARD_WORKSPACE_PATH=/opt/nattome-pipeline` | Web, worker, import scripts | Root for repo-relative paths and migration artifacts. |
+| `DASHBOARD_RUNS_PATH` | Web, worker, import scripts | Local run folder location for migration and temporary pipeline output. |
+| `DASHBOARD_DATA_PATH` | Web, worker, import scripts | Local data folder location for configs and migration inputs. |
+| `SUPABASE_URL=https://YOUR-PROJECT.supabase.co` | Web, worker, import scripts | Supabase project API URL. |
+| `SUPABASE_ANON_KEY=replace_me` | Web | Supabase Auth browser/session boundary. |
+| `SUPABASE_SERVICE_ROLE_KEY=replace_me` | Server-side web code, worker, import scripts | Supabase Postgres and Storage service operations. |
+| `SUPABASE_STORAGE_BUCKET=dashboard-artifacts` | Web, worker, import scripts | Bucket for reports, source videos, JSON snapshots, workbooks, and other artifacts. |
+| `APIFY_TOKEN` | Worker | TikTok scrape execution. |
+| `GEMINI_API_KEY` | Worker | Nattome POV report generation. |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Worker | Optional report delivery. |
+
+## 6. Add The FastAPI Service
+
+The production ASGI command is:
+
+```bash
+/opt/nattome-pipeline/.venv/bin/uvicorn dashboard.app:create_app --factory --host 127.0.0.1 --port 8765
+```
+
+Install the web service:
 
 ```bash
 cat >/etc/systemd/system/nattome-dashboard.service <<'EOF'
 [Unit]
-Description=Nattome dashboard
-After=network.target
+Description=Nattome Supabase FastAPI dashboard
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
+User=root
 WorkingDirectory=/opt/nattome-pipeline
 EnvironmentFile=/opt/nattome-pipeline/.env
-ExecStart=/opt/nattome-pipeline/.venv/bin/python -m dashboard.web --host 127.0.0.1 --port 8765 --workspace /opt/nattome-pipeline
+ExecStart=/opt/nattome-pipeline/.venv/bin/uvicorn dashboard.app:create_app --factory --host 127.0.0.1 --port 8765
 Restart=always
 RestartSec=5
 
@@ -110,29 +155,69 @@ curl -fsS http://127.0.0.1:8765/healthz
 
 Expected health output:
 
-```text
-ok
+```json
+{"status":"ok"}
 ```
 
-## 6. Put Nginx In Front
+## 7. Add The Worker Service
 
-Create a basic-auth user:
+Run the queue worker as a separate service so long-running analysis never blocks
+FastAPI request handling. The worker should use the same environment file as the
+web app because it needs Supabase Postgres, Supabase Storage, workspace paths,
+and pipeline credentials.
 
 ```bash
-htpasswd -c /etc/nginx/.htpasswd nattome
+cat >/etc/systemd/system/nattome-dashboard-worker.service <<'EOF'
+[Unit]
+Description=Nattome dashboard Supabase worker
+After=network-online.target nattome-dashboard.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/nattome-pipeline
+EnvironmentFile=/opt/nattome-pipeline/.env
+ExecStart=/opt/nattome-pipeline/.venv/bin/python -m dashboard.worker --worker-id vps-worker-1 --poll-interval 15
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now nattome-dashboard-worker
+systemctl status nattome-dashboard-worker --no-pager
 ```
 
-Create the Nginx site. Replace `your-domain.com` with a real domain if you have
-one. If you only have an IP address, use `_` as `server_name`.
+The worker contract is:
+
+- Claim one queued `manual_runs` row at a time.
+- Mark the matching `runs` row as `running`, then `succeeded`, `failed`, or
+  `canceled`.
+- Upload large outputs to Supabase Storage under stable `runs/<run_id>/...`
+  object paths.
+- Upsert `run_outputs` metadata for every uploaded object.
+- Store concise failure summaries only; do not write secrets or full
+  environment dumps to Supabase.
+
+## 8. Put Nginx In Front
+
+Nginx terminates public HTTP/HTTPS and proxies to the private FastAPI listener.
+Authentication remains Supabase Auth inside the dashboard, so do not add a
+second basic-auth gate unless you explicitly need an emergency extra layer.
+
+Replace `your-domain.com` with the real domain. Use `_` temporarily only when
+testing by IP address.
 
 ```bash
 cat >/etc/nginx/sites-available/nattome-dashboard <<'EOF'
 server {
     listen 80;
-    server_name _;
+    server_name your-domain.com;
 
-    auth_basic "Nattome Dashboard";
-    auth_basic_user_file /etc/nginx/.htpasswd;
+    client_max_body_size 50m;
 
     location / {
         proxy_pass http://127.0.0.1:8765;
@@ -156,16 +241,9 @@ Open the firewall:
 ```bash
 ufw allow OpenSSH
 ufw allow 'Nginx HTTP'
+ufw allow 'Nginx HTTPS'
 ufw --force enable
 ```
-
-Now visit:
-
-```text
-http://YOUR_VPS_IP/
-```
-
-## 7. Optional HTTPS
 
 If you point a domain to the VPS, add HTTPS with Certbot:
 
@@ -174,43 +252,22 @@ apt install -y certbot python3-certbot-nginx
 certbot --nginx -d your-domain.com
 ```
 
-## 8. Upload Existing Local Artifacts
+## 9. Import Existing Artifacts Once
 
-The dashboard is most useful when `data/`, `runs/`, and `outputs/` are present
-on the VPS. From your Windows machine, upload them with `scp`:
-
-```powershell
-scp -r data outputs runs root@YOUR_VPS_IP:/opt/nattome-pipeline/
-```
-
-Then rebuild the dashboard index on the VPS:
+Historical local artifacts can be imported into Supabase after the files are on
+the VPS. This is a one-time migration aid; the production dashboard reads
+Supabase Postgres and Supabase Storage, not the old local dashboard index.
 
 ```bash
 cd /opt/nattome-pipeline
 . .venv/bin/activate
-python -c "from dashboard.indexer import index_pipeline_artifacts; print(index_pipeline_artifacts())"
-systemctl restart nattome-dashboard
-```
-
-For the Supabase-first dashboard migration, import historical Run Folder
-artifacts once after the files are present on the VPS. The importer uploads each
-file under a stable `runs/<run_id>/...` Storage object path, then upserts the
-matching `runs` and `run_outputs` metadata rows.
-
-```bash
-cd /opt/nattome-pipeline
-. .venv/bin/activate
-export DASHBOARD_WORKSPACE_PATH=/opt/nattome-pipeline
-export SUPABASE_URL="https://YOUR-PROJECT.supabase.co"
-export SUPABASE_SERVICE_ROLE_KEY="replace_me"
-export SUPABASE_STORAGE_BUCKET="dashboard-artifacts"
 python -m dashboard.legacy_import \
   --workspace /opt/nattome-pipeline \
   --storage-bucket dashboard-artifacts
 ```
 
-If the old dashboard SQLite file has curation labels or notes that are not
-recoverable from artifacts, pass it explicitly as a one-time source:
+If an old dashboard SQLite file has curation labels or notes that cannot be
+recovered from artifacts, pass it explicitly as a one-time source:
 
 ```bash
 python -m dashboard.legacy_import \
@@ -219,16 +276,32 @@ python -m dashboard.legacy_import \
   --legacy-sqlite /opt/nattome-pipeline/data/dashboard/dashboard.sqlite3
 ```
 
-Do not configure the new FastAPI dashboard to read SQLite at runtime. This
-import is a migration aid only; rerunning it is safe because run and artifact
-metadata are upserted by stable keys.
+Do not configure the production dashboard to read SQLite at runtime.
 
-## 9. Common Operations
+## 10. Backups
+
+Supabase Postgres backups protect metadata: runs, statuses, settings versions,
+manual-run records, curation, raw/selected video metadata, and artifact rows.
+Enable Supabase Postgres backups in the Supabase project and periodically test a
+restore into a separate project before relying on the backup plan.
+
+Supabase Storage export protects large artifacts: source videos, reports,
+workbooks, raw scrape JSON, evidence snapshots, Gemini responses, and any other
+objects in `SUPABASE_STORAGE_BUCKET`. Schedule a Storage export or object sync
+to a separate backup target. The export must preserve bucket name, object path,
+size, and checksum when available so `run_outputs` rows can be reconciled after
+a restore.
+
+Keep the VPS `.env` outside the repository and include it in the server backup
+plan through your secrets manager or encrypted host backup. Do not commit it.
+
+## 11. Common Operations
 
 Check logs:
 
 ```bash
 journalctl -u nattome-dashboard -n 100 --no-pager
+journalctl -u nattome-dashboard-worker -n 100 --no-pager
 ```
 
 Deploy new code:
@@ -239,10 +312,12 @@ git pull
 . .venv/bin/activate
 pip install -r requirements.txt
 systemctl restart nattome-dashboard
+systemctl restart nattome-dashboard-worker
 ```
 
-Stop the dashboard:
+Stop services:
 
 ```bash
+systemctl stop nattome-dashboard-worker
 systemctl stop nattome-dashboard
 ```

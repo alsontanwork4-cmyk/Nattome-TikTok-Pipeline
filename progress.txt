@@ -2306,3 +2306,31 @@ Feedback:
 
 Notes for next iteration:
 - No blocker remains from this issue. The next AFK slice is expected to add the Supabase VPS deployment path.
+
+## 2026-05-10 - 0086 Add Supabase VPS Deployment Path
+
+Task completed from `docs/issues/0086-add-supabase-vps-deployment-path.md`.
+
+Key decisions made:
+- Replaced the old VPS dashboard guide with the Supabase-first FastAPI production path.
+- Documented separate `systemd` units for the FastAPI web app and dashboard worker.
+- Made `uvicorn dashboard.app:create_app --factory --host 127.0.0.1 --port 8765` the documented production web command.
+- Documented Nginx reverse proxying to the private FastAPI listener while keeping Supabase Auth as the dashboard auth boundary.
+- Documented production environment variables for runtime mode, workspace paths, Supabase URL and keys, Storage bucket, and worker pipeline credentials.
+- Added backup expectations for Supabase Postgres metadata and Supabase Storage artifacts.
+- Added a focused docs regression test to keep the deployment guide off the retired dashboard server command.
+
+Files changed:
+- `docs/vps-dashboard-deployment.md`
+- `tests/test_vps_dashboard_deployment_docs.py`
+- `progress.txt`
+- `docs/issues/done/0086-add-supabase-vps-deployment-path.md`
+
+Feedback:
+- RED: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs` failed against the old VPS guide.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs` passed with 1 test.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs tests.test_dashboard_worker` passed for the docs test and 2 worker tests.
+- BLOCKED: FastAPI shell verification could not run because both the global Python and local `.venv` are missing the `fastapi` dependency in this sandbox.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to remove the legacy dashboard server and SQLite runtime after FastAPI/Supabase parity.
