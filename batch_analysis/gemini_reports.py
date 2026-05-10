@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any, Callable
 
@@ -13,6 +14,9 @@ from .evidence_io import (
 )
 
 DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+DEFAULT_FILE_ACTIVE_TIMEOUT_SECONDS = 180
+DEFAULT_FILE_ACTIVE_POLL_SECONDS = 2
+COMPILED_REPORT_FILENAME = "nattome_batch_analysis_final_outputs.md"
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
 NATTOME_BRAND_REFERENCE = (
     WORKSPACE_ROOT
@@ -250,16 +254,14 @@ class GeminiNattomePovReporter:
         evidence_records: list[dict[str, Any]] = []
         creative_records: list[dict[str, Any]] = []
         report_records: list[dict[str, Any]] = []
-        final_outputs: list[str] = []
 
         for candidate in candidates:
             per_video = self._run_video(client, candidate, brand_reference)
             evidence_records.append(per_video["evidence"])
             creative_records.append(per_video["creative"])
             report_records.append(per_video["report"])
-            if per_video["report"].get("status") in ("completed", "skipped") and per_video["report"].get("path"):
-                final_outputs.append(per_video["report"]["path"])
 
+        final_outputs = self._compile_final_report(report_records)
         return self._result(evidence_records, creative_records, report_records, final_outputs)
 
     def _run_video(
@@ -291,6 +293,7 @@ class GeminiNattomePovReporter:
         try:
             video_path = self.run_folder / source_video["path"]
             uploaded_file = client.files.upload(file=str(video_path))
+            uploaded_file = self._wait_for_uploaded_file_active(client, uploaded_file)
             evidence_response = client.models.generate_content(
                 model=self.model_name,
                 contents=[build_video_evidence_prompt(candidate), uploaded_file],
@@ -379,7 +382,10 @@ class GeminiNattomePovReporter:
                     phase_status([record["status"] for record in report_records]),
                     model_name=self.model_name,
                     inputs={"creative_responses": self._paths(creative_records)},
-                    outputs={"reports": final_outputs},
+                    outputs={
+                        "reports": final_outputs,
+                        "per_video_reports": self._paths(report_records),
+                    },
                     failure_details=self._failures(report_records),
                 ),
             ],
@@ -411,6 +417,42 @@ class GeminiNattomePovReporter:
     def _paths(self, records: list[dict[str, Any]]) -> list[str]:
         return [record["path"] for record in records if record.get("path")]
 
+    def _compile_final_report(self, report_records: list[dict[str, Any]]) -> list[str]:
+        available_reports = [
+            record
+            for record in report_records
+            if record.get("status") in ("completed", "skipped") and record.get("path")
+        ]
+        if not available_reports:
+            return []
+
+        compiled_path = self.run_folder / "reports" / COMPILED_REPORT_FILENAME
+        compiled_path.parent.mkdir(parents=True, exist_ok=True)
+        sections = [
+            "# Nattome Batch Analysis Final Outputs",
+            "",
+            "Compiled report for all generated Nattome POV video analyses.",
+            "",
+        ]
+        for index, record in enumerate(available_reports, start=1):
+            report_path = self.run_folder / str(record["path"])
+            if not report_path.exists():
+                continue
+            report_text = report_path.read_text(encoding="utf-8").strip()
+            sections.extend(
+                [
+                    f"## Video {index}: {record.get('prefix') or record.get('candidate_id')}",
+                    "",
+                    f"- Source report: `{record['path']}`",
+                    "",
+                    report_text,
+                    "",
+                ]
+            )
+
+        compiled_path.write_text("\n".join(sections).rstrip() + "\n", encoding="utf-8")
+        return [relative_path(compiled_path, self.run_folder)]
+
     def _failures(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         return [
             {
@@ -430,7 +472,47 @@ class GeminiNattomePovReporter:
             "uri": getattr(uploaded_file, "uri", None),
             "name": getattr(uploaded_file, "name", None),
             "mime_type": getattr(uploaded_file, "mime_type", None),
+            "state": self._file_state_name(uploaded_file),
         }
+
+    def _wait_for_uploaded_file_active(self, client: Any, uploaded_file: Any) -> Any:
+        name = self._uploaded_file_name(uploaded_file)
+        if not name or not hasattr(client.files, "get"):
+            return uploaded_file
+
+        deadline = time.monotonic() + DEFAULT_FILE_ACTIVE_TIMEOUT_SECONDS
+        current_file = uploaded_file
+        while time.monotonic() < deadline:
+            state = self._file_state_name(current_file)
+            if state in ("ACTIVE", "STATE_ACTIVE"):
+                return current_file
+            if state in ("FAILED", "STATE_FAILED"):
+                raise RuntimeError(f"Gemini uploaded file {name} failed processing")
+            time.sleep(DEFAULT_FILE_ACTIVE_POLL_SECONDS)
+            current_file = client.files.get(name=name)
+
+        state = self._file_state_name(current_file) or "unknown"
+        raise TimeoutError(
+            f"Gemini uploaded file {name} did not become ACTIVE within "
+            f"{DEFAULT_FILE_ACTIVE_TIMEOUT_SECONDS}s; state={state}"
+        )
+
+    def _uploaded_file_name(self, uploaded_file: Any) -> str | None:
+        if isinstance(uploaded_file, dict):
+            name = uploaded_file.get("name")
+            return str(name) if name else None
+        name = getattr(uploaded_file, "name", None)
+        return str(name) if name else None
+
+    def _file_state_name(self, uploaded_file: Any) -> str | None:
+        if isinstance(uploaded_file, dict):
+            state = uploaded_file.get("state")
+        else:
+            state = getattr(uploaded_file, "state", None)
+        if state is None:
+            return None
+        name = getattr(state, "name", None)
+        return str(name or state)
 
 
 def generate_nattome_pov_reports(

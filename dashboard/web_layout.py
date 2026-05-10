@@ -8,7 +8,6 @@ from .web_overview import _render_overview
 from .web_report import _render_report_page
 from .web_run_history import _render_run_history
 from .web_settings import _render_scrape_settings
-from .web_theme import render_theme_styles
 
 
 def render_page(
@@ -52,9 +51,8 @@ def render_page(
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-  <style>
-{render_theme_styles()}
-  </style>
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <script src="/static/dashboard.js" defer></script>
 </head>
 <body>
   <div class="layout">

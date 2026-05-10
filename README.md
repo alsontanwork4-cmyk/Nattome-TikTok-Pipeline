@@ -29,8 +29,7 @@ batch_analysis/
   tool_adapters.py    source video copy/download helpers
 
 skills/
-  nattome-viral-intelligence-run/
-  nattome-tiktok-candidate-discovery/
+  nattome-tiktok-candidate-discovery/  consolidated project skill plus assets/references
 ```
 
 ## Environment

@@ -15,6 +15,14 @@ class FakeGeminiResponse:
         self.text = text
 
 
+class FakeUploadedFile:
+    def __init__(self, *, name="files/video", state="ACTIVE"):
+        self.name = name
+        self.uri = f"gemini://{name}"
+        self.mime_type = "video/mp4"
+        self.state = state
+
+
 class FakeGeminiClient:
     def __init__(self):
         self.uploads = []
@@ -146,12 +154,15 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
             evidence_path = run_folder / "data" / "001_first-video_gemini_evidence.json"
             creative_path = run_folder / "data" / "001_first-video_gemini_creative_response.json"
             report_path = run_folder / "reports" / "001_first-video_nattome_pov_report.md"
+            compiled_report_path = run_folder / "reports" / "nattome_batch_analysis_final_outputs.md"
             self.assertTrue(evidence_path.is_file())
             self.assertTrue(creative_path.is_file())
             self.assertEqual(
                 report_path.read_text(encoding="utf-8"),
                 "# Nattome POV Inspiration\n\nUse the post-meal bloating hook and keep claims grounded.\n",
             )
+            self.assertTrue(compiled_report_path.is_file())
+            self.assertIn("Video 1: 001_first-video", compiled_report_path.read_text(encoding="utf-8"))
             self.assertEqual(len(telegram_messages), 1)
             self.assertEqual(telegram_messages[0]["bot_token"], "test-telegram-token")
             self.assertEqual(telegram_messages[0]["chat_id"], "test-chat-id")
@@ -162,7 +173,10 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
             self.assertEqual(len(telegram_documents), 1)
             self.assertEqual(telegram_documents[0]["bot_token"], "test-telegram-token")
             self.assertEqual(telegram_documents[0]["chat_id"], "test-chat-id")
-            self.assertEqual(telegram_documents[0]["document_path"].name, "001_first-video_nattome_pov_report.md")
+            self.assertEqual(
+                telegram_documents[0]["document_path"].name,
+                "nattome_batch_analysis_final_outputs.md",
+            )
 
             manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
             phases = {phase["name"]: phase for phase in manifest["phases"]}
@@ -172,9 +186,55 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
             self.assertEqual(phases["telegram_delivery"]["status"], "completed")
             self.assertEqual(
                 manifest["outputs"]["final_outputs"],
+                ["reports/nattome_batch_analysis_final_outputs.md"],
+            )
+            self.assertEqual(
+                phases["nattome_pov_reports"]["outputs"]["per_video_reports"],
                 ["reports/001_first-video_nattome_pov_report.md"],
             )
             self.assertEqual(manifest["outputs"]["pipeline_status"], "nattome_pov_reports_delivered")
+
+    def test_uploaded_video_is_polled_until_active_before_evidence_generation(self):
+        class PollingGeminiClient(FakeGeminiClient):
+            def __init__(self):
+                super().__init__()
+                self.get_calls = 0
+
+            def upload(self, *, file):
+                self.uploads.append(Path(file))
+                return FakeUploadedFile(state="PROCESSING")
+
+            def get(self, *, name):
+                self.get_calls += 1
+                return FakeUploadedFile(name=name, state="ACTIVE")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            fake_client = PollingGeminiClient()
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}), patch(
+                "batch_analysis.gemini_reports.time.sleep"
+            ):
+                run_folder = create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                    ),
+                    gemini_client_factory=lambda api_key: fake_client,
+                )
+
+            self.assertEqual(fake_client.get_calls, 1)
+            self.assertEqual(len(fake_client.calls), 2)
+            evidence = json.loads(
+                (run_folder / "data" / "001_first-video_gemini_evidence.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(evidence["uploaded_file"]["state"], "ACTIVE")
 
     def test_generated_report_records_missing_telegram_credentials_without_failing_report(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -280,8 +340,11 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
             self.assertEqual(phases["nattome_pov_reports"]["status"], "partial")
             self.assertEqual(
                 manifest["outputs"]["final_outputs"],
-                ["reports/002_available-video_nattome_pov_report.md"],
+                ["reports/nattome_batch_analysis_final_outputs.md"],
             )
+            compiled_report_path = run_folder / "reports" / "nattome_batch_analysis_final_outputs.md"
+            self.assertTrue(compiled_report_path.is_file())
+            self.assertIn("002_available-video", compiled_report_path.read_text(encoding="utf-8"))
             self.assertIn("missing-video", str(phases["nattome_pov_reports"]["failure_details"]))
 
     def test_completed_artifacts_are_skipped_on_phase_two_rerun(self):
@@ -315,7 +378,7 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
             self.assertEqual(phases["gemini_video_evidence"]["status"], "skipped")
             self.assertEqual(phases["gemini_creative_strategy"]["status"], "skipped")
             self.assertEqual(phases["nattome_pov_reports"]["status"], "skipped")
-            self.assertEqual(rerun["final_outputs"], ["reports/001_first-video_nattome_pov_report.md"])
+            self.assertEqual(rerun["final_outputs"], ["reports/nattome_batch_analysis_final_outputs.md"])
 
 
 if __name__ == "__main__":

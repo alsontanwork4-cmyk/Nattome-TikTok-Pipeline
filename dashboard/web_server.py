@@ -28,6 +28,8 @@ PostFormAction = tuple[Callable[[Path, FormData], object], str]
 NAV_ROUTES = {route for _, route in NAV_ITEMS}
 
 _STATIC_CONTENT_TYPES: dict[str, str] = {
+    ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
     ".png": "image/png",
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",

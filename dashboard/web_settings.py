@@ -111,7 +111,7 @@ def _render_unified_settings(settings: dict[str, object]) -> str:
               Viewing current settings. Click Edit to make changes.
             </p>
           </div>
-          <button type="button" class="edit-toggle-btn" id="edit-toggle-btn" onclick="toggleSettingsEdit()">
+          <button type="button" class="edit-toggle-btn" id="edit-toggle-btn" data-settings-edit-toggle>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Edit Settings
           </button>
@@ -152,78 +152,11 @@ def _render_unified_settings(settings: dict[str, object]) -> str:
             <p class="muted">Saved changes affect the next scheduled scrape.</p>
             <div class="settings-save-buttons">
               <button type="submit">Save scrape settings</button>
-              <button type="button" class="cancel-edit-btn" onclick="toggleSettingsEdit()">Cancel</button>
+              <button type="button" class="cancel-edit-btn" data-settings-edit-toggle>Cancel</button>
             </div>
           </div>
         </form>
       </section>
-      {_render_edit_toggle_script()}
-    """
-
-
-def _render_edit_toggle_script() -> str:
-    return """
-      <script>
-        (function() {
-          var panel = document.getElementById('unified-settings-panel');
-          var btn = document.getElementById('edit-toggle-btn');
-          var hint = document.getElementById('settings-mode-hint');
-          var saveArea = document.getElementById('settings-save-area');
-
-          // Start in read-only mode
-          panel.classList.add('readonly-mode');
-          panel.classList.remove('edit-mode');
-
-          // Set all form controls to readonly/disabled
-          setFieldsReadonly(true);
-
-          window.toggleSettingsEdit = function() {
-            var isReadonly = panel.classList.contains('readonly-mode');
-            if (isReadonly) {
-              // Switch to edit mode
-              panel.classList.remove('readonly-mode');
-              panel.classList.add('edit-mode');
-              btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Cancel';
-              btn.classList.add('cancel-state');
-              hint.textContent = 'Editing mode — make your changes and save below.';
-              setFieldsReadonly(false);
-            } else {
-              // Switch back to read-only mode (cancel)
-              panel.classList.add('readonly-mode');
-              panel.classList.remove('edit-mode');
-              btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Settings';
-              btn.classList.remove('cancel-state');
-              hint.textContent = 'Viewing current settings. Click Edit to make changes.';
-              setFieldsReadonly(true);
-              // Reset form to original values
-              panel.querySelector('.settings-form').reset();
-            }
-          };
-
-          function setFieldsReadonly(readonly) {
-            var inputs = panel.querySelectorAll('.settings-form input[type="text"], .settings-form textarea');
-            var selects = panel.querySelectorAll('.settings-form select');
-            var checkboxes = panel.querySelectorAll('.settings-form input[type="checkbox"]');
-
-            for (var i = 0; i < inputs.length; i++) {
-              // Skip the reason field — always editable when save area is visible
-              if (inputs[i].name === 'reason') continue;
-              inputs[i].readOnly = readonly;
-              if (readonly) {
-                inputs[i].tabIndex = -1;
-              } else {
-                inputs[i].removeAttribute('tabindex');
-              }
-            }
-            for (var i = 0; i < selects.length; i++) {
-              selects[i].disabled = readonly;
-            }
-            for (var i = 0; i < checkboxes.length; i++) {
-              checkboxes[i].disabled = readonly;
-            }
-          }
-        })();
-      </script>
     """
 
 
