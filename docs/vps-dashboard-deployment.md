@@ -71,7 +71,14 @@ git checkout YOUR_BRANCH
 
 Create the Supabase project before starting the services:
 
-- Apply the dashboard data contract from `docs/supabase-dashboard-data-contract.md`.
+- For a fresh project, run `docs/supabase-dashboard-schema.sql` in Supabase SQL
+  Editor, then review the dashboard data contract in
+  `docs/supabase-dashboard-data-contract.md`.
+- For an existing project, apply the idempotent migration files in order:
+  `docs/migrations/20260510_agent_settings_versions.sql`, then
+  `docs/migrations/20260510_agent_trace_events.sql`. Run both idempotent agent migrations before restarting existing services so the web app, worker, and
+  PostgREST schema cache agree on `agent_settings_versions`,
+  `save_agent_settings_version`, and `agent_trace_events`.
 - Enable Supabase Auth and create the owner user who may sign in to the dashboard.
 - Create the Storage bucket named by `SUPABASE_STORAGE_BUCKET`; the examples use
   `dashboard-artifacts`.
@@ -114,7 +121,7 @@ Environment ownership:
 | `SUPABASE_SERVICE_ROLE_KEY=replace_me` | Server-side web code, worker, import scripts | Supabase Postgres and Storage service operations. |
 | `SUPABASE_STORAGE_BUCKET=dashboard-artifacts` | Web, worker, import scripts | Bucket for reports, source videos, JSON snapshots, workbooks, and other artifacts. |
 | `APIFY_TOKEN` | Worker | TikTok scrape execution. |
-| `GEMINI_API_KEY` | Worker | Nattome POV report generation. |
+| `GEMINI_API_KEY` | Worker | Nattome POV report generation. GEMINI_API_KEY remains in the VPS EnvironmentFile and is never stored in dashboard-managed agent settings. |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Worker | Optional report delivery. |
 
 ## 6. Add The FastAPI Service
@@ -199,6 +206,11 @@ The worker contract is:
 - Upload large outputs to Supabase Storage under stable `runs/<run_id>/...`
   object paths.
 - Upsert `run_outputs` metadata for every uploaded object.
+- Resolve active Gemini agent settings from Supabase, local config, or defaults.
+- Live tracing writes compact `agent_trace_events` rows while Gemini work is
+  running. These rows contain status, timing, candidate references, compact
+  uploaded-file/usage metadata, artifact references, and sanitized error
+  summaries; full Gemini responses stay in Supabase Storage artifacts.
 - Store concise failure summaries only; do not write secrets or full
   environment dumps to Supabase.
 
@@ -285,6 +297,9 @@ cd /opt/nattome-pipeline
 git pull
 . .venv/bin/activate
 pip install -r requirements.txt
+# Existing deployments only, when these files have not been applied yet:
+# run docs/migrations/20260510_agent_settings_versions.sql in Supabase SQL Editor
+# run docs/migrations/20260510_agent_trace_events.sql in Supabase SQL Editor
 systemctl restart nattome-dashboard
 systemctl restart nattome-dashboard-worker
 ```

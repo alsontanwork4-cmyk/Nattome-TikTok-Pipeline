@@ -2561,3 +2561,28 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to update agent dashboard deployment and schema docs.
+
+## 2026-05-10 - 0095 Update Agent Dashboard Deployment And Schema Docs
+
+Task completed from `docs/issues/0095-update-agent-dashboard-deployment-and-schema-docs.md`.
+
+Key decisions made:
+- Added docs tests that pin the agent settings and trace schema tables, idempotent migration files, data-contract security boundaries, deployment migration path, and live tracing operational notes.
+- Updated the Supabase dashboard data contract to state that agent settings keep `GEMINI_API_KEY` environment-based, trace rows stay compact, full Gemini responses remain Supabase Storage artifacts, and trace artifact references are relative object paths.
+- Updated the VPS deployment guide with the fresh-install schema file, existing-project migration order, restart timing, worker live-tracing behavior, and the environment-only Gemini key boundary.
+- Reused the existing full schema and idempotent migration SQL files, which already define `agent_settings_versions`, `agent_trace_events`, indexes, and `save_agent_settings_version`.
+
+Files changed:
+- `docs/supabase-dashboard-data-contract.md`
+- `docs/vps-dashboard-deployment.md`
+- `tests/test_agent_dashboard_docs.py`
+- `progress.txt`
+- `docs/issues/done/0095-update-agent-dashboard-deployment-and-schema-docs.md`
+
+Feedback:
+- RED: `python -m pytest tests\test_agent_dashboard_docs.py tests\test_vps_dashboard_deployment_docs.py -q` failed because the docs did not mention the migration path and trace/artifact boundaries.
+- GREEN: `python -m pytest tests\test_agent_dashboard_docs.py tests\test_vps_dashboard_deployment_docs.py -q` passed with 4 tests and 41 subtests.
+- GREEN: `python -m pytest -q` passed with 132 tests and 190 subtests.
+
+Notes for next iteration:
+- The remaining local issue is the parent Gemini Agent Management Dashboard tracker.
