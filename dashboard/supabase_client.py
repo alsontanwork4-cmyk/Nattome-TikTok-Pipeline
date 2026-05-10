@@ -175,6 +175,57 @@ class DashboardSupabaseClient:
             fallback_object_path=artifact_id,
         )
 
+    def get_report_artifact(self, run_id: str) -> ArtifactMetadata | None:
+        response = (
+            self._client.table("run_outputs")
+            .select("*")
+            .eq("run_id", run_id)
+            .eq("artifact_type", "report")
+            .limit(1)
+            .execute()
+        )
+        rows = list(response.data or [])
+        if not rows:
+            return None
+        return _artifact_metadata_from_record(
+            rows[0],
+            default_bucket=self.storage_bucket,
+            fallback_object_path=str(rows[0].get("object_path") or ""),
+        )
+
+    def download_artifact_text(self, metadata: ArtifactMetadata) -> str | None:
+        payload = (
+            self._client.storage.from_(metadata.bucket or self.storage_bucket)
+            .download(metadata.object_path)
+        )
+        if payload is None:
+            return None
+        if isinstance(payload, bytes):
+            return payload.decode("utf-8")
+        if isinstance(payload, str):
+            return payload
+        if hasattr(payload, "decode"):
+            return payload.decode("utf-8")
+        return str(payload)
+
+    def list_raw_videos(self) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("raw_videos")
+            .select("*")
+            .order("play_count", desc=True)
+            .order("video_id", desc=False)
+            .execute()
+        )
+        return list(response.data or [])
+
+    def list_selected_videos(self) -> list[dict[str, Any]]:
+        response = self._client.table("selected_videos").select("*").execute()
+        return list(response.data or [])
+
+    def list_video_curation(self) -> list[dict[str, Any]]:
+        response = self._client.table("video_curation").select("*").execute()
+        return list(response.data or [])
+
     def upsert_manual_run(self, record: dict[str, Any]) -> list[dict[str, Any]]:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
         return list(response.data or [])

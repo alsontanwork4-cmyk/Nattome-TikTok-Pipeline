@@ -2179,3 +2179,33 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to rebuild reports and CSV exports from Supabase.
+
+## 2026-05-10 - 0082 Rebuild Reports And CSV Exports From Supabase
+
+Task completed from `docs/issues/0082-rebuild-reports-and-csv-exports-from-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI resource routes for `GET /reports` and `GET /reports/{run_id}` using Supabase run metadata, run output metadata, and Storage-backed Markdown artifact reads.
+- Extracted the legacy Markdown renderer into a store-free shared module so FastAPI report pages can reuse the dashboard visual language without importing the old request handler or SQLite runtime.
+- Added authenticated CSV download routes for raw videos and run summaries from Supabase table data, preserving the established CSV column shape and download filenames.
+- Kept legacy local dashboard navigation on `/report` while mapping the FastAPI Jinja shell navigation to `/reports`.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/markdown.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/report_detail.html`
+- `dashboard/templates/reports.html`
+- `dashboard/web_report.py`
+- `tests/test_dashboard_fastapi_reports_exports.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0082-rebuild-reports-and-csv-exports-from-supabase.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_fastapi_reports_exports.py` failed because `/reports`, `/reports/{run_id}`, and both `/exports/*.csv` routes returned 404.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_fastapi_reports_exports.py` passed with 4 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi*.py"`, `python -m unittest discover -s tests -p test_dashboard_report_page.py`, and `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` all passed.
+- GREEN: `python -m unittest discover -s tests` passed with 124 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to rebuild settings and curation on Supabase.

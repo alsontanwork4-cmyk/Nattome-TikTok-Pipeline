@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import csv
+import json
+from io import StringIO
+
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -13,7 +17,46 @@ from .auth import (
     get_current_user,
 )
 from .config import DashboardSettings
-from .web_constants import NAV_GROUPS
+from .markdown import render_markdown
+from .supabase_client import ArtifactMetadata
+from .web_constants import NAV_GROUPS as LEGACY_NAV_GROUPS
+
+RAW_VIDEO_CSV_COLUMNS = [
+    "video_id",
+    "tiktok_url",
+    "author_handle",
+    "caption",
+    "hashtags",
+    "source_input",
+    "play_count",
+    "like_count",
+    "comment_count",
+    "share_count",
+    "created_at",
+    "is_downloadable",
+    "run_id",
+    "config_version",
+    "selection_status",
+    "curation_labels",
+    "exclude_similar_reason",
+    "curation_note",
+    "source_artifact_path",
+]
+
+RUN_SUMMARY_CSV_COLUMNS = [
+    "run_id",
+    "timestamp",
+    "run_type",
+    "source_type",
+    "triggered_by",
+    "config_version",
+    "raw_candidates",
+    "eligible_candidates",
+    "selected_count",
+    "top_issue",
+    "output_types",
+    "output_links",
+]
 
 
 class EmptyDashboardDataClient:
@@ -36,6 +79,21 @@ class EmptyDashboardDataClient:
         expires_in: int = 900,
     ) -> str:
         return ""
+
+    def get_report_artifact(self, run_id: str) -> object | None:
+        return None
+
+    def download_artifact_text(self, metadata: object) -> str | None:
+        return None
+
+    def list_raw_videos(self) -> list[dict]:
+        return []
+
+    def list_selected_videos(self) -> list[dict]:
+        return []
+
+    def list_video_curation(self) -> list[dict]:
+        return []
 
 
 def create_app(
@@ -148,6 +206,112 @@ def create_app(
                 "run": _run_view(run),
                 "outputs": outputs,
             },
+        )
+
+    @app.get("/reports", response_class=HTMLResponse)
+    def reports_page(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        reports = [
+            _report_list_view(
+                run,
+                app.state.dashboard_client.list_run_outputs(str(run.get("run_id") or "")),
+            )
+            for run in app.state.dashboard_client.list_runs(limit=50)
+        ]
+        return templates.TemplateResponse(
+            request,
+            "reports.html",
+            {
+                **_template_context(
+                    resolved_settings,
+                    page_title="Reports",
+                    active_path="/reports",
+                ),
+                "current_user": user,
+                "reports": reports,
+            },
+        )
+
+    @app.get("/reports/{run_id}", response_class=HTMLResponse)
+    def report_detail_page(request: Request, run_id: str) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        run = app.state.dashboard_client.get_run(run_id)
+        if not run:
+            return templates.TemplateResponse(
+                request,
+                "report_detail.html",
+                {
+                    **_template_context(
+                        resolved_settings,
+                        page_title="Report not found",
+                        active_path="/reports",
+                    ),
+                    "current_user": user,
+                    "run": None,
+                    "report_html": "",
+                },
+                status_code=404,
+            )
+        metadata = _get_report_artifact(app.state.dashboard_client, run_id)
+        markdown = (
+            app.state.dashboard_client.download_artifact_text(metadata)
+            if metadata is not None
+            else None
+        )
+        return templates.TemplateResponse(
+            request,
+            "report_detail.html",
+            {
+                **_template_context(
+                    resolved_settings,
+                    page_title=str(run.get("run_id") or run_id),
+                    active_path="/reports",
+                ),
+                "current_user": user,
+                "run": _run_view(run),
+                "report_html": render_markdown(markdown) if markdown else "",
+            },
+        )
+
+    @app.get("/exports/raw-videos.csv")
+    def raw_videos_export(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        return _csv_download_response(
+            _csv_text(
+                RAW_VIDEO_CSV_COLUMNS,
+                _raw_video_export_rows(
+                    raw_videos=app.state.dashboard_client.list_raw_videos(),
+                    selected_videos=app.state.dashboard_client.list_selected_videos(),
+                    video_curation=app.state.dashboard_client.list_video_curation(),
+                ),
+            ),
+            filename="nattome-raw-videos.csv",
+        )
+
+    @app.get("/exports/run-summaries.csv")
+    def run_summaries_export(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        runs = app.state.dashboard_client.list_runs(limit=50)
+        return _csv_download_response(
+            _csv_text(
+                RUN_SUMMARY_CSV_COLUMNS,
+                [
+                    _run_summary_export_row(
+                        run,
+                        app.state.dashboard_client.list_run_outputs(str(run.get("run_id") or "")),
+                    )
+                    for run in runs
+                ],
+            ),
+            filename="nattome-run-summaries.csv",
         )
 
     @app.get("/artifacts/{artifact_id:path}", response_class=HTMLResponse)
@@ -269,10 +433,23 @@ def _template_context(
         "settings": settings,
         "page_title": page_title,
         "active_path": active_path,
-        "nav_groups": NAV_GROUPS,
+        "nav_groups": _fastapi_nav_groups(),
         "current_user": None,
         "error": "",
     }
+
+
+def _fastapi_nav_groups() -> tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...]:
+    groups = []
+    for group_label, items in LEGACY_NAV_GROUPS:
+        updated_items = []
+        for label, route, icon_name in items:
+            if route == "/report":
+                updated_items.append(("Reports", "/reports", icon_name))
+            else:
+                updated_items.append((label, route, icon_name))
+        groups.append((group_label, tuple(updated_items)))
+    return tuple(groups)
 
 
 def _authenticated_user_or_redirect(request: Request) -> object:
@@ -371,6 +548,142 @@ def _output_count_label(outputs: list[dict]) -> str:
     if len(outputs) == 1:
         return "1 output available"
     return f"{len(outputs)} outputs available"
+
+
+def _report_list_view(run: dict, outputs: list[dict]) -> dict:
+    run_view = _run_view(run)
+    report = _first_report_output(outputs)
+    return {
+        "run": run_view,
+        "filename": str(report.get("filename") or report.get("object_path") or "") if report else "",
+        "size": _format_bytes(report.get("size_bytes")) if report else "--",
+    }
+
+
+def _get_report_artifact(dashboard_client: object, run_id: str) -> ArtifactMetadata | None:
+    get_report_artifact = getattr(dashboard_client, "get_report_artifact", None)
+    if callable(get_report_artifact):
+        metadata = get_report_artifact(run_id)
+        if isinstance(metadata, ArtifactMetadata):
+            return metadata
+        if isinstance(metadata, dict):
+            return _artifact_metadata_from_output(metadata)
+    outputs = dashboard_client.list_run_outputs(run_id)
+    report = _first_report_output(outputs)
+    return _artifact_metadata_from_output(report) if report else None
+
+
+def _first_report_output(outputs: list[dict]) -> dict | None:
+    for output in outputs:
+        artifact_type = str(output.get("artifact_type") or "").lower()
+        content_type = str(output.get("content_type") or "").lower()
+        filename = str(output.get("filename") or output.get("object_path") or "").lower()
+        if artifact_type == "report" or content_type == "text/markdown" or filename.endswith(".md"):
+            return output
+    return None
+
+
+def _artifact_metadata_from_output(output: dict) -> ArtifactMetadata:
+    object_path = str(output.get("object_path") or "")
+    return ArtifactMetadata(
+        run_id=str(output.get("run_id") or ""),
+        artifact_type=str(output.get("artifact_type") or ""),
+        bucket=str(output.get("bucket") or ""),
+        object_path=object_path,
+        filename=str(output.get("filename") or object_path.rsplit("/", 1)[-1]),
+        content_type=str(output.get("content_type") or ""),
+        size_bytes=output.get("size_bytes"),
+        checksum=output.get("checksum"),
+        created_at=output.get("created_at"),
+    )
+
+
+def _raw_video_export_rows(
+    *,
+    raw_videos: list[dict],
+    selected_videos: list[dict],
+    video_curation: list[dict],
+) -> list[dict[str, object]]:
+    selected_by_video = {str(row.get("video_id") or ""): row for row in selected_videos}
+    curation_by_video = {str(row.get("video_id") or ""): row for row in video_curation}
+    rows = []
+    for video in raw_videos:
+        video_id = str(video.get("video_id") or "")
+        selected = selected_by_video.get(video_id, {})
+        curation = curation_by_video.get(video_id, {})
+        rows.append(
+            {
+                "video_id": video_id,
+                "tiktok_url": str(video.get("tiktok_url") or ""),
+                "author_handle": str(video.get("author_handle") or ""),
+                "caption": str(video.get("caption") or ""),
+                "hashtags": "; ".join(str(item) for item in _list_value(video.get("hashtags"))),
+                "source_input": str(video.get("source_input") or ""),
+                "play_count": _cell(video.get("play_count")),
+                "like_count": _cell(video.get("like_count")),
+                "comment_count": _cell(video.get("comment_count")),
+                "share_count": _cell(video.get("share_count")),
+                "created_at": str(video.get("created_at") or ""),
+                "is_downloadable": "yes" if video.get("is_downloadable") else "no",
+                "run_id": str(video.get("run_id") or selected.get("run_id") or ""),
+                "config_version": str(video.get("config_version") or ""),
+                "selection_status": str(selected.get("evidence_status") or "raw"),
+                "curation_labels": "; ".join(str(item) for item in _list_value(curation.get("labels"))),
+                "exclude_similar_reason": str(curation.get("exclude_similar_reason") or ""),
+                "curation_note": str(curation.get("note") or ""),
+                "source_artifact_path": str(video.get("source_artifact_path") or ""),
+            }
+        )
+    return rows
+
+
+def _run_summary_export_row(run: dict, outputs: list[dict]) -> dict[str, object]:
+    return {
+        "run_id": str(run.get("run_id") or ""),
+        "timestamp": str(run.get("started_at") or run.get("created_at") or ""),
+        "run_type": str(run.get("run_type") or run.get("mode") or ""),
+        "source_type": str(run.get("source_type") or ""),
+        "triggered_by": str(run.get("triggered_by") or run.get("created_by") or ""),
+        "config_version": str(run.get("config_version") or ""),
+        "raw_candidates": _cell(run.get("raw_candidate_count")),
+        "eligible_candidates": _cell(run.get("eligible_candidate_count")),
+        "selected_count": _cell(run.get("selected_count")),
+        "top_issue": _safe_error_summary(run.get("error_summary")),
+        "output_types": "; ".join(str(output.get("artifact_type") or "") for output in outputs),
+        "output_links": "; ".join(str(output.get("object_path") or "") for output in outputs),
+    }
+
+
+def _csv_text(columns: list[str], rows: list[dict[str, object]]) -> str:
+    output = StringIO()
+    writer = csv.DictWriter(output, fieldnames=columns, lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows)
+    return output.getvalue()
+
+
+def _csv_download_response(body: str, *, filename: str) -> Response:
+    return Response(
+        body,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+def _list_value(value: object) -> list[object]:
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str) and value.strip():
+        try:
+            loaded = json.loads(value)
+        except json.JSONDecodeError:
+            return [value]
+        return loaded if isinstance(loaded, list) else [value]
+    return []
+
+
+def _cell(value: object) -> object:
+    return "" if value is None else value
 
 
 def _safe_error_summary(value: object) -> str:

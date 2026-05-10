@@ -49,6 +49,10 @@ class FakeStorageBucket:
         self.recorder.append((self.bucket_name, "create_signed_url", object_path, expires_in))
         return {"signedURL": f"https://storage.example/{self.bucket_name}/{object_path}"}
 
+    def download(self, object_path: str):
+        self.recorder.append((self.bucket_name, "download", object_path))
+        return b"# Report\n"
+
 
 class FakeStorage:
     def __init__(self, recorder: list[tuple]):
@@ -200,6 +204,35 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             ("dashboard-artifacts", "create_signed_url", "runs/run-1/report.md", 900),
             fake.calls,
         )
+
+    def test_client_reads_report_artifacts_and_export_tables(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+
+        report = client.get_report_artifact("run-1")
+        report_body = client.download_artifact_text(
+            ArtifactMetadata(
+                run_id="run-1",
+                artifact_type="report",
+                bucket="dashboard-artifacts",
+                object_path="runs/run-1/report.md",
+                filename="report.md",
+            )
+        )
+        raw_videos = client.list_raw_videos()
+        selected_videos = client.list_selected_videos()
+        video_curation = client.list_video_curation()
+
+        self.assertEqual(report.object_path, "")
+        self.assertEqual(report_body, "# Report\n")
+        self.assertEqual(raw_videos, [{"table": "raw_videos"}])
+        self.assertEqual(selected_videos, [{"table": "selected_videos"}])
+        self.assertEqual(video_curation, [{"table": "video_curation"}])
+        self.assertIn(("run_outputs", "eq", "run_id", "run-1"), fake.calls)
+        self.assertIn(("run_outputs", "eq", "artifact_type", "report"), fake.calls)
+        self.assertIn(("dashboard-artifacts", "download", "runs/run-1/report.md"), fake.calls)
+        self.assertIn(("raw_videos", "order", "play_count", True), fake.calls)
+        self.assertIn(("raw_videos", "order", "video_id", False), fake.calls)
 
 
 if __name__ == "__main__":
