@@ -2436,3 +2436,39 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to add live agent trace event writing.
+
+## 2026-05-10 - 0091 Add Live Agent Trace Event Tracer
+
+Task completed from `docs/issues/0091-add-live-agent-trace-event-tracer.md`.
+
+Key decisions made:
+- Added `agent_trace_events` to the Supabase contract, full schema, and an idempotent migration.
+- Added dashboard data-client methods to upsert trace rows and list recent or run-scoped trace events.
+- Gemini execution now emits compact running/completed/skipped/disabled/failed trace rows for upload, file activation wait, evidence generation, creative generation, artifact writes, completion, and preflight/skip failures.
+- Trace rows record run id, agent, candidate id/prefix, substep, status, timestamps, duration, config source/version, artifact references, uploaded Gemini file metadata, usage metadata, and sanitized errors.
+- Trace rows store relative artifact references and metadata only; full response text remains in artifacts and local paths/API keys are excluded.
+- Dashboard worker-created runs pass the manual run id and Supabase trace writer into the batch run so trace rows can be written while execution is in progress.
+
+Files changed:
+- `batch_analysis/gemini_reports.py`
+- `batch_analysis/run.py`
+- `dashboard/supabase_client.py`
+- `dashboard/worker.py`
+- `docs/supabase-dashboard-data-contract.md`
+- `docs/supabase-dashboard-schema.sql`
+- `docs/migrations/20260510_agent_trace_events.sql`
+- `tests/test_dashboard_supabase_contract.py`
+- `tests/test_gemini_nattome_pov_reports.py`
+- `progress.txt`
+- `docs/issues/done/0091-add-live-agent-trace-event-tracer.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` failed because `agent_trace_events` and trace client methods did not exist.
+- RED: `python -m unittest discover -s tests -p test_gemini_nattome_pov_reports.py` failed because Gemini execution emitted no trace rows.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` passed with 10 tests.
+- GREEN: `python -m unittest discover -s tests -p test_gemini_nattome_pov_reports.py` passed with 12 tests.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_worker.py` passed with 6 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 119 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build the Agents configuration dashboard.

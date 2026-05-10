@@ -10,6 +10,7 @@ Required tables:
 - `selected_videos`: selected candidate membership and evidence status for a run.
 - `scrape_settings_versions`: versioned settings payloads, reasons, active version, rollback source, and creator identity.
 - `agent_settings_versions`: versioned Gemini Video Evidence Agent and Nattome Creative Strategist Agent settings, including enabled state, structured prompt sections, model name, polished generation controls, advanced Gemini generation config, save reason, active version, rollback source, and creator identity. `GEMINI_API_KEY` remains environment-based and must not be stored in this table.
+- `agent_trace_events`: compact live Gemini agent trace rows with run id, agent, candidate reference, substep, status, timestamps, config source/version, artifact references, uploaded Gemini file metadata, usage metadata, and sanitized error summary. Trace rows must not store API keys, raw environment values, full local filesystem paths, or full Gemini response text.
 - `manual_runs`: queued/running/finished manual run requests claimed by the worker, including trigger identity, requested/claimed/finished timestamps, expected output metadata, and concise failure summaries.
 
 Manual run statuses use the compact worker contract: `queued`, `running`, `succeeded`, `failed`, and `canceled`. FastAPI only inserts queued manual run records and matching queued `runs` rows; the worker claims queued records, updates visible run status, and publishes artifact metadata after Supabase Storage upload.

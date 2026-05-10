@@ -324,6 +324,10 @@ def create_run(
                 selected_batch["selected_candidates"],
                 client_factory=gemini_client_factory,
                 agent_settings=agent_settings_resolution["settings"],
+                trace_writer=getattr(args, "trace_writer", None),
+                trace_run_id=str(getattr(args, "trace_run_id", None) or run_folder.name),
+                config_source=agent_settings_resolution["source"],
+                config_version=agent_settings_resolution["version"],
             )
         except ValueError as exc:
             agent_settings_manifest = {

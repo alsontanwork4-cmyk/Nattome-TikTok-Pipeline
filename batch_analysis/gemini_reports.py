@@ -3,8 +3,10 @@ from __future__ import annotations
 import json
 import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
+from uuid import uuid4
 
 from .evidence_io import (
     EvidenceBundleStore,
@@ -217,6 +219,10 @@ class GeminiNattomePovReporter:
         client_factory: GeminiClientFactory | None = None,
         brand_reference_path: Path = NATTOME_BRAND_REFERENCE,
         agent_settings: dict[str, Any] | None = None,
+        trace_writer: Callable[[dict[str, Any]], Any] | None = None,
+        trace_run_id: str = "",
+        config_source: str = "defaults",
+        config_version: int | None = None,
     ):
         self.run_folder = run_folder
         self.api_key = api_key if api_key is not None else os.environ.get("GEMINI_API_KEY")
@@ -227,34 +233,50 @@ class GeminiNattomePovReporter:
         self.agent_settings = self._validated_agent_settings(agent_settings)
         self.evidence_agent = self.agent_settings["agents"]["gemini_video_evidence"]
         self.creative_agent = self.agent_settings["agents"]["nattome_creative_strategy"]
+        self.trace_writer = trace_writer
+        self.trace_run_id = trace_run_id
+        self.config_source = config_source
+        self.config_version = config_version
 
     def run(self, candidates: list[dict[str, Any]]) -> dict[str, Any]:
         if not candidates:
             return self._result([], [], [], [])
         if not self.evidence_agent["enabled"]:
-            disabled = [
-                self._disabled_record(candidate, self.store.load_snapshot(candidate)["prefix"])
-                for candidate in candidates
-            ]
-            skipped = [
-                self._skipped_record(
-                    candidate,
-                    self.store.load_snapshot(candidate)["prefix"],
-                    "Gemini Video Evidence Agent is disabled.",
+            disabled = []
+            skipped = []
+            for candidate in candidates:
+                prefix = self.store.load_snapshot(candidate)["prefix"]
+                self._instant_trace("gemini_video_evidence", candidate, prefix, "skipped", "disabled")
+                self._instant_trace("gemini_creative_strategy", candidate, prefix, "skipped", "skipped")
+                disabled.append(self._disabled_record(candidate, prefix))
+                skipped.append(
+                    self._skipped_record(
+                        candidate,
+                        prefix,
+                        "Gemini Video Evidence Agent is disabled.",
+                    )
                 )
-                for candidate in candidates
-            ]
             return self._result(disabled, skipped, skipped, [])
         if not self.api_key:
-            missing = [
-                {
+            missing = []
+            for candidate in candidates:
+                prefix = self.store.load_snapshot(candidate)["prefix"]
+                self._instant_trace(
+                    "gemini_video_evidence",
+                    candidate,
+                    prefix,
+                    "preflight",
+                    "failed",
+                    error_summary="GEMINI_API_KEY is not configured",
+                )
+                missing.append(
+                    {
                     "candidate_id": candidate.get("id"),
-                    "prefix": self.store.load_snapshot(candidate)["prefix"],
+                    "prefix": prefix,
                     "status": "missing_credentials",
                     "reason": "GEMINI_API_KEY is not configured",
                 }
-                for candidate in candidates
-            ]
+                )
             return self._result(missing, missing, missing, [])
 
         try:
@@ -302,12 +324,39 @@ class GeminiNattomePovReporter:
         report_relative = relative_path(report_path, self.run_folder)
 
         if evidence_path.exists() and creative_path.exists() and report_path.exists():
+            self._instant_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "skipped",
+                "skipped",
+                artifact_references=[relative_path(evidence_path, self.run_folder)],
+            )
+            self._instant_trace(
+                "gemini_creative_strategy",
+                candidate,
+                prefix,
+                "skipped",
+                "skipped",
+                artifact_references=[
+                    relative_path(creative_path, self.run_folder),
+                    relative_path(report_path, self.run_folder),
+                ],
+            )
             return {
                 "evidence": self._artifact_record(candidate, prefix, "skipped", evidence_path),
                 "creative": self._artifact_record(candidate, prefix, "skipped", creative_path),
                 "report": self._artifact_record(candidate, prefix, "skipped", report_path),
             }
         if evidence_path.exists() and not self.creative_agent["enabled"]:
+            self._instant_trace(
+                "gemini_creative_strategy",
+                candidate,
+                prefix,
+                "skipped",
+                "disabled",
+                error_summary="Nattome Creative Strategist Agent is disabled.",
+            )
             return {
                 "evidence": self._artifact_record(candidate, prefix, "skipped", evidence_path),
                 "creative": self._disabled_record(candidate, prefix),
@@ -321,17 +370,58 @@ class GeminiNattomePovReporter:
         source_video = snapshot.get("source_video", {})
         if source_video.get("state") != "available" or not source_video.get("path"):
             reason = source_video.get("reason") or "source video is not available"
+            self._instant_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "uploading_video",
+                "failed",
+                error_summary=reason,
+            )
             failed = self._failure_record(candidate, prefix, reason)
             return {"evidence": failed, "creative": failed, "report": failed}
 
         try:
             video_path = self.run_folder / source_video["path"]
+            upload_trace = self._start_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "uploading_video",
+            )
             uploaded_file = client.files.upload(file=str(video_path))
+            self._finish_trace(
+                upload_trace,
+                "completed",
+                uploaded_file=self._uploaded_file_record(uploaded_file),
+            )
+            wait_trace = self._start_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "waiting_for_file_active",
+            )
             uploaded_file = self._wait_for_uploaded_file_active(client, uploaded_file)
+            self._finish_trace(
+                wait_trace,
+                "completed",
+                uploaded_file=self._uploaded_file_record(uploaded_file),
+            )
+            evidence_trace = self._start_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "generating_evidence",
+            )
             evidence_response = client.models.generate_content(
                 model=self.evidence_agent["model"],
                 contents=[build_video_evidence_prompt(candidate), uploaded_file],
                 config=self._generation_config(self.evidence_agent),
+            )
+            self._finish_trace(
+                evidence_trace,
+                "completed",
+                usage_metadata=self._usage_metadata(evidence_response),
             )
             evidence_payload = {
                 "agent": "gemini_video_evidence",
@@ -342,9 +432,29 @@ class GeminiNattomePovReporter:
                 "uploaded_file": self._uploaded_file_record(uploaded_file),
                 "response": normalized_response(evidence_response),
             }
+            evidence_artifact = relative_path(evidence_path, self.run_folder)
+            write_trace = self._start_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "writing_artifacts",
+            )
             write_json_object(evidence_path, evidence_payload)
+            self._finish_trace(
+                write_trace,
+                "completed",
+                artifact_references=[evidence_artifact],
+            )
 
             if not self.creative_agent["enabled"]:
+                self._instant_trace(
+                    "gemini_creative_strategy",
+                    candidate,
+                    prefix,
+                    "skipped",
+                    "disabled",
+                    error_summary="Nattome Creative Strategist Agent is disabled.",
+                )
                 return {
                     "evidence": self._artifact_record(candidate, prefix, "completed", evidence_path),
                     "creative": self._disabled_record(candidate, prefix),
@@ -355,6 +465,12 @@ class GeminiNattomePovReporter:
                     ),
                 }
 
+            creative_trace = self._start_trace(
+                "gemini_creative_strategy",
+                candidate,
+                prefix,
+                "generating_creative_strategy",
+            )
             creative_response = client.models.generate_content(
                 model=self.creative_agent["model"],
                 contents=[
@@ -365,6 +481,11 @@ class GeminiNattomePovReporter:
                     )
                 ],
                 config=self._generation_config(self.creative_agent),
+            )
+            self._finish_trace(
+                creative_trace,
+                "completed",
+                usage_metadata=self._usage_metadata(creative_response),
             )
             creative_payload = {
                 "agent": "gemini_creative_strategy",
@@ -378,11 +499,35 @@ class GeminiNattomePovReporter:
                 },
                 "response": normalized_response(creative_response),
             }
+            creative_artifact = relative_path(creative_path, self.run_folder)
+            report_artifact = report_relative
+            write_creative_trace = self._start_trace(
+                "gemini_creative_strategy",
+                candidate,
+                prefix,
+                "writing_artifacts",
+            )
             write_json_object(creative_path, creative_payload)
 
             report_text = response_text(creative_response).rstrip() + "\n"
             report_path.parent.mkdir(parents=True, exist_ok=True)
             report_path.write_text(report_text, encoding="utf-8")
+            self._finish_trace(
+                write_creative_trace,
+                "completed",
+                artifact_references=[creative_artifact, report_artifact],
+            )
+            completed_trace = self._start_trace(
+                "gemini_creative_strategy",
+                candidate,
+                prefix,
+                "completed",
+            )
+            self._finish_trace(
+                completed_trace,
+                "completed",
+                artifact_references=[evidence_artifact, creative_artifact, report_artifact],
+            )
 
             return {
                 "evidence": self._artifact_record(candidate, prefix, "completed", evidence_path),
@@ -393,6 +538,14 @@ class GeminiNattomePovReporter:
                 },
             }
         except Exception as exc:
+            self._instant_trace(
+                "gemini_video_evidence",
+                candidate,
+                prefix,
+                "failed",
+                "failed",
+                error_summary=str(exc),
+            )
             failed = self._failure_record(candidate, prefix, str(exc))
             return {"evidence": failed, "creative": failed, "report": failed}
 
@@ -577,6 +730,107 @@ class GeminiNattomePovReporter:
         name = getattr(state, "name", None)
         return str(name or state)
 
+    def _start_trace(
+        self,
+        agent: str,
+        candidate: dict[str, Any],
+        prefix: str,
+        substep: str,
+    ) -> dict[str, Any] | None:
+        if self.trace_writer is None:
+            return None
+        now = _iso_now()
+        event = {
+            "event_id": str(uuid4()),
+            "run_id": self.trace_run_id,
+            "agent": agent,
+            "candidate_id": str(candidate.get("id") or ""),
+            "candidate_prefix": prefix,
+            "substep": substep,
+            "status": "running",
+            "started_at": now,
+            "ended_at": None,
+            "duration_ms": None,
+            "config_source": self.config_source,
+            "config_version": self.config_version,
+            "artifact_references": [],
+            "uploaded_file": {},
+            "usage_metadata": {},
+            "error_summary": "",
+            "created_at": now,
+            "updated_at": now,
+        }
+        self._write_trace(event)
+        return event
+
+    def _finish_trace(
+        self,
+        event: dict[str, Any] | None,
+        status: str,
+        *,
+        artifact_references: list[str] | None = None,
+        uploaded_file: dict[str, Any] | None = None,
+        usage_metadata: dict[str, Any] | None = None,
+        error_summary: str = "",
+    ) -> None:
+        if event is None:
+            return
+        ended_at = _iso_now()
+        event.update(
+            {
+                "status": status,
+                "ended_at": ended_at,
+                "duration_ms": _duration_ms(event["started_at"], ended_at),
+                "artifact_references": artifact_references or [],
+                "uploaded_file": _compact_json_object(uploaded_file),
+                "usage_metadata": _compact_json_object(usage_metadata),
+                "error_summary": _sanitize_trace_error(error_summary),
+                "updated_at": ended_at,
+            }
+        )
+        self._write_trace(event)
+
+    def _instant_trace(
+        self,
+        agent: str,
+        candidate: dict[str, Any],
+        prefix: str,
+        substep: str,
+        status: str,
+        *,
+        artifact_references: list[str] | None = None,
+        uploaded_file: dict[str, Any] | None = None,
+        usage_metadata: dict[str, Any] | None = None,
+        error_summary: str = "",
+    ) -> None:
+        event = self._start_trace(agent, candidate, prefix, substep)
+        self._finish_trace(
+            event,
+            status,
+            artifact_references=artifact_references,
+            uploaded_file=uploaded_file,
+            usage_metadata=usage_metadata,
+            error_summary=error_summary,
+        )
+
+    def _write_trace(self, event: dict[str, Any]) -> None:
+        if self.trace_writer is None:
+            return
+        self.trace_writer(dict(event))
+
+    def _usage_metadata(self, response: Any) -> dict[str, Any]:
+        usage = getattr(response, "usage_metadata", None)
+        if usage is None and isinstance(response, dict):
+            usage = response.get("usage_metadata") or response.get("usageMetadata")
+        if usage is None:
+            return {}
+        if isinstance(usage, dict):
+            return _compact_json_object(usage)
+        to_dict = getattr(usage, "to_dict", None)
+        if callable(to_dict):
+            return _compact_json_object(to_dict())
+        return {}
+
     def _generation_config(self, agent: dict[str, Any]) -> dict[str, Any]:
         generation = {
             key: value
@@ -600,6 +854,10 @@ def generate_nattome_pov_reports(
     model_name: str = DEFAULT_GEMINI_MODEL,
     client_factory: GeminiClientFactory | None = None,
     agent_settings: dict[str, Any] | None = None,
+    trace_writer: Callable[[dict[str, Any]], Any] | None = None,
+    trace_run_id: str = "",
+    config_source: str = "defaults",
+    config_version: int | None = None,
 ) -> dict[str, Any]:
     return GeminiNattomePovReporter(
         run_folder,
@@ -607,4 +865,42 @@ def generate_nattome_pov_reports(
         model_name=model_name,
         client_factory=client_factory,
         agent_settings=agent_settings,
+        trace_writer=trace_writer,
+        trace_run_id=trace_run_id,
+        config_source=config_source,
+        config_version=config_version,
     ).run(candidates)
+
+
+def _iso_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _duration_ms(started_at: str, ended_at: str) -> int:
+    try:
+        start = datetime.fromisoformat(started_at)
+        end = datetime.fromisoformat(ended_at)
+    except ValueError:
+        return 0
+    return max(0, int((end - start).total_seconds() * 1000))
+
+
+def _sanitize_trace_error(value: object) -> str:
+    from dashboard.runtime import sanitize_error_summary
+
+    return sanitize_error_summary(value)
+
+
+def _compact_json_object(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    compact: dict[str, Any] = {}
+    for key, item in value.items():
+        if item in (None, ""):
+            continue
+        text = str(item)
+        if "\\" in text or ":/" in text:
+            if str(key) not in {"uri", "name", "mime_type", "state"}:
+                continue
+        compact[str(key)] = item
+    return compact

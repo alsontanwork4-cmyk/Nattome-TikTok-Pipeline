@@ -14,6 +14,7 @@ from batch_analysis.run import create_run
 class FakeGeminiResponse:
     def __init__(self, text):
         self.text = text
+        self.usage_metadata = {"total_token_count": 42}
 
 
 class FakeUploadedFile:
@@ -128,6 +129,53 @@ class GeminiNattomePovReportsTest(unittest.TestCase):
                     "snapshot": "data/agent_settings_snapshot.json",
                 },
             )
+
+    def test_gemini_run_writes_sanitized_trace_events(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            trace_events = []
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        trace_run_id="manual-run-1",
+                        trace_writer=trace_events.append,
+                    ),
+                    gemini_client_factory=lambda api_key: FakeGeminiClient(),
+                )
+
+            completed_steps = {
+                event["substep"]
+                for event in trace_events
+                if event["status"] == "completed"
+            }
+            self.assertTrue(
+                {
+                    "uploading_video",
+                    "waiting_for_file_active",
+                    "generating_evidence",
+                    "writing_artifacts",
+                    "generating_creative_strategy",
+                    "completed",
+                }.issubset(completed_steps)
+            )
+            self.assertTrue(any(event["status"] == "running" for event in trace_events))
+            serialized = json.dumps(trace_events)
+            self.assertIn('"run_id": "manual-run-1"', serialized)
+            self.assertIn('"config_source": "defaults"', serialized)
+            self.assertIn('"usage_metadata": {"total_token_count": 42}', serialized)
+            self.assertIn("data/001_first-video_gemini_evidence.json", serialized)
+            self.assertNotIn(str(temp_path), serialized)
+            self.assertNotIn("Use the post-meal bloating hook", serialized)
+            self.assertNotIn("test-gemini-key", serialized)
 
     def test_configured_agent_models_and_generation_options_are_used(self):
         with tempfile.TemporaryDirectory() as temp_dir:

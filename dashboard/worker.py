@@ -137,6 +137,8 @@ def build_pipeline_runner(
                     data_client=dashboard_client,
                     local_config_path=resolved_agent_config_path,
                 ),
+                trace_run_id=run_id,
+                trace_writer=getattr(dashboard_client, "upsert_agent_trace_event", None),
             )
         )
         status, error_summary = publish_run_records(

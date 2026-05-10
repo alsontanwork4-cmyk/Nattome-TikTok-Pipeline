@@ -138,6 +138,7 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             "selected_videos",
             "scrape_settings_versions",
             "agent_settings_versions",
+            "agent_trace_events",
             "manual_runs",
         }
 
@@ -422,6 +423,41 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             ),
             fake.calls,
         )
+
+    def test_client_upserts_and_lists_agent_trace_events(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        event = {
+            "event_id": "trace-1",
+            "run_id": "run-1",
+            "agent": "gemini_video_evidence",
+            "candidate_id": "video-1",
+            "candidate_prefix": "001_video-1",
+            "substep": "generating_evidence",
+            "status": "completed",
+            "started_at": "2026-05-10T00:00:00+00:00",
+            "ended_at": "2026-05-10T00:00:01+00:00",
+            "duration_ms": 1000,
+            "config_source": "supabase",
+            "config_version": 4,
+            "artifact_references": ["data/001_video-1_gemini_evidence.json"],
+            "uploaded_file": {"uri": "gemini://file"},
+            "usage_metadata": {"total_token_count": 42},
+            "error_summary": "",
+        }
+
+        upserted = client.upsert_agent_trace_event(event)
+        run_events = client.list_agent_trace_events(run_id="run-1", limit=25)
+        recent_events = client.list_recent_agent_trace_events(limit=10)
+
+        self.assertEqual(upserted[0]["event_id"], "trace-1")
+        self.assertEqual(run_events, [{"table": "agent_trace_events"}])
+        self.assertEqual(recent_events, [{"table": "agent_trace_events"}])
+        self.assertIn(("agent_trace_events", "upsert", event, "event_id"), fake.calls)
+        self.assertIn(("agent_trace_events", "eq", "run_id", "run-1"), fake.calls)
+        self.assertIn(("agent_trace_events", "order", "started_at", True), fake.calls)
+        self.assertIn(("agent_trace_events", "limit", 25), fake.calls)
+        self.assertIn(("agent_trace_events", "limit", 10), fake.calls)
 
 if __name__ == "__main__":
     unittest.main()

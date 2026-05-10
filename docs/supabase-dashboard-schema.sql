@@ -90,6 +90,27 @@ create table if not exists public.agent_settings_versions (
   updated_at text not null default ''
 );
 
+create table if not exists public.agent_trace_events (
+  event_id text primary key,
+  run_id text not null default '',
+  agent text not null default '',
+  candidate_id text not null default '',
+  candidate_prefix text not null default '',
+  substep text not null default '',
+  status text not null default '',
+  started_at text not null default '',
+  ended_at text,
+  duration_ms integer,
+  config_source text not null default '',
+  config_version integer,
+  artifact_references jsonb not null default '[]'::jsonb,
+  uploaded_file jsonb not null default '{}'::jsonb,
+  usage_metadata jsonb not null default '{}'::jsonb,
+  error_summary text not null default '',
+  created_at text not null default '',
+  updated_at text not null default ''
+);
+
 create table if not exists public.manual_runs (
   id text primary key,
   run_id text not null references public.runs(run_id) on delete cascade,
@@ -117,6 +138,10 @@ create unique index if not exists idx_scrape_settings_one_active
 create unique index if not exists idx_agent_settings_one_active
   on public.agent_settings_versions(is_active)
   where is_active;
+create index if not exists idx_agent_trace_events_run_started
+  on public.agent_trace_events(run_id, started_at desc);
+create index if not exists idx_agent_trace_events_recent
+  on public.agent_trace_events(started_at desc);
 
 create or replace function public.save_scrape_settings_version(
   p_settings jsonb,

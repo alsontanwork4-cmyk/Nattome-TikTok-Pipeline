@@ -82,6 +82,26 @@ DASHBOARD_TABLE_CONTRACT: dict[str, tuple[str, ...]] = {
         "created_at",
         "updated_at",
     ),
+    "agent_trace_events": (
+        "event_id",
+        "run_id",
+        "agent",
+        "candidate_id",
+        "candidate_prefix",
+        "substep",
+        "status",
+        "started_at",
+        "ended_at",
+        "duration_ms",
+        "config_source",
+        "config_version",
+        "artifact_references",
+        "uploaded_file",
+        "usage_metadata",
+        "error_summary",
+        "created_at",
+        "updated_at",
+    ),
     "manual_runs": (
         "id",
         "run_id",
@@ -511,6 +531,40 @@ class DashboardSupabaseClient:
         response = (
             self._client.table("run_outputs")
             .upsert(metadata.to_record(), on_conflict="run_id,object_path")
+            .execute()
+        )
+        return list(response.data or [])
+
+    def upsert_agent_trace_event(self, event: dict[str, Any]) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("agent_trace_events")
+            .upsert(event, on_conflict="event_id")
+            .execute()
+        )
+        return list(response.data or [])
+
+    def list_agent_trace_events(
+        self,
+        *,
+        run_id: str,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("agent_trace_events")
+            .select("*")
+            .eq("run_id", run_id)
+            .order("started_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return list(response.data or [])
+
+    def list_recent_agent_trace_events(self, *, limit: int = 100) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("agent_trace_events")
+            .select("*")
+            .order("started_at", desc=True)
+            .limit(limit)
             .execute()
         )
         return list(response.data or [])
