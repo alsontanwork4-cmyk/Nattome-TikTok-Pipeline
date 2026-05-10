@@ -1,0 +1,200 @@
+import unittest
+
+from dashboard.supabase_client import (
+    ARTIFACT_METADATA_FIELDS,
+    DASHBOARD_TABLE_CONTRACT,
+    ArtifactMetadata,
+    DashboardSupabaseClient,
+)
+
+
+class FakeQuery:
+    def __init__(self, table_name: str, recorder: list[tuple]):
+        self.table_name = table_name
+        self.recorder = recorder
+        self.data = [{"table": table_name}]
+
+    def select(self, columns: str):
+        self.recorder.append((self.table_name, "select", columns))
+        return self
+
+    def eq(self, column: str, value: object):
+        self.recorder.append((self.table_name, "eq", column, value))
+        return self
+
+    def order(self, column: str, desc: bool = False):
+        self.recorder.append((self.table_name, "order", column, desc))
+        return self
+
+    def limit(self, count: int):
+        self.recorder.append((self.table_name, "limit", count))
+        return self
+
+    def upsert(self, record: dict, on_conflict: str | None = None):
+        self.recorder.append((self.table_name, "upsert", record, on_conflict))
+        self.data = [record]
+        return self
+
+    def execute(self):
+        self.recorder.append((self.table_name, "execute"))
+        return self
+
+
+class FakeStorageBucket:
+    def __init__(self, bucket_name: str, recorder: list[tuple]):
+        self.bucket_name = bucket_name
+        self.recorder = recorder
+
+    def create_signed_url(self, object_path: str, expires_in: int):
+        self.recorder.append((self.bucket_name, "create_signed_url", object_path, expires_in))
+        return {"signedURL": f"https://storage.example/{self.bucket_name}/{object_path}"}
+
+
+class FakeStorage:
+    def __init__(self, recorder: list[tuple]):
+        self.recorder = recorder
+
+    def from_(self, bucket_name: str):
+        self.recorder.append(("storage", "from", bucket_name))
+        return FakeStorageBucket(bucket_name, self.recorder)
+
+
+class FakeSupabase:
+    def __init__(self):
+        self.calls: list[tuple] = []
+        self.storage = FakeStorage(self.calls)
+
+    def table(self, table_name: str):
+        self.calls.append(("client", "table", table_name))
+        return FakeQuery(table_name, self.calls)
+
+
+class DashboardSupabaseContractTest(unittest.TestCase):
+    def test_contract_defines_dashboard_tables_and_required_fields(self):
+        expected_tables = {
+            "runs",
+            "run_outputs",
+            "raw_videos",
+            "selected_videos",
+            "video_curation",
+            "scrape_settings_versions",
+            "manual_runs",
+        }
+
+        self.assertEqual(set(DASHBOARD_TABLE_CONTRACT), expected_tables)
+        for table_name, fields in DASHBOARD_TABLE_CONTRACT.items():
+            with self.subTest(table=table_name):
+                self.assertIn("created_at", fields)
+                self.assertGreaterEqual(len(fields), 4)
+
+        self.assertTrue(
+            {
+                "bucket",
+                "object_path",
+                "size_bytes",
+                "checksum",
+                "created_at",
+                "run_id",
+            }.issubset(ARTIFACT_METADATA_FIELDS)
+        )
+
+    def test_artifact_metadata_normalizes_storage_record(self):
+        metadata = ArtifactMetadata(
+            run_id="run-1",
+            artifact_type="report",
+            bucket="dashboard-artifacts",
+            object_path="runs/run-1/report.md",
+            filename="report.md",
+            content_type="text/markdown",
+            size_bytes=1234,
+            checksum="sha256:abc",
+            created_at="2026-05-10T01:00:00Z",
+        )
+
+        self.assertEqual(
+            metadata.to_record(),
+            {
+                "run_id": "run-1",
+                "artifact_type": "report",
+                "bucket": "dashboard-artifacts",
+                "object_path": "runs/run-1/report.md",
+                "filename": "report.md",
+                "content_type": "text/markdown",
+                "size_bytes": 1234,
+                "checksum": "sha256:abc",
+                "created_at": "2026-05-10T01:00:00Z",
+            },
+        )
+
+    def test_client_lists_runs_and_run_detail_with_supabase_style_queries(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+
+        runs = client.list_runs(limit=25)
+        run = client.get_run("run-1")
+        outputs = client.list_run_outputs("run-1")
+
+        self.assertEqual(runs, [{"table": "runs"}])
+        self.assertEqual(run, {"table": "runs"})
+        self.assertEqual(outputs, [{"table": "run_outputs"}])
+        self.assertIn(("client", "table", "runs"), fake.calls)
+        self.assertIn(("runs", "order", "started_at", True), fake.calls)
+        self.assertIn(("runs", "limit", 25), fake.calls)
+        self.assertIn(("runs", "eq", "run_id", "run-1"), fake.calls)
+        self.assertIn(("run_outputs", "eq", "run_id", "run-1"), fake.calls)
+
+    def test_client_writes_manual_runs_and_artifact_metadata(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        metadata = ArtifactMetadata(
+            run_id="run-1",
+            artifact_type="report",
+            bucket="dashboard-artifacts",
+            object_path="runs/run-1/report.md",
+            filename="report.md",
+        )
+
+        manual_run_result = client.upsert_manual_run(
+            {
+                "id": "manual-1",
+                "status": "queued",
+                "triggered_by": "owner@example.com",
+                "created_at": "2026-05-10T01:00:00Z",
+            }
+        )
+        artifact_result = client.upsert_artifact_metadata(metadata)
+
+        self.assertEqual(manual_run_result[0]["id"], "manual-1")
+        self.assertEqual(artifact_result[0]["object_path"], "runs/run-1/report.md")
+        self.assertIn(("manual_runs", "upsert", manual_run_result[0], "id"), fake.calls)
+        self.assertIn(
+            ("run_outputs", "upsert", artifact_result[0], "run_id,object_path"),
+            fake.calls,
+        )
+
+    def test_client_creates_signed_artifact_url_from_metadata(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        metadata = ArtifactMetadata(
+            run_id="run-1",
+            artifact_type="report",
+            bucket="dashboard-artifacts",
+            object_path="runs/run-1/report.md",
+            filename="report.md",
+        )
+
+        signed_url = client.create_signed_artifact_url(metadata, expires_in=900)
+
+        self.assertEqual(
+            signed_url,
+            "https://storage.example/dashboard-artifacts/runs/run-1/report.md",
+        )
+        self.assertIn(("storage", "from", "dashboard-artifacts"), fake.calls)
+        self.assertIn(
+            ("dashboard-artifacts", "create_signed_url", "runs/run-1/report.md", 900),
+            fake.calls,
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

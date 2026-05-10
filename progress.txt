@@ -2075,3 +2075,28 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to define the compact Supabase dashboard data contract.
+
+## 2026-05-10 - 0078 Create Supabase Dashboard Data Contract
+
+Task completed from `docs/issues/0078-create-supabase-dashboard-data-contract.md`.
+
+Key decisions made:
+- Defined a compact table contract for `runs`, `run_outputs`, `raw_videos`, `selected_videos`, `video_curation`, `scrape_settings_versions`, and `manual_runs`.
+- Added explicit artifact metadata fields for Supabase Storage lookup: bucket, object path, size, checksum, created time, and run id.
+- Added `dashboard/supabase_client.py` as a direct Supabase-style boundary for upcoming run list/detail, manual run, and artifact access slices.
+- Kept the boundary small and fake-client-testable without SQLite runtime support, broad adapters, protocols, or repository-per-table abstractions.
+- Documented the data contract in `docs/supabase-dashboard-data-contract.md`.
+
+Files changed:
+- `dashboard/supabase_client.py`
+- `docs/supabase-dashboard-data-contract.md`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0078-create-supabase-dashboard-data-contract.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_supabase_contract.py -q` failed because `dashboard.supabase_client` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_supabase_contract.py -q` passed with 5 tests and 7 subtests.
+- GREEN: `python -m pytest -q` passed with 107 tests and 55 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build authenticated runs list and run detail pages from Supabase.
