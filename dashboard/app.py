@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from .config import DashboardSettings
+from .web_constants import NAV_GROUPS
 
 
 def create_app(settings: DashboardSettings | None = None) -> FastAPI:
@@ -30,6 +31,8 @@ def create_app(settings: DashboardSettings | None = None) -> FastAPI:
             {
                 "settings": resolved_settings,
                 "page_title": "Overview",
+                "active_path": "/",
+                "nav_groups": NAV_GROUPS,
             },
         )
 

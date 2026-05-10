@@ -1,4 +1,5 @@
 <!doctype html>
+{% import "theme.html" as theme %}
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -13,28 +14,65 @@
 <body>
   <div class="layout">
     <header class="topbar" role="banner">
-      <div class="brand">
-        <img class="brand-mark" src="/static/nattome-logo.png" alt="">
-        <div>
-          <strong>Nattome</strong>
-          <span class="brand-tag">Nattome TikTok Scraper</span>
-        </div>
-      </div>
-      <div class="topbar-status">
-        <span class="status-pill">FastAPI shell</span>
-        <span>{{ settings.runtime_mode }}</span>
+      {{ theme.brand() }}
+      <div class="topbar-meta">
+        {{ theme.meta_pill("Ready", primary=True) }}
+        {{ theme.meta_pill(settings.runtime_mode, "db") }}
       </div>
     </header>
-    <aside class="sidebar" aria-label="Dashboard navigation">
-      <nav>
-        <a href="/" aria-current="page">Overview</a>
-      </nav>
-    </aside>
+    {{ theme.sidebar(nav_groups, active_path) }}
     <main>
       {% block content %}
+      {% set actions %}
+      <form class="action-form shell-smoke-form" method="post">
+        <button type="button" disabled>Queue run</button>
+      </form>
+      {% endset %}
+      {{ theme.page_header(page_title, "Supabase-first FastAPI dashboard foundation.", actions) }}
+      <section class="panel feature">
+        <h2>Runtime</h2>
+        <dl class="metadata-grid">
+          <div>
+            <dt>Mode</dt>
+            <dd>{{ settings.runtime_mode }}</dd>
+          </div>
+          <div>
+            <dt>Storage</dt>
+            <dd>{{ theme.status_pill("Ready", "ok") }}</dd>
+          </div>
+          <div>
+            <dt>Artifacts</dt>
+            <dd>{{ settings.supabase_storage_bucket }}</dd>
+          </div>
+        </dl>
+      </section>
       <section class="panel">
-        <h1>{{ page_title }}</h1>
-        <p>Dashboard shell ready.</p>
+        <h2>Route Foundation</h2>
+        <table class="data-table shell-smoke-table">
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>State</th>
+              <th>Runtime</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/healthz</code></td>
+              <td>{{ theme.status_pill("Ready", "ok") }}</td>
+              <td>Unauthenticated</td>
+            </tr>
+            <tr>
+              <td><code>/static/{path}</code></td>
+              <td>{{ theme.status_pill("Ready", "ok") }}</td>
+              <td>Legacy assets</td>
+            </tr>
+          </tbody>
+        </table>
+        <label class="field-label">
+          Workspace
+          <input type="text" value="{{ settings.workspace_path }}" readonly>
+        </label>
       </section>
       {% endblock %}
     </main>

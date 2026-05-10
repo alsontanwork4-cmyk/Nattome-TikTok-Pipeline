@@ -2019,3 +2019,29 @@ Feedback:
 
 Notes for next iteration:
 - Next FastAPI rewrite slice is expected to port the legacy dashboard visual theme into the Jinja shell while still avoiding full page rebuilds.
+
+## 2026-05-10 - 0076 Port Legacy Dashboard Visual Theme To Jinja Shell
+
+Task completed from `docs/issues/0076-port-legacy-dashboard-visual-theme-to-jinja-shell.md`.
+
+Key decisions made:
+- Reused the existing legacy `dashboard/assets` CSS and logo through the FastAPI static mount instead of creating a new asset tree or palette.
+- Added reusable Jinja theme macros for brand, topbar metadata, navigation, breadcrumbs, page headers, icons, and status pills.
+- Updated the base FastAPI shell to render legacy dashboard classes for navigation, cards, tables, forms, buttons, and status pills.
+- Documented that later FastAPI page slices must preserve the legacy visual language unless a human approves a redesign.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/base.html`
+- `dashboard/templates/theme.html`
+- `docs/adr/0003-supabase-first-fastapi-dashboard-rewrite.md`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0076-port-legacy-dashboard-visual-theme-to-jinja-shell.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because the Jinja shell still used placeholder markup and the ADR lacked the later-page visual-language rule.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 6 tests.
+- GREEN: `python -m pytest -q` passed with 97 tests and 48 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add the Supabase Auth gate for the FastAPI dashboard.

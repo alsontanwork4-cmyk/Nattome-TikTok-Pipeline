@@ -71,6 +71,43 @@ class DashboardFastAPIShellTest(unittest.TestCase):
             self.assertIn("Nattome", response.text)
             self.assertFalse((workspace / "data" / "dashboard" / "dashboard.sqlite3").exists())
 
+    def test_fastapi_shell_reuses_legacy_dashboard_theme_patterns(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            client = TestClient(create_app(settings))
+
+            response = client.get("/")
+            css_response = client.get("/static/dashboard.css")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('<a class="brand-mark" href="/"', response.text)
+            self.assertIn('class="brand-logo"', response.text)
+            self.assertIn('<div class="topbar-meta">', response.text)
+            self.assertIn('<span class="meta-pill primary">', response.text)
+            self.assertIn('<div class="nav-group">', response.text)
+            self.assertIn('<a class="nav-link" href="/" aria-current="page">', response.text)
+            self.assertIn('<nav class="breadcrumb" aria-label="Breadcrumb">', response.text)
+            self.assertIn('<div class="page-actions">', response.text)
+            self.assertIn('<section class="panel feature">', response.text)
+            self.assertIn('<span class="status-pill ok">Ready</span>', response.text)
+            self.assertIn('<table class="data-table shell-smoke-table">', response.text)
+            self.assertIn('<label class="field-label">', response.text)
+            self.assertIn('class="action-form shell-smoke-form"', response.text)
+            self.assertIn("<button", response.text)
+            self.assertEqual(css_response.status_code, 200)
+            self.assertIn("--accent: #B85B2E;", css_response.text)
+            self.assertIn(".nav-link[aria-current=\"page\"]", css_response.text)
+            self.assertIn(".status-pill.ok", css_response.text)
+
+    def test_fastapi_visual_language_decision_is_documented_for_later_pages(self):
+        adr = PROJECT_ROOT / "docs" / "adr" / "0003-supabase-first-fastapi-dashboard-rewrite.md"
+        body = adr.read_text(encoding="utf-8")
+
+        self.assertIn(
+            "Later FastAPI page slices must keep this legacy visual language",
+            body,
+        )
+
     def test_dashboard_app_import_does_not_import_legacy_web_server(self):
         script = (
             "import json, sys; "
