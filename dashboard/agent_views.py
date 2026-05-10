@@ -198,6 +198,7 @@ def trace_history_rows(trace_events: list[dict], *, limit: int = 12) -> list[dic
             "candidate_reference": _candidate_reference(event),
             "started_at": str(event.get("started_at") or ""),
             "ended_at": str(event.get("ended_at") or ""),
+            "duration": _trace_duration_text(event),
             "artifact_references": [
                 str(reference)
                 for reference in (event.get("artifact_references") or [])
@@ -249,6 +250,33 @@ def _elapsed_text(event: dict, now: datetime) -> str:
     ended_at = _parse_datetime(event.get("ended_at"))
     end = ended_at if ended_at != datetime.min.replace(tzinfo=timezone.utc) else _as_utc(now)
     seconds = max(0, int((end - started_at).total_seconds()))
+    minutes, remaining_seconds = divmod(seconds, 60)
+    hours, remaining_minutes = divmod(minutes, 60)
+    if hours:
+        return f"{hours}h {remaining_minutes}m"
+    if minutes:
+        return f"{minutes}m {remaining_seconds}s"
+    return f"{remaining_seconds}s"
+
+
+def _trace_duration_text(event: dict) -> str:
+    duration_ms = event.get("duration_ms")
+    try:
+        if duration_ms not in (None, ""):
+            return _duration_seconds_text(max(0, int(duration_ms) // 1000))
+    except (TypeError, ValueError):
+        pass
+    started_at = _parse_datetime(event.get("started_at"))
+    ended_at = _parse_datetime(event.get("ended_at"))
+    if (
+        started_at == datetime.min.replace(tzinfo=timezone.utc)
+        or ended_at == datetime.min.replace(tzinfo=timezone.utc)
+    ):
+        return ""
+    return _duration_seconds_text(max(0, int((ended_at - started_at).total_seconds())))
+
+
+def _duration_seconds_text(seconds: int) -> str:
     minutes, remaining_seconds = divmod(seconds, 60)
     hours, remaining_minutes = divmod(minutes, 60)
     if hours:

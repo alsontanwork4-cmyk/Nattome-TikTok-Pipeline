@@ -2534,3 +2534,30 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to add a run-detail agent trace tab.
+
+## 2026-05-10 - 0094 Add Run Detail Agent Trace Tab
+
+Task completed from `docs/issues/0094-add-run-detail-agent-trace-tab.md`.
+
+Key decisions made:
+- Added an `Agent Trace` tab to the existing run detail workbench tab set without changing the existing overview, posts, authors, music, video, or all-fields tabs.
+- Run detail now loads trace rows with `list_agent_trace_events(run_id=..., limit=100)` and treats missing or unavailable trace data as an empty list.
+- Reused the Agents page trace normalization for agent display names, status, candidate reference, timestamps, artifact references, sanitized errors, and compact duration text.
+- The tab renders a compact run-scoped table and shows an empty state when no trace rows exist.
+
+Files changed:
+- `dashboard/agent_views.py`
+- `dashboard/run_workbench.py`
+- `dashboard/templates/run_detail.html`
+- `dashboard/assets/dashboard.css`
+- `tests/test_dashboard_fastapi_runs.py`
+- `progress.txt`
+- `docs/issues/done/0094-add-run-detail-agent-trace-tab.md`
+
+Feedback:
+- RED: `python -m pytest tests\test_dashboard_fastapi_runs.py -q` failed because the `Agent Trace` tab and empty state did not exist.
+- GREEN: `python -m pytest tests\test_dashboard_fastapi_runs.py -q` passed with 15 tests and 17 subtests.
+- GREEN: `python -m pytest -q` passed with 129 tests and 166 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to update agent dashboard deployment and schema docs.

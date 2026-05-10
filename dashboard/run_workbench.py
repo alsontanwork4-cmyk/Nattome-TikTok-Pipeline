@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from .agent_views import trace_history_rows
 from .reports import artifact_metadata_from_output
 from .view_models import cell, format_bytes, list_value, output_view, run_view
 
@@ -13,6 +14,7 @@ RUN_DETAIL_TABS = (
     ("authors", "Authors"),
     ("music", "Music"),
     ("video", "Video"),
+    ("agent-trace", "Agent Trace"),
     ("all-fields", "All fields"),
 )
 
@@ -68,6 +70,7 @@ def run_detail_workbench(
     raw_items = _raw_items(raw_payload)
     fallback_items = _fallback_items(run_id, raw_videos) if not raw_items else []
     items = raw_items or fallback_items
+    agent_trace = trace_history_rows(_run_agent_trace_events(dashboard_client, run_id))
     rendered_outputs = [output_view(output) for output in outputs]
     rendered_run = run_view(run)
     overview = _overview(
@@ -90,6 +93,7 @@ def run_detail_workbench(
         "authors": [_author_row(item, index) for index, item in enumerate(items, start=1)],
         "music": [_music_row(item, index) for index, item in enumerate(items, start=1)],
         "video": [_video_row(item, index) for index, item in enumerate(items, start=1)],
+        "agent_trace": agent_trace,
         "all_fields": [_all_fields_row(item, index) for index, item in enumerate(items, start=1)],
         "outputs": rendered_outputs,
         "using_fallback": not raw_items,
@@ -128,6 +132,16 @@ def first_raw_scrape_output(outputs: list[dict]) -> dict | None:
         ):
             return output
     return None
+
+
+def _run_agent_trace_events(dashboard_client: object, run_id: str) -> list[dict]:
+    list_events = getattr(dashboard_client, "list_agent_trace_events", None)
+    if not callable(list_events):
+        return []
+    try:
+        return list(list_events(run_id=run_id, limit=100) or [])
+    except Exception:
+        return []
 
 
 def _overview(

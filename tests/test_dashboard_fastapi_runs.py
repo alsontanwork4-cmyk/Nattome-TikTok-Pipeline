@@ -208,6 +208,38 @@ class FakeDashboardDataClient:
                 "created_at": "2026-05-10T00:50:00Z",
             }
         ]
+        self.agent_trace_events = {
+            "run-succeeded": [
+                {
+                    "event_id": "trace-1",
+                    "run_id": "run-succeeded",
+                    "agent": "gemini_video_evidence",
+                    "candidate_id": "video-raw-1",
+                    "candidate_prefix": "001-video-raw-1",
+                    "substep": "generating_evidence",
+                    "status": "completed",
+                    "started_at": "2026-05-10T00:04:00Z",
+                    "ended_at": "2026-05-10T00:04:42Z",
+                    "duration_ms": 42000,
+                    "artifact_references": ["data/001_video_gemini_evidence.json"],
+                    "error_summary": "",
+                },
+                {
+                    "event_id": "trace-2",
+                    "run_id": "run-succeeded",
+                    "agent": "nattome_creative_strategy",
+                    "candidate_id": "video-raw-1",
+                    "candidate_prefix": "001-video-raw-1",
+                    "substep": "generating_creative_strategy",
+                    "status": "failed",
+                    "started_at": "2026-05-10T00:05:00Z",
+                    "ended_at": "2026-05-10T00:05:03Z",
+                    "duration_ms": 3000,
+                    "artifact_references": [],
+                    "error_summary": "GEMINI_API_KEY=secret\nCreative generation failed",
+                },
+            ]
+        }
 
     def list_runs(self, *, limit: int = 50):
         return self.runs[:limit]
@@ -223,6 +255,9 @@ class FakeDashboardDataClient:
 
     def list_raw_videos(self):
         return self.raw_videos
+
+    def list_agent_trace_events(self, *, run_id: str, limit: int = 100):
+        return self.agent_trace_events.get(run_id, [])[:limit]
 
     def get_active_manual_run(self, *, run_type: str):
         return self.active_manual_run
@@ -405,7 +440,7 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
             all_fields = client.get("/runs/run-succeeded?tab=all-fields")
 
             self.assertEqual(overview.status_code, 200)
-            for label in ["Overview", "Posts", "Authors", "Music", "Video", "All fields"]:
+            for label in ["Overview", "Posts", "Authors", "Music", "Video", "All fields", "Agent Trace"]:
                 with self.subTest(label=label):
                     self.assertIn(label, overview.text)
             self.assertIn('href="/runs/run-succeeded?tab=posts" aria-current="page"', posts.text)
@@ -420,6 +455,53 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
             self.assertIn("https://cdn.example/video.mp4", video.text)
             self.assertIn("authorMeta", all_fields.text)
             self.assertIn("video-raw-1", all_fields.text)
+
+    def test_run_detail_agent_trace_tab_filters_rows_to_selected_run(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            data_client = FakeDashboardDataClient()
+            data_client.agent_trace_events["other-run"] = [
+                {
+                    "event_id": "other",
+                    "run_id": "other-run",
+                    "agent": "gemini_video_evidence",
+                    "candidate_prefix": "other-candidate",
+                    "substep": "generating_evidence",
+                    "status": "completed",
+                    "started_at": "2026-05-10T00:00:00Z",
+                    "ended_at": "2026-05-10T00:00:01Z",
+                    "duration_ms": 1000,
+                    "artifact_references": [],
+                    "error_summary": "",
+                }
+            ]
+            client = self._client(Path(temp_dir), data_client)
+
+            response = client.get("/runs/run-succeeded?tab=agent-trace")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('href="/runs/run-succeeded?tab=agent-trace" aria-current="page"', response.text)
+            self.assertIn("Gemini Video Evidence Agent", response.text)
+            self.assertIn("Nattome Creative Strategist Agent", response.text)
+            self.assertIn("001-video-raw-1", response.text)
+            self.assertIn("generating_evidence", response.text)
+            self.assertIn("generating_creative_strategy", response.text)
+            self.assertIn("42s", response.text)
+            self.assertIn("3s", response.text)
+            self.assertIn("data/001_video_gemini_evidence.json", response.text)
+            self.assertIn("[redacted secret]", response.text)
+            self.assertIn("Creative generation failed", response.text)
+            self.assertNotIn("other-candidate", response.text)
+            self.assertNotIn("secret", response.text.lower().replace("[redacted secret]", ""))
+
+    def test_run_detail_agent_trace_tab_renders_empty_state_without_trace_data(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FakeDashboardDataClient())
+
+            response = client.get("/runs/run-running?tab=agent-trace")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("No agent trace events for this run yet.", response.text)
+            self.assertIn("Fallback compact caption", client.get("/runs/run-running?tab=posts").text)
 
     def test_run_detail_falls_back_to_compact_raw_videos_without_raw_scrape_artifact(self):
         with tempfile.TemporaryDirectory() as temp_dir:

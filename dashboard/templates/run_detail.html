@@ -255,6 +255,46 @@
       </table>
     </div>
 
+    {% elif workbench.active_tab == "agent-trace" %}
+    {% if not workbench.agent_trace %}
+    <div class="empty-state">
+      <span>No agent trace events for this run yet.</span>
+    </div>
+    {% else %}
+    <div class="table-scroll">
+      <table class="data-table agent-trace-table">
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Candidate</th>
+            <th>Substep</th>
+            <th>Status</th>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Elapsed</th>
+            <th>Artifacts</th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in workbench.agent_trace %}
+          <tr>
+            <td>{{ event.agent }}</td>
+            <td>{{ event.candidate_reference or "--" }}</td>
+            <td>{{ event.substep or "--" }}</td>
+            <td><span class="status-pill {{ 'err' if event.status == 'failed' else 'warn' if event.status in ['running', 'queued'] else 'ok' }}">{{ event.status or "--" }}</span></td>
+            <td>{{ event.started_at or "--" }}</td>
+            <td>{{ event.ended_at or "--" }}</td>
+            <td>{{ event.duration or "--" }}</td>
+            <td>{{ event.artifact_references | join(", ") if event.artifact_references else "--" }}</td>
+            <td>{{ event.error_summary or "--" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
     {% else %}
     <div class="all-fields-stack">
       {% for item in workbench.all_fields %}
