@@ -8,7 +8,7 @@ Nattome's TikTok Content Discovery Pipeline already produces useful artifacts: r
 - Which keywords, hashtags, or competitor profiles helped or hurt scrape quality?
 - Did the pipeline process the selected videos cleanly?
 - What changed in the scrape configuration before a quality improvement or drop?
-- Which raw scraped videos were useful, irrelevant, noisy, or worth saving?
+- Which raw scraped videos look promising, irrelevant, or noisy?
 - Which TikTok patterns are emerging across runs?
 - Which Nattome POVs are approved and reusable?
 - How does the pipeline work, and where are the supporting architecture and tool decisions?
@@ -19,7 +19,7 @@ The current file-based workflow is especially hard for a new marketer because ra
 
 Build a local web dashboard for Nattome marketers that sits on top of the existing TikTok Content Discovery Pipeline.
 
-The dashboard will not replace the existing Markdown, JSON, Excel, run folders, skills, or documentation. Instead, it will read and index those artifacts into a dashboard-owned SQLite cache so marketers can browse, search, label, and monitor the pipeline from one place.
+The dashboard will not replace the existing Markdown, JSON, Excel, run folders, skills, or documentation. Instead, it will read and index those artifacts into a dashboard-owned SQLite cache so marketers can browse, search, and monitor the pipeline from one place.
 
 The first screen will be a Latest Run Overview focused on marketer operations. It will show a top-level Scrape Quality Score, a visually separate Pipeline Health summary, the latest run timestamp, the next scheduled run, the current production config version, the top scraped videos, the top quality drivers, and clear actions for running the pipeline or editing settings.
 
@@ -30,9 +30,9 @@ Marketers will be allowed to directly edit production scrape settings through va
 - Run scrape now: fast scrape/discovery feedback.
 - Run full pipeline: slower end-to-end scrape, selection, evidence analysis, reports, Excel workbook, and delivery.
 
-The dashboard's primary content object will be the raw scraped video, not only selected or analyzed videos. Each raw video will show metadata, source input, engagement, relevance, status, labels, notes, and outbound TikTok link. The dashboard will not embed or locally play downloaded TikTok videos in MVP.
+The dashboard's primary content object will be the raw scraped video, not only selected or analyzed videos. Each raw video will show metadata, source input, engagement, relevance, status, and outbound TikTok link. The dashboard will not embed or locally play downloaded TikTok videos in MVP.
 
-Marketers can lightly curate videos with labels and notes. These labels inform passive recommendations but do not automatically change scoring or scrape settings. Recommendations remain advisory and link back to supporting videos, labels, sources, and runs.
+The dashboard does not include in-app raw-video review forms. Recommendations remain advisory and link back to supporting videos, sources, and runs.
 
 The dashboard will include editable Approved Pattern Library and Nattome POV Library sections. Candidate Patterns can be auto-generated from batch/run analysis, then marketers can approve and edit them into canonical patterns. The Pattern Library captures external TikTok mechanics. The Nattome POV Library captures Nattome's owned brand-safe interpretation, marketing territory, product/campaign/market targeting, and adaptation rules.
 
@@ -63,14 +63,14 @@ The MVP is single-user and local, but all mutable dashboard-owned records should
 19. As a Nattome marketer, I want raw videos to show whether a downloadable video was available, so that I can understand selection and pipeline readiness.
 20. As a Nattome marketer, I want outbound TikTok links, so that I can inspect the original video when needed.
 21. As a Nattome marketer, I do not want local video playback in MVP, so that the dashboard stays lighter and avoids media handling complexity.
-22. As a Nattome marketer, I want to label raw videos lightly, so that I can mark what is relevant, irrelevant, wrong-market, a great hook, a good Nattome fit, competitor inspiration, saved for later, or something to exclude similar content from.
-23. As a Nattome marketer, I want to add a short note to a raw video, so that qualitative context is not lost.
-24. As a Nattome marketer, I want labels and notes to persist across runs by TikTok video ID, so that repeated videos retain team context.
-25. As a Nattome marketer, I want labels to inform recommendations but not silently change future scoring, so that I can trust pipeline behavior.
+22. As a Nattome marketer, I want raw videos to remain read-only in the dashboard, so that the app stays focused on monitoring and settings.
+23. As a Nattome marketer, I want recommendations to come from scrape quality drivers, so that they are grounded in pipeline data.
+24. As a Nattome marketer, I want repeated videos to be recognizable by TikTok video ID, so that repeated source quality can still be inspected.
+25. As a Nattome marketer, I do not want in-app video labels or notes, so that the dashboard stays uncluttered.
 26. As a Nattome marketer, I want recommendations to show supporting evidence, so that I can judge whether the suggestion is credible.
 27. As a Nattome marketer, I want recommendations to remain passive, so that settings only change when I explicitly edit them.
 28. As a Nattome marketer, I want to mark recommendations as accepted, ignored, or needs more data, so that the dashboard can track recommendation usefulness.
-29. As a Nattome marketer, I want recommendations to link to supporting videos, labels, sources, and runs, so that I can audit the reasoning.
+29. As a Nattome marketer, I want recommendations to link to supporting videos, sources, and runs, so that I can audit the reasoning.
 30. As a Nattome marketer, I want recommendations to resolve when the underlying configuration changes, so that stale recommendations do not clutter the dashboard.
 31. As a Nattome marketer, I want to directly edit scrape settings, so that I can improve scrape quality without asking a developer for every keyword or threshold change.
 32. As a Nattome marketer, I want settings edited through validated forms, so that I do not break the config with invalid JSON.
@@ -118,15 +118,15 @@ The MVP is single-user and local, but all mutable dashboard-owned records should
 74. As a Nattome marketer, I want the Pipeline Architecture section to include the full architecture, tool stack, PRDs, ADRs, phase/status map, file/output map, and data lineage, so that a new person can learn the system.
 75. As a maintainer, I want architecture docs read-only in the dashboard, so that canonical engineering documentation remains controlled.
 76. As a Nattome marketer, I want global search, so that I can find videos, runs, patterns, POVs, notes, reports, and docs from one place.
-77. As a Nattome marketer, I want faceted filtering, so that I can browse by run date, run type, config version, source input, video status, label, score band, relevance, engagement, freshness, author, hashtag, topic, pattern, POV, market, campaign, product, and pipeline phase.
+77. As a Nattome marketer, I want faceted filtering, so that I can browse by run date, run type, config version, source input, video status, score band, relevance, engagement, freshness, author, hashtag, topic, pattern, POV, market, campaign, product, and pipeline phase.
 78. As a Nattome marketer, I want to export filtered raw videos to CSV, so that I can share or analyze a filtered set externally.
 79. As a Nattome marketer, I want to export run summaries to CSV, so that I can review scrape trends outside the dashboard.
 80. As a Nattome marketer, I want to export approved patterns and Nattome POVs to Markdown, so that the marketing library can be shared in document form.
-81. As a Nattome marketer, I do not want a custom deck or report builder in MVP, so that the first version stays focused on monitoring and curation.
-82. As a maintainer, I want a dashboard-owned SQLite index/cache, so that filtering, search, labels, notes, config history, quality scores, recommendations, patterns, POVs, and docs index are fast and durable.
+81. As a Nattome marketer, I do not want a custom deck or report builder in MVP, so that the first version stays focused on monitoring.
+82. As a maintainer, I want a dashboard-owned SQLite index/cache, so that filtering, search, config history, quality scores, recommendations, patterns, POVs, and docs index are fast and durable.
 83. As a maintainer, I want existing pipeline artifacts to remain the source of truth, so that the dashboard does not replace run folders or evidence outputs.
 84. As a maintainer, I want the SQLite index to be rebuildable from artifacts plus dashboard-owned state, so that corrupted or stale indexes can be repaired.
-85. As a maintainer, I want labels, notes, approved patterns, POV edits, and config history to be durable dashboard-owned state, so that user work is not lost during reindexing.
+85. As a maintainer, I want approved patterns, POV edits, and config history to be durable dashboard-owned state, so that user work is not lost during reindexing.
 86. As a maintainer, I want the MVP to be local and single-user, so that implementation stays practical for the current workflow.
 87. As a maintainer, I want mutable records to include `created_by`, `updated_by`, `created_at`, and `updated_at`, so that future multi-user migration is not blocked.
 88. As a maintainer, I want manual runs to record `triggered_by`, so that run provenance is preserved.
@@ -160,17 +160,12 @@ The MVP is single-user and local, but all mutable dashboard-owned records should
 - Pipeline Health severity levels are info, warning, error, and blocked.
 - Raw scraped videos are the primary content object.
 - Selected/analyzed videos are statuses on raw videos, not the only records shown.
-- Raw video records should include original TikTok URL, author handle, caption, hashtags, source input, engagement stats, weighted engagement rate, created date, Nattome relevance score, duplicate/noise flags, downloadable-video availability, selection/analyzed status, run ID, config version, labels, and notes.
+- Raw video records should include original TikTok URL, author handle, caption, hashtags, source input, engagement stats, weighted engagement rate, created date, Nattome relevance score, duplicate/noise flags, downloadable-video availability, selection/analyzed status, run ID, and config version.
 - The MVP will use outbound TikTok links and metadata only.
 - The MVP will not include embedded local video playback.
-- Marketer labels and notes are lightweight dashboard-owned curation records.
-- Recommended labels include Relevant, Irrelevant, Wrong Market, Great Hook, Good Nattome Fit, Competitor Inspiration, Save for Later, and Exclude Similar.
-- Exclude Similar should require a short reason.
-- Labels inform recommendations only.
-- Labels do not automatically change scrape settings or scoring.
 - Recommendations are passive insights.
 - Recommendations can be marked accepted, ignored, or needs more data.
-- Recommendations should link to supporting raw videos, labels, runs, and source inputs.
+- Recommendations should link to supporting raw videos, runs, and source inputs.
 - Recommendations can be resolved after underlying configuration changes.
 - Marketers can directly edit production scrape settings.
 - Edited settings affect the next scheduled run automatically.
@@ -208,7 +203,7 @@ The MVP is single-user and local, but all mutable dashboard-owned records should
 - Pattern and POV status values should include draft, approved, and archived.
 - Default values can assume Nattome, Malaysia, and mixed/English language.
 - Pipeline Architecture will include full architecture, tool stack, PRDs, ADRs, phase/status map, file/output map, and data lineage.
-- Global search should cover raw videos, runs, labels, notes, Candidate Patterns, Approved Patterns, Nattome POVs, architecture docs, and reports.
+- Global search should cover raw videos, runs, Candidate Patterns, Approved Patterns, Nattome POVs, architecture docs, and reports.
 - Search should include faceted filters rather than keyword search alone.
 - MVP exports are filtered raw videos CSV, run summaries CSV, Approved Patterns Markdown, Nattome POVs Markdown, and links to existing reports/workbooks.
 - A custom deck builder, custom report builder, hosted database, authentication, and local media playback are out of scope for MVP.
@@ -216,13 +211,12 @@ The MVP is single-user and local, but all mutable dashboard-owned records should
 The main implementation modules are expected to be:
 
 - an artifact indexer that reads repo artifacts and normalizes runs, raw videos, selected status, outputs, logs, and docs into dashboard records
-- a dashboard SQLite storage layer that owns mutable state, versioning, labels, notes, libraries, and recommendations
+- a dashboard SQLite storage layer that owns mutable state, versioning, libraries, and recommendations
 - a Scrape Quality Score module that computes explainable scrape-only scores and quality drivers
 - a Pipeline Health summarizer that converts run manifests, logs, and output existence into impact summaries and technical drill-downs
 - a scrape settings validation and config versioning module that manages marketer-editable production settings and rollback
 - a run orchestration module that launches scrape-only and full-pipeline manual runs without overwriting artifacts
-- a content curation module for labels, notes, and video-level persistence
-- a recommendation engine that generates passive suggestions from score drivers and curation evidence
+- a recommendation engine that generates passive suggestions from score drivers
 - a Pattern Library and Nattome POV Library module with versioned marketer editing
 - a search and facet indexing module for runs, videos, libraries, reports, and architecture docs
 - export handlers for CSV and Markdown exports
@@ -237,7 +231,7 @@ The main implementation modules are expected to be:
 - Scrape Quality tests should verify a score below 60 creates an attention condition but does not mutate settings.
 - Artifact indexing tests should verify raw scrapes, selected batches, run manifests, pipeline health artifacts, reports, and output links normalize into stable dashboard records.
 - Artifact indexing tests should verify raw scraped videos remain the primary records and selected/analyzed state is represented as status.
-- Artifact indexing tests should verify the index can be rebuilt from artifacts without losing dashboard-owned labels, notes, config versions, approved patterns, or POV entries.
+- Artifact indexing tests should verify the index can be rebuilt from artifacts without losing dashboard-owned config versions, approved patterns, or POV entries.
 - SQLite storage tests should verify attribution fields, timestamps, version history, rollback data, and durable dashboard-owned records.
 - Settings validation tests should verify hashtag normalization, profile normalization, duplicate detection, numeric threshold validation, scope validation, and required save reason behavior.
 - Config versioning tests should verify each save records old values, new values, reason, user, timestamp, and active production version.
@@ -245,14 +239,13 @@ The main implementation modules are expected to be:
 - Run orchestration tests should verify Run scrape now and Run full pipeline produce distinct manual run records and never overwrite scheduled artifacts.
 - Pipeline Health tests should verify plain-language impact summaries for completed, partial, warning, error, and blocked phases.
 - Pipeline Health tests should verify technical details remain available for expanded views.
-- Recommendation tests should verify recommendations are generated from quality drivers and labels without mutating settings.
+- Recommendation tests should verify recommendations are generated from quality drivers without mutating settings.
 - Recommendation tests should verify recommendations can be marked accepted, ignored, needs more data, and resolved.
-- Label and note tests should verify labels persist across runs by TikTok video ID.
 - Pattern Library tests should verify Candidate Patterns can be promoted to Approved Patterns with version history.
 - Nattome POV Library tests should verify marketer edits preserve version history and optional targeting fields.
 - Search tests should verify keyword search plus facets return expected videos, runs, patterns, POVs, docs, and reports.
 - Export tests should verify filtered videos and run summaries export to CSV, and approved patterns/POVs export to Markdown.
-- UI or integration tests should focus on critical marketer workflows: opening Latest Run Overview, editing settings with validation, saving a config version, running a manual scrape, browsing raw videos, applying labels, reviewing recommendations, viewing run trends, and editing approved pattern/POV entries.
+- UI or integration tests should focus on critical marketer workflows: opening Latest Run Overview, editing settings with validation, saving a config version, running a manual scrape, browsing raw videos, reviewing recommendations, viewing run trends, and editing approved pattern/POV entries.
 - Prior art includes existing run manifest tests, Batch Analysis Run CLI tests, output rendering tests, cleanup tests, Telegram delivery tests, candidate selection tests, report generation tests, and structured JSON tests.
 
 ## Out of Scope
@@ -282,11 +275,10 @@ The dashboard should make the marketer's improvement loop explicit:
 1. Review Latest Run Overview.
 2. Inspect Scrape Quality Score and quality drivers.
 3. Browse raw scraped videos.
-4. Label useful or poor videos.
-5. Review passive recommendations.
-6. Edit production scrape settings through validated forms.
-7. Save a versioned config change with a reason.
-8. Run scrape now for fast feedback or wait for the next scheduled run.
-9. Monitor Run History trends against config versions.
+4. Review passive recommendations.
+5. Edit production scrape settings through validated forms.
+6. Save a versioned config change with a reason.
+7. Run scrape now for fast feedback or wait for the next scheduled run.
+8. Monitor Run History trends against config versions.
 
 The implementation should prefer deep modules with small interfaces for indexing, scoring, settings/versioning, run orchestration, recommendations, and library curation. Those modules should be testable without launching a browser or calling Apify/Gemini.

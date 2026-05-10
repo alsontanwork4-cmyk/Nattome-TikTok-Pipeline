@@ -1,0 +1,62 @@
+{% macro icon(name) -%}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {%- if name == "overview" -%}
+  <path d="M3 12 12 4l9 8"></path><path d="M5 10v10h14V10"></path>
+  {%- elif name == "history" -%}
+  <path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path><path d="M12 8v5l3 2"></path>
+  {%- elif name == "report" -%}
+  <path d="M6 3h9l3 3v15H6z"></path><path d="M15 3v4h4"></path><path d="M9 11h6"></path><path d="M9 15h6"></path><path d="M9 19h4"></path>
+  {%- elif name == "settings" -%}
+  <circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+  {%- elif name == "db" -%}
+  <ellipse cx="12" cy="6" rx="8" ry="3"></ellipse><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"></path><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path>
+  {%- else -%}
+  <path d="m4 16 4-5 4 3 4-7 4 5"></path>
+  {%- endif -%}
+</svg>
+{%- endmacro %}
+
+{% macro brand() -%}
+<a class="brand-mark" href="/" aria-label="Nattome dashboard home">
+  <img class="brand-logo" src="/static/nattome-logo.png" alt="Nattome">
+  <span class="brand-tag">Nattome TikTok Scraper</span>
+</a>
+{%- endmacro %}
+
+{% macro meta_pill(label, icon_name="", primary=False) -%}
+<span class="meta-pill{% if primary %} primary{% endif %}">{% if primary %}<span class="dot" aria-hidden="true"></span>{% elif icon_name %}{{ icon(icon_name) }}{% endif %}{{ label }}</span>
+{%- endmacro %}
+
+{% macro status_pill(label, tone="ok") -%}
+<span class="status-pill {{ tone }}">{{ label }}</span>
+{%- endmacro %}
+
+{% macro nav_item(label, route, active_path, icon_name) -%}
+<a class="nav-link" href="{{ route }}" {% if route == active_path %}aria-current="page"{% endif %}>{{ icon(icon_name) }}<span>{{ label }}</span></a>
+{%- endmacro %}
+
+{% macro sidebar(nav_groups, active_path) -%}
+<aside class="sidebar" aria-label="Dashboard sections">
+  {% for group_label, items in nav_groups %}
+  <div class="nav-group">
+    <p class="nav-group-label">{{ group_label }}</p>
+    {% for label, route, icon_name in items %}
+    {{ nav_item(label, route, active_path, icon_name) }}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</aside>
+{%- endmacro %}
+
+{% macro breadcrumb(current) -%}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <span class="current">{{ current }}</span>
+</nav>
+{%- endmacro %}
+
+{% macro page_header(title, lede, actions="") -%}
+{{ breadcrumb(title) }}
+<h1>{{ title }}</h1>
+<p class="lede">{{ lede }}</p>
+{% if actions %}<div class="page-actions">{{ actions | safe }}</div>{% endif %}
+{%- endmacro %}

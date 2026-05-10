@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not run %}
+{{ theme.page_header("Report not found", "No Supabase run metadata exists for this id.") }}
+<section class="panel">
+  <h2>Report not found</h2>
+  <p class="muted">Check the run id or wait for the worker to publish metadata.</p>
+</section>
+{% else %}
+{{ theme.page_header(run.run_id, "Read-only Supabase-backed report snapshot.") }}
+<section class="panel feature">
+  <h2>Run Metadata</h2>
+  <dl class="metadata-grid">
+    <div>
+      <dt>Status</dt>
+      <dd>{{ theme.status_pill(run.status_label, run.status_tone) }}</dd>
+    </div>
+    <div>
+      <dt>Run type</dt>
+      <dd>{{ run.run_type or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Started</dt>
+      <dd>{{ run.started_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Finished</dt>
+      <dd>{{ run.finished_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Duration</dt>
+      <dd>{{ run.duration }}</dd>
+    </div>
+    <div>
+      <dt>Triggered by</dt>
+      <dd>{{ run.triggered_by or "--" }}</dd>
+    </div>
+  </dl>
+</section>
+
+{% if report_html %}
+<article class="panel wide-panel report-reader" aria-label="Report snapshot">
+  {{ report_html | safe }}
+</article>
+{% else %}
+<section class="panel wide-panel">
+  <h2>Report unavailable</h2>
+  <div class="empty-state">
+    <span class="empty-state-icon">{{ theme.icon("report") }}</span>
+    <div>
+      <p>Report unavailable</p>
+      <p class="muted">No report Markdown artifact is available for this run.</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

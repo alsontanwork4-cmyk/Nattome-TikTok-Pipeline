@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set actions %}
+<form class="action-form manual-run-form" method="post" action="/runs">
+  <button type="submit">Run full pipeline</button>
+</form>
+{% endset %}
+{{ theme.page_header("Runs", "Marketing analysis across TikTok scraper runs.", actions) }}
+{% if run_error %}
+<section class="panel notice">
+  <h2>Manual Run</h2>
+  <p class="muted">{{ run_error }}</p>
+</section>
+{% endif %}
+<section class="panel">
+  <div class="run-list-header">
+    <div>
+      <p class="run-workbench-eyebrow">Scraper run by TikTok</p>
+      <h2>TikTok Scraper Runs</h2>
+      <p class="muted">{{ run_count | default(runs | length) }} recent runs with reach, engagement, creators, sounds, and source inputs.</p>
+    </div>
+    <form class="run-search-form" method="get" action="/runs">
+      <label class="field-label">
+        Search by run ID
+        <input type="search" name="q" value="{{ query | default('') }}" placeholder="Search by run ID">
+      </label>
+    </form>
+  </div>
+  {% if not runs %}
+  <div class="empty-state">
+    <span class="empty-state-icon">{{ theme.icon("history") }}</span>
+    <div>
+      <p>No Supabase runs yet</p>
+      <p class="muted">The worker has not published dashboard run metadata.</p>
+    </div>
+  </div>
+  {% else %}
+  <div class="table-scroll">
+  <table class="data-table runs-table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Run</th>
+        <th>Results</th>
+        <th>Total Plays</th>
+        <th>Engagements</th>
+        <th>Eng. Rate</th>
+        <th>Top Author</th>
+        <th>Top Music</th>
+        <th>Inputs</th>
+        <th>Started</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for run in runs %}
+      <tr>
+        <td>{{ theme.status_pill(run.status_label, run.status_tone) }}</td>
+        <td>
+          <a href="/runs/{{ run.run_id }}">{{ run.task_summary }}</a>
+          <span class="muted run-id-line">{{ run.run_id }}</span>
+        </td>
+        <td><a href="/runs/{{ run.run_id }}">{{ run.result_count }}</a></td>
+        <td>{{ run.total_plays }}</td>
+        <td>{{ run.engagements }}</td>
+        <td>{{ run.engagement_rate }}</td>
+        <td>{{ run.top_author }}</td>
+        <td>{{ run.top_music }}</td>
+        <td>{{ run.input_summary }}</td>
+        <td>{{ run.started_at or "--" }}</td>
+        <td>{{ run.duration }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

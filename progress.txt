@@ -426,7 +426,7 @@ Task completed from `docs/issues/0018-create-two-layer-run-folder-and-run-manife
 Key decisions made:
 - Skeleton Batch Analysis Runs now create direct Run Folder child folders for `reports`, `data`, `evidence`, and `logs`.
 - Skeleton runs write `run_manifest.json` with configuration, timestamp, mode, requested batch size, folders, and structured phase records.
-- `batch_index.md` is generated from the Run Manifest and links back to `run_manifest.json`.
+- `run_manifest.json` is the canonical Run Folder index.
 - Existing candidate-run writers keep their legacy nested output folders only when a candidate file is provided, so later migration issues can move evidence and output writers incrementally.
 
 Files changed:
@@ -1919,3 +1919,453 @@ Feedback:
 
 Notes for next iteration:
 - Issue `0064` can align README and glossary language with the now-canonical Daily Top-5 operation.
+
+## 2026-05-09 - 0071 Rename Top-5 Operation To Daily Top-3
+
+Task completed from `docs/issues/0071-rename-top-5-operation-to-daily-top-3.md`.
+
+Key decisions made:
+- Treated Daily Top-3 Selection as the current normal operating model while leaving historical done issues and older PRDs unchanged.
+- Changed the canonical discovery handoff path for new normal runs to `daily_selection_top3.json`.
+- Set daily-mode and dashboard/manual-run daily selection defaults to 3.
+- Kept existing `top5_*` production artifact filenames as compatibility surface for this slice, while changing current visible labels to Daily Top-3 or Creative Production Report language.
+
+Files changed:
+- `.github/workflows/daily-evidence-run.yml`
+- `CONTEXT.md`
+- `README.md`
+- `batch_analysis/config.py`
+- `batch_analysis/run.py`
+- `batch_analysis/telegram.py`
+- `dashboard/manual_runs.py`
+- `dashboard/settings.py`
+- `dashboard/web_run_history.py`
+- `docs/cloud-operations.md`
+- `skills/nattome-viral-intelligence-run/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/config.json`
+- `skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py`
+- `skills/nattome-evidence-insight-analysis/SKILL.md`
+- `tests/test_daily_evidence_skill_contract.py`
+- Daily selection, dashboard, cloud publication, cleanup, full-run, report, workbook, and settings tests.
+- `docs/issues/done/0071-rename-top-5-operation-to-daily-top-3.md`
+
+Feedback:
+- RED: `.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_skill_contract -v` failed because current docs and skills still taught Daily Top-5 and `daily_selection_top5.json`.
+- GREEN: `.venv\Scripts\python.exe -m unittest tests.test_daily_evidence_skill_contract -v` passed with 6 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_daily_discovery_handoff tests.test_dashboard_manual_runs tests.test_scrape_settings tests.test_dashboard_web_settings -v` passed with 15 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_cloud_publication tests.test_daily_evidence_cloud_publication tests.test_github_actions_daily_evidence_workflow tests.test_cloud_operations_documentation -v` passed with 17 tests.
+- `.venv\Scripts\python.exe -m unittest tests.test_full_batch_analysis_two_layer_cli tests.test_top5_angle_planning_workbook tests.test_top5_creative_report -v` passed with 10 tests.
+- `.venv\Scripts\python.exe -m unittest discover -s tests -v` passed with 147 tests.
+
+Notes for next iteration:
+- Issue `0072` can enforce evidence-qualified production outputs and handle `top5_*` production alias retirement/backfill behavior.
+
+## 2026-05-09 - 0072 Enforce Evidence-Qualified Production Outputs With Backfill
+
+Task completed from `docs/issues/0072-enforce-evidence-qualified-production-outputs-with-backfill.md`.
+
+Key decisions made:
+- Kept one public Daily Evidence Run CLI and removed public `--mode` / `--batch-size` flags.
+- Added explicit `--backfill-candidates` input and made discovery write `daily_backfill_candidates.json` beside `daily_selection_top3.json`.
+- Analyzed the Daily Top-3 before backfill, capped backfill at two candidates, and stopped once three production-qualified candidates were available.
+- Treated production-qualified as at least one generated evidence-backed Shootable Angle; missing source video, missing Gemini credentials, failed Gemini, or no angles do not qualify.
+- Wrote neutral `production_creative_report_YYYY-MM-DD.md` and `production_angle_planning_sheet_YYYY-MM-DD.xlsx` only when at least one candidate qualifies.
+- Kept dashboard/report-view fallback support for historical `top5_*` report artifacts.
+
+Files changed:
+- `.github/workflows/daily-evidence-run.yml`
+- `README.md`
+- `batch_analysis/*` orchestration, output, workbook, Telegram, manifest, config, and cloud publication modules.
+- `dashboard/*` manual run, report view, settings, and form handling.
+- `scripts/run_batch_analysis.py`
+- `skills/nattome-viral-intelligence-run/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/SKILL.md`
+- `skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py`
+- `skills/nattome-evidence-insight-analysis/SKILL.md`
+- `skills/nattome-production-report-generation/SKILL.md`
+- Tests for daily production qualification, discovery handoff, CLI/run behavior, cloud/workflow/docs, dashboard settings/manual runs, report, and workbook output.
+- `docs/issues/done/0072-enforce-evidence-qualified-production-outputs-with-backfill.md`
+
+Feedback:
+- RED: `python -m pytest -q tests/test_daily_production_qualification.py` failed on the old public CLI and no backfill/qualification behavior.
+- GREEN: `python -m pytest -q tests/test_daily_production_qualification.py` passed with 3 tests.
+- GREEN: `python -m pytest -q` passed with 151 tests and 51 subtests.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next Ralph issue should start only after confirming no higher-priority AFK task supersedes the current queue.
+
+## 2026-05-10 - 0075 Bootstrap Supabase-First FastAPI Shell
+
+Task completed from `docs/issues/0075-bootstrap-supabase-first-fastapi-shell.md`.
+
+Key decisions made:
+- Added a compact FastAPI shell without importing `dashboard.web_server` or initializing the SQLite dashboard store.
+- Kept the first slice intentionally narrow: app factory, environment settings, `/healthz`, static asset serving, and a base Jinja template.
+- Made workspace, runs, data, template, asset, runtime mode, and Supabase settings environment-driven for later migration slices.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/config.py`
+- `dashboard/templates/base.html`
+- `requirements.txt`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0075-bootstrap-supabase-first-fastapi-shell.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because `dashboard.app` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 4 tests.
+- GREEN: `python -m pytest -q` passed with 95 tests and 48 subtests.
+
+Notes for next iteration:
+- Next FastAPI rewrite slice is expected to port the legacy dashboard visual theme into the Jinja shell while still avoiding full page rebuilds.
+
+## 2026-05-10 - 0076 Port Legacy Dashboard Visual Theme To Jinja Shell
+
+Task completed from `docs/issues/0076-port-legacy-dashboard-visual-theme-to-jinja-shell.md`.
+
+Key decisions made:
+- Reused the existing legacy `dashboard/assets` CSS and logo through the FastAPI static mount instead of creating a new asset tree or palette.
+- Added reusable Jinja theme macros for brand, topbar metadata, navigation, breadcrumbs, page headers, icons, and status pills.
+- Updated the base FastAPI shell to render legacy dashboard classes for navigation, cards, tables, forms, buttons, and status pills.
+- Documented that later FastAPI page slices must preserve the legacy visual language unless a human approves a redesign.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/base.html`
+- `dashboard/templates/theme.html`
+- `docs/adr/0003-supabase-first-fastapi-dashboard-rewrite.md`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0076-port-legacy-dashboard-visual-theme-to-jinja-shell.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because the Jinja shell still used placeholder markup and the ADR lacked the later-page visual-language rule.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 6 tests.
+- GREEN: `python -m pytest -q` passed with 97 tests and 48 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add the Supabase Auth gate for the FastAPI dashboard.
+
+## 2026-05-10 - 0077 Add Supabase Auth Gate
+
+Task completed from `docs/issues/0077-add-supabase-auth-gate.md`.
+
+Key decisions made:
+- Added a compact Supabase Auth REST boundary for password sign-in and bearer-token user lookup.
+- Protected the FastAPI dashboard shell with a session cookie while keeping `/healthz` public.
+- Added public `GET /login`, `POST /login`, and `POST /logout` routes using the legacy Jinja theme.
+- Exposed authenticated user identity in the shell for later audit fields such as `created_by`, `updated_by`, trigger user, and curation author.
+- Kept the auth client injectable for deterministic tests without adding broad abstractions that conflict with the dashboard architecture contract.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/auth.py`
+- `dashboard/assets/dashboard.css`
+- `dashboard/templates/base.html`
+- `dashboard/templates/login.html`
+- `requirements.txt`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0077-add-supabase-auth-gate.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because `dashboard.auth` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 11 tests.
+- Full-suite RED: `python -m pytest -q` failed because the new auth module used `Protocol`, which violates the existing dashboard architecture characterization contract.
+- GREEN: `python -m pytest -q` passed with 102 tests and 48 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to define the compact Supabase dashboard data contract.
+
+## 2026-05-10 - 0078 Create Supabase Dashboard Data Contract
+
+Task completed from `docs/issues/0078-create-supabase-dashboard-data-contract.md`.
+
+Key decisions made:
+- Defined a compact table contract for `runs`, `run_outputs`, `raw_videos`, `selected_videos`, `video_curation`, `scrape_settings_versions`, and `manual_runs`.
+- Added explicit artifact metadata fields for Supabase Storage lookup: bucket, object path, size, checksum, created time, and run id.
+- Added `dashboard/supabase_client.py` as a direct Supabase-style boundary for upcoming run list/detail, manual run, and artifact access slices.
+- Kept the boundary small and fake-client-testable without SQLite runtime support, broad adapters, protocols, or repository-per-table abstractions.
+- Documented the data contract in `docs/supabase-dashboard-data-contract.md`.
+
+Files changed:
+- `dashboard/supabase_client.py`
+- `docs/supabase-dashboard-data-contract.md`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0078-create-supabase-dashboard-data-contract.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_supabase_contract.py -q` failed because `dashboard.supabase_client` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_supabase_contract.py -q` passed with 5 tests and 7 subtests.
+- GREEN: `python -m pytest -q` passed with 107 tests and 55 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build authenticated runs list and run detail pages from Supabase.
+
+## 2026-05-10 - 0079 Build Runs List And Run Detail From Supabase
+
+Task completed from `docs/issues/0079-build-runs-list-and-run-detail-from-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `GET /runs` and `GET /runs/{run_id}` pages using the dashboard Supabase client boundary rather than the old request handler or SQLite store.
+- Kept the first real data view narrow: newest-first run list, run detail metadata, output metadata, supported status pills, and missing-run handling.
+- Redacted secret-like lines from failed run error summaries while preserving concise actionable failure text.
+- Kept the pages on the legacy Jinja visual theme with panels, tables, metadata grids, and status pills.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/runs.html`
+- `dashboard/templates/run_detail.html`
+- `tests/test_dashboard_fastapi_runs.py`
+- `docs/issues/done/0079-build-runs-list-and-run-detail-from-supabase.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_runs.py -q` failed because `/runs` returned 404 and `create_app` had no dashboard data-client seam.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_runs.py -q` passed with 5 tests and 10 subtests.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py tests/test_dashboard_supabase_contract.py tests/test_dashboard_fastapi_runs.py -q` passed with 21 tests and 17 subtests.
+- GREEN: `python -m pytest -q` passed with 112 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build the authenticated overview from Supabase runs.
+
+## 2026-05-10 - 0080 Build Overview From Supabase Runs
+
+Task completed from `docs/issues/0080-build-overview-from-supabase-runs.md`.
+
+Key decisions made:
+- Replaced the authenticated `GET /` shell placeholder with a Supabase-backed overview using the existing dashboard data-client seam.
+- Kept the overview focused on the latest run only: status, timing, candidate funnel counts, output availability, report/run links, artifact links, and the top operational issue.
+- Preserved the legacy dashboard visual language with Jinja templates, feature panels, metadata grids, funnel stats, empty state styling, and existing theme assets.
+- Kept the new overview independent of the old request handler and SQLite runtime.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/overview.html`
+- `tests/test_dashboard_fastapi_overview.py`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0080-build-overview-from-supabase-runs.md`
+
+Feedback:
+- RED: `python -m pytest -q tests/test_dashboard_fastapi_overview.py` failed because `/` still rendered the shell placeholder instead of Supabase run metadata.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_overview.py` passed with 3 tests.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_shell.py tests/test_dashboard_fastapi_runs.py tests/test_dashboard_fastapi_overview.py` passed with 19 tests and 10 subtests.
+- GREEN: `python -m pytest -q` passed with 115 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add authenticated Supabase Storage artifact access.
+
+## 2026-05-10 - 0081 Add Supabase Storage Artifact Access
+
+Task completed from `docs/issues/0081-add-supabase-storage-artifact-access.md`.
+
+Key decisions made:
+- Added authenticated `GET /artifacts/{artifact_id}` as a path-based route so Supabase `run_outputs.object_path` values can be used directly as artifact identifiers.
+- Resolved artifact metadata from Supabase Postgres through the dashboard client boundary before asking Supabase Storage for a short-lived signed URL.
+- Redirected successful artifact access to the signed Storage URL and kept missing states inside the dashboard shell without rendering bucket names, object paths, service-role secrets, or environment values.
+- Kept artifact error states on the legacy dashboard visual language with the shared Jinja base, feature panel, and action link styles.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/artifact_status.html`
+- `tests/test_dashboard_fastapi_artifacts.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0081-add-supabase-storage-artifact-access.md`
+
+Feedback:
+- RED: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_supabase_contract.py` failed because `/artifacts/...` returned 404 and `DashboardSupabaseClient` had no artifact metadata lookup.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_supabase_contract.py` passed with 9 tests and 7 subtests.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_fastapi_overview.py tests/test_dashboard_fastapi_runs.py tests/test_dashboard_fastapi_shell.py tests/test_dashboard_supabase_contract.py` passed with 28 tests and 17 subtests.
+- GREEN: `python -m pytest -q` passed with 119 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to rebuild reports and CSV exports from Supabase.
+
+## 2026-05-10 - 0082 Rebuild Reports And CSV Exports From Supabase
+
+Task completed from `docs/issues/0082-rebuild-reports-and-csv-exports-from-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI resource routes for `GET /reports` and `GET /reports/{run_id}` using Supabase run metadata, run output metadata, and Storage-backed Markdown artifact reads.
+- Extracted the legacy Markdown renderer into a store-free shared module so FastAPI report pages can reuse the dashboard visual language without importing the old request handler or SQLite runtime.
+- Added authenticated CSV download routes for raw videos and run summaries from Supabase table data, preserving the established CSV column shape and download filenames.
+- Kept legacy local dashboard navigation on `/report` while mapping the FastAPI Jinja shell navigation to `/reports`.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/markdown.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/report_detail.html`
+- `dashboard/templates/reports.html`
+- `dashboard/web_report.py`
+- `tests/test_dashboard_fastapi_reports_exports.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0082-rebuild-reports-and-csv-exports-from-supabase.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_fastapi_reports_exports.py` failed because `/reports`, `/reports/{run_id}`, and both `/exports/*.csv` routes returned 404.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_fastapi_reports_exports.py` passed with 4 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi*.py"`, `python -m unittest discover -s tests -p test_dashboard_report_page.py`, and `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` all passed.
+- GREEN: `python -m unittest discover -s tests` passed with 124 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to rebuild settings and curation on Supabase.
+
+## 2026-05-10 - 0083 Rebuild Settings And Curation On Supabase
+
+Task completed from `docs/issues/0083-rebuild-settings-and-curation-on-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `GET /settings`, `POST /settings`, and `POST /settings/{version}/rollback` routes using the existing dashboard client seam and Supabase Auth audit identity.
+- Extracted scrape settings defaults and validation into a store-free module so the FastAPI app can validate settings without importing the SQLite-backed settings runtime.
+- Added Supabase client methods for listing/versioning scrape settings and upserting video curation records in Postgres.
+- Added run-detail curation forms and authenticated `POST /videos/{video_id}/curation`, preserving allowed labels, note limits, exclude-similar behavior, and audit fields.
+- Mapped the FastAPI shell navigation to `/settings` while leaving the legacy local dashboard route names intact.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/scrape_settings.py`
+- `dashboard/settings.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/run_detail.html`
+- `dashboard/templates/settings.html`
+- `tests/test_dashboard_fastapi_settings_curation.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0083-rebuild-settings-and-curation-on-supabase.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_fastapi_settings_curation.py` failed because `/settings`, `/settings/{version}/rollback`, `/videos/{video_id}/curation`, and run-detail curation UI were missing.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_fastapi_settings_curation.py` passed with 6 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi*.py"`, `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py`, and `python -m unittest discover -s tests -p test_scrape_settings.py` all passed.
+- GREEN: `python -m unittest discover -s tests` passed with 131 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add the worker-backed manual run trigger.
+
+## 2026-05-10 - 0084 Add Worker-Backed Manual Run Trigger
+
+Task completed from `docs/issues/0084-add-worker-backed-manual-run-trigger.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `POST /runs` as an enqueue-only manual trigger so long-running pipeline work stays out of the web request.
+- Added `dashboard/runtime.py` for the active full-pipeline guard, queued manual-run record construction, expected output metadata, and shared error-summary redaction.
+- Added a compact `dashboard/worker.py` claim/execution/status contract with injectable runner behavior and artifact metadata publication.
+- Extended the Supabase client boundary with manual-run enqueue, active-run lookup, queued claim, status update, and run visibility updates without adding repository layers.
+- Kept the trigger UI in the existing Runs page using the legacy dashboard form/button/panel visual language.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/runtime.py`
+- `dashboard/worker.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/runs.html`
+- `docs/supabase-dashboard-data-contract.md`
+- `tests/test_dashboard_fastapi_runs.py`
+- `tests/test_dashboard_worker.py`
+- `progress.txt`
+- `docs/issues/done/0084-add-worker-backed-manual-run-trigger.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p "test_dashboard_fastapi_runs.py"` failed because `POST /runs` returned 405 and the Runs page had no trigger form.
+- RED: `python -m unittest discover -s tests -p "test_dashboard_worker.py"` failed because `dashboard.worker` did not exist.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi_runs.py"` passed with 8 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_worker.py"` passed with 2 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_supabase_contract.py"` passed with 7 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 136 tests.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to add the one-time legacy artifact import.
+
+## 2026-05-10 - 0085 Add One-Time Legacy Artifact Import
+
+Task completed from `docs/issues/0085-add-one-time-legacy-artifact-import.md`.
+
+Key decisions made:
+- Added `dashboard/legacy_import.py` as a one-time migration utility for historical Run Folders, separate from the FastAPI runtime.
+- Imported legacy run metadata from `runs/batch-analysis/*/run_manifest.json`, deriving visible `runs` rows from manifest, metadata, and selected-batch artifacts.
+- Uploaded every Run Folder file to stable Supabase Storage object paths under `runs/<run_id>/...`.
+- Wrote `run_outputs` metadata with bucket, object path, filename, content type, file size, SHA-256 checksum, created time, and run id.
+- Added optional explicit SQLite curation import for state not recoverable from artifacts without initializing the dashboard SQLite runtime.
+- Documented the migration command and made it safe to rerun through Supabase upserts by stable keys.
+
+Files changed:
+- `dashboard/legacy_import.py`
+- `dashboard/supabase_client.py`
+- `docs/vps-dashboard-deployment.md`
+- `requirements.txt`
+- `tests/test_dashboard_legacy_import.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `progress.txt`
+- `docs/issues/done/0085-add-one-time-legacy-artifact-import.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p "test_dashboard_legacy_import.py"` failed because `dashboard.legacy_import` did not exist.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_legacy_import.py"` passed with 2 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_supabase_contract.py"` passed with 8 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_architecture_characterization.py"` passed with 11 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 139 tests.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to add the Supabase VPS deployment path.
+
+## 2026-05-10 - 0086 Add Supabase VPS Deployment Path
+
+Task completed from `docs/issues/0086-add-supabase-vps-deployment-path.md`.
+
+Key decisions made:
+- Replaced the old VPS dashboard guide with the Supabase-first FastAPI production path.
+- Documented separate `systemd` units for the FastAPI web app and dashboard worker.
+- Made `uvicorn dashboard.app:create_app --factory --host 127.0.0.1 --port 8765` the documented production web command.
+- Documented Nginx reverse proxying to the private FastAPI listener while keeping Supabase Auth as the dashboard auth boundary.
+- Documented production environment variables for runtime mode, workspace paths, Supabase URL and keys, Storage bucket, and worker pipeline credentials.
+- Added backup expectations for Supabase Postgres metadata and Supabase Storage artifacts.
+- Added a focused docs regression test to keep the deployment guide off the retired dashboard server command.
+
+Files changed:
+- `docs/vps-dashboard-deployment.md`
+- `tests/test_vps_dashboard_deployment_docs.py`
+- `progress.txt`
+- `docs/issues/done/0086-add-supabase-vps-deployment-path.md`
+
+Feedback:
+- RED: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs` failed against the old VPS guide.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs` passed with 1 test.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_vps_dashboard_deployment_docs tests.test_dashboard_worker` passed for the docs test and 2 worker tests.
+- BLOCKED: FastAPI shell verification could not run because both the global Python and local `.venv` are missing the `fastapi` dependency in this sandbox.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to remove the legacy dashboard server and SQLite runtime after FastAPI/Supabase parity.
+
+## 2026-05-10 - 0087 Remove Legacy Dashboard Server And SQLite Runtime
+
+Task completed from `docs/issues/0087-remove-legacy-dashboard-server-and-sqlite-runtime.md`.
+
+Key decisions made:
+- Deleted the retired plain HTTP dashboard server, local SQLite store, artifact indexer, refresh path, legacy settings/manual-run/export/read modules, and Python-rendered HTML modules.
+- Replaced `dashboard.web` with a compact FastAPI compatibility entrypoint that exposes `create_app`, `DashboardSettings`, and a `uvicorn` main.
+- Removed obsolete tests that only protected the retired request handler or local SQLite runtime.
+- Kept `dashboard.legacy_import` as the only allowed SQLite reader because it is a one-time migration aid.
+- Superseded the old architecture PRDs that previously prohibited FastAPI or treated SQLite as the only dashboard store.
+- Updated README to point production dashboard operators to the FastAPI/Supabase deployment path.
+- Added a cleanup regression test that protects the removal of legacy runtime files and SQLite initialization paths.
+
+Files changed:
+- `README.md`
+- `dashboard/web.py`
+- Deleted legacy dashboard runtime files under `dashboard/`
+- `docs/prd/dashboard-architecture-contract-verification.md`
+- `docs/prd/dashboard-codebase-architecture-deepening-prd.md`
+- Deleted obsolete legacy dashboard tests under `tests/`
+- `tests/test_dashboard_legacy_cleanup.py`
+- `tests/test_scrape_settings.py`
+- `progress.txt`
+- `docs/issues/done/0087-remove-legacy-dashboard-server-and-sqlite-runtime.md`
+
+Feedback:
+- RED: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_dashboard_legacy_cleanup` failed while legacy modules and docs still existed.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_dashboard_legacy_cleanup tests.test_scrape_settings` passed with 6 tests after cleanup.
+- GREEN: `.\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 88 tests after installing missing project requirements.
+- GREEN: `rg -n "python -m dashboard\.web" README.md docs dashboard tests -S` only found regression-test guard strings.
+- GREEN: `rg -n "initialize_dashboard_store|connect_dashboard_store|DASHBOARD_DB_PATH|from \.store|from dashboard\.store|sqlite3\.connect\(" dashboard -S` returned no runtime hits.
+
+Notes for next iteration:
+- No open AFK issue remains in `docs/issues/` after this cleanup.

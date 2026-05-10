@@ -80,6 +80,47 @@ class EvidenceBundleStoreTest(unittest.TestCase):
             ]
             self.assertEqual(nested_directories, [])
 
+    def test_failed_source_video_state_keeps_snapshot_and_index_shape(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            run_folder = temp_path / "run"
+            missing_source = temp_path / "missing-source.mov"
+            candidate = selected_candidate(
+                "failed/video",
+                3,
+                video_download_url=str(missing_source),
+            )
+
+            store = EvidenceBundleStore(run_folder)
+            index = store.write_source_snapshots([candidate])
+
+            self.assertEqual(
+                index,
+                {
+                    "bundle_count": 1,
+                    "bundles": [
+                        {
+                            "candidate_id": "failed/video",
+                            "rank": 3,
+                            "prefix": "003_failed-video",
+                            "snapshot": "data/003_failed-video_evidence_snapshot.json",
+                            "source_metadata": "data/003_failed-video_source_metadata.json",
+                            "source_video": None,
+                            "source_video_state": "failed",
+                        }
+                    ],
+                },
+            )
+
+            snapshot = store.load_snapshot(candidate)
+            self.assertEqual(snapshot["candidate_id"], "failed/video")
+            self.assertEqual(snapshot["source_video"]["state"], "failed")
+            self.assertIsNone(snapshot["source_video"]["path"])
+            self.assertIn("download source does not exist", snapshot["source_video"]["reason"])
+            self.assertEqual(snapshot["source_video"]["source"], str(missing_source))
+            self.assertTrue((run_folder / "data" / "003_failed-video_source_metadata.json").is_file())
+            self.assertFalse((run_folder / "evidence" / "003_failed-video_source_video.mov").exists())
+
     def test_selected_batch_run_writes_flat_evidence_snapshots(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

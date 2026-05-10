@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not run %}
+{{ theme.page_header("Run not found", "No Supabase run metadata exists for this id.") }}
+<section class="panel">
+  <h2>Run not found</h2>
+  <p class="muted">Check the run id or wait for the worker to publish metadata.</p>
+</section>
+{% else %}
+{{ theme.page_header(run.run_id, "TikTok scraper output tables for this run.") }}
+
+<section class="panel run-workbench">
+  <header class="run-workbench-header">
+    <div>
+      <p class="run-workbench-eyebrow">Scraper run by TikTok</p>
+      <h2>TikTok Scraper Run</h2>
+      <p class="muted">{{ workbench.overview.data_source }}</p>
+    </div>
+    <dl class="run-summary-stats">
+      <div>
+        <dt>Status</dt>
+        <dd>{{ theme.status_pill(run.status_label, run.status_tone) }}</dd>
+      </div>
+      <div>
+        <dt>Results</dt>
+        <dd>{{ workbench.overview.unique_result_count }}</dd>
+      </div>
+      <div>
+        <dt>Total Plays</dt>
+        <dd>{{ workbench.insights.total_plays }}</dd>
+      </div>
+      <div>
+        <dt>Eng. Rate</dt>
+        <dd>{{ workbench.insights.engagement_rate }}</dd>
+      </div>
+      <div>
+        <dt>Duration</dt>
+        <dd>{{ run.duration }}</dd>
+      </div>
+    </dl>
+  </header>
+
+  <nav class="run-tab-nav" aria-label="Run output tables">
+    {% for tab in workbench.tabs %}
+    <a class="run-tab-link" href="{{ tab.href }}" {% if tab.active %}aria-current="page"{% endif %}>{{ tab.label }}</a>
+    {% endfor %}
+  </nav>
+
+  <div class="run-tab-panel">
+    {% if workbench.active_tab == "overview" %}
+    <div class="run-market-summary">
+      <span>Scope: {{ workbench.overview.scope }}</span>
+      <span>Inputs: {{ workbench.overview.inputs.hashtags }} / {{ workbench.overview.inputs.keywords }} / {{ workbench.overview.inputs.profiles }}</span>
+      <span>Top author: {{ workbench.insights.top_author }}</span>
+      <span>Top music: {{ workbench.insights.top_music }}</span>
+      <span>Avg plays: {{ workbench.insights.avg_plays }}</span>
+    </div>
+
+    {% if run.error_summary %}
+    <h3>Error summary</h3>
+    <pre class="error-summary">{{ run.error_summary }}</pre>
+    {% endif %}
+
+    <div class="table-scroll">
+      <table class="data-table overview-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Author's Avatar</th>
+            <th>Author</th>
+            <th>Text</th>
+            <th>Diggs</th>
+            <th>Shares</th>
+            <th>Plays</th>
+            <th>Comments</th>
+            <th>Bookmarks</th>
+            <th>Duration (seconds)</th>
+            <th>Music</th>
+            <th>Music author</th>
+            <th>Music original?</th>
+            <th>Create Time</th>
+            <th>Video url</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in workbench.overview_rows %}
+          <tr>
+            <td>{{ item.index }}</td>
+            <td>{% if item.avatar %}<img class="run-thumb" src="{{ item.avatar }}" alt="">{% else %}<span class="muted">--</span>{% endif %}</td>
+            <td>{{ item.author or "--" }}</td>
+            <td><div class="post-hook">{{ item.text }}</div></td>
+            <td>{{ item.diggs }}</td>
+            <td>{{ item.shares }}</td>
+            <td>{{ item.plays }}</td>
+            <td>{{ item.comments }}</td>
+            <td>{{ item.bookmarks }}</td>
+            <td>{{ item.duration }}</td>
+            <td>{{ item.music_name or "--" }}</td>
+            <td>{{ item.music_author or "--" }}</td>
+            <td>{{ item.music_original }}</td>
+            <td>{{ item.create_time or "--" }}</td>
+            <td>{% if item.video_url %}<a href="{{ item.video_url }}" target="_blank" rel="noopener">{{ item.video_url }}</a>{% else %}--{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% elif workbench.active_tab == "posts" %}
+    <div class="table-scroll">
+      <table class="data-table posts-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cover</th>
+            <th>Text</th>
+            <th>Diggs</th>
+            <th>Shares</th>
+            <th>Plays</th>
+            <th>Comments</th>
+            <th>Duration (seconds)</th>
+            <th>Is Ad</th>
+            <th>Hashtags</th>
+            <th>Author</th>
+            <th>Video url</th>
+            <th>Create Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in workbench.posts %}
+          <tr>
+            <td>{{ post.index }}</td>
+            <td>{% if post.cover %}<img class="run-thumb" src="{{ post.cover }}" alt="">{% else %}<span class="muted">--</span>{% endif %}</td>
+            <td><div class="post-hook">{{ post.text }}</div></td>
+            <td>{{ post.diggs }}</td>
+            <td>{{ post.shares }}</td>
+            <td>{{ post.plays }}</td>
+            <td>{{ post.comments }}</td>
+            <td>{{ post.duration }}</td>
+            <td>{{ post.is_ad }}</td>
+            <td><span class="hashtag-line">{{ post.hashtags | join(", ") if post.hashtags else "--" }}</span></td>
+            <td>{{ post.author or "--" }}</td>
+            <td>{% if post.video_url %}<a href="{{ post.video_url }}" target="_blank" rel="noopener">{{ post.video_url }}</a>{% else %}--{% endif %}</td>
+            <td>{{ post.create_time or "--" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% elif workbench.active_tab == "authors" %}
+    <div class="table-scroll">
+      <table class="data-table authors-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Avatar</th>
+            <th>Name</th>
+            <th>Nickname</th>
+            <th>Verified?</th>
+            <th>Signature</th>
+            <th>Author Fans</th>
+            <th>Author videos</th>
+            <th>Private account?</th>
+            <th>TikTok seller?</th>
+            <th>Bio link</th>
+            <th>Author ID</th>
+            <th>Text</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for author in workbench.authors %}
+          <tr>
+            <td>{{ author.index }}</td>
+            <td>{% if author.avatar %}<img class="run-thumb" src="{{ author.avatar }}" alt="">{% else %}<span class="muted">--</span>{% endif %}</td>
+            <td>{{ author.name or "--" }}</td>
+            <td>{{ author.nickname or "--" }}</td>
+            <td>{{ author.verified }}</td>
+            <td><div class="post-hook">{{ author.signature or "--" }}</div></td>
+            <td>{{ author.fans }}</td>
+            <td>{{ author.videos }}</td>
+            <td>{{ author.private_account }}</td>
+            <td>{{ author.seller }}</td>
+            <td>{{ author.bio_link }}</td>
+            <td>{{ author.author_id }}</td>
+            <td><div class="post-hook">{{ author.text }}</div></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% elif workbench.active_tab == "music" %}
+    <div class="table-scroll">
+      <table class="data-table music-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cover URL</th>
+            <th>Music name</th>
+            <th>Music author</th>
+            <th>Music original</th>
+            <th>Music album</th>
+            <th>Play URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for music in workbench.music %}
+          <tr>
+            <td>{{ music.index }}</td>
+            <td>{% if music.cover %}<img class="run-thumb" src="{{ music.cover }}" alt="">{% else %}<span class="muted">--</span>{% endif %}</td>
+            <td>{{ music.name or "--" }}</td>
+            <td>{{ music.author or "--" }}</td>
+            <td>{{ music.original }}</td>
+            <td>{{ music.album }}</td>
+            <td>{% if music.play_url %}<a href="{{ music.play_url }}" target="_blank" rel="noopener">{{ music.play_url }}</a>{% else %}--{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% elif workbench.active_tab == "video" %}
+    <div class="table-scroll">
+      <table class="data-table video-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cover URL</th>
+            <th>Duration (seconds)</th>
+            <th>Definition</th>
+            <th>Format</th>
+            <th>Height</th>
+            <th>Width</th>
+            <th>Download</th>
+            <th>Text</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for video in workbench.video %}
+          <tr>
+            <td>{{ video.index }}</td>
+            <td>{% if video.cover %}<img class="run-thumb" src="{{ video.cover }}" alt="">{% else %}<span class="muted">--</span>{% endif %}</td>
+            <td>{{ video.duration }}</td>
+            <td>{{ video.definition }}</td>
+            <td>{{ video.format }}</td>
+            <td>{{ video.height }}</td>
+            <td>{{ video.width }}</td>
+            <td>{% if video.download %}<a href="{{ video.download }}" target="_blank" rel="noopener">{{ video.download }}</a>{% else %}--{% endif %}</td>
+            <td><div class="post-hook">{{ video.text }}</div></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% else %}
+    <div class="all-fields-stack">
+      {% for item in workbench.all_fields %}
+      <details class="all-fields-row" {% if loop.first %}open{% endif %}>
+        <summary>#{{ item.index }} {{ item.title }}</summary>
+        <div class="table-scroll">
+          <table class="data-table all-fields-table">
+            <tbody>
+              {% for field in item.fields %}
+              <tr>
+                <th>{{ field.key }}</th>
+                <td><pre class="field-value">{{ field.value }}</pre></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

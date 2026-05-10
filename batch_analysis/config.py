@@ -1,16 +1,18 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+import os
+from datetime import datetime, timedelta, timezone, tzinfo
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+DAILY_SELECTION_SIZE = 5
+DAILY_RUN_MODE = "daily"
+DEFAULT_RUN_FOLDER_TIME_ZONE = "Asia/Singapore"
 
 MODE_DEFAULT_BATCH_SIZE = {
-    "debug": 1,
-    "daily": 5,
-    "quick": 5,
-    "default": 10,
-    "deep": 20,
+    "daily": DAILY_SELECTION_SIZE,
 }
 
 RUN_SUBDIRECTORIES = [
@@ -29,32 +31,12 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "requires_downloadable_video": True,
     },
     "outputs": {
-        "markdown": "reports",
-        "json": "data",
-        "spreadsheet": "data",
-        "evidence_bundles": "data/evidence_bundle_index.json",
-        "logs": "logs",
-    },
-    "tool_stack": {
-        "primary_adapter": "gemini_2_5_flash",
-        "gemini_model": "gemini-2.5-flash",
-        "gemini_api_key_env": "GEMINI_API_KEY",
-        "discovery_download": "Apify",
-        "evidence_extraction": "Gemini 2.5 Flash",
-    },
-    "telegram": {
-        "enabled": True,
-        "bot_token_env": "TELEGRAM_BOT_TOKEN",
-        "chat_id_env": "TELEGRAM_CHAT_ID",
-    },
-    "cleanup": {
-        "enabled": False,
-        "requires_report_approval": True,
-        "report_approved": False,
-        "remove_source_videos": True,
-        "remove_frames": True,
+        "selection_json": "data/selected_batch.json",
+        "selection_markdown": "reports/selected_batch.md",
+        "source_video_index": "data/evidence_bundle_index.json",
     },
 }
+
 
 def parse_run_timestamp(value: str | None) -> datetime:
     if value is None:
@@ -67,11 +49,23 @@ def parse_run_timestamp(value: str | None) -> datetime:
         parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc).replace(microsecond=0)
 
-def isoformat_z(timestamp: datetime) -> str:
-    return timestamp.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+def isoformat_local(timestamp: datetime) -> str:
+    return timestamp.astimezone(run_folder_timezone()).replace(microsecond=0).isoformat()
+
+
+def run_folder_timezone() -> tzinfo:
+    name = os.environ.get("NATTOME_RUN_FOLDER_TIME_ZONE", DEFAULT_RUN_FOLDER_TIME_ZONE)
+    try:
+        return ZoneInfo(name)
+    except ZoneInfoNotFoundError:
+        return timezone(timedelta(hours=8))
+
 
 def run_folder_name(timestamp: datetime, mode: str) -> str:
-    return f"{timestamp.strftime('%Y%m%dT%H%M%SZ')}_{mode}"
+    local_timestamp = timestamp.astimezone(run_folder_timezone())
+    return f"{local_timestamp.strftime('%Y%m%dT%H%M%S%z')}_{mode}"
+
 
 def deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
     merged = dict(base)
@@ -81,6 +75,7 @@ def deep_merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
         else:
             merged[key] = value
     return merged
+
 
 def load_config(config_path: Path | None) -> dict[str, Any]:
     if config_path is None:

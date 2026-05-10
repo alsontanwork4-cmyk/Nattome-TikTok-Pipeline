@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set actions %}
+<div class="actions">
+  <a class="action-link" href="/exports/run-summaries.csv">Export run summaries CSV</a>
+  <a class="action-link secondary" href="/exports/raw-videos.csv">Export raw videos CSV</a>
+</div>
+{% endset %}
+{{ theme.page_header("Reports", "Supabase-backed report snapshots and CSV exports.", actions) }}
+{% if report_error %}
+<section class="panel notice">
+  <h2>Reports unavailable</h2>
+  <p class="muted">{{ report_error }}</p>
+</section>
+{% endif %}
+<section class="panel">
+  <h2>Report Runs</h2>
+  {% if not reports %}
+  <div class="empty-state">
+    <span class="empty-state-icon">{{ theme.icon("report") }}</span>
+    <div>
+      <p>No Supabase reports yet</p>
+      <p class="muted">The worker has not published report artifact metadata.</p>
+    </div>
+  </div>
+  {% else %}
+  <table class="data-table reports-table">
+    <thead>
+      <tr>
+        <th>Run</th>
+        <th>Status</th>
+        <th>Type</th>
+        <th>Started</th>
+        <th>Report</th>
+        <th>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr>
+        <td><a href="/reports/{{ report.run.run_id }}">{{ report.run.run_id }}</a></td>
+        <td>{{ theme.status_pill(report.run.status_label, report.run.status_tone) }}</td>
+        <td>{{ report.run.run_type or "--" }}</td>
+        <td>{{ report.run.started_at or "--" }}</td>
+        <td>{{ report.filename or "Report unavailable" }}</td>
+        <td>{{ report.size }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endblock %}

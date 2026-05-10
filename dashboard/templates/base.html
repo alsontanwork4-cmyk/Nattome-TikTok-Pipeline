@@ -1,0 +1,89 @@
+<!doctype html>
+{% import "theme.html" as theme %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nattome TikTok Scraper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <script src="/static/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="layout"{% if current_user %} data-auth-user-id="{{ current_user.user_id }}"{% endif %}>
+    <header class="topbar" role="banner">
+      {{ theme.brand() }}
+      <div class="topbar-meta">
+        {{ theme.meta_pill("Ready", primary=True) }}
+        {% if current_user %}
+        {{ theme.meta_pill(current_user.audit_identity) }}
+        {% endif %}
+        {{ theme.meta_pill(settings.runtime_mode, "db") }}
+        {% if current_user %}
+        <form class="topbar-logout" method="post" action="/logout">
+          <button type="submit">Sign out</button>
+        </form>
+        {% endif %}
+      </div>
+    </header>
+    {{ theme.sidebar(nav_groups, active_path) }}
+    <main>
+      {% block content %}
+      {% set actions %}
+      <form class="action-form shell-smoke-form" method="post">
+        <button type="button" disabled>Queue run</button>
+      </form>
+      {% endset %}
+      {{ theme.page_header(page_title, "Supabase-first FastAPI dashboard foundation.", actions) }}
+      <section class="panel feature">
+        <h2>Runtime</h2>
+        <dl class="metadata-grid">
+          <div>
+            <dt>Mode</dt>
+            <dd>{{ settings.runtime_mode }}</dd>
+          </div>
+          <div>
+            <dt>Storage</dt>
+            <dd>{{ theme.status_pill("Ready", "ok") }}</dd>
+          </div>
+          <div>
+            <dt>Artifacts</dt>
+            <dd>{{ settings.supabase_storage_bucket }}</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="panel">
+        <h2>Route Foundation</h2>
+        <table class="data-table shell-smoke-table">
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>State</th>
+              <th>Runtime</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/healthz</code></td>
+              <td>{{ theme.status_pill("Ready", "ok") }}</td>
+              <td>Unauthenticated</td>
+            </tr>
+            <tr>
+              <td><code>/static/{path}</code></td>
+              <td>{{ theme.status_pill("Ready", "ok") }}</td>
+              <td>Legacy assets</td>
+            </tr>
+          </tbody>
+        </table>
+        <label class="field-label">
+          Workspace
+          <input type="text" value="{{ settings.workspace_path }}" readonly>
+        </label>
+      </section>
+      {% endblock %}
+    </main>
+  </div>
+</body>
+</html>

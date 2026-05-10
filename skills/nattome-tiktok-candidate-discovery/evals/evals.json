@@ -1,48 +1,41 @@
 {
-  "skill_name": "nattome-tiktok-candidate-discovery",
+  "skill_name": "nattome-batch-analysis-run",
   "evals": [
     {
       "id": 1,
-      "prompt": "Run the daily Nattome TikTok brief for today. Pull the top 5 viral videos in the digestive-health space, break down why each one works, and give me 3 angles per topic that I can shoot this week. Save the brief as a markdown file.",
-      "expected_output": "A daily discovery handoff markdown file with 5 topics, each containing: source video link + stats, virality breakdown (hook/pacing/structure/emotional trigger/why it won), and 3 Nattome angles (hook, avatar, format, product, script outline). Brand voice rules followed (named clinical study, no overclaim, format choice justified). The handoff is framed as ideation input, not the final production report.",
+      "prompt": "Run the daily Nattome TikTok batch analysis for today.",
+      "expected_output": "A timestamped runs/batch-analysis/<timestamp>_daily folder containing raw scrape JSON, Daily Top Videos handoff JSON, selected batch artifacts, source-video snapshots, Gemini evidence artifacts when credentials are available, final Nattome POV report Markdown files when generated, and Telegram delivery status in the manifest.",
       "files": [],
       "assertions": [
-        {"text": "Output is saved as a dated daily discovery handoff markdown file", "type": "file_check"},
-        {"text": "Output is framed as ideation or handoff input, not the final production report", "type": "content_check"},
-        {"text": "All 5 topics include a working TikTok URL", "type": "content_check"},
-        {"text": "Each topic has a hook breakdown labeled by hook type (symptom recognition, counter-intuitive, POV, etc.)", "type": "content_check"},
-        {"text": "Each topic has 3 Nattome angles", "type": "content_check"},
-        {"text": "Each angle names a specific product (DH, DR, or DH-R) and explains why that product fits", "type": "content_check"},
-        {"text": "Each angle picks a single avatar (Sufferer, Maintainer, or Pharmacy Browser)", "type": "content_check"},
-        {"text": "Each angle picks a format (talking head, VLOG, or both) with reasoning", "type": "content_check"},
-        {"text": "When clinical backing is referenced, it names UCSI University or NCT06524271 (not vague 'studies show')", "type": "content_check"},
-        {"text": "No banned phrases appear in scripted angle copy: 'miracle', 'cure', 'instant fix', 'detox', 'cleanse'", "type": "content_check"},
-        {"text": "If competing with Gaviscon, framing is natural-vs-chemical or long-term-vs-temporary, not name-trashing", "type": "content_check"}
+        {"text": "Runs batch_analysis/scrape_tiktok.py with --download-videos and --daily-selection-output", "type": "behavior_check"},
+        {"text": "Runs batch_analysis/run_batch_analysis.py against the Daily Top Videos handoff using the same timestamp", "type": "behavior_check"},
+        {"text": "Reports raw scrape path, daily selection path, run folder path, final output paths, and run_manifest.json phase status", "type": "content_check"},
+        {"text": "Does not print credential values", "type": "content_check"},
+        {"text": "Does not claim Gemini or Telegram phases completed when credentials are missing", "type": "content_check"}
       ]
     },
     {
       "id": 2,
-      "prompt": "Here's a viral TikTok URL: https://www.tiktok.com/@example/video/7234567890123456789 — break it down for me and give me 3 Nattome angles based on it. (Pretend you scraped it; the URL is a placeholder.)",
-      "expected_output": "Single-video brief with virality breakdown + 3 Nattome angles. Skips full daily template since it's only one video.",
+      "prompt": "Summarize the latest Nattome batch-analysis run and tell me whether the final reports were delivered.",
+      "expected_output": "A concise artifact and phase-status summary grounded in the latest run_manifest.json, including selected count, source-video states, Gemini report status, final_outputs, and telegram_delivery status.",
       "files": [],
       "assertions": [
-        {"text": "Output includes hook/pacing/structure/emotional-trigger breakdown for the single video", "type": "content_check"},
-        {"text": "Output includes exactly 3 Nattome angles", "type": "content_check"},
-        {"text": "Each angle specifies product + avatar + format + script outline", "type": "content_check"},
-        {"text": "Skill does NOT generate a fake list of 5 topics — respects the single-URL scope", "type": "content_check"}
+        {"text": "Reads run_manifest.json instead of inferring phase success from file names alone", "type": "behavior_check"},
+        {"text": "Preserves source video states exactly as available, missing, or failed", "type": "content_check"},
+        {"text": "Treats Telegram delivery as separate from Gemini report generation", "type": "content_check"},
+        {"text": "Lists generated Nattome POV report markdown paths only when present in final_outputs", "type": "content_check"}
       ]
     },
     {
       "id": 3,
-      "prompt": "I don't want to run a scrape today. The trend right now is people doing 'POV: bloating after a Ramadan buka puasa buffet'. Give me 3 Nattome angles for this trend.",
-      "expected_output": "3 angles for the bloating-after-buffet topic, with format choices and product tie-ins. No scraping, no fake virality stats.",
+      "prompt": "Use this existing candidate JSON to create a source-video batch-analysis run without scraping today.",
+      "expected_output": "A run folder created by batch_analysis/run_batch_analysis.py using the provided candidate JSON, with selected batch artifacts, source-video snapshots, Gemini status, and Telegram delivery status recorded in run_manifest.json.",
       "files": [],
       "assertions": [
-        {"text": "Skill does NOT call the Apify scraper for this prompt", "type": "behavior_check"},
-        {"text": "Output contains 3 distinct angles", "type": "content_check"},
-        {"text": "DR (instant relief) is featured prominently — it's the obvious post-buffet product fit", "type": "content_check"},
-        {"text": "At least one angle uses 'Both' format (the POV → reveal pattern is Nattome's strongest)", "type": "content_check"},
-        {"text": "Brand voice is sincere/professional — no influencer-hype language", "type": "content_check"}
+        {"text": "Does not call Apify when an existing candidate JSON is supplied", "type": "behavior_check"},
+        {"text": "Runs batch_analysis/run_batch_analysis.py with --candidates", "type": "behavior_check"},
+        {"text": "Keeps selected candidate rank and source-video state unchanged in the summary", "type": "content_check"},
+        {"text": "Does not invent creative recommendations from metadata when Gemini evidence is unavailable", "type": "content_check"}
       ]
     }
   ]

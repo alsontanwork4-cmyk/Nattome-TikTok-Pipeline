@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ theme.page_header(status_title, "Supabase Storage artifact access.") }}
+<section class="panel feature">
+  <h2>{{ status_title }}</h2>
+  <p class="muted">{{ status_message }}</p>
+  <div class="actions">
+    <a class="action-link secondary" href="/runs">Back to runs</a>
+  </div>
+</section>
+{% endblock %}

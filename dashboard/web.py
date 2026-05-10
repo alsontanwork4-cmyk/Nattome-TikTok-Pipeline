@@ -1,20 +1,29 @@
 from __future__ import annotations
 
-from .web_constants import CURATION_LABELS, NAV_GROUPS, NAV_ITEMS
-from .web_layout import render_page
-from .web_server import DashboardServer, create_handler, main, resolve_dashboard_workspace, serve
+from .config import DashboardSettings
 
 __all__ = [
-    "CURATION_LABELS",
-    "DashboardServer",
-    "NAV_GROUPS",
-    "NAV_ITEMS",
-    "create_handler",
+    "DashboardSettings",
+    "create_app",
     "main",
-    "render_page",
-    "resolve_dashboard_workspace",
-    "serve",
 ]
+
+
+def create_app(*args, **kwargs):
+    from .app import create_app as fastapi_create_app
+
+    return fastapi_create_app(*args, **kwargs)
+
+
+def main() -> None:
+    import uvicorn
+
+    uvicorn.run(
+        "dashboard.app:create_app",
+        factory=True,
+        host="127.0.0.1",
+        port=8765,
+    )
 
 
 if __name__ == "__main__":

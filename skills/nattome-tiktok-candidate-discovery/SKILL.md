@@ -1,88 +1,84 @@
 ---
-name: nattome-tiktok-candidate-discovery
-description: Supporting reference skill for Phase 1 of the Nattome Daily Evidence Run. Use directly only for discovery-only debugging, scraper configuration, or creating a fresh Daily Top-5 Selection handoff without running Gemini evidence analysis. Normal operation should use `nattome-viral-intelligence-run`.
-user-invocable: false
+name: nattome-batch-analysis-run
+description: Run or maintain the compact Nattome TikTok batch-analysis pipeline: scrape TikTok candidates, create the Daily Top Videos handoff, snapshot source videos, generate Gemini Nattome POV reports, and deliver final Markdown reports to Telegram.
 ---
 
-# Nattome TikTok Candidate Discovery
+# Nattome Batch Analysis Run
 
-This is a supporting phase reference. It owns the scraper command, scraper config, discovery assets, and candidate preview rules. Normal users should trigger `nattome-viral-intelligence-run` instead.
+Use this as the single project skill for normal Nattome TikTok batch-analysis work. The active runtime code lives in `batch_analysis/`.
 
-## Role
-
-Phase 1 finds evidence-ready TikTok candidates and writes the Daily Top-5 Selection handoff for Gemini analysis.
-
-Discovery may produce candidate previews, but it must not produce production-ready Shootable Angles. Before Gemini evidence exists, all content reads are metadata inferences.
-
-## Read First
-
-- `CONTEXT.md`
-- `references/nattome_brand.md`
-- `references/virality_framework.md`
-
-Brand voice, avatars, claim rules, and virality taxonomy live in those files. Do not duplicate or override them here.
+Python owns orchestration, candidate selection, source-video snapshots, manifest/status records, and delivery. Gemini owns source-video evidence interpretation and marketer-facing Nattome POV report wording.
 
 ## Pre-Flight
 
-Required:
+Check required credentials without printing values.
 
-- `APIFY_TOKEN`
+- `APIFY_TOKEN`: required for fresh TikTok discovery through Apify.
+- `GEMINI_API_KEY`: required for Gemini evidence and Nattome POV report generation.
+- `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`: required only for Telegram delivery after reports are generated.
 
-Treat the project root `.env` as a valid credential source. Check without printing token values. If `APIFY_TOKEN` is missing, stop and report it. Do not fabricate TikTok results.
+Treat the project root `.env` as a valid credential source. If Gemini or Telegram credentials are missing, the runtime records the missing phase honestly in `run_manifest.json`; do not imply those phases completed.
 
-## Discovery Command
+## Daily Run
 
-From the project root:
+From the project root, create one timestamp and reuse it for discovery and batch analysis:
 
 ```powershell
-$runId = "nattome_$(Get-Date -Format yyyyMMddTHHmmss)"
-$runDir = "data/daily_runs/$runId"
-python skills/nattome-tiktok-candidate-discovery/scripts/scrape_tiktok.py `
-  --output "$runDir/raw_scrape_top30.json" `
-  --top 30 `
+$timestamp = (Get-Date).ToUniversalTime()
+$localTimestamp = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId($timestamp, "Singapore Standard Time")
+$stamp = $localTimestamp.ToString("yyyyMMddTHHmmss") + "+0800"
+$isoTimestamp = $timestamp.ToString("yyyy-MM-ddTHH:mm:ssZ")
+$runDir = "runs/batch-analysis/${stamp}_daily"
+python batch_analysis/scrape_tiktok.py `
+  --output "$runDir/data/raw_scrape_all.json" `
   --download-videos `
-  --daily-selection-output "$runDir/daily_selection_top5.json"
+  --daily-selection-output "$runDir/data/daily_selection_top_videos.json"
 ```
 
-Outputs:
+```powershell
+python batch_analysis/run_batch_analysis.py `
+  --candidates "$runDir/data/daily_selection_top_videos.json" `
+  --timestamp "$isoTimestamp"
+```
 
-- Full ranked scrape: `data/daily_runs/<run_id>/raw_scrape_top30.json`
-- Daily Top-5 Selection handoff: `data/daily_runs/<run_id>/daily_selection_top5.json`
-- Optional discovery markdown: `outputs/daily_briefs/daily_brief_<YYYY-MM-DD>.md`
+The run folder is `runs/batch-analysis/<timestamp>_daily/`.
 
-Keep JSON, Markdown, config, and brief files in UTF-8.
-The scraper refuses to overwrite existing JSON outputs unless `--overwrite` is passed, so normal runs must use a fresh run folder.
+## Outputs To Report
 
-## Candidate Preview Rules
+Report the run in terms of concrete artifacts and manifest phase status:
 
-For each top-5 candidate, previews may include:
+- `data/raw_scrape_all.json`
+- `data/daily_selection_top_videos.json`
+- `data/selected_batch.json`
+- `reports/selected_batch.md`
+- `data/evidence_bundle_index.json`
+- `data/<rank>_<video-id>_source_metadata.json`
+- `data/<rank>_<video-id>_evidence_snapshot.json`
+- `evidence/<rank>_<video-id>_source_video.<ext>`
+- `data/<rank>_<video-id>_gemini_evidence.json`
+- `data/<rank>_<video-id>_gemini_creative_response.json`
+- `reports/<rank>_<video-id>_nattome_pov_report.md`
+- `run_manifest.json` phase status, including `telegram_delivery`
 
-- Topic.
-- Metadata signals from caption, hashtags, author, engagement, recency, and URL.
-- Likely hook direction, clearly labeled as inference.
-- Likely structure, clearly labeled as inference.
-- Likely emotional trigger, clearly labeled as inference.
-- Why the video may have won, based only on available metadata and engagement signals.
+## Operating Rules
 
-Do not claim exact visible text, spoken content, pacing, scene changes, audio cues, or hook execution until Gemini evidence analysis has run.
+- Do not invent analysis results from captions or metadata.
+- Preserve selected candidate rank and source-video state exactly.
+- Source video state is factual: `available`, `missing`, or `failed`.
+- Do not render final Nattome POV reports from fixed Python templates; Gemini writes the final Markdown.
+- Ground recommendations in observable video evidence or explicit Nattome brand guidance.
+- Do not invent clinical claims, product outcomes, doctor recommendations, guaranteed relief, cure language, or disease-prevention claims.
+- Treat Telegram delivery as separate from report generation. Delivery failure does not invalidate generated report artifacts.
 
-## No Production Angles Before Gemini
+## References And Assets
 
-Before Gemini:
-
-- Say `candidate preview`, `likely hook direction`, and `metadata inference`.
-- Do not say `Shootable Angle`.
-- Do not say `Nattome Priority Score`.
-- Do not say `production-ready`.
-
-After Gemini evidence exists, use `nattome-evidence-insight-analysis` or the main `nattome-viral-intelligence-run` reporting rules.
-
-## Owned Files
-
-- `scripts/scrape_tiktok.py` - Apify TikTok scraper.
-- `scripts/telegram_send.py` - optional Telegram sender for markdown briefs.
-- `config.json` - active discovery config.
+- `../../batch_analysis/scrape_tiktok.py` - Apify TikTok scraper.
+- `../../batch_analysis/run_batch_analysis.py` - CLI entrypoint for the batch-analysis run.
+- `../../batch_analysis/run.py` - orchestration, manifest, source snapshots, Gemini, and Telegram delivery.
+- `../../batch_analysis/gemini_reports.py` - two-agent Gemini report generation.
+- `../../batch_analysis/telegram_delivery.py` - Telegram summary and report document delivery.
+- `../../batch_analysis/scrape_config.json` - active discovery config.
 - `assets/config.example.json` - example config.
-- `assets/daily_brief_template.md` - optional discovery brief template.
-- `references/nattome_brand.md` - brand voice and claim guardrails.
-- `references/virality_framework.md` - virality analysis lens.
+- `assets/daily_brief_template.md` - legacy brief template; do not use as the final report renderer.
+- `references/nattome_brand.md` - brand voice and product positioning reference.
+- `references/virality_framework.md` - virality analysis lens reference.
