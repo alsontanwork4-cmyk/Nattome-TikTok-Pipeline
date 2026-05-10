@@ -2152,3 +2152,30 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to add authenticated Supabase Storage artifact access.
+
+## 2026-05-10 - 0081 Add Supabase Storage Artifact Access
+
+Task completed from `docs/issues/0081-add-supabase-storage-artifact-access.md`.
+
+Key decisions made:
+- Added authenticated `GET /artifacts/{artifact_id}` as a path-based route so Supabase `run_outputs.object_path` values can be used directly as artifact identifiers.
+- Resolved artifact metadata from Supabase Postgres through the dashboard client boundary before asking Supabase Storage for a short-lived signed URL.
+- Redirected successful artifact access to the signed Storage URL and kept missing states inside the dashboard shell without rendering bucket names, object paths, service-role secrets, or environment values.
+- Kept artifact error states on the legacy dashboard visual language with the shared Jinja base, feature panel, and action link styles.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/artifact_status.html`
+- `tests/test_dashboard_fastapi_artifacts.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0081-add-supabase-storage-artifact-access.md`
+
+Feedback:
+- RED: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_supabase_contract.py` failed because `/artifacts/...` returned 404 and `DashboardSupabaseClient` had no artifact metadata lookup.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_supabase_contract.py` passed with 9 tests and 7 subtests.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_artifacts.py tests/test_dashboard_fastapi_overview.py tests/test_dashboard_fastapi_runs.py tests/test_dashboard_fastapi_shell.py tests/test_dashboard_supabase_contract.py` passed with 28 tests and 17 subtests.
+- GREEN: `python -m pytest -q` passed with 119 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to rebuild reports and CSV exports from Supabase.

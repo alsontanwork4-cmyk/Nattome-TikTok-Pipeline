@@ -133,15 +133,21 @@ class DashboardSupabaseContractTest(unittest.TestCase):
         runs = client.list_runs(limit=25)
         run = client.get_run("run-1")
         outputs = client.list_run_outputs("run-1")
+        artifact = client.get_artifact_metadata("runs/run-1/report.md")
 
         self.assertEqual(runs, [{"table": "runs"}])
         self.assertEqual(run, {"table": "runs"})
         self.assertEqual(outputs, [{"table": "run_outputs"}])
+        self.assertEqual(artifact.object_path, "runs/run-1/report.md")
         self.assertIn(("client", "table", "runs"), fake.calls)
         self.assertIn(("runs", "order", "started_at", True), fake.calls)
         self.assertIn(("runs", "limit", 25), fake.calls)
         self.assertIn(("runs", "eq", "run_id", "run-1"), fake.calls)
         self.assertIn(("run_outputs", "eq", "run_id", "run-1"), fake.calls)
+        self.assertIn(
+            ("run_outputs", "eq", "object_path", "runs/run-1/report.md"),
+            fake.calls,
+        )
 
     def test_client_writes_manual_runs_and_artifact_metadata(self):
         fake = FakeSupabase()

@@ -158,6 +158,23 @@ class DashboardSupabaseClient:
         )
         return list(response.data or [])
 
+    def get_artifact_metadata(self, artifact_id: str) -> ArtifactMetadata | None:
+        response = (
+            self._client.table("run_outputs")
+            .select("*")
+            .eq("object_path", artifact_id)
+            .limit(1)
+            .execute()
+        )
+        rows = list(response.data or [])
+        if not rows:
+            return None
+        return _artifact_metadata_from_record(
+            rows[0],
+            default_bucket=self.storage_bucket,
+            fallback_object_path=artifact_id,
+        )
+
     def upsert_manual_run(self, record: dict[str, Any]) -> list[dict[str, Any]]:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
         return list(response.data or [])
@@ -181,3 +198,23 @@ class DashboardSupabaseClient:
             .create_signed_url(metadata.object_path, expires_in)
         )
         return str(response.get("signedURL") or response.get("signedUrl") or "")
+
+
+def _artifact_metadata_from_record(
+    record: dict[str, Any],
+    *,
+    default_bucket: str,
+    fallback_object_path: str,
+) -> ArtifactMetadata:
+    object_path = str(record.get("object_path") or fallback_object_path)
+    return ArtifactMetadata(
+        run_id=str(record.get("run_id") or ""),
+        artifact_type=str(record.get("artifact_type") or ""),
+        bucket=str(record.get("bucket") or default_bucket),
+        object_path=object_path,
+        filename=str(record.get("filename") or object_path.rsplit("/", 1)[-1]),
+        content_type=str(record.get("content_type") or ""),
+        size_bytes=record.get("size_bytes"),
+        checksum=record.get("checksum"),
+        created_at=record.get("created_at"),
+    )

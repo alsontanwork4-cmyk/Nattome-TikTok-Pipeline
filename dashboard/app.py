@@ -26,6 +26,17 @@ class EmptyDashboardDataClient:
     def list_run_outputs(self, run_id: str) -> list[dict]:
         return []
 
+    def get_artifact_metadata(self, artifact_id: str) -> object | None:
+        return None
+
+    def create_signed_artifact_url(
+        self,
+        metadata: object,
+        *,
+        expires_in: int = 900,
+    ) -> str:
+        return ""
+
 
 def create_app(
     settings: DashboardSettings | None = None,
@@ -138,6 +149,50 @@ def create_app(
                 "outputs": outputs,
             },
         )
+
+    @app.get("/artifacts/{artifact_id:path}", response_class=HTMLResponse)
+    def artifact_download(request: Request, artifact_id: str) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        metadata = app.state.dashboard_client.get_artifact_metadata(artifact_id)
+        if not metadata:
+            return templates.TemplateResponse(
+                request,
+                "artifact_status.html",
+                {
+                    **_template_context(
+                        resolved_settings,
+                        page_title="Artifact not found",
+                        active_path="/runs",
+                    ),
+                    "current_user": user,
+                    "status_title": "Artifact not found",
+                    "status_message": "No Supabase artifact metadata exists for this route.",
+                },
+                status_code=404,
+            )
+        signed_url = app.state.dashboard_client.create_signed_artifact_url(
+            metadata,
+            expires_in=900,
+        )
+        if not signed_url:
+            return templates.TemplateResponse(
+                request,
+                "artifact_status.html",
+                {
+                    **_template_context(
+                        resolved_settings,
+                        page_title="Artifact unavailable",
+                        active_path="/runs",
+                    ),
+                    "current_user": user,
+                    "status_title": "Artifact unavailable",
+                    "status_message": "Supabase Storage did not return a signed download URL.",
+                },
+                status_code=502,
+            )
+        return RedirectResponse(signed_url, status_code=303)
 
     @app.get("/login", response_class=HTMLResponse)
     def login_page(request: Request) -> HTMLResponse:
