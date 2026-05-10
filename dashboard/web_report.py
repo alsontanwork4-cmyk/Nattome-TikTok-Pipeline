@@ -51,7 +51,7 @@ def _render_report_selector(artifacts: list[ReportArtifact], selected_run_id: st
         <form method="get" action="/report">
           <label class="field-label">
             Choose snapshot
-            <select name="run_id" onchange="this.form.submit()">
+            <select name="run_id" data-auto-submit>
               {"".join(options)}
             </select>
           </label>

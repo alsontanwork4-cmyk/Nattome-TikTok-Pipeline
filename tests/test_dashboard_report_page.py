@@ -43,6 +43,8 @@ class DashboardReportPageTest(unittest.TestCase):
             self.assertIn("Lead with the stomach moment.", body)
             self.assertIn("<table", body)
             self.assertIn("Routine demo", body)
+            self.assertIn("data-auto-submit", body)
+            self.assertNotIn("onchange=", body)
 
     def test_report_page_can_select_an_older_run_report(self):
         with tempfile.TemporaryDirectory() as temp_dir:

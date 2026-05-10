@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .web_architecture import _render_pipeline_architecture
 from .web_components import _render_placeholder, _render_sidebar, _render_topbar, _title_for_path
 from .web_overview import _render_overview
 from .web_report import _render_report_page
@@ -38,8 +37,6 @@ def render_page(
             run_history_run_id=run_history_run_id,
             run_history_tab=run_history_tab,
         )
-    elif active_path == "/pipeline-architecture":
-        overview = _render_pipeline_architecture(workspace)
     else:
         overview = _render_placeholder(title)
     return f"""<!doctype html>

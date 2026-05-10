@@ -45,7 +45,6 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
             self.assertEqual(summary.raw_videos, 2)
             self.assertEqual(summary.selected_batches, 1)
             self.assertEqual(summary.batch_runs, 1)
-            self.assertGreaterEqual(summary.documentation_records, 3)
             self.assertEqual(summary_after_reindex.raw_videos, 2)
 
             connection = sqlite3.connect(workspace / DASHBOARD_DB_PATH)
@@ -68,12 +67,6 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
                     for row in connection.execute(
                         "SELECT * FROM run_outputs WHERE run_id = ?",
                         ("20260507T000000Z_default",),
-                    )
-                }
-                docs = {
-                    row["path"]: dict(row)
-                    for row in connection.execute(
-                        "SELECT * FROM documentation_records"
                     )
                 }
                 curation = connection.execute(
@@ -101,19 +94,13 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
             self.assertEqual(selected["candidate_source"], "data/raw_scrapes/sample_raw.json")
             self.assertIn("manifest", outputs)
             self.assertIn("selected_batch", outputs)
-            self.assertIn("README.md", docs)
-            self.assertIn("CONTEXT.md", docs)
-            self.assertIn("docs/prd/sample-prd.md", docs)
             self.assertEqual(json.loads(curation["labels"]), ["Great Hook"])
             self.assertEqual(curation["note"], "Keep this hook pattern.")
 
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"
         run_folder = workspace / "runs" / "batch-analysis" / "20260507T000000Z_default"
-        docs_prd = workspace / "docs" / "prd"
-        docs_adr = workspace / "docs" / "adr"
-        skill_folder = workspace / "skills" / "nattome-tiktok-candidate-discovery"
-        for folder in [raw_scrapes, run_folder / "data", docs_prd, docs_adr, skill_folder]:
+        for folder in [raw_scrapes, run_folder / "data"]:
             folder.mkdir(parents=True, exist_ok=True)
 
         (raw_scrapes / "sample_raw.json").write_text(
@@ -189,8 +176,3 @@ class DashboardArtifactIndexerTest(unittest.TestCase):
         )
         (run_folder / "logs").mkdir()
         (run_folder / "logs" / "pipeline.log").write_text("ok\n", encoding="utf-8")
-        (workspace / "README.md").write_text("# Readme\n", encoding="utf-8")
-        (workspace / "CONTEXT.md").write_text("# Context\n", encoding="utf-8")
-        (docs_prd / "sample-prd.md").write_text("# Sample PRD\n", encoding="utf-8")
-        (docs_adr / "0001-sample.md").write_text("# Sample ADR\n", encoding="utf-8")
-        (skill_folder / "SKILL.md").write_text("# Skill\n", encoding="utf-8")

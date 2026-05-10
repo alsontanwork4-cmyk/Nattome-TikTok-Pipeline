@@ -3,7 +3,7 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
-from .settings import get_active_settings_version, list_settings_versions
+from .settings import DEFAULT_SCRAPE_SETTINGS, get_active_settings_version, list_settings_versions
 from .time_display import display_datetime
 from .web_components import (
     _lines,
@@ -11,77 +11,24 @@ from .web_components import (
     _version_label,
 )
 
-SETTING_HELP: dict[str, dict[str, str]] = {
-    "hashtags": {
-        "changes": "Searches TikTok hashtag pages for gut-health content.",
-        "increase": "Adding more hashtags broadens discovery and can find more angles.",
-        "decrease": "Removing weak hashtags narrows the scrape and can reduce noise.",
-        "default": "Default: 10 gut-health hashtags.",
-        "warning": "Too many broad hashtags can make the scrape slower and less focused.",
-    },
-    "keywords": {
-        "changes": "Searches TikTok for plain-language phrases people use around symptoms and routines.",
-        "increase": "Adding keywords can uncover videos that do not use your target hashtags.",
-        "decrease": "Removing keywords makes the scrape more focused but may miss useful posts.",
-        "default": "Default: 7 gut-health search phrases.",
-        "warning": "Broad phrases can pull in wellness content that is not a Nattome fit.",
-    },
-    "competitor_profiles": {
-        "changes": "Checks specific creator or brand profiles for inspiration and market signals.",
-        "increase": "Adding profiles broadens competitor monitoring.",
-        "decrease": "Removing profiles keeps the scrape focused on the most relevant accounts.",
-        "default": "Default: @gaviscon, @gutgang, @drwillcole.",
-        "warning": "Profiles that post outside gut health can add irrelevant candidates.",
-    },
-    "scope": {
-        "changes": "Chooses which source type the next scrape uses.",
-        "increase": "All sources gives the broadest scrape.",
-        "decrease": "A single source type is faster and easier to diagnose.",
-        "default": "Default: All sources.",
-        "warning": "Using only one source type can hide good candidates from the others.",
-    },
-    "results_per_input": {
-        "changes": "Sets how many TikToks to collect from each hashtag, keyword, or profile.",
-        "increase": "Higher values collect more candidates and may improve discovery.",
-        "decrease": "Lower values make the scrape faster but reduce coverage.",
-        "default": "Default: 20. Typical range: 10-50.",
-        "warning": "Very high values can slow the scrape and create more review work.",
-    },
-    "minimum_views": {
-        "changes": "Filters out TikToks below a view-count threshold.",
-        "increase": "Higher values favor proven videos but reduce candidate volume.",
-        "decrease": "Lower values allow earlier or niche videos into the pool.",
-        "default": "Default: 10000. Typical range: 5000-50000.",
-        "warning": "Too high can leave too few usable candidates.",
-    },
-    "maximum_age_days": {
-        "changes": "Only keeps TikToks posted within the last N days.",
-        "increase": "Higher values include older videos and improve volume.",
-        "decrease": "Lower values prioritize fresher trends.",
-        "default": "Default: 30 days. Typical range: 7-60 days.",
-        "warning": "Too low can make the scrape look weak on quiet days.",
-    },
-    "minimum_engagement_rate_percent": {
-        "changes": "Filters for videos where likes, comments, and shares are strong compared with views.",
-        "increase": "Higher percentages keep stronger engagement signals but fewer videos.",
-        "decrease": "Lower percentages allow more candidates into the pool.",
-        "default": "Default: 3%. Typical range: 1-8%.",
-        "warning": "Too high can remove useful high-view videos with average engagement.",
-    },
-    "requires_downloadable_video": {
-        "changes": "Requires a downloadable source video before a candidate can be selected.",
-        "increase": "Keeping it on improves evidence and reporting readiness.",
-        "decrease": "Turning it off may keep useful TikToks that cannot be downloaded.",
-        "default": "Default: On.",
-        "warning": "Turning it off can create candidates that are harder to analyze later.",
-    },
-    "exclusion_terms": {
-        "changes": "Blocks known low-quality topics, phrases, or patterns from the scrape.",
-        "increase": "Adding terms can reduce repeated noise.",
-        "decrease": "Removing terms allows more content through.",
-        "default": "Default: none.",
-        "warning": "Overly broad exclusions can remove useful gut-health content.",
-    },
+SETTING_HELP: dict[str, str] = {
+    "hashtags": "Searches TikTok hashtag pages for gut-health content.",
+    "keywords": "Searches TikTok for plain-language phrases people use around symptoms and routines.",
+    "competitor_profiles": "Checks specific creator or brand profiles for inspiration and market signals.",
+    "scope": "Chooses which source type the next scrape uses.",
+    "results_per_input": "Sets how many TikToks to collect from each hashtag, keyword, or profile.",
+    "minimum_views": "Filters out TikToks below a view-count threshold.",
+    "maximum_age_days": "Only keeps TikToks posted within the last N days.",
+    "minimum_engagement_rate_percent": "Filters for videos where likes, comments, and shares are strong compared with views.",
+    "requires_downloadable_video": "Requires a downloadable source video before a candidate can be selected.",
+    "exclusion_terms": "Blocks known low-quality topics, phrases, or patterns from the scrape.",
+}
+
+TYPICAL_SETTING_RANGES: dict[str, str] = {
+    "results_per_input": "10-50",
+    "minimum_views": "5000-50000",
+    "maximum_age_days": "7-180 days",
+    "minimum_engagement_rate_percent": "1-8%",
 }
 
 
@@ -231,10 +178,10 @@ def _setting_shell(
 
 
 def _render_setting_help(name: str, label: str) -> str:
-    help_text = SETTING_HELP.get(name, {})
+    help_text = SETTING_HELP.get(name, "")
     items = [
-        ("What it is", help_text.get("changes", "")),
-        ("Recommended range", help_text.get("default", "")),
+        ("What it is", help_text),
+        ("Recommended range", _recommended_range(name)),
     ]
     rows = [
         f"<li><strong>{html.escape(row_label)}</strong>: {html.escape(text)}</li>"
@@ -250,6 +197,44 @@ def _render_setting_help(name: str, label: str) -> str:
         <ul>{"".join(rows)}</ul>
       </details>
     """
+
+
+def _recommended_range(name: str) -> str:
+    default_text = _default_text(name)
+    typical = TYPICAL_SETTING_RANGES.get(name)
+    if typical:
+        return f"{default_text}. Typical range: {typical}."
+    return f"{default_text}."
+
+
+def _default_text(name: str) -> str:
+    if name == "minimum_engagement_rate_percent":
+        return f"Default: {_percent_value(DEFAULT_SCRAPE_SETTINGS.get('minimum_weighted_engagement_rate'))}%"
+    value = DEFAULT_SCRAPE_SETTINGS.get(name)
+    if name == "hashtags" and isinstance(value, list):
+        return f"Default: {len(value)} gut-health hashtags"
+    if name == "keywords" and isinstance(value, list):
+        return f"Default: {len(value)} gut-health search phrases"
+    if name == "competitor_profiles" and isinstance(value, list):
+        return "Default: " + ", ".join(f"@{str(profile).lstrip('@')}" for profile in value)
+    if name == "scope":
+        return f"Default: {_scope_label(str(value or 'all'))}"
+    if name == "maximum_age_days":
+        return f"Default: {value} days"
+    if name == "requires_downloadable_video":
+        return f"Default: {'On' if value else 'Off'}"
+    if name == "exclusion_terms" and not value:
+        return "Default: none"
+    return f"Default: {value}"
+
+
+def _scope_label(scope: str) -> str:
+    return {
+        "all": "All sources",
+        "hashtags": "Only hashtags",
+        "keywords": "Only keywords",
+        "profiles": "Only competitor profiles",
+    }.get(scope, scope)
 
 
 def _percent_value(value: object) -> str:

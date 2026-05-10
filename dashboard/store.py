@@ -239,16 +239,6 @@ def _create_artifact_tables(connection: sqlite3.Connection) -> None:
     )
     connection.execute(
         """
-        CREATE TABLE IF NOT EXISTS documentation_records (
-            path TEXT PRIMARY KEY,
-            title TEXT NOT NULL,
-            doc_type TEXT NOT NULL,
-            indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    connection.execute(
-        """
         CREATE TABLE IF NOT EXISTS scrape_quality_scores (
             run_id TEXT PRIMARY KEY,
             score INTEGER NOT NULL,

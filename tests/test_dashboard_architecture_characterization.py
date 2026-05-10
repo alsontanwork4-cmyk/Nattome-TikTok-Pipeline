@@ -7,7 +7,6 @@ import threading
 import unittest
 from pathlib import Path
 
-import dashboard.architecture as dashboard_architecture
 import dashboard.exports as dashboard_exports
 import dashboard.health as dashboard_health
 import dashboard.indexer as dashboard_indexer
@@ -25,7 +24,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 class DashboardArchitectureCharacterizationTest(unittest.TestCase):
     def test_heavy_dashboard_modules_use_store_connection_helper(self):
         modules = [
-            dashboard_architecture,
             dashboard_exports,
             dashboard_health,
             dashboard_indexer,
@@ -150,7 +148,6 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
         )
 
         expected_feature_modules = {
-            "architecture.py",
             "exports.py",
             "health.py",
             "manual_runs.py",
@@ -179,7 +176,6 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
 
     def test_dashboard_read_paths_keep_automatic_refresh_contract(self):
         read_path_modules = [
-            dashboard_architecture,
             dashboard_run_history,
         ]
         for module in read_path_modules:

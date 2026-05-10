@@ -17,7 +17,6 @@ DERIVED_TABLES = (
     "selected_batches",
     "batch_runs",
     "run_outputs",
-    "documentation_records",
     "pipeline_health_summaries",
 )
 
@@ -28,7 +27,6 @@ class IndexSummary:
     selected_batches: int
     batch_runs: int
     run_outputs: int
-    documentation_records: int
 
 
 def index_pipeline_artifacts(workspace: Path | str = ".") -> IndexSummary:
@@ -38,7 +36,6 @@ def index_pipeline_artifacts(workspace: Path | str = ".") -> IndexSummary:
         _clear_derived_records(connection)
         _index_raw_scrapes(connection, workspace_path)
         _index_batch_runs(connection, workspace_path)
-        _index_documentation(connection, workspace_path)
         connection.commit()
         return _build_summary(connection)
     finally:
@@ -364,44 +361,12 @@ def _insert_run_output(
     )
 
 
-def _index_documentation(connection: Connection, workspace: Path) -> None:
-    paths: list[Path] = []
-    for relative in ["README.md", "CONTEXT.md"]:
-        path = workspace / relative
-        if path.exists():
-            paths.append(path)
-    for root in [workspace / "docs" / "prd", workspace / "docs" / "adr"]:
-        paths.extend(sorted(root.glob("*.md")))
-    skills_root = workspace / "skills"
-    if skills_root.exists():
-        paths.extend(sorted(skills_root.glob("*/SKILL.md")))
-
-    for path in paths:
-        title = _markdown_title(path)
-        connection.execute(
-            """
-            INSERT INTO documentation_records (
-                path,
-                title,
-                doc_type
-            )
-            VALUES (?, ?, ?)
-            """,
-            (
-                _relative_path(workspace, path),
-                title,
-                _doc_type(workspace, path),
-            ),
-        )
-
-
 def _build_summary(connection: Connection) -> IndexSummary:
     return IndexSummary(
         raw_videos=_count(connection, "raw_videos"),
         selected_batches=_count(connection, "selected_batches"),
         batch_runs=_count(connection, "batch_runs"),
         run_outputs=_count(connection, "run_outputs"),
-        documentation_records=_count(connection, "documentation_records"),
     )
 
 
@@ -454,31 +419,6 @@ def _read_json(path: Path) -> Any | None:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
-
-
-def _markdown_title(path: Path) -> str:
-    try:
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.startswith("# "):
-                return line[2:].strip()
-    except OSError:
-        pass
-    return path.stem.replace("-", " ").title()
-
-
-def _doc_type(workspace: Path, path: Path) -> str:
-    relative = _relative_path(workspace, path)
-    if relative == "README.md":
-        return "readme"
-    if relative == "CONTEXT.md":
-        return "domain_context"
-    if relative.startswith("docs/prd/"):
-        return "prd"
-    if relative.startswith("docs/adr/"):
-        return "adr"
-    if relative.startswith("skills/"):
-        return "skill"
-    return "doc"
 
 
 def _relative_path(workspace: Path, path: Path) -> str:

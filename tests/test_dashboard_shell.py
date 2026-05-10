@@ -18,7 +18,7 @@ from dashboard.store import (
 from dashboard.web_actions import _save_video_curation
 from dashboard.web import DashboardServer, NAV_ITEMS, create_handler, resolve_dashboard_workspace
 from dashboard.web_layout import render_page
-from dashboard.web_theme import render_theme_styles
+from dashboard.web_settings import SETTING_HELP
 
 
 class DashboardStoreTest(unittest.TestCase):
@@ -164,17 +164,75 @@ class DashboardWebShellTest(unittest.TestCase):
                     self.assertIn(f'href="{route}" aria-current="page"', body)
                     self.assertIn(label, body)
 
-    def test_rendered_page_uses_inline_theme_module_styles(self):
+    def test_rendered_page_uses_static_dashboard_assets(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             body = render_page("/", Path(temp_dir))
-            theme_styles = render_theme_styles().strip()
 
-            self.assertIn("<style>", body)
-            self.assertIn(theme_styles, body)
-            self.assertIn(".layout {", theme_styles)
+            self.assertIn('<link rel="stylesheet" href="/static/dashboard.css">', body)
+            self.assertIn('<script src="/static/dashboard.js" defer></script>', body)
+            self.assertNotIn("<style>", body)
+            self.assertNotIn("<script>", body)
+            self.assertNotIn("onclick=", body)
+            self.assertNotIn("onchange=", body)
             self.assertIn('<header class="topbar" role="banner">', body)
             self.assertIn("Latest Run Overview", body)
-            self.assertNotIn('href="/static/', body)
+
+    def test_static_dashboard_assets_are_served_from_assets_folder(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            css_response, css_body = self._request(workspace, "GET", "/static/dashboard.css")
+            js_response, js_body = self._request(workspace, "GET", "/static/dashboard.js")
+
+            self.assertEqual(css_response.status, 200)
+            self.assertEqual(css_response.getheader("Content-Type"), "text/css; charset=utf-8")
+            self.assertIn(".layout {", css_body)
+            self.assertEqual(js_response.status, 200)
+            self.assertEqual(js_response.getheader("Content-Type"), "text/javascript; charset=utf-8")
+            self.assertIn("toggleSettingsEdit", js_body)
+
+    def test_static_dashboard_asset_route_keeps_single_filename_safety_rule(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            missing_response, missing_body = self._request(workspace, "GET", "/static/missing.css")
+            nested_response, nested_body = self._request(workspace, "GET", "/static/assets/dashboard.css")
+            traversal_response, traversal_body = self._request(workspace, "GET", "/static/../web_server.py")
+
+            self.assertEqual(missing_response.status, 404)
+            self.assertIn("Asset not found", missing_body)
+            self.assertEqual(nested_response.status, 404)
+            self.assertIn("Asset not found", nested_body)
+            self.assertEqual(traversal_response.status, 404)
+            self.assertIn("Asset not found", traversal_body)
+
+    def test_scrape_settings_page_has_no_inline_script_or_handlers(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            response, body = self._request(Path(temp_dir), "GET", "/scrape-settings")
+
+            self.assertEqual(response.status, 200)
+            self.assertIn("Scrape Settings", body)
+            self.assertIn("data-settings-edit-toggle", body)
+            self.assertNotIn("<script>", body)
+            self.assertNotIn("onclick=", body)
+            self.assertNotIn("onchange=", body)
+
+    def test_scrape_setting_help_only_contains_displayed_fields(self):
+        for setting_name, help_text in SETTING_HELP.items():
+            with self.subTest(setting=setting_name):
+                self.assertIsInstance(help_text, str)
+                self.assertNotIn("Default:", help_text)
+                self.assertNotIn("Typical range:", help_text)
+
+    def test_pipeline_architecture_route_is_removed(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            response, body = self._request(workspace, "GET", "/pipeline-architecture")
+
+            self.assertEqual(response.status, 404)
+            self.assertIn("Dashboard route not found", body)
+            self.assertFalse((workspace / DASHBOARD_DB_PATH).exists())
 
     def test_overview_route_loads_without_pipeline_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -188,7 +246,7 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Run History", body)
             self.assertIn("Scrape Settings", body)
             self.assertNotIn("Nattome POV Library", body)
-            self.assertIn("Pipeline Architecture", body)
+            self.assertNotIn("Pipeline Architecture", body)
             self.assertNotIn("Run scrape now", body)
             self.assertNotIn("Run full pipeline", body)
             self.assertTrue((workspace / DASHBOARD_DB_PATH).is_file())
@@ -417,6 +475,8 @@ class DashboardWebShellTest(unittest.TestCase):
             self.assertIn("Only competitor profiles", initial_body)
             self.assertIn("Minimum engagement rate (%)", initial_body)
             self.assertIn("Explain", initial_body)
+            self.assertIn("Default: 150 days", initial_body)
+            self.assertNotIn("Default: 30 days", initial_body)
             self.assertEqual(missing_reason_response.status, 400)
             self.assertIn("requires a reason", missing_reason_body)
             self.assertEqual(first_save_response.status, 303)
