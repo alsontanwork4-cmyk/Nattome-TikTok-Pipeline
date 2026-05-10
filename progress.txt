@@ -2209,3 +2209,34 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to rebuild settings and curation on Supabase.
+
+## 2026-05-10 - 0083 Rebuild Settings And Curation On Supabase
+
+Task completed from `docs/issues/0083-rebuild-settings-and-curation-on-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `GET /settings`, `POST /settings`, and `POST /settings/{version}/rollback` routes using the existing dashboard client seam and Supabase Auth audit identity.
+- Extracted scrape settings defaults and validation into a store-free module so the FastAPI app can validate settings without importing the SQLite-backed settings runtime.
+- Added Supabase client methods for listing/versioning scrape settings and upserting video curation records in Postgres.
+- Added run-detail curation forms and authenticated `POST /videos/{video_id}/curation`, preserving allowed labels, note limits, exclude-similar behavior, and audit fields.
+- Mapped the FastAPI shell navigation to `/settings` while leaving the legacy local dashboard route names intact.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/scrape_settings.py`
+- `dashboard/settings.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/run_detail.html`
+- `dashboard/templates/settings.html`
+- `tests/test_dashboard_fastapi_settings_curation.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `docs/issues/done/0083-rebuild-settings-and-curation-on-supabase.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_fastapi_settings_curation.py` failed because `/settings`, `/settings/{version}/rollback`, `/videos/{video_id}/curation`, and run-detail curation UI were missing.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_fastapi_settings_curation.py` passed with 6 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi*.py"`, `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py`, and `python -m unittest discover -s tests -p test_scrape_settings.py` all passed.
+- GREEN: `python -m unittest discover -s tests` passed with 131 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add the worker-backed manual run trigger.

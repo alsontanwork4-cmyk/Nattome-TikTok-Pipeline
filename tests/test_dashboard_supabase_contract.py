@@ -35,6 +35,16 @@ class FakeQuery:
         self.data = [record]
         return self
 
+    def update(self, record: dict):
+        self.recorder.append((self.table_name, "update", record))
+        self.data = [record]
+        return self
+
+    def insert(self, record: dict):
+        self.recorder.append((self.table_name, "insert", record))
+        self.data = [record]
+        return self
+
     def execute(self):
         self.recorder.append((self.table_name, "execute"))
         return self
@@ -233,6 +243,40 @@ class DashboardSupabaseContractTest(unittest.TestCase):
         self.assertIn(("dashboard-artifacts", "download", "runs/run-1/report.md"), fake.calls)
         self.assertIn(("raw_videos", "order", "play_count", True), fake.calls)
         self.assertIn(("raw_videos", "order", "video_id", False), fake.calls)
+
+    def test_client_versions_settings_and_upserts_video_curation(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        settings = {
+            "hashtags": ["guthealth"],
+            "keywords": ["bloating"],
+            "competitor_profiles": ["gaviscon"],
+            "scope": "all",
+        }
+
+        saved = client.save_settings_version(
+            settings,
+            reason="Initial production settings",
+            user="owner@example.com",
+        )
+        curation = client.upsert_video_curation(
+            "video-1",
+            labels=["Relevant", "Good Nattome Fit"],
+            note="Use for hook planning.",
+            exclude_similar_reason="",
+            user="owner@example.com",
+        )
+
+        self.assertEqual(saved["version"], 1)
+        self.assertEqual(saved["settings"], settings)
+        self.assertEqual(saved["created_by"], "owner@example.com")
+        self.assertEqual(curation["video_id"], "video-1")
+        self.assertEqual(curation["labels"], ["Relevant", "Good Nattome Fit"])
+        self.assertEqual(curation["updated_by"], "owner@example.com")
+        self.assertIn(("scrape_settings_versions", "order", "version", True), fake.calls)
+        self.assertIn(("scrape_settings_versions", "update", {"is_active": False}), fake.calls)
+        self.assertIn(("scrape_settings_versions", "eq", "is_active", True), fake.calls)
+        self.assertIn(("video_curation", "upsert", curation, "video_id"), fake.calls)
 
 
 if __name__ == "__main__":

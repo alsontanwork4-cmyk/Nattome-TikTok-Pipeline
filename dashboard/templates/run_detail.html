@@ -85,5 +85,51 @@
   </table>
   {% endif %}
 </section>
+<section class="panel">
+  <h2>Curation</h2>
+  {% if curation_error %}
+  <p class="settings-status">{{ curation_error }}</p>
+  {% endif %}
+  {% if not curation_videos %}
+  <p class="muted">No raw video metadata has been published for this run.</p>
+  {% else %}
+  <div class="curation-drawer-list">
+    {% for video in curation_videos %}
+    <article class="curation-card">
+      <header>
+        <div>
+          <h3>{{ video.caption or video.video_id }}</h3>
+          <p class="muted">{{ video.author_handle or "--" }} {% if video.tiktok_url %}<a href="{{ video.tiktok_url }}" target="_blank" rel="noopener">Open TikTok</a>{% endif %}</p>
+        </div>
+        <span class="status-pill accent">{{ video.play_count }}</span>
+      </header>
+      <form class="curation-form" method="post" action="/videos/{{ video.video_id }}/curation">
+        <input type="hidden" name="run_id" value="{{ run.run_id }}">
+        <fieldset>
+          <legend>Labels</legend>
+          <div class="label-grid">
+            {% for label in curation_labels %}
+            <label class="check-label">
+              <input type="checkbox" name="labels" value="{{ label }}" {% if label in video.labels %}checked{% endif %}>
+              {{ label }}
+            </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+        <label class="field-label">
+          Exclude similar reason
+          <input type="text" name="exclude_similar_reason" maxlength="160" value="{{ video.exclude_similar_reason }}">
+        </label>
+        <label class="field-label">
+          Note
+          <textarea name="note">{{ video.note }}</textarea>
+        </label>
+        <button type="submit">Save curation</button>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
 {% endif %}
 {% endblock %}

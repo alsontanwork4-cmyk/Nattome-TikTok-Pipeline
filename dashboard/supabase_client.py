@@ -226,6 +226,96 @@ class DashboardSupabaseClient:
         response = self._client.table("video_curation").select("*").execute()
         return list(response.data or [])
 
+    def list_settings_versions(self) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("scrape_settings_versions")
+            .select("*")
+            .order("version", desc=True)
+            .execute()
+        )
+        return list(response.data or [])
+
+    def save_settings_version(
+        self,
+        settings: dict[str, Any],
+        *,
+        reason: str,
+        user: str,
+    ) -> dict[str, Any]:
+        versions = self.list_settings_versions()
+        next_version = _next_settings_version(versions)
+        record = {
+            "version": next_version,
+            "settings": settings,
+            "reason": reason,
+            "is_active": True,
+            "rollback_of_version": None,
+            "created_by": user,
+            "updated_by": user,
+        }
+        return self._insert_settings_version(record)
+
+    def rollback_settings_version(
+        self,
+        *,
+        target_version: int,
+        reason: str,
+        user: str,
+    ) -> dict[str, Any]:
+        versions = self.list_settings_versions()
+        target = next(
+            (version for version in versions if int(version.get("version") or 0) == target_version),
+            None,
+        )
+        if target is None:
+            raise ValueError(f"unknown scrape settings version: {target_version}")
+        record = {
+            "version": _next_settings_version(versions),
+            "settings": target.get("settings") or {},
+            "reason": reason,
+            "is_active": True,
+            "rollback_of_version": target_version,
+            "created_by": user,
+            "updated_by": user,
+        }
+        return self._insert_settings_version(record)
+
+    def upsert_video_curation(
+        self,
+        video_id: str,
+        *,
+        labels: list[str],
+        note: str,
+        exclude_similar_reason: str,
+        user: str,
+    ) -> dict[str, Any]:
+        record = {
+            "video_id": video_id,
+            "labels": labels,
+            "note": note,
+            "exclude_similar_reason": exclude_similar_reason,
+            "created_by": user,
+            "updated_by": user,
+        }
+        response = (
+            self._client.table("video_curation")
+            .upsert(record, on_conflict="video_id")
+            .execute()
+        )
+        rows = list(response.data or [])
+        return rows[0] if rows else record
+
+    def _insert_settings_version(self, record: dict[str, Any]) -> dict[str, Any]:
+        (
+            self._client.table("scrape_settings_versions")
+            .update({"is_active": False})
+            .eq("is_active", True)
+            .execute()
+        )
+        response = self._client.table("scrape_settings_versions").insert(record).execute()
+        rows = list(response.data or [])
+        return rows[0] if rows else record
+
     def upsert_manual_run(self, record: dict[str, Any]) -> list[dict[str, Any]]:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
         return list(response.data or [])
@@ -269,3 +359,9 @@ def _artifact_metadata_from_record(
         checksum=record.get("checksum"),
         created_at=record.get("created_at"),
     )
+
+
+def _next_settings_version(versions: list[dict[str, Any]]) -> int:
+    if not versions:
+        return 1
+    return max(int(version.get("version") or 0) for version in versions) + 1

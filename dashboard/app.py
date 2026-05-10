@@ -18,8 +18,9 @@ from .auth import (
 )
 from .config import DashboardSettings
 from .markdown import render_markdown
+from .scrape_settings import DEFAULT_SCRAPE_SETTINGS, validate_scrape_settings
 from .supabase_client import ArtifactMetadata
-from .web_constants import NAV_GROUPS as LEGACY_NAV_GROUPS
+from .web_constants import CURATION_LABELS, NAV_GROUPS as LEGACY_NAV_GROUPS
 
 RAW_VIDEO_CSV_COLUMNS = [
     "video_id",
@@ -94,6 +95,38 @@ class EmptyDashboardDataClient:
 
     def list_video_curation(self) -> list[dict]:
         return []
+
+    def list_settings_versions(self) -> list[dict]:
+        return []
+
+    def save_settings_version(
+        self,
+        settings: dict,
+        *,
+        reason: str,
+        user: str,
+    ) -> dict:
+        return {}
+
+    def rollback_settings_version(
+        self,
+        *,
+        target_version: int,
+        reason: str,
+        user: str,
+    ) -> dict:
+        return {}
+
+    def upsert_video_curation(
+        self,
+        video_id: str,
+        *,
+        labels: list[str],
+        note: str,
+        exclude_similar_reason: str,
+        user: str,
+    ) -> dict:
+        return {}
 
 
 def create_app(
@@ -189,10 +222,18 @@ def create_app(
                     "current_user": user,
                     "run": None,
                     "outputs": [],
+                    "curation_videos": [],
+                    "curation_labels": CURATION_LABELS,
+                    "curation_error": "",
                 },
                 status_code=404,
             )
         outputs = [_output_view(row) for row in app.state.dashboard_client.list_run_outputs(run_id)]
+        curation_videos = _curation_video_views(
+            run_id=run_id,
+            raw_videos=_call_client_list(app.state.dashboard_client, "list_raw_videos"),
+            video_curation=_call_client_list(app.state.dashboard_client, "list_video_curation"),
+        )
         return templates.TemplateResponse(
             request,
             "run_detail.html",
@@ -205,8 +246,115 @@ def create_app(
                 "current_user": user,
                 "run": _run_view(run),
                 "outputs": outputs,
+                "curation_videos": curation_videos,
+                "curation_labels": CURATION_LABELS,
+                "curation_error": "",
             },
         )
+
+    @app.get("/settings", response_class=HTMLResponse)
+    def settings_page(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        return templates.TemplateResponse(
+            request,
+            "settings.html",
+            _settings_template_context(
+                resolved_settings,
+                user=user,
+                versions=_call_client_list(app.state.dashboard_client, "list_settings_versions"),
+                error="",
+            ),
+        )
+
+    @app.post("/settings", response_class=HTMLResponse)
+    async def save_settings(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        form = await request.form()
+        try:
+            payload = _settings_form_payload(form)
+            reason = _form_value(form, "reason").strip()
+            if not reason:
+                raise ValueError("saving production scrape settings requires a reason")
+            validated = validate_scrape_settings(payload)
+            app.state.dashboard_client.save_settings_version(
+                validated,
+                reason=reason,
+                user=user.audit_identity,
+            )
+        except ValueError as exc:
+            return templates.TemplateResponse(
+                request,
+                "settings.html",
+                _settings_template_context(
+                    resolved_settings,
+                    user=user,
+                    versions=_call_client_list(app.state.dashboard_client, "list_settings_versions"),
+                    error=str(exc),
+                    form_settings=_form_settings_from_payload(_settings_form_payload(form)),
+                ),
+                status_code=400,
+            )
+        return RedirectResponse("/settings", status_code=303)
+
+    @app.post("/settings/{version}/rollback", response_class=HTMLResponse)
+    async def rollback_settings(request: Request, version: int) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        form = await request.form()
+        try:
+            reason = _form_value(form, "reason").strip()
+            if not reason:
+                raise ValueError("rolling back production scrape settings requires a reason")
+            app.state.dashboard_client.rollback_settings_version(
+                target_version=version,
+                reason=reason,
+                user=user.audit_identity,
+            )
+        except ValueError as exc:
+            return templates.TemplateResponse(
+                request,
+                "settings.html",
+                _settings_template_context(
+                    resolved_settings,
+                    user=user,
+                    versions=_call_client_list(app.state.dashboard_client, "list_settings_versions"),
+                    error=str(exc),
+                ),
+                status_code=400,
+            )
+        return RedirectResponse("/settings", status_code=303)
+
+    @app.post("/videos/{video_id}/curation", response_class=HTMLResponse)
+    async def save_video_curation(request: Request, video_id: str) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        form = await request.form()
+        labels = [str(label) for label in form.getlist("labels")]
+        invalid = [label for label in labels if label not in CURATION_LABELS]
+        run_id = _form_value(form, "run_id").strip()
+        if invalid:
+            return Response(
+                f"Invalid curation labels: {', '.join(invalid)}",
+                status_code=400,
+                media_type="text/plain; charset=utf-8",
+            )
+        exclude_reason = _form_value(form, "exclude_similar_reason")[:160]
+        if "Exclude Similar" in labels and not exclude_reason.strip():
+            labels = [label for label in labels if label != "Exclude Similar"]
+        app.state.dashboard_client.upsert_video_curation(
+            video_id,
+            labels=labels,
+            note=_form_value(form, "note")[:500],
+            exclude_similar_reason=exclude_reason,
+            user=user.audit_identity,
+        )
+        return RedirectResponse(f"/runs/{run_id}" if run_id else "/runs", status_code=303)
 
     @app.get("/reports", response_class=HTMLResponse)
     def reports_page(request: Request) -> Response:
@@ -286,9 +434,9 @@ def create_app(
             _csv_text(
                 RAW_VIDEO_CSV_COLUMNS,
                 _raw_video_export_rows(
-                    raw_videos=app.state.dashboard_client.list_raw_videos(),
-                    selected_videos=app.state.dashboard_client.list_selected_videos(),
-                    video_curation=app.state.dashboard_client.list_video_curation(),
+                    raw_videos=_call_client_list(app.state.dashboard_client, "list_raw_videos"),
+                    selected_videos=_call_client_list(app.state.dashboard_client, "list_selected_videos"),
+                    video_curation=_call_client_list(app.state.dashboard_client, "list_video_curation"),
                 ),
             ),
             filename="nattome-raw-videos.csv",
@@ -446,6 +594,8 @@ def _fastapi_nav_groups() -> tuple[tuple[str, tuple[tuple[str, str, str], ...]],
         for label, route, icon_name in items:
             if route == "/report":
                 updated_items.append(("Reports", "/reports", icon_name))
+            elif route == "/scrape-settings":
+                updated_items.append(("Scrape Settings", "/settings", icon_name))
             else:
                 updated_items.append((label, route, icon_name))
         groups.append((group_label, tuple(updated_items)))
@@ -457,6 +607,13 @@ def _authenticated_user_or_redirect(request: Request) -> object:
         return get_current_user(request)
     except AuthenticationError:
         return RedirectResponse("/login", status_code=303)
+
+
+def _call_client_list(dashboard_client: object, method_name: str) -> list[dict]:
+    method = getattr(dashboard_client, method_name, None)
+    if not callable(method):
+        return []
+    return list(method() or [])
 
 
 def _run_view(row: dict) -> dict:
@@ -548,6 +705,154 @@ def _output_count_label(outputs: list[dict]) -> str:
     if len(outputs) == 1:
         return "1 output available"
     return f"{len(outputs)} outputs available"
+
+
+def _settings_template_context(
+    settings: DashboardSettings,
+    *,
+    user: object,
+    versions: list[dict],
+    error: str,
+    form_settings: dict | None = None,
+) -> dict:
+    normalized_versions = [_settings_version_view(version) for version in versions]
+    active = next((version for version in normalized_versions if version["is_active"]), None)
+    if active is None:
+        active = {
+            "version": 0,
+            "settings": dict(DEFAULT_SCRAPE_SETTINGS),
+            "reason": "Default production settings",
+            "is_active": True,
+            "rollback_of_version": None,
+            "created_by": "system",
+            "created_at": "",
+        }
+    return {
+        **_template_context(settings, page_title="Scrape Settings", active_path="/settings"),
+        "current_user": user,
+        "active": active,
+        "versions": normalized_versions,
+        "form": _settings_form_view(form_settings or active["settings"]),
+        "scope_options": [
+            ("all", "All sources"),
+            ("hashtags", "Only hashtags"),
+            ("keywords", "Only keywords"),
+            ("profiles", "Only competitor profiles"),
+        ],
+        "error": error,
+    }
+
+
+def _settings_version_view(record: dict) -> dict:
+    settings = record.get("settings")
+    if not isinstance(settings, dict):
+        settings = record.get("new_settings") if isinstance(record.get("new_settings"), dict) else {}
+    return {
+        "version": int(record.get("version") or 0),
+        "settings": {**DEFAULT_SCRAPE_SETTINGS, **settings},
+        "reason": str(record.get("reason") or ""),
+        "is_active": bool(record.get("is_active")),
+        "rollback_of_version": record.get("rollback_of_version"),
+        "created_by": str(record.get("created_by") or record.get("changed_by") or ""),
+        "created_at": str(record.get("created_at") or record.get("timestamp") or ""),
+    }
+
+
+def _settings_form_view(settings: dict) -> dict:
+    return {
+        "hashtags": _lines(settings.get("hashtags")),
+        "keywords": _lines(settings.get("keywords")),
+        "competitor_profiles": _lines(settings.get("competitor_profiles")),
+        "scope": str(settings.get("scope") or "all"),
+        "results_per_input": settings.get("results_per_input") or "",
+        "minimum_views": settings.get("minimum_views") or "",
+        "maximum_age_days": settings.get("maximum_age_days") or "",
+        "minimum_engagement_rate_percent": _percent_value(
+            settings.get("minimum_weighted_engagement_rate")
+        ),
+        "requires_downloadable_video": bool(settings.get("requires_downloadable_video")),
+        "exclusion_terms": _lines(settings.get("exclusion_terms")),
+    }
+
+
+def _settings_form_payload(form: object) -> dict[str, object]:
+    engagement_rate = _form_value(form, "minimum_weighted_engagement_rate")
+    engagement_rate_percent = _form_value(form, "minimum_engagement_rate_percent")
+    if engagement_rate_percent:
+        engagement_rate = str(float(engagement_rate_percent) / 100)
+    return {
+        "hashtags": _form_value(form, "hashtags"),
+        "keywords": _form_value(form, "keywords"),
+        "competitor_profiles": _form_value(form, "competitor_profiles"),
+        "scope": _form_value(form, "scope") or "all",
+        "results_per_input": _form_value(form, "results_per_input"),
+        "minimum_views": _form_value(form, "minimum_views"),
+        "maximum_age_days": _form_value(form, "maximum_age_days"),
+        "minimum_weighted_engagement_rate": engagement_rate,
+        "requires_downloadable_video": "requires_downloadable_video" in form,
+        "exclusion_terms": _form_value(form, "exclusion_terms"),
+    }
+
+
+def _form_settings_from_payload(payload: dict[str, object]) -> dict:
+    settings = dict(DEFAULT_SCRAPE_SETTINGS)
+    settings.update(payload)
+    try:
+        settings["minimum_weighted_engagement_rate"] = float(
+            payload.get("minimum_weighted_engagement_rate") or 0
+        )
+    except (TypeError, ValueError):
+        settings["minimum_weighted_engagement_rate"] = payload.get(
+            "minimum_weighted_engagement_rate"
+        )
+    return settings
+
+
+def _form_value(form: object, key: str) -> str:
+    value = form.get(key) if hasattr(form, "get") else ""
+    return str(value or "")
+
+
+def _lines(value: object) -> str:
+    if isinstance(value, list):
+        return "\n".join(str(item) for item in value)
+    return str(value or "")
+
+
+def _percent_value(value: object) -> str:
+    try:
+        percent = float(value) * 100
+    except (TypeError, ValueError):
+        return ""
+    return f"{percent:g}"
+
+
+def _curation_video_views(
+    *,
+    run_id: str,
+    raw_videos: list[dict],
+    video_curation: list[dict],
+) -> list[dict]:
+    curation_by_video = {str(row.get("video_id") or ""): row for row in video_curation}
+    videos = []
+    for video in raw_videos:
+        if str(video.get("run_id") or "") != run_id:
+            continue
+        video_id = str(video.get("video_id") or "")
+        curation = curation_by_video.get(video_id, {})
+        videos.append(
+            {
+                "video_id": video_id,
+                "caption": str(video.get("caption") or ""),
+                "author_handle": str(video.get("author_handle") or ""),
+                "tiktok_url": str(video.get("tiktok_url") or ""),
+                "play_count": _cell(video.get("play_count")),
+                "labels": _list_value(curation.get("labels")),
+                "note": str(curation.get("note") or ""),
+                "exclude_similar_reason": str(curation.get("exclude_similar_reason") or ""),
+            }
+        )
+    return videos
 
 
 def _report_list_view(run: dict, outputs: list[dict]) -> dict:
