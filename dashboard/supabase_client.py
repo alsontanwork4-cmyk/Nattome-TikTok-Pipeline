@@ -323,6 +323,11 @@ class DashboardSupabaseClient:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
         return list(response.data or [])
 
+    def upsert_run(self, record: dict[str, Any]) -> dict[str, Any]:
+        response = self._client.table("runs").upsert(record, on_conflict="run_id").execute()
+        rows = list(response.data or [])
+        return rows[0] if rows else record
+
     def enqueue_manual_run(
         self,
         manual_run: dict[str, Any],
@@ -431,6 +436,14 @@ class DashboardSupabaseClient:
             .execute()
         )
         return list(response.data or [])
+
+    def upload_artifact_file(self, source_path: Any, metadata: ArtifactMetadata) -> None:
+        payload = source_path.read_bytes() if hasattr(source_path, "read_bytes") else bytes(source_path)
+        self._client.storage.from_(metadata.bucket or self.storage_bucket).upload(
+            metadata.object_path,
+            payload,
+            file_options={"content-type": metadata.content_type, "upsert": "true"},
+        )
 
     def create_signed_artifact_url(
         self,

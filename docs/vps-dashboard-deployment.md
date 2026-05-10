@@ -192,6 +192,37 @@ python -c "from dashboard.indexer import index_pipeline_artifacts; print(index_p
 systemctl restart nattome-dashboard
 ```
 
+For the Supabase-first dashboard migration, import historical Run Folder
+artifacts once after the files are present on the VPS. The importer uploads each
+file under a stable `runs/<run_id>/...` Storage object path, then upserts the
+matching `runs` and `run_outputs` metadata rows.
+
+```bash
+cd /opt/nattome-pipeline
+. .venv/bin/activate
+export DASHBOARD_WORKSPACE_PATH=/opt/nattome-pipeline
+export SUPABASE_URL="https://YOUR-PROJECT.supabase.co"
+export SUPABASE_SERVICE_ROLE_KEY="replace_me"
+export SUPABASE_STORAGE_BUCKET="dashboard-artifacts"
+python -m dashboard.legacy_import \
+  --workspace /opt/nattome-pipeline \
+  --storage-bucket dashboard-artifacts
+```
+
+If the old dashboard SQLite file has curation labels or notes that are not
+recoverable from artifacts, pass it explicitly as a one-time source:
+
+```bash
+python -m dashboard.legacy_import \
+  --workspace /opt/nattome-pipeline \
+  --storage-bucket dashboard-artifacts \
+  --legacy-sqlite /opt/nattome-pipeline/data/dashboard/dashboard.sqlite3
+```
+
+Do not configure the new FastAPI dashboard to read SQLite at runtime. This
+import is a migration aid only; rerunning it is safe because run and artifact
+metadata are upserted by stable keys.
+
 ## 9. Common Operations
 
 Check logs:

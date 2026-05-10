@@ -63,6 +63,18 @@ class FakeStorageBucket:
         self.recorder.append((self.bucket_name, "download", object_path))
         return b"# Report\n"
 
+    def upload(self, object_path: str, payload: bytes, file_options: dict):
+        self.recorder.append(
+            (
+                self.bucket_name,
+                "upload",
+                object_path,
+                payload,
+                file_options,
+            )
+        )
+        return {"path": object_path}
+
 
 class FakeStorage:
     def __init__(self, recorder: list[tuple]):
@@ -183,14 +195,24 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             }
         )
         artifact_result = client.upsert_artifact_metadata(metadata)
+        run_result = client.upsert_run(
+            {
+                "run_id": "run-1",
+                "status": "succeeded",
+                "run_type": "daily",
+                "created_at": "2026-05-10T01:00:00Z",
+            }
+        )
 
         self.assertEqual(manual_run_result[0]["id"], "manual-1")
         self.assertEqual(artifact_result[0]["object_path"], "runs/run-1/report.md")
+        self.assertEqual(run_result["run_id"], "run-1")
         self.assertIn(("manual_runs", "upsert", manual_run_result[0], "id"), fake.calls)
         self.assertIn(
             ("run_outputs", "upsert", artifact_result[0], "run_id,object_path"),
             fake.calls,
         )
+        self.assertIn(("runs", "upsert", run_result, "run_id"), fake.calls)
 
     def test_client_creates_signed_artifact_url_from_metadata(self):
         fake = FakeSupabase()
@@ -212,6 +234,36 @@ class DashboardSupabaseContractTest(unittest.TestCase):
         self.assertIn(("storage", "from", "dashboard-artifacts"), fake.calls)
         self.assertIn(
             ("dashboard-artifacts", "create_signed_url", "runs/run-1/report.md", 900),
+            fake.calls,
+        )
+
+    def test_client_uploads_artifact_file_to_storage_bucket(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        metadata = ArtifactMetadata(
+            run_id="run-1",
+            artifact_type="report",
+            bucket="dashboard-artifacts",
+            object_path="runs/run-1/report.md",
+            filename="report.md",
+            content_type="text/markdown",
+        )
+
+        class SourcePath:
+            def read_bytes(self):
+                return b"# Report\n"
+
+        client.upload_artifact_file(SourcePath(), metadata)
+
+        self.assertIn(("storage", "from", "dashboard-artifacts"), fake.calls)
+        self.assertIn(
+            (
+                "dashboard-artifacts",
+                "upload",
+                "runs/run-1/report.md",
+                b"# Report\n",
+                {"content-type": "text/markdown", "upsert": "true"},
+            ),
             fake.calls,
         )
 

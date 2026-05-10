@@ -2274,3 +2274,35 @@ Feedback:
 
 Notes for next iteration:
 - No blocker remains from this issue. The next AFK slice is expected to add the one-time legacy artifact import.
+
+## 2026-05-10 - 0085 Add One-Time Legacy Artifact Import
+
+Task completed from `docs/issues/0085-add-one-time-legacy-artifact-import.md`.
+
+Key decisions made:
+- Added `dashboard/legacy_import.py` as a one-time migration utility for historical Run Folders, separate from the FastAPI runtime.
+- Imported legacy run metadata from `runs/batch-analysis/*/run_manifest.json`, deriving visible `runs` rows from manifest, metadata, and selected-batch artifacts.
+- Uploaded every Run Folder file to stable Supabase Storage object paths under `runs/<run_id>/...`.
+- Wrote `run_outputs` metadata with bucket, object path, filename, content type, file size, SHA-256 checksum, created time, and run id.
+- Added optional explicit SQLite curation import for state not recoverable from artifacts without initializing the dashboard SQLite runtime.
+- Documented the migration command and made it safe to rerun through Supabase upserts by stable keys.
+
+Files changed:
+- `dashboard/legacy_import.py`
+- `dashboard/supabase_client.py`
+- `docs/vps-dashboard-deployment.md`
+- `requirements.txt`
+- `tests/test_dashboard_legacy_import.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `progress.txt`
+- `docs/issues/done/0085-add-one-time-legacy-artifact-import.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p "test_dashboard_legacy_import.py"` failed because `dashboard.legacy_import` did not exist.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_legacy_import.py"` passed with 2 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_supabase_contract.py"` passed with 8 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_architecture_characterization.py"` passed with 11 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 139 tests.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to add the Supabase VPS deployment path.
