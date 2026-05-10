@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any
 
 
@@ -86,7 +87,9 @@ DASHBOARD_TABLE_CONTRACT: dict[str, tuple[str, ...]] = {
         "triggered_by",
         "requested_at",
         "claimed_at",
+        "claimed_by",
         "finished_at",
+        "expected_output_metadata",
         "error_summary",
         "created_at",
         "updated_at",
@@ -320,6 +323,107 @@ class DashboardSupabaseClient:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
         return list(response.data or [])
 
+    def enqueue_manual_run(
+        self,
+        manual_run: dict[str, Any],
+        run: dict[str, Any],
+    ) -> dict[str, Any]:
+        self._client.table("runs").upsert(run, on_conflict="run_id").execute()
+        rows = self.upsert_manual_run(manual_run)
+        return rows[0] if rows else manual_run
+
+    def get_active_manual_run(self, *, run_type: str) -> dict[str, Any] | None:
+        response = (
+            self._client.table("manual_runs")
+            .select("*")
+            .eq("run_type", run_type)
+            .order("requested_at", desc=True)
+            .execute()
+        )
+        for row in list(response.data or []):
+            if str(row.get("status") or "").lower() in {"queued", "running"}:
+                return row
+        return None
+
+    def claim_queued_manual_run(self, *, worker_id: str) -> dict[str, Any] | None:
+        response = (
+            self._client.table("manual_runs")
+            .select("*")
+            .eq("status", "queued")
+            .order("requested_at", desc=False)
+            .limit(1)
+            .execute()
+        )
+        queued = list(response.data or [])
+        if not queued:
+            return None
+        manual_run = queued[0]
+        run_id = str(manual_run.get("run_id") or "")
+        claimed_at = _iso_now()
+        updates = {
+            "status": "running",
+            "claimed_by": worker_id,
+            "claimed_at": claimed_at,
+            "updated_at": claimed_at,
+        }
+        claim_response = (
+            self._client.table("manual_runs")
+            .update(updates)
+            .eq("id", manual_run.get("id"))
+            .eq("status", "queued")
+            .execute()
+        )
+        claimed_rows = list(claim_response.data or [])
+        if not claimed_rows:
+            return None
+        (
+            self._client.table("runs")
+            .update(
+                {
+                    "status": "running",
+                    "started_at": claimed_at,
+                    "updated_at": claimed_at,
+                }
+            )
+            .eq("run_id", run_id)
+            .execute()
+        )
+        return claimed_rows[0]
+
+    def mark_manual_run_status(
+        self,
+        run_id: str,
+        *,
+        status: str,
+        error_summary: str = "",
+    ) -> None:
+        finished_at = _iso_now()
+        updates = {
+            "status": status,
+            "error_summary": error_summary,
+            "finished_at": finished_at,
+            "updated_at": finished_at,
+        }
+        (
+            self._client.table("manual_runs")
+            .update(updates)
+            .eq("run_id", run_id)
+            .execute()
+        )
+        (
+            self._client.table("runs")
+            .update(
+                {
+                    "status": status,
+                    "finished_at": finished_at,
+                    "error_summary": error_summary,
+                    "updated_at": finished_at,
+                }
+            )
+            .eq("run_id", run_id)
+            .execute()
+        )
+
     def upsert_artifact_metadata(self, metadata: ArtifactMetadata) -> list[dict[str, Any]]:
         response = (
             self._client.table("run_outputs")
@@ -365,3 +469,7 @@ def _next_settings_version(versions: list[dict[str, Any]]) -> int:
     if not versions:
         return 1
     return max(int(version.get("version") or 0) for version in versions) + 1
+
+
+def _iso_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()

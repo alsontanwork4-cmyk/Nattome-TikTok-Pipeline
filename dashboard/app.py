@@ -18,6 +18,7 @@ from .auth import (
 )
 from .config import DashboardSettings
 from .markdown import render_markdown
+from .runtime import ActiveManualRunError, enqueue_manual_run, sanitize_error_summary
 from .scrape_settings import DEFAULT_SCRAPE_SETTINGS, validate_scrape_settings
 from .supabase_client import ArtifactMetadata
 from .web_constants import CURATION_LABELS, NAV_GROUPS as LEGACY_NAV_GROUPS
@@ -128,6 +129,12 @@ class EmptyDashboardDataClient:
     ) -> dict:
         return {}
 
+    def get_active_manual_run(self, *, run_type: str) -> dict | None:
+        return None
+
+    def enqueue_manual_run(self, manual_run: dict, run: dict) -> dict:
+        return manual_run
+
 
 def create_app(
     settings: DashboardSettings | None = None,
@@ -200,8 +207,38 @@ def create_app(
                 **_template_context(resolved_settings, page_title="Runs", active_path="/runs"),
                 "current_user": user,
                 "runs": runs,
+                "run_error": "",
             },
         )
+
+    @app.post("/runs", response_class=HTMLResponse)
+    def request_manual_run(request: Request) -> Response:
+        user = _authenticated_user_or_redirect(request)
+        if isinstance(user, RedirectResponse):
+            return user
+        try:
+            enqueue_manual_run(
+                app.state.dashboard_client,
+                triggered_by=user.audit_identity,
+            )
+        except ActiveManualRunError as exc:
+            runs = [_run_view(row) for row in app.state.dashboard_client.list_runs(limit=50)]
+            return templates.TemplateResponse(
+                request,
+                "runs.html",
+                {
+                    **_template_context(
+                        resolved_settings,
+                        page_title="Runs",
+                        active_path="/runs",
+                    ),
+                    "current_user": user,
+                    "runs": runs,
+                    "run_error": str(exc),
+                },
+                status_code=409,
+            )
+        return RedirectResponse("/runs", status_code=303)
 
     @app.get("/runs/{run_id}", response_class=HTMLResponse)
     def run_detail_page(request: Request, run_id: str) -> Response:
@@ -992,17 +1029,7 @@ def _cell(value: object) -> object:
 
 
 def _safe_error_summary(value: object) -> str:
-    text = str(value or "").strip()
-    if not text:
-        return ""
-    sanitized_lines = []
-    for line in text.splitlines()[:4]:
-        lowered = line.lower()
-        if any(marker in lowered for marker in ("secret", "token", "password", "key=")):
-            sanitized_lines.append("[redacted secret]")
-        else:
-            sanitized_lines.append(line[:240])
-    return "\n".join(sanitized_lines)
+    return sanitize_error_summary(value)
 
 
 app = create_app()

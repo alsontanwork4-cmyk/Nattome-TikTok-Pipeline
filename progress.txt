@@ -2240,3 +2240,37 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to add the worker-backed manual run trigger.
+
+## 2026-05-10 - 0084 Add Worker-Backed Manual Run Trigger
+
+Task completed from `docs/issues/0084-add-worker-backed-manual-run-trigger.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `POST /runs` as an enqueue-only manual trigger so long-running pipeline work stays out of the web request.
+- Added `dashboard/runtime.py` for the active full-pipeline guard, queued manual-run record construction, expected output metadata, and shared error-summary redaction.
+- Added a compact `dashboard/worker.py` claim/execution/status contract with injectable runner behavior and artifact metadata publication.
+- Extended the Supabase client boundary with manual-run enqueue, active-run lookup, queued claim, status update, and run visibility updates without adding repository layers.
+- Kept the trigger UI in the existing Runs page using the legacy dashboard form/button/panel visual language.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/runtime.py`
+- `dashboard/worker.py`
+- `dashboard/supabase_client.py`
+- `dashboard/templates/runs.html`
+- `docs/supabase-dashboard-data-contract.md`
+- `tests/test_dashboard_fastapi_runs.py`
+- `tests/test_dashboard_worker.py`
+- `progress.txt`
+- `docs/issues/done/0084-add-worker-backed-manual-run-trigger.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p "test_dashboard_fastapi_runs.py"` failed because `POST /runs` returned 405 and the Runs page had no trigger form.
+- RED: `python -m unittest discover -s tests -p "test_dashboard_worker.py"` failed because `dashboard.worker` did not exist.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi_runs.py"` passed with 8 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_worker.py"` passed with 2 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_supabase_contract.py"` passed with 7 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 136 tests.
+
+Notes for next iteration:
+- No blocker remains from this issue. The next AFK slice is expected to add the one-time legacy artifact import.

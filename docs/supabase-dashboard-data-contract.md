@@ -10,7 +10,9 @@ Required tables:
 - `selected_videos`: selected candidate membership and evidence status for a run.
 - `video_curation`: labels, notes, exclusion reason, and Supabase Auth audit identity.
 - `scrape_settings_versions`: versioned settings payloads, reasons, active version, rollback source, and creator identity.
-- `manual_runs`: queued/running/finished manual run requests claimed by the worker.
+- `manual_runs`: queued/running/finished manual run requests claimed by the worker, including trigger identity, requested/claimed/finished timestamps, expected output metadata, and concise failure summaries.
+
+Manual run statuses use the compact worker contract: `queued`, `running`, `succeeded`, `failed`, and `canceled`. FastAPI only inserts queued manual run records and matching queued `runs` rows; the worker claims queued records, updates visible run status, and publishes artifact metadata after Supabase Storage upload.
 
 Artifact metadata fields live in `run_outputs`: `run_id`, `artifact_type`, `bucket`, `object_path`, `filename`, `content_type`, `size_bytes`, `checksum`, and `created_at`. Large files stay in Supabase Storage; Postgres stores only metadata and lookup fields.
 

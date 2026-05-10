@@ -28,6 +28,8 @@ class FakeSupabaseAuthClient:
 
 class FakeDashboardDataClient:
     def __init__(self):
+        self.enqueued_manual_runs = []
+        self.active_manual_run = None
         self.runs = [
             {
                 "run_id": "run-queued",
@@ -119,6 +121,14 @@ class FakeDashboardDataClient:
     def list_run_outputs(self, run_id: str):
         return self.outputs.get(run_id, [])
 
+    def get_active_manual_run(self, *, run_type: str):
+        return self.active_manual_run
+
+    def enqueue_manual_run(self, manual_run: dict, run: dict):
+        self.enqueued_manual_runs.append((manual_run, run))
+        self.runs.insert(0, run)
+        return manual_run
+
 
 class DashboardFastAPIRunsTest(unittest.TestCase):
     def test_runs_route_requires_authentication(self):
@@ -132,6 +142,55 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
 
             self.assertEqual(response.status_code, 303)
             self.assertEqual(response.headers["location"], "/login")
+
+    def test_manual_run_trigger_requires_authentication(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = TestClient(
+                create_app(DashboardSettings(workspace_path=Path(temp_dir))),
+                follow_redirects=False,
+            )
+
+            response = client.post("/runs")
+
+            self.assertEqual(response.status_code, 303)
+            self.assertEqual(response.headers["location"], "/login")
+
+    def test_manual_run_trigger_queues_full_pipeline_without_running_worker(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            data_client = FakeDashboardDataClient()
+            client = self._client(Path(temp_dir), data_client)
+
+            response = client.post("/runs", follow_redirects=False)
+
+            self.assertEqual(response.status_code, 303)
+            self.assertEqual(response.headers["location"], "/runs")
+            self.assertEqual(len(data_client.enqueued_manual_runs), 1)
+            manual_run, run = data_client.enqueued_manual_runs[0]
+            self.assertEqual(manual_run["status"], "queued")
+            self.assertEqual(manual_run["run_type"], "full_pipeline")
+            self.assertEqual(manual_run["triggered_by"], "owner@example.com")
+            self.assertIn("requested_at", manual_run)
+            self.assertGreaterEqual(len(manual_run["expected_output_metadata"]), 3)
+            self.assertEqual(run["status"], "queued")
+            self.assertEqual(run["run_id"], manual_run["run_id"])
+            self.assertEqual(run["triggered_by"], "owner@example.com")
+
+    def test_manual_run_trigger_rejects_duplicate_active_full_pipeline_run(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            data_client = FakeDashboardDataClient()
+            data_client.active_manual_run = {
+                "id": "manual-active",
+                "run_id": "run-active",
+                "status": "running",
+                "run_type": "full_pipeline",
+            }
+            client = self._client(Path(temp_dir), data_client)
+
+            response = client.post("/runs", follow_redirects=False)
+
+            self.assertEqual(response.status_code, 409)
+            self.assertIn("A full pipeline run is already active.", response.text)
+            self.assertEqual(data_client.enqueued_manual_runs, [])
 
     def test_runs_route_renders_empty_state_without_sqlite_runtime(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -155,6 +214,8 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
             response = client.get("/runs")
 
             self.assertEqual(response.status_code, 200)
+            self.assertIn('method="post" action="/runs"', response.text)
+            self.assertIn("Run full pipeline", response.text)
             self.assertIn('<table class="data-table runs-table">', response.text)
             for run_id in [
                 "run-queued",
