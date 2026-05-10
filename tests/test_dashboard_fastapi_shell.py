@@ -201,16 +201,14 @@ class DashboardFastAPIShellTest(unittest.TestCase):
             self.assertIn('<a class="nav-link" href="/" aria-current="page">', response.text)
             self.assertIn('<nav class="breadcrumb" aria-label="Breadcrumb">', response.text)
             self.assertIn('<div class="page-actions">', response.text)
-            self.assertIn('<section class="panel feature">', response.text)
-            self.assertIn('<span class="status-pill ok">Ready</span>', response.text)
-            self.assertIn('<table class="data-table shell-smoke-table">', response.text)
-            self.assertIn('<label class="field-label">', response.text)
-            self.assertIn('class="action-form shell-smoke-form"', response.text)
-            self.assertIn("<button", response.text)
+            self.assertIn('<section class="panel feature overview-hero">', response.text)
+            self.assertIn('<div class="empty-state">', response.text)
+            self.assertIn('class="action-link" href="/runs"', response.text)
             self.assertEqual(css_response.status_code, 200)
             self.assertIn("--accent: #B85B2E;", css_response.text)
             self.assertIn(".nav-link[aria-current=\"page\"]", css_response.text)
             self.assertIn(".status-pill.ok", css_response.text)
+            self.assertIn(".overview-hero", css_response.text)
 
     def test_fastapi_visual_language_decision_is_documented_for_later_pages(self):
         adr = PROJECT_ROOT / "docs" / "adr" / "0003-supabase-first-fastapi-dashboard-rewrite.md"

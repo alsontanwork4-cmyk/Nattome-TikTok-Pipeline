@@ -53,15 +53,35 @@ def create_app(
         user = _authenticated_user_or_redirect(request)
         if isinstance(user, RedirectResponse):
             return user
+        latest_runs = app.state.dashboard_client.list_runs(limit=1)
+        latest_run = _run_view(latest_runs[0]) if latest_runs else None
+        outputs = (
+            [
+                _output_view(row)
+                for row in app.state.dashboard_client.list_run_outputs(latest_run["run_id"])
+            ]
+            if latest_run
+            else []
+        )
         return templates.TemplateResponse(
             request,
-            "base.html",
+            "overview.html",
             {
-                "settings": resolved_settings,
-                "page_title": "Overview",
-                "active_path": "/",
-                "nav_groups": NAV_GROUPS,
+                **_template_context(
+                    resolved_settings,
+                    page_title="Overview",
+                    active_path="/",
+                ),
                 "current_user": user,
+                "latest_run": latest_run,
+                "outputs": outputs,
+                "report_href": f"/reports/{latest_run['run_id']}" if latest_run else "",
+                "output_count_label": _output_count_label(outputs),
+                "top_operational_issue": (
+                    latest_run["error_summary"]
+                    if latest_run and latest_run["error_summary"]
+                    else "No operational issue reported."
+                ),
             },
         )
 
@@ -227,10 +247,12 @@ def _run_view(row: dict) -> dict:
 
 
 def _output_view(row: dict) -> dict:
+    object_path = str(row.get("object_path") or "")
     return {
         "artifact_type": str(row.get("artifact_type") or ""),
         "bucket": str(row.get("bucket") or ""),
-        "object_path": str(row.get("object_path") or ""),
+        "object_path": object_path,
+        "artifact_href": f"/artifacts/{object_path}" if object_path else "",
         "filename": str(row.get("filename") or row.get("object_path") or ""),
         "content_type": str(row.get("content_type") or ""),
         "size": _format_bytes(row.get("size_bytes")),
@@ -286,6 +308,14 @@ def _format_bytes(value: object) -> str:
     if size >= 1024:
         return f"{size / 1024:.1f} KB"
     return f"{size} B"
+
+
+def _output_count_label(outputs: list[dict]) -> str:
+    if not outputs:
+        return "No outputs published"
+    if len(outputs) == 1:
+        return "1 output available"
+    return f"{len(outputs)} outputs available"
 
 
 def _safe_error_summary(value: object) -> str:

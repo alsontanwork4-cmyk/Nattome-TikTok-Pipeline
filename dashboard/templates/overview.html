@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set actions %}
+<div class="actions">
+  <a class="action-link" href="/runs">View runs</a>
+  {% if latest_run %}
+  <a class="action-link secondary" href="/runs/{{ latest_run.run_id }}">Open latest run</a>
+  {% endif %}
+</div>
+{% endset %}
+{{ theme.page_header("Overview", "Latest Supabase-backed pipeline state.", actions) }}
+
+<section class="panel feature overview-hero">
+  <h2>Latest run</h2>
+  {% if not latest_run %}
+  <div class="empty-state">
+    <span class="empty-state-icon">{{ theme.icon("history") }}</span>
+    <div>
+      <p>No Supabase run data yet</p>
+      <p class="muted">The worker has not published dashboard metadata.</p>
+    </div>
+  </div>
+  {% else %}
+  <p class="run-id-metric"><a href="/runs/{{ latest_run.run_id }}">{{ latest_run.run_id }}</a></p>
+  <dl class="metadata-grid">
+    <div>
+      <dt>Status</dt>
+      <dd>{{ theme.status_pill(latest_run.status_label, latest_run.status_tone) }}</dd>
+    </div>
+    <div>
+      <dt>Run type</dt>
+      <dd>{{ latest_run.run_type or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Started</dt>
+      <dd>{{ latest_run.started_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Finished</dt>
+      <dd>{{ latest_run.finished_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Duration</dt>
+      <dd>{{ latest_run.duration }}</dd>
+    </div>
+    <div>
+      <dt>Triggered by</dt>
+      <dd>{{ latest_run.triggered_by or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Outputs</dt>
+      <dd>{{ output_count_label }}</dd>
+    </div>
+    <div>
+      <dt>Report</dt>
+      <dd><a href="{{ report_href }}">Open report</a></dd>
+    </div>
+  </dl>
+  <ol class="overview-funnel">
+    <li>
+      <span class="overview-funnel-label">Raw candidates</span>
+      <span class="overview-funnel-value">{{ latest_run.raw_candidate_count }}</span>
+    </li>
+    <li>
+      <span class="overview-funnel-label">Eligible candidates</span>
+      <span class="overview-funnel-value">{{ latest_run.eligible_candidate_count }}</span>
+    </li>
+    <li>
+      <span class="overview-funnel-label">Selected</span>
+      <span class="overview-funnel-value">{{ latest_run.selected_count }}</span>
+    </li>
+  </ol>
+  {% endif %}
+</section>
+
+{% if latest_run %}
+<div class="overview-grid-3">
+  <article>
+    <h3>Output availability</h3>
+    {% if not outputs %}
+    <p class="muted">No output metadata has been published for this run.</p>
+    {% else %}
+    <div class="output-chip-row">
+      {% for output in outputs %}
+      <a class="output-chip" href="{{ output.artifact_href }}">{{ output.filename }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </article>
+  <article>
+    <h3>Top operational issue</h3>
+    <p class="muted">{{ top_operational_issue }}</p>
+  </article>
+  <article>
+    <h3>Run links</h3>
+    <ul class="overview-stat-list">
+      <li><a href="/runs/{{ latest_run.run_id }}">Run detail</a></li>
+      <li><a href="{{ report_href }}">Report route</a></li>
+    </ul>
+  </article>
+</div>
+{% endif %}
+{% endblock %}

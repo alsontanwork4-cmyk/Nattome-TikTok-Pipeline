@@ -2126,3 +2126,29 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to build the authenticated overview from Supabase runs.
+
+## 2026-05-10 - 0080 Build Overview From Supabase Runs
+
+Task completed from `docs/issues/0080-build-overview-from-supabase-runs.md`.
+
+Key decisions made:
+- Replaced the authenticated `GET /` shell placeholder with a Supabase-backed overview using the existing dashboard data-client seam.
+- Kept the overview focused on the latest run only: status, timing, candidate funnel counts, output availability, report/run links, artifact links, and the top operational issue.
+- Preserved the legacy dashboard visual language with Jinja templates, feature panels, metadata grids, funnel stats, empty state styling, and existing theme assets.
+- Kept the new overview independent of the old request handler and SQLite runtime.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/overview.html`
+- `tests/test_dashboard_fastapi_overview.py`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0080-build-overview-from-supabase-runs.md`
+
+Feedback:
+- RED: `python -m pytest -q tests/test_dashboard_fastapi_overview.py` failed because `/` still rendered the shell placeholder instead of Supabase run metadata.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_overview.py` passed with 3 tests.
+- GREEN: `python -m pytest -q tests/test_dashboard_fastapi_shell.py tests/test_dashboard_fastapi_runs.py tests/test_dashboard_fastapi_overview.py` passed with 19 tests and 10 subtests.
+- GREEN: `python -m pytest -q` passed with 115 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add authenticated Supabase Storage artifact access.
