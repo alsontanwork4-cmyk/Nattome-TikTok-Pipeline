@@ -14,7 +14,7 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - Host the dashboard and batch analysis control surface reliably on a VPS.
 - Remove legacy dashboard server code after FastAPI reaches feature parity.
 - Keep or extract useful business logic, but rewrite the web layer cleanly.
-- Provide persistent storage for run metadata, settings, curation, and batch status.
+- Provide Supabase-backed persistent storage for run metadata, settings, curation, and batch status.
 - Support authentication before exposing the dashboard over the internet.
 - Keep the first production version server-rendered unless a separate frontend becomes clearly necessary.
 - Make the final system easy to understand, deploy, debug, and extend.
@@ -74,7 +74,7 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 **Acceptance Criteria:**
 
 - [ ] Review existing modules and classify them as keep, rewrite, or delete.
-- [ ] Keep useful non-web modules such as run loading, settings validation, exports, manual runs, and report discovery where practical.
+- [ ] Keep useful domain rules such as settings validation, export column definitions, report discovery/formatting, and time display where practical.
 - [ ] Rewrite request handling, auth, response handling, and route composition in FastAPI.
 - [ ] Remove old helper functions that only exist for the deleted server.
 - [ ] Document the final module map.
@@ -98,8 +98,8 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 **Acceptance Criteria:**
 
 - [ ] Define production tables for runs, run outputs, selected videos, raw videos, curation, settings versions, and manual runs.
-- [ ] Choose initial production storage: local Postgres, Supabase Postgres, or SQLite with a clear upgrade path.
-- [ ] Store large artifacts as files or object-storage objects, not database blobs.
+- [ ] Use Supabase Postgres as the production metadata store.
+- [ ] Store large artifacts in Supabase Storage, not database blobs or VPS-local dashboard storage.
 - [ ] Store artifact metadata in the database.
 - [ ] Add backup and restore notes.
 
@@ -183,8 +183,8 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - FR-2: The production app must be served by `uvicorn` or a compatible ASGI server.
 - FR-3: The app must provide routes for overview, report, run history, scrape settings, exports, health check, curation, and manual run trigger.
 - FR-4: The app must require authentication for dashboard pages and mutating actions in production.
-- FR-5: The app must store run metadata, run status, settings versions, and curation data durably.
-- FR-6: The app must store large artifacts outside the relational database.
+- FR-5: The app must store run metadata, run status, settings versions, and curation data durably in Supabase Postgres.
+- FR-6: The app must store large artifacts in Supabase Storage, with metadata in Supabase Postgres.
 - FR-7: The app must expose enough run status detail to operate the pipeline without SSH for normal cases.
 - FR-8: Manual run triggers must be protected against duplicate active runs.
 - FR-9: Settings changes must be versioned and rollbackable.
@@ -203,12 +203,13 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - Do not store source videos or large reports directly in Postgres.
 - Do not add Kubernetes or complex orchestration for the first VPS version.
 - Do not create generic repository or adapter layers without a concrete need.
-- Do not preserve old dashboard architecture tests that conflict with the FastAPI rewrite.
+- Do not preserve old dashboard architecture tests, SQLite runtime tests, or local-server tests that conflict with the FastAPI/Supabase rewrite.
 
 ## Design Considerations
 
 - The first FastAPI version should probably use server-rendered HTML for compactness.
-- Templates may be introduced if they make the new code smaller and easier to read than large Python f-strings.
+- Jinja templates are the rendering strategy for the FastAPI dashboard.
+- The new dashboard should preserve the legacy dashboard's color theme, dense operational layout, navigation feel, card/table styling, buttons, status pills, and logo treatment unless a human explicitly approves a redesign.
 - The dashboard should feel like an operational control panel: dense, clear, and focused.
 - Run status should be visible near the top of the relevant pages.
 - Mutating actions should provide direct success or error feedback.
@@ -216,69 +217,77 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 
 ## Technical Considerations
 
-### Likely keep or adapt
+### Keep or adapt
 
-- `dashboard/indexer.py`
-- `dashboard/run_history.py`
-- `dashboard/settings.py`
-- `dashboard/exports.py`
-- `dashboard/manual_runs.py`
-- `dashboard/report_view.py`
-- `dashboard/store.py`, if SQLite remains part of local/dev mode
+- Settings validation rules from `dashboard/settings.py`
+- Export column definitions and CSV formatting rules from `dashboard/exports.py`
+- Report discovery/formatting behavior from `dashboard/report_view.py`
+- Time display helpers from `dashboard/time_display.py`
+- Static assets from `dashboard/assets/` where still useful
 
-### Likely rewrite
+### Rewrite
 
 - `dashboard/web.py`
 - `dashboard/web_server.py`
+- `dashboard/web_actions.py`
 - `dashboard/web_layout.py`
 - `dashboard/web_components.py`
+- `dashboard/web_constants.py`
 - `dashboard/web_overview.py`
 - `dashboard/web_report.py`
 - `dashboard/web_run_history.py`
 - `dashboard/web_settings.py`
+- SQLite-backed persistence in `dashboard/store.py`
+- Run history, manual run, settings, curation, and export data access around Supabase Postgres and Supabase Storage
 
-Some rendering logic can be copied or translated, but the final structure should belong to FastAPI, not the old server.
+Some rendering behavior can be translated, but the final structure belongs to FastAPI, Jinja, Supabase Auth, Supabase Postgres, and Supabase Storage. Do not carry forward the old server, SQLite store, or large Python HTML string rendering as production architecture.
 
 ### Proposed new structure
 
 ```text
 dashboard/
-  app.py                 FastAPI app factory and route registration
-  config.py              Environment-based app settings
-  auth.py                Authentication helpers
+  app.py                 FastAPI app factory, middleware, route registration
+  config.py              environment config and runtime settings
+  auth.py                Supabase Auth session/user dependency
+  supabase_client.py     Supabase Postgres and Storage client boundary
+  runtime.py             enqueue manual runs and active-run guard
+  worker.py              queue polling, job claim, pipeline execution
+
   routes/
     overview.py
+    runs.py
     reports.py
-    run_history.py
     settings.py
+    curation.py
     exports.py
-    manual_runs.py
+    artifacts.py
+
   templates/
     base.html
+    login.html
     overview.html
+    runs.html
+    run_detail.html
     report.html
-    run_history.html
     settings.html
-  static/
+
+  assets/
     dashboard.css
     dashboard.js
-  storage/
-    connection.py
-    schema.py
-  runtime.py             Batch trigger and active-run coordination
 ```
 
-This structure is a proposal. Implementation should keep it compact and avoid empty folders or placeholder abstractions.
+This structure is the locked target from `docs/adr/0003-supabase-first-fastapi-dashboard-rewrite.md`. Implementation should keep it compact and avoid empty folders, placeholder abstractions, generic repositories, or repository-per-table layers.
 
 ## Storage Decision
 
-The preferred production storage should be decided before implementation begins.
+The production storage decision is locked in `docs/adr/0003-supabase-first-fastapi-dashboard-rewrite.md`.
 
-Recommended path:
+- Supabase Postgres is the production metadata store.
+- Supabase Storage is the large artifact store.
+- SQLite is removed from the new dashboard runtime and should not remain as a second supported dashboard store.
+- A later migration slice may read legacy SQLite only as a one-time import source if needed.
 
-1. Use Postgres/Supabase for production run metadata, settings versions, manual runs, and curation.
-2. Use VPS disk or Supabase Storage for large artifacts.
-3. Keep SQLite only for local development or one-time migration, not as the long-term production source of truth.
+Production metadata includes run metadata, run status, settings versions, manual runs, curation, selected videos, raw videos, and output metadata.
 
 Candidate tables:
 
@@ -290,7 +299,42 @@ Candidate tables:
 - `scrape_settings_versions`
 - `manual_runs`
 
-Large artifacts should be referenced by metadata: path, storage provider, size, checksum if available, created time, and run id.
+Large artifacts should be referenced by metadata: Supabase Storage bucket, object path, size, checksum if available, created time, and run id.
+
+## Authentication Decision
+
+Authentication uses Supabase Auth. Dashboard user identity should populate audit fields such as `created_by`, `updated_by`, manual-run trigger user, and curation author.
+
+## Rendering Decision
+
+Rendering uses server-rendered Jinja templates. Report Markdown may be rendered server-side and inserted into a Jinja page, but the app should not keep large Python HTML string renderers as the main presentation layer.
+
+## Batch Execution Decision
+
+Batch execution runs outside the FastAPI request process. FastAPI writes authenticated manual-run requests to Supabase; a separate Python worker managed by `systemd` claims queued jobs, enforces active-run locking, runs the pipeline, uploads artifacts to Supabase Storage, and updates status.
+
+## Route Map
+
+Canonical FastAPI routes use clean resource-style paths:
+
+- `GET /`
+- `GET /healthz`
+- `GET /login`
+- `POST /login`
+- `POST /logout`
+- `GET /runs`
+- `GET /runs/{run_id}`
+- `POST /runs`
+- `GET /reports`
+- `GET /reports/{run_id}`
+- `GET /settings`
+- `POST /settings`
+- `POST /settings/{version}/rollback`
+- `POST /videos/{video_id}/curation`
+- `GET /exports/raw-videos.csv`
+- `GET /exports/run-summaries.csv`
+- `GET /artifacts/{artifact_id}`
+- `GET /static/{path}`
 
 ## Implementation Plan
 
@@ -326,7 +370,7 @@ Large artifacts should be referenced by metadata: path, storage provider, size, 
 - Add authentication.
 - Add production database schema.
 - Add storage access code.
-- Add migration/import path from current artifacts or SQLite.
+- Add migration/import path from current artifacts and, only if needed, a one-time read from legacy SQLite.
 - Add backup documentation.
 
 ### Phase 5: Add VPS deployment
@@ -340,6 +384,7 @@ Large artifacts should be referenced by metadata: path, storage provider, size, 
 
 - Delete old plain HTTP server code.
 - Delete obsolete tests.
+- Delete SQLite runtime/store code after Supabase parity.
 - Delete obsolete docs that forbid FastAPI.
 - Update commands and imports.
 - Run the full dashboard test suite.
@@ -350,7 +395,8 @@ Large artifacts should be referenced by metadata: path, storage provider, size, 
 - A user can view runs, reports, settings, and exports remotely.
 - A user can trigger and monitor a batch run without SSH.
 - Auth protects the dashboard before public exposure.
-- Production run metadata survives service restarts.
+- Production run metadata survives service restarts in Supabase Postgres.
+- Large artifacts are stored in Supabase Storage and are accessible through authenticated dashboard routes.
 - The old dashboard server code is removed after replacement.
 - The final dashboard codebase is smaller or easier to navigate than the old web module set.
 - There is one production web architecture.
@@ -361,10 +407,10 @@ Large artifacts should be referenced by metadata: path, storage provider, size, 
   **Mitigation:** Keep the route list small and rebuild only production-critical pages first.
 
 - **Risk:** Useful domain logic gets thrown away unnecessarily.
-  **Mitigation:** Classify files before deleting: keep, adapt, rewrite, delete.
+  **Mitigation:** Keep only clear domain rules and rewrite storage/web boundaries around Supabase.
 
 - **Risk:** The app becomes over-abstracted.
-  **Mitigation:** Avoid generic repositories, adapters, and empty layers until the code proves they are needed.
+  **Mitigation:** Avoid placeholder modules, generic repositories, repository-per-table layers, broad adapters, and empty abstractions until the code proves they are needed.
 
 - **Risk:** Hosted dashboard exposes sensitive controls.
   **Mitigation:** Add auth before production exposure and protect all mutating routes.
@@ -373,14 +419,9 @@ Large artifacts should be referenced by metadata: path, storage provider, size, 
   **Mitigation:** Add active-run lock/status tracking and visible failure states.
 
 - **Risk:** Large artifacts overload the database.
-  **Mitigation:** Store large files in disk/object storage and keep metadata in the database.
+  **Mitigation:** Store large files in Supabase Storage and keep metadata in Supabase Postgres.
 
 ## Open Questions
 
-- Should production storage be Supabase Postgres immediately, or local Postgres on the VPS first?
-- Should authentication be simple owner password first, or Supabase Auth from the start?
-- Should server-rendered templates replace Python f-string HTML immediately?
-- Should batch execution run inside the FastAPI app process, a separate worker process, or a `systemd` job?
-- Which old dashboard modules should be deleted outright versus copied into the new route/template structure?
-- Should SQLite remain supported for local development after the production rewrite?
+Resolved by `docs/adr/0003-supabase-first-fastapi-dashboard-rewrite.md`.
 
