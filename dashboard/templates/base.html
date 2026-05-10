@@ -12,12 +12,20 @@
   <script src="/static/dashboard.js" defer></script>
 </head>
 <body>
-  <div class="layout">
+  <div class="layout"{% if current_user %} data-auth-user-id="{{ current_user.user_id }}"{% endif %}>
     <header class="topbar" role="banner">
       {{ theme.brand() }}
       <div class="topbar-meta">
         {{ theme.meta_pill("Ready", primary=True) }}
+        {% if current_user %}
+        {{ theme.meta_pill(current_user.audit_identity) }}
+        {% endif %}
         {{ theme.meta_pill(settings.runtime_mode, "db") }}
+        {% if current_user %}
+        <form class="topbar-logout" method="post" action="/logout">
+          <button type="submit">Sign out</button>
+        </form>
+        {% endif %}
       </div>
     </header>
     {{ theme.sidebar(nav_groups, active_path) }}

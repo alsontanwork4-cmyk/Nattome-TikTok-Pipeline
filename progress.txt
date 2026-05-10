@@ -2045,3 +2045,33 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to add the Supabase Auth gate for the FastAPI dashboard.
+
+## 2026-05-10 - 0077 Add Supabase Auth Gate
+
+Task completed from `docs/issues/0077-add-supabase-auth-gate.md`.
+
+Key decisions made:
+- Added a compact Supabase Auth REST boundary for password sign-in and bearer-token user lookup.
+- Protected the FastAPI dashboard shell with a session cookie while keeping `/healthz` public.
+- Added public `GET /login`, `POST /login`, and `POST /logout` routes using the legacy Jinja theme.
+- Exposed authenticated user identity in the shell for later audit fields such as `created_by`, `updated_by`, trigger user, and curation author.
+- Kept the auth client injectable for deterministic tests without adding broad abstractions that conflict with the dashboard architecture contract.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/auth.py`
+- `dashboard/assets/dashboard.css`
+- `dashboard/templates/base.html`
+- `dashboard/templates/login.html`
+- `requirements.txt`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0077-add-supabase-auth-gate.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because `dashboard.auth` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 11 tests.
+- Full-suite RED: `python -m pytest -q` failed because the new auth module used `Protocol`, which violates the existing dashboard architecture characterization contract.
+- GREEN: `python -m pytest -q` passed with 102 tests and 48 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to define the compact Supabase dashboard data contract.

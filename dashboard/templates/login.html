@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ theme.page_header("Login", "Sign in with Supabase Auth to operate the dashboard.") }}
+<section class="panel feature">
+  <h2>Dashboard Access</h2>
+  {% if error %}
+  <p class="status-pill err">{{ error }}</p>
+  {% endif %}
+  <form class="settings-form login-form" method="post" action="/login">
+    <label class="field-label">
+      Email
+      <input type="email" name="email" autocomplete="username" required>
+    </label>
+    <label class="field-label">
+      Password
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <button type="submit">Sign in</button>
+  </form>
+</section>
+{% endblock %}

@@ -3,4 +3,5 @@ fastapi
 google-genai
 httpx
 jinja2
+python-multipart
 uvicorn

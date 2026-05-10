@@ -8,10 +8,38 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from dashboard.app import create_app
+from dashboard.auth import AuthSession, AuthenticatedUser, AuthenticationError
 from dashboard.config import DashboardSettings
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+class FakeSupabaseAuthClient:
+    def __init__(self):
+        self.sessions: dict[str, AuthenticatedUser] = {}
+
+    def sign_in_with_password(self, email: str, password: str) -> AuthSession:
+        if email != "owner@example.com" or password != "correct-password":
+            raise AuthenticationError("Invalid login credentials")
+        user = AuthenticatedUser(
+            user_id="user-123",
+            email=email,
+            access_token="token-123",
+        )
+        self.sessions[user.access_token] = user
+        return AuthSession(
+            access_token=user.access_token,
+            refresh_token="refresh-123",
+            expires_in=3600,
+            user=user,
+        )
+
+    def get_user(self, access_token: str) -> AuthenticatedUser:
+        try:
+            return self.sessions[access_token]
+        except KeyError as exc:
+            raise AuthenticationError("Invalid session") from exc
 
 
 class DashboardFastAPIShellTest(unittest.TestCase):
@@ -55,11 +83,96 @@ class DashboardFastAPIShellTest(unittest.TestCase):
             self.assertIn(".layout {", css_response.text)
             self.assertFalse((workspace / "data" / "dashboard" / "dashboard.sqlite3").exists())
 
+    def test_dashboard_shell_requires_authenticated_user(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            client = TestClient(create_app(settings), follow_redirects=False)
+
+            response = client.get("/")
+
+            self.assertEqual(response.status_code, 303)
+            self.assertEqual(response.headers["location"], "/login")
+
+    def test_login_page_is_public_and_uses_legacy_theme(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            client = TestClient(create_app(settings))
+
+            response = client.get("/login")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("<title>Nattome TikTok Scraper</title>", response.text)
+            self.assertIn('<a class="brand-mark" href="/"', response.text)
+            self.assertIn('<section class="panel feature">', response.text)
+            self.assertIn('<form class="settings-form login-form"', response.text)
+            self.assertIn('name="email"', response.text)
+            self.assertIn('name="password"', response.text)
+
+    def test_login_sets_session_cookie_and_exposes_authenticated_user_identity(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            auth_client = FakeSupabaseAuthClient()
+            client = TestClient(
+                create_app(settings, auth_client=auth_client),
+                follow_redirects=False,
+            )
+
+            login_response = client.post(
+                "/login",
+                data={"email": "owner@example.com", "password": "correct-password"},
+            )
+            dashboard_response = client.get("/")
+
+            self.assertEqual(login_response.status_code, 303)
+            self.assertEqual(login_response.headers["location"], "/")
+            self.assertIn("dashboard_access_token", login_response.headers["set-cookie"])
+            self.assertEqual(dashboard_response.status_code, 200)
+            self.assertIn("owner@example.com", dashboard_response.text)
+            self.assertIn('data-auth-user-id="user-123"', dashboard_response.text)
+
+    def test_login_failure_rerenders_login_without_setting_session_cookie(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            client = TestClient(
+                create_app(settings, auth_client=FakeSupabaseAuthClient()),
+                follow_redirects=False,
+            )
+
+            response = client.post(
+                "/login",
+                data={"email": "owner@example.com", "password": "wrong-password"},
+            )
+
+            self.assertEqual(response.status_code, 401)
+            self.assertIn("Invalid email or password", response.text)
+            self.assertNotIn("dashboard_access_token", response.headers.get("set-cookie", ""))
+
+    def test_logout_clears_session_cookie_and_returns_to_login(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            settings = DashboardSettings(workspace_path=Path(temp_dir))
+            client = TestClient(
+                create_app(settings, auth_client=FakeSupabaseAuthClient()),
+                follow_redirects=False,
+            )
+            client.post(
+                "/login",
+                data={"email": "owner@example.com", "password": "correct-password"},
+            )
+
+            logout_response = client.post("/logout")
+            dashboard_response = client.get("/")
+
+            self.assertEqual(logout_response.status_code, 303)
+            self.assertEqual(logout_response.headers["location"], "/login")
+            self.assertIn("dashboard_access_token", logout_response.headers["set-cookie"])
+            self.assertEqual(dashboard_response.status_code, 303)
+            self.assertEqual(dashboard_response.headers["location"], "/login")
+
     def test_fastapi_shell_renders_base_template_without_legacy_runtime(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             settings = DashboardSettings(workspace_path=workspace)
-            client = TestClient(create_app(settings))
+            client = self._authenticated_client(settings)
 
             response = client.get("/")
 
@@ -74,7 +187,7 @@ class DashboardFastAPIShellTest(unittest.TestCase):
     def test_fastapi_shell_reuses_legacy_dashboard_theme_patterns(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             settings = DashboardSettings(workspace_path=Path(temp_dir))
-            client = TestClient(create_app(settings))
+            client = self._authenticated_client(settings)
 
             response = client.get("/")
             css_response = client.get("/static/dashboard.css")
@@ -129,6 +242,18 @@ class DashboardFastAPIShellTest(unittest.TestCase):
         imported_modules = json.loads(result.stdout)
         self.assertFalse(imported_modules["web_server"])
         self.assertFalse(imported_modules["store"])
+
+    def _authenticated_client(self, settings: DashboardSettings) -> TestClient:
+        auth_client = FakeSupabaseAuthClient()
+        user = AuthenticatedUser(
+            user_id="user-123",
+            email="owner@example.com",
+            access_token="token-123",
+        )
+        auth_client.sessions[user.access_token] = user
+        client = TestClient(create_app(settings, auth_client=auth_client))
+        client.cookies.set("dashboard_access_token", user.access_token)
+        return client
 
 
 if __name__ == "__main__":
