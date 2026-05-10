@@ -18,6 +18,7 @@ NAV_GROUPS = (
     (
         "Controls",
         (
+            ("Agents", "/agents", "agents"),
             ("Scrape Settings", "/settings", "settings"),
         ),
     ),
@@ -64,6 +65,8 @@ def active_path_for_request(request: Request) -> str:
         return "/reports"
     if path.startswith("/runs") or path.startswith("/artifacts"):
         return "/runs"
+    if path.startswith("/agents"):
+        return "/agents"
     if path.startswith("/settings") or path.startswith("/videos"):
         return "/settings"
     return "/"

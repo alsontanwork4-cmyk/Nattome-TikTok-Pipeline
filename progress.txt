@@ -2472,3 +2472,35 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to build the Agents configuration dashboard.
+
+## 2026-05-10 - 0092 Build Agents Configuration Dashboard
+
+Task completed from `docs/issues/0092-build-agents-configuration-dashboard.md`.
+
+Key decisions made:
+- Added authenticated `GET /agents`, `POST /agents`, and `POST /agents/{version}/rollback` routes using the existing FastAPI auth and dashboard client seams.
+- Added `Controls -> Agents` above Scrape Settings in the sidebar and active-path handling for `/agents`.
+- Added an Agents Jinja page that manages only the Gemini Video Evidence Agent and Nattome Creative Strategist Agent.
+- The page renders structured prompt sections, compiled prompt previews, fixed Nattome brand context text, polished generation controls, advanced JSON config, version history, rollback forms, and a compact SVG mascot state header.
+- Saves require a reason, validate through the shared agent settings layer, and persist authenticated user identity; validation errors rerender without saving.
+- No Gemini smoke-test action was added.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/agent_views.py`
+- `dashboard/routes/agents.py`
+- `dashboard/shell.py`
+- `dashboard/templates/agents.html`
+- `tests/test_dashboard_fastapi_agents.py`
+- `progress.txt`
+- `docs/issues/done/0092-build-agents-configuration-dashboard.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_dashboard_fastapi_agents.py` failed because `/agents` routes were missing.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_fastapi_agents.py` passed with 5 tests.
+- GREEN: `python -m unittest discover -s tests -p "test_dashboard_fastapi*.py"` passed with 53 tests.
+- GREEN: `python -m unittest discover -s tests -p test_agent_settings.py` passed with 5 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 124 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build live runs and trace history UI.

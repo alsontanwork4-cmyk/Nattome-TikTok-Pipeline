@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ theme.page_header("Agents", "Manage future-run Gemini agent configuration and prompt previews.") }}
+
+<section class="panel wide-panel agent-mascot-panel">
+  <div class="agent-mascot" data-state="{{ mascot_state }}" aria-label="Agent system {{ mascot_state }}">
+    <svg width="54" height="42" viewBox="0 0 54 42" role="img" aria-hidden="true">
+      <rect x="10" y="9" width="34" height="24" rx="6" fill="currentColor" opacity="0.14"></rect>
+      <circle cx="22" cy="21" r="3" fill="currentColor"></circle>
+      <circle cx="32" cy="21" r="3" fill="currentColor"></circle>
+      <path d="M20 29h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M27 4v5" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+    </svg>
+    <div>
+      <h2>Agent system</h2>
+      <p class="muted">Current configuration state: {{ mascot_state }}</p>
+    </div>
+  </div>
+</section>
+
+{% if error %}
+<section class="panel notice">
+  <h2>Agent settings could not be saved</h2>
+  <p>{{ error }}</p>
+</section>
+{% endif %}
+
+<p class="settings-status">Next Gemini run uses agent config: <strong>v{{ active.version }}</strong></p>
+
+<section class="panel wide-panel settings-panel unified-settings">
+  <div class="unified-settings-header">
+    <div>
+      <h2>Gemini agents</h2>
+      <p class="muted current-settings-helper">Saved changes affect future runs only. Nattome brand POV reference is fixed preview context and is not editable here.</p>
+    </div>
+  </div>
+  <form class="settings-form" method="post" action="/agents">
+    {% for agent in agents %}
+    <section class="settings-group" aria-labelledby="{{ agent.key }}-heading">
+      <h3 id="{{ agent.key }}-heading">{{ agent.display_name }}</h3>
+      <div class="settings-grid">
+        <div class="settings-field">
+          <span class="field-label">Enabled</span>
+          <label class="check-label">
+            <input type="checkbox" name="{{ agent.key }}__enabled" value="on" {% if agent.enabled %}checked{% endif %}>
+            Run this agent in future pipeline runs
+          </label>
+        </div>
+        <label class="field-label">
+          Gemini model
+          <input type="text" name="{{ agent.key }}__model" value="{{ agent.model }}">
+        </label>
+      </div>
+      <h4>Prompt sections</h4>
+      <div class="settings-grid">
+        {% for section in agent.prompt_sections %}
+        <label class="field-label">
+          {{ section.label }}
+          <textarea name="{{ agent.key }}__prompt__{{ section.key }}">{{ section.value }}</textarea>
+        </label>
+        {% endfor %}
+      </div>
+      <h4>Generation controls</h4>
+      <div class="settings-grid">
+        {% for field in generation_fields %}
+        <label class="field-label">
+          {{ field.replace("_", " ").title() }}
+          <input type="text" name="{{ agent.key }}__{{ field }}" value="{{ agent.generation.get(field) or '' }}">
+        </label>
+        {% endfor %}
+        <label class="field-label">
+          Advanced generation config JSON
+          <textarea name="{{ agent.key }}__advanced_generation_config">{{ agent.advanced_generation_config }}</textarea>
+        </label>
+      </div>
+      <label class="field-label">
+        Compiled prompt preview
+        <textarea readonly>{{ agent.compiled_prompt }}</textarea>
+      </label>
+    </section>
+    {% endfor %}
+    <div class="settings-save-area">
+      <label class="field-label">
+        Save reason
+        <input type="text" name="reason" maxlength="240" placeholder="Why are you changing these agents?" required>
+      </label>
+      <button type="submit">Save agent settings</button>
+    </div>
+  </form>
+</section>
+
+<details class="panel wide-panel advanced-settings" open>
+  <summary>Advanced: version history and rollback</summary>
+  <div class="advanced-settings-body">
+    {% if not versions %}
+    <p class="muted">No saved agent config versions yet.</p>
+    {% else %}
+    <ul class="history-list">
+      {% for version in versions %}
+      <li class="history-item">
+        <p><strong>v{{ version.version }}</strong> - {% if version.is_active %}active{% else %}inactive{% endif %} - {{ version.reason }}</p>
+        <p class="muted">{{ version.created_by }} {{ version.created_at }}</p>
+        {% if not version.is_active %}
+        <form class="rollback-form" method="post" action="/agents/{{ version.version }}/rollback">
+          <label class="field-label">
+            Rollback reason
+            <input type="text" name="reason" maxlength="240" placeholder="Why are you rolling back?" required>
+          </label>
+          <button type="submit">Roll back to v{{ version.version }}</button>
+        </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</details>
+{% endblock %}

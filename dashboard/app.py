@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from .auth import SupabaseAuthClient
 from .config import DashboardSettings
 from .composition import build_dashboard_data_client
-from .routes import artifacts, auth, exports, overview, reports, runs
+from .routes import agents, artifacts, auth, exports, overview, reports, runs
 from .routes import settings as settings_routes
 from .runtime import sanitize_error_summary
 from .shell import active_path_for_request, current_user_or_none, template_context
@@ -64,6 +64,7 @@ def create_app(
 
     app.include_router(overview.router)
     app.include_router(runs.router)
+    app.include_router(agents.router)
     app.include_router(settings_routes.router)
     app.include_router(reports.router)
     app.include_router(exports.router)
