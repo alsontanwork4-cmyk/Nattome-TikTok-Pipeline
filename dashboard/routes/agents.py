@@ -61,7 +61,12 @@ async def save_agents(request: Request) -> Response:
         reason = form_value(form, "reason").strip()
         if not reason:
             raise ValueError("saving agent settings requires a reason")
-        payload = agents_form_payload(form)
+        existing_versions = call_client_list(dashboard_client, "list_agent_settings_versions")
+        active_settings = next(
+            (v.get("settings") for v in existing_versions if v.get("is_active")),
+            None,
+        )
+        payload = agents_form_payload(form, base_settings=active_settings)
         validated = validate_agent_settings(payload)
         dashboard_client.save_agent_settings_version(
             validated,

@@ -82,9 +82,111 @@
     }, seconds * 1000);
   }
 
+  function initializeAgentCardEditMode() {
+    var forms = document.querySelectorAll("[data-card-form]");
+    for (var i = 0; i < forms.length; i++) {
+      setupCardForm(forms[i]);
+    }
+  }
+
+  function setupCardForm(form) {
+    var editBtn = form.querySelector("[data-card-edit]");
+    var cancelBtn = form.querySelector("[data-card-cancel]");
+    var saveBtn = form.querySelector("[data-card-save]");
+    if (!editBtn || !cancelBtn || !saveBtn) return;
+
+    function applyMode(mode) {
+      form.setAttribute("data-edit-mode", mode);
+      var editing = mode === "on";
+      var onSettingsTab = form.getAttribute("data-active-tab") !== "logs";
+      setCardFieldsReadonly(form, !editing);
+      editBtn.hidden = editing || !onSettingsTab;
+      cancelBtn.hidden = !editing || !onSettingsTab;
+      saveBtn.hidden = !editing || !onSettingsTab;
+    }
+
+    applyMode("off");
+
+    editBtn.addEventListener("click", function () {
+      applyMode("on");
+      var firstField = form.querySelector("input:not([type='hidden']):not([disabled]), textarea:not([disabled]), select:not([disabled])");
+      if (firstField) {
+        try { firstField.focus(); } catch (e) {}
+      }
+    });
+
+    cancelBtn.addEventListener("click", function () {
+      form.reset();
+      applyMode("off");
+    });
+
+    var tabs = form.querySelectorAll("[data-card-tab]");
+    var panes = form.querySelectorAll("[data-card-pane]");
+    function activateTab(name) {
+      form.setAttribute("data-active-tab", name);
+      for (var t = 0; t < tabs.length; t++) {
+        var match = tabs[t].getAttribute("data-card-tab") === name;
+        tabs[t].setAttribute("aria-selected", match ? "true" : "false");
+      }
+      for (var p = 0; p < panes.length; p++) {
+        panes[p].hidden = panes[p].getAttribute("data-card-pane") !== name;
+      }
+      applyMode(form.getAttribute("data-edit-mode") || "off");
+    }
+    for (var i = 0; i < tabs.length; i++) {
+      (function (tab) {
+        tab.addEventListener("click", function () {
+          activateTab(tab.getAttribute("data-card-tab"));
+        });
+      })(tabs[i]);
+    }
+  }
+
+  function setCardFieldsReadonly(form, readonly) {
+    var inputs = form.querySelectorAll("input[type='text'], textarea");
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].hasAttribute("data-always-readonly")) {
+        inputs[i].readOnly = true;
+        continue;
+      }
+      inputs[i].readOnly = readonly;
+    }
+    var checkboxes = form.querySelectorAll("input[type='checkbox']");
+    for (var j = 0; j < checkboxes.length; j++) {
+      checkboxes[j].disabled = readonly;
+    }
+    var selects = form.querySelectorAll("select");
+    for (var k = 0; k < selects.length; k++) {
+      selects[k].disabled = readonly;
+    }
+  }
+
+  function initializeSidebarToggle() {
+    var btn = document.getElementById("sidebar-toggle");
+    if (!btn) return;
+    var root = document.documentElement;
+    function syncAria() {
+      btn.setAttribute("aria-expanded", root.dataset.sidebar === "collapsed" ? "false" : "true");
+    }
+    syncAria();
+    btn.addEventListener("click", function () {
+      var collapsed = root.dataset.sidebar === "collapsed";
+      if (collapsed) {
+        delete root.dataset.sidebar;
+        try { localStorage.setItem("nattome.sidebarCollapsed", "0"); } catch (e) {}
+      } else {
+        root.dataset.sidebar = "collapsed";
+        try { localStorage.setItem("nattome.sidebarCollapsed", "1"); } catch (e) {}
+      }
+      syncAria();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initializeSettingsEditMode();
     initializeAutoSubmitControls();
     initializeAgentAutoRefresh();
+    initializeSidebarToggle();
+    initializeAgentCardEditMode();
   });
 })();

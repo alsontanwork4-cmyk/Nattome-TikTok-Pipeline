@@ -57,14 +57,23 @@ def agents_template_context(
         now=now or datetime.now(timezone.utc),
     )
     mascot = live_mascot_state(live_rows)
+    agent_views = [agent_view(agent_key, form["agents"][agent_key]) for agent_key in AGENT_KEYS]
+    live_by_key = {row["key"]: row for row in live_rows}
+    events = trace_events or []
+    trace_by_key = {
+        agent_key: trace_history_rows(_events_for_agent(events, agent_key), limit=8)
+        for agent_key in AGENT_KEYS
+    }
     return {
         **template_context(settings, page_title="Agents", active_path="/agents"),
         "current_user": user,
         "active": active,
         "versions": normalized_versions,
-        "agents": [agent_view(agent_key, form["agents"][agent_key]) for agent_key in AGENT_KEYS],
+        "agents": agent_views,
         "live_agent_rows": live_rows,
-        "trace_history": trace_history_rows(trace_events or []),
+        "live_rows_by_key": live_by_key,
+        "trace_history": trace_history_rows(events),
+        "trace_by_key": trace_by_key,
         "generation_fields": GENERATION_FIELDS,
         "mascot_state": mascot,
         "should_auto_refresh_agents": any(row["state"] == "running" for row in live_rows),
@@ -105,10 +114,15 @@ def agent_view(agent_key: str, agent: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def agents_form_payload(form: object) -> dict[str, Any]:
+def agents_form_payload(form: object, base_settings: dict | None = None) -> dict[str, Any]:
+    base = validate_agent_settings(base_settings or DEFAULT_AGENT_SETTINGS)
     settings = {"schema_version": 1, "agents": {}}
     for agent_key in AGENT_KEYS:
         default_agent = DEFAULT_AGENT_SETTINGS["agents"][agent_key]
+        base_agent = base["agents"].get(agent_key, default_agent)
+        if not _agent_present_in_form(form, agent_key):
+            settings["agents"][agent_key] = base_agent
+            continue
         advanced_text = form_value(form, f"{agent_key}__advanced_generation_config").strip()
         settings["agents"][agent_key] = {
             "display_name": default_agent["display_name"],
@@ -126,6 +140,13 @@ def agents_form_payload(form: object) -> dict[str, Any]:
             "advanced_generation_config": json.loads(advanced_text) if advanced_text else {},
         }
     return settings
+
+
+def _agent_present_in_form(form: object, agent_key: str) -> bool:
+    has_field = getattr(form, "__contains__", None)
+    if has_field is None:
+        return False
+    return f"{agent_key}__model" in form
 
 
 def form_value(form: object, key: str) -> str:

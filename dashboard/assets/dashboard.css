@@ -69,6 +69,47 @@
       grid-template-areas:
         "topbar topbar"
         "sidebar main";
+      transition: grid-template-columns .2s ease;
+    }
+    html[data-sidebar="collapsed"] .layout {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+    html[data-sidebar="collapsed"] .sidebar {
+      transform: translateX(-100%);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .sidebar {
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    .sidebar-toggle {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      color: var(--ink-2);
+      cursor: pointer;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+      flex: 0 0 auto;
+    }
+    .sidebar-toggle:hover {
+      background: var(--bg-warm);
+      border-color: var(--line-strong);
+      color: var(--accent-ink);
+    }
+    .sidebar-toggle:focus-visible {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-focus);
+    }
+    html[data-sidebar="collapsed"] .sidebar-toggle {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-ink);
     }
     .topbar {
       grid-area: topbar;
@@ -224,6 +265,11 @@
       padding: 32px 40px 64px;
       max-width: 1280px;
       width: 100%;
+      margin-inline: auto;
+      transition: max-width .2s ease;
+    }
+    html[data-sidebar="collapsed"] main {
+      max-width: 1440px;
     }
     /* ---- Page header ---- */
     .breadcrumb {
@@ -723,6 +769,442 @@
     }
     .live-agent-table {
       min-width: 1120px;
+    }
+    /* ---- Agent roster (cute chibi cards) ---- */
+    .agent-roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 220px));
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .agent-card {
+      --card-color: var(--accent);
+      --card-soft: var(--accent-soft);
+      --chibi-skin: #F5D2B6;
+      --chibi-robe: #B85B2E;
+      --chibi-trim: #FBE5D2;
+      --chibi-hat:  #3D2F26;
+      --chibi-pants:#5B4636;
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
+      color: var(--ink-2);
+      box-shadow: var(--shadow-1);
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    .agent-card[open] {
+      grid-column: 1 / -1;
+      border-color: var(--card-color);
+      box-shadow: var(--shadow-2);
+    }
+    .agent-card-summary {
+      list-style: none;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 12px 12px 10px;
+      border-radius: inherit;
+    }
+    .agent-card-summary::-webkit-details-marker { display: none; }
+    .agent-card-summary::marker { content: ""; }
+    .agent-card:not([open]):hover {
+      border-color: var(--card-color);
+      box-shadow: 0 12px 30px -14px var(--card-color), var(--shadow-2);
+      transform: translateY(-3px);
+    }
+    .agent-card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .agent-card-summary { transition: transform .18s ease; }
+    .agent-card:not([open]):hover .agent-card-stage {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.6) 0%, transparent 60%),
+        var(--card-soft);
+      box-shadow: inset 0 0 0 2px var(--card-color);
+    }
+    .agent-card-stage { transition: box-shadow .18s ease; }
+    .agent-card:not([open]):hover .agent-chibi {
+      animation: chibi-hover 0.7s ease-in-out infinite;
+    }
+    .agent-card:not([open]):hover .agent-card-name { color: var(--card-color); }
+    @keyframes chibi-hover {
+      0%   { transform: translateY(0)    scale(1)    rotate(0deg); }
+      25%  { transform: translateY(-6px) scale(1.15) rotate(-4deg); }
+      50%  { transform: translateY(-9px) scale(1.18) rotate(0deg); }
+      75%  { transform: translateY(-6px) scale(1.15) rotate(4deg); }
+      100% { transform: translateY(0)    scale(1)    rotate(0deg); }
+    }
+    .agent-card[data-mascot="m0"] {
+      --card-color: #B85B2E; --card-soft: #FBE5D2;
+      --chibi-robe: #B85B2E; --chibi-trim: #FBE5D2; --chibi-hat: #3D2F26;
+    }
+    .agent-card[data-mascot="m1"] {
+      --card-color: #4F7042; --card-soft: #E4EED8;
+      --chibi-robe: #4F7042; --chibi-trim: #E4EED8; --chibi-hat: #2F4D2A;
+    }
+    .agent-card[data-mascot="m2"] {
+      --card-color: #6B5BA8; --card-soft: #E8E2F6;
+      --chibi-robe: #6B5BA8; --chibi-trim: #E8E2F6; --chibi-hat: #3F356B;
+    }
+    .agent-card[data-mascot="m3"] {
+      --card-color: #C77A1A; --card-soft: #FCEFD3;
+      --chibi-robe: #C77A1A; --chibi-trim: #FCEFD3; --chibi-hat: #6B4310;
+    }
+    .agent-card-status {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--panel);
+      border: 1.5px solid var(--line-strong);
+      display: grid;
+      place-items: center;
+    }
+    .agent-card-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted-2);
+    }
+    .agent-card[data-state="running"] .agent-card-status-dot,
+    .agent-card[data-state="queued"] .agent-card-status-dot {
+      background: var(--warn);
+      animation: roster-pulse 1.4s ease-out infinite;
+    }
+    .agent-card[data-state="failed"] .agent-card-status-dot { background: var(--danger); }
+    .agent-card[data-state="last-succeeded"] .agent-card-status-dot,
+    .agent-card[data-state="idle"] .agent-card-status-dot { background: var(--success); }
+    .agent-card[data-state="disabled"] { opacity: .72; }
+    @keyframes roster-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(199,122,26,.55); }
+      70%  { box-shadow: 0 0 0 6px rgba(199,122,26,0); }
+      100% { box-shadow: 0 0 0 0 rgba(199,122,26,0); }
+    }
+    .agent-card-stage {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: var(--r-sm);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.6) 0%, transparent 60%),
+        var(--card-soft);
+      border: 1px solid rgba(31,23,20,.06);
+      display: grid;
+      place-items: end center;
+      overflow: hidden;
+    }
+    .agent-chibi {
+      width: 60px;
+      height: 68px;
+      transform-origin: 50% 95%;
+      animation: chibi-float 3.6s ease-in-out infinite;
+    }
+    .agent-chibi .c-skin  { fill: var(--chibi-skin); }
+    .agent-chibi .c-robe  { fill: var(--chibi-robe); }
+    .agent-chibi .c-trim  { fill: var(--chibi-trim); }
+    .agent-chibi .c-hat   { fill: var(--chibi-hat); }
+    .agent-chibi .c-pants { fill: var(--chibi-pants); }
+    .agent-chibi .chibi-eyes {
+      transform-origin: 32px 30px;
+      animation: chibi-blink 5s ease-in-out infinite;
+    }
+    .agent-card[data-state="running"] .agent-chibi,
+    .agent-card[data-state="queued"] .agent-chibi {
+      animation: chibi-bounce 0.7s ease-in-out infinite;
+    }
+    .agent-card[data-state="failed"] .agent-chibi {
+      animation: chibi-shake 0.5s ease-in-out 1;
+    }
+    .agent-card[data-state="failed"] .chibi-mouth { y: 35; }
+    .agent-card[data-state="disabled"] .agent-chibi {
+      animation: none;
+      filter: grayscale(.7);
+    }
+    @keyframes chibi-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-3px); }
+    }
+    @keyframes chibi-bounce {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      45%      { transform: translateY(-6px) scale(1.02, .97); }
+      75%      { transform: translateY(1px) scale(.98, 1.02); }
+    }
+    @keyframes chibi-blink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      94%, 98%      { transform: scaleY(0.1); }
+    }
+    @keyframes chibi-shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-3px) rotate(-2deg); }
+      40%, 80% { transform: translateX(3px) rotate(2deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .agent-chibi,
+      .agent-chibi .chibi-eyes,
+      .agent-card-status-dot { animation: none !important; }
+    }
+    .agent-card-body {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .agent-card-name {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 14px;
+      line-height: 1.2;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .agent-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .agent-card-model {
+      background: var(--surface-2);
+      border-radius: var(--r-pill);
+      padding: 1px 7px;
+      font-size: 10.5px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .agent-card-version {
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .agent-card-sub {
+      margin: 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .agent-card-error {
+      margin: 0;
+      font-size: 11px;
+      color: var(--danger);
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .agent-card-cta {
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--card-color);
+      letter-spacing: .02em;
+    }
+    .agent-card[open] .agent-card-cta { color: var(--muted); }
+    .agent-card-details {
+      border-top: 1px solid var(--line);
+      padding: 14px 14px 16px;
+      display: grid;
+      gap: 12px;
+      background: linear-gradient(180deg, var(--card-soft) 0%, transparent 28%);
+      border-bottom-left-radius: var(--r-md);
+      border-bottom-right-radius: var(--r-md);
+    }
+    .agent-card-details h4 {
+      margin: 6px 0 -2px;
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .agent-card-details .settings-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .agent-card-details .settings-grid--header {
+      grid-template-columns: auto minmax(220px, 1fr);
+      align-items: end;
+    }
+    .agent-card-details .settings-grid--header .check-label {
+      justify-self: start;
+      max-width: max-content;
+      white-space: nowrap;
+    }
+    .agent-card-details .settings-grid--prompts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .agent-card-details .settings-grid--knobs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    @media (max-width: 900px) {
+      .agent-card-details .settings-grid--header,
+      .agent-card-details .settings-grid--prompts {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .agent-card-details .settings-grid--knobs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .agent-card-details textarea { min-height: 72px; }
+    .agent-card-details textarea[rows] { min-height: unset; }
+    .agent-card-details[data-edit-mode="off"] input,
+    .agent-card-details[data-edit-mode="off"] textarea,
+    .agent-card-details[data-edit-mode="off"] select {
+      background: var(--bg-warm);
+      border-color: var(--line);
+      color: var(--ink-2);
+      cursor: default;
+    }
+    .agent-card-details[data-edit-mode="off"] input:focus,
+    .agent-card-details[data-edit-mode="off"] textarea:focus,
+    .agent-card-details[data-edit-mode="off"] select:focus {
+      box-shadow: none;
+      border-color: var(--line);
+    }
+    .agent-card-details .btn-secondary {
+      background: var(--panel);
+      color: var(--ink-2);
+      border: 1px solid var(--line-strong);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .agent-card-details .btn-secondary:hover {
+      background: var(--bg-warm);
+      border-color: var(--card-color, var(--accent));
+      color: var(--card-color, var(--accent-ink));
+    }
+    .agent-card-save {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      border-top: 1px dashed var(--line-strong);
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+    .agent-card-save:empty,
+    .agent-card-save:has(button[hidden]:only-child) {
+      display: none;
+    }
+    .agent-card-tabbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .agent-card-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .agent-card-tabs {
+      display: flex;
+      gap: 8px;
+    }
+    .agent-card-details .agent-card-tab,
+    .settings-form .agent-card-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-2);
+      cursor: pointer;
+      transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+      box-shadow: none;
+    }
+    .agent-card-details .agent-card-tab:hover,
+    .settings-form .agent-card-tab:hover {
+      background: var(--panel);
+      border-color: var(--card-color, var(--accent));
+      color: var(--card-color, var(--accent-ink));
+    }
+    .agent-card-details .agent-card-tab[aria-selected="true"],
+    .settings-form .agent-card-tab[aria-selected="true"] {
+      background: var(--card-color, var(--accent));
+      border-color: var(--card-color, var(--accent));
+      color: #fff;
+      box-shadow: var(--shadow-1);
+    }
+    .agent-card-details .agent-card-tab[aria-selected="true"]:hover,
+    .settings-form .agent-card-tab[aria-selected="true"]:hover {
+      background: var(--card-color, var(--accent));
+      color: #fff;
+    }
+    .agent-card-tab svg { color: currentColor; }
+    .agent-card-pane[hidden] { display: none; }
+    .agent-card-pane {
+      display: grid;
+      gap: 12px;
+    }
+    .agent-trace-count {
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-pill);
+      padding: 1px 7px;
+      font-size: 11px;
+      color: var(--ink-2);
+      min-width: 18px;
+      text-align: center;
+    }
+    .agent-card-tab[aria-selected="true"] .agent-trace-count {
+      background: rgba(255,255,255,.95);
+      border-color: transparent;
+      color: var(--card-color, var(--accent-ink));
+    }
+    .agent-trace-list {
+      max-height: 380px;
+      overflow-y: auto;
+      margin: 0;
+    }
+    .agent-trace-empty {
+      margin: 0;
+      font-size: 12.5px;
+      padding: 12px 14px;
+      background: var(--bg-warm);
+      border: 1px dashed var(--line);
+      border-radius: var(--r-md);
+      text-align: center;
+    }
+    .agent-card-save {
+      border-top: 1px dashed var(--line-strong);
+      margin-top: 4px;
+      padding-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .agent-card-save button {
+      justify-self: start;
+      background: var(--card-color);
+      border-color: var(--card-color);
+    }
+    .agent-card-save button:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+    .settings-group:target {
+      animation: settings-target-flash 1.6s ease-out 1;
+      border-radius: var(--r-md);
+    }
+    @keyframes settings-target-flash {
+      0%   { box-shadow: 0 0 0 4px var(--accent-soft); }
+      100% { box-shadow: 0 0 0 0 transparent; }
     }
     .trace-history-list {
       display: grid;

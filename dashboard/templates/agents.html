@@ -26,142 +26,201 @@
 </section>
 {% endif %}
 
-<section class="panel wide-panel live-agents-panel" {% if should_auto_refresh_agents %}data-agent-auto-refresh="5"{% endif %}>
+<section class="panel wide-panel agent-roster-panel" {% if should_auto_refresh_agents %}data-agent-auto-refresh="5"{% endif %}>
   <div class="live-agents-header">
     <div>
-      <h2>Live agent runs</h2>
-      <p class="muted current-settings-helper">Recent trace events update this status without sockets or server-sent events.</p>
+      <h2>Agent roster</h2>
+      <p class="muted current-settings-helper">Each agent lives in its own enclosure. Click a card to tune its prompts, model, and generation knobs. Next run uses config v{{ active.version }}.</p>
     </div>
     <a class="action-link secondary" href="/agents">Refresh</a>
   </div>
-  <div class="table-scroll">
-    <table class="data-table live-agent-table">
-      <thead>
-        <tr>
-          <th>Agent</th>
-          <th>Enabled</th>
-          <th>Model</th>
-          <th>Config</th>
-          <th>State</th>
-          <th>Candidate</th>
-          <th>Elapsed</th>
-          <th>Latest error</th>
-          <th>Last completed</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in live_agent_rows %}
-        <tr>
-          <td>{{ row.display_name }}</td>
-          <td>{% if row.enabled %}Enabled{% else %}Disabled{% endif %}</td>
-          <td><code>{{ row.model }}</code></td>
-          <td>v{{ row.config_version }}</td>
-          <td><span class="status-pill {{ 'err' if row.state == 'failed' else 'warn' if row.state in ['running', 'queued', 'disabled'] else 'ok' }}">{{ row.state }}</span></td>
-          <td>{{ row.current_candidate or "none" }}</td>
-          <td>{{ row.elapsed or "-" }}</td>
-          <td>{{ row.latest_error_summary or "-" }}</td>
-          <td>{{ row.last_completed_at or "-" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<section class="panel wide-panel trace-history-panel">
-  <h2>Trace history</h2>
-  {% if not trace_history %}
-  <p class="muted">No recent agent trace events yet.</p>
-  {% else %}
-  <ol class="trace-history-list">
-    {% for event in trace_history %}
-    <li class="trace-history-item">
-      <div class="trace-history-main">
-        <span class="status-pill {{ 'err' if event.status == 'failed' else 'warn' if event.status in ['running', 'queued'] else 'ok' }}">{{ event.status }}</span>
-        <strong>{{ event.substep }}</strong>
-        <span>{{ event.agent }}</span>
-      </div>
-      <p class="muted">
-        Run <code>{{ event.run_id }}</code>
-        {% if event.candidate_reference %} - {{ event.candidate_reference }}{% endif %}
-        {% if event.started_at %} - {{ event.started_at }}{% endif %}
-        {% if event.ended_at %} to {{ event.ended_at }}{% endif %}
-      </p>
-      {% if event.artifact_references %}
-      <p class="trace-artifacts">Artifacts: {{ event.artifact_references | join(", ") }}</p>
-      {% endif %}
-      {% if event.error_summary %}
-      <p class="trace-error">{{ event.error_summary }}</p>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% endif %}
-</section>
-
-<p class="settings-status">Next Gemini run uses agent config: <strong>v{{ active.version }}</strong></p>
-
-<section class="panel wide-panel settings-panel unified-settings">
-  <div class="unified-settings-header">
-    <div>
-      <h2>Gemini agents</h2>
-      <p class="muted current-settings-helper">Saved changes affect future runs only. Nattome brand POV reference is fixed preview context and is not editable here.</p>
-    </div>
-  </div>
-  <form class="settings-form" method="post" action="/agents">
+  <div class="agent-roster-grid">
     {% for agent in agents %}
-    <section class="settings-group" aria-labelledby="{{ agent.key }}-heading">
-      <h3 id="{{ agent.key }}-heading">{{ agent.display_name }}</h3>
-      <div class="settings-grid">
-        <div class="settings-field">
-          <span class="field-label">Enabled</span>
-          <label class="check-label">
-            <input type="checkbox" name="{{ agent.key }}__enabled" value="on" {% if agent.enabled %}checked{% endif %}>
-            Run this agent in future pipeline runs
+    {%- set row = live_rows_by_key.get(agent.key, {}) -%}
+    {%- set mascot_index = loop.index0 % 4 -%}
+    <details class="agent-card" id="{{ agent.key }}-heading"
+       data-state="{{ row.state_key or 'idle' }}"
+       data-mascot="m{{ mascot_index }}">
+      <summary class="agent-card-summary" aria-label="{{ agent.display_name }} — {{ row.state or 'idle' }}">
+      <span class="agent-card-status" title="{{ row.state or 'idle' }}">
+        <span class="agent-card-status-dot"></span>
+      </span>
+      <div class="agent-card-stage">
+        <svg class="agent-chibi" width="60" height="68" viewBox="0 0 64 72" role="img" aria-hidden="true" shape-rendering="crispEdges">
+          <ellipse cx="32" cy="66" rx="18" ry="3" fill="rgba(31,23,20,.18)"/>
+          <g class="chibi-body">
+            <rect x="24" y="54" width="6" height="8" class="c-pants"/>
+            <rect x="34" y="54" width="6" height="8" class="c-pants"/>
+            <rect x="22" y="60" width="10" height="3" fill="#3D2F26"/>
+            <rect x="34" y="60" width="10" height="3" fill="#3D2F26"/>
+            <rect x="20" y="36" width="24" height="20" rx="3" class="c-robe"/>
+            <rect x="20" y="36" width="24" height="3" class="c-trim"/>
+            <rect x="14" y="40" width="6" height="12" rx="2" class="c-skin"/>
+            <rect x="44" y="40" width="6" height="12" rx="2" class="c-skin"/>
+            <rect x="22" y="20" width="20" height="18" rx="4" class="c-skin"/>
+            <rect x="20" y="14" width="24" height="8" rx="3" class="c-hat"/>
+            <rect x="22" y="11" width="20" height="5" rx="2" class="c-hat"/>
+            {% if mascot_index == 0 %}
+            <rect x="46" y="38" width="10" height="8" rx="1.5" fill="#2F2622"/>
+            <circle cx="51" cy="42" r="2.5" fill="#B85B2E"/>
+            <rect x="48" y="36" width="3" height="2" fill="#2F2622"/>
+            {% elif mascot_index == 1 %}
+            <rect x="49" y="34" width="3" height="14" fill="#7A4A2A"/>
+            <rect x="47" y="32" width="7" height="4" rx="1" class="c-trim"/>
+            <circle cx="50" cy="50" r="3" class="c-trim"/>
+            {% elif mascot_index == 2 %}
+            <circle cx="52" cy="38" r="4" fill="none" stroke="#3D2F26" stroke-width="1.5"/>
+            <line x1="55" y1="41" x2="59" y2="46" stroke="#3D2F26" stroke-width="1.5"/>
+            {% else %}
+            <path d="M50 36 L52 41 L57 42 L52 43 L50 48 L48 43 L43 42 L48 41 Z" class="c-trim"/>
+            {% endif %}
+            <g class="chibi-eyes">
+              <rect x="27" y="28" width="2.5" height="3" fill="#1F1714"/>
+              <rect x="34.5" y="28" width="2.5" height="3" fill="#1F1714"/>
+            </g>
+            <rect x="25" y="32" width="2" height="1.5" fill="#E8A18A" opacity=".7"/>
+            <rect x="37" y="32" width="2" height="1.5" fill="#E8A18A" opacity=".7"/>
+            <rect class="chibi-mouth" x="30" y="33.5" width="4" height="1.5" fill="#1F1714"/>
+          </g>
+        </svg>
+      </div>
+      <div class="agent-card-body">
+        <h3 class="agent-card-name">{{ agent.display_name }}</h3>
+        <div class="agent-card-meta">
+          <code class="agent-card-model">{{ agent.model }}</code>
+          <span class="agent-card-version">v{{ active.version }}</span>
+        </div>
+        <p class="agent-card-sub">
+          {% if agent.enabled %}● healthy{% else %}○ paused{% endif %}
+          {% if row.elapsed %} · {{ row.elapsed }}{% endif %}
+        </p>
+        {% if row.latest_error_summary %}
+        <p class="agent-card-error" title="{{ row.latest_error_summary }}">⚠ {{ row.latest_error_summary }}</p>
+        {% endif %}
+        <span class="agent-card-cta" aria-hidden="true">Configure ▾</span>
+      </div>
+      </summary>
+      <form class="settings-form agent-card-details" method="post" action="/agents" data-card-form data-edit-mode="off" data-active-tab="logs">
+        {%- set agent_trace = trace_by_key.get(agent.key, []) -%}
+        <input type="hidden" name="reason" value="Updated {{ agent.display_name }} via agent card">
+        <div class="agent-card-tabbar">
+          <div class="agent-card-tabs" role="tablist" aria-label="{{ agent.display_name }} sections">
+            <button type="button" class="agent-card-tab" data-card-tab="logs" role="tab" aria-selected="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Logs
+              {% if agent_trace %}<span class="agent-trace-count">{{ agent_trace|length }}</span>{% endif %}
+            </button>
+            <button type="button" class="agent-card-tab" data-card-tab="settings" role="tab" aria-selected="false">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </button>
+          </div>
+          <div class="agent-card-actions">
+            <button type="button" class="btn-secondary" data-card-edit>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Edit
+            </button>
+            <button type="button" class="btn-secondary" data-card-cancel hidden>Cancel</button>
+          </div>
+        </div>
+        <div class="agent-card-pane" data-card-pane="settings" hidden>
+        <div class="settings-grid settings-grid--header">
+          <div class="settings-field">
+            <span class="field-label">Enabled</span>
+            <label class="check-label">
+              <input type="checkbox" name="{{ agent.key }}__enabled" value="on" {% if agent.enabled %}checked{% endif %}>
+              Run this agent
+            </label>
+          </div>
+          {%- set gemini_models = [
+            "gemini-2.5-pro",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash",
+            "gemini-2.0-flash-lite",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+            "gemini-1.5-flash-8b",
+          ] -%}
+          <label class="field-label">
+            Gemini model
+            <select name="{{ agent.key }}__model" class="model-select">
+              {% for model_id in gemini_models %}
+              <option value="{{ model_id }}" {% if model_id == agent.model %}selected{% endif %}>{{ model_id }}</option>
+              {% endfor %}
+              {% if agent.model and agent.model not in gemini_models %}
+              <option value="{{ agent.model }}" selected>{{ agent.model }} (custom)</option>
+              {% endif %}
+            </select>
           </label>
         </div>
-        <label class="field-label">
-          Gemini model
-          <input type="text" name="{{ agent.key }}__model" value="{{ agent.model }}">
-        </label>
-      </div>
-      <h4>Prompt sections</h4>
-      <div class="settings-grid">
-        {% for section in agent.prompt_sections %}
-        <label class="field-label">
-          {{ section.label }}
-          <textarea name="{{ agent.key }}__prompt__{{ section.key }}">{{ section.value }}</textarea>
-        </label>
-        {% endfor %}
-      </div>
-      <h4>Generation controls</h4>
-      <div class="settings-grid">
-        {% for field in generation_fields %}
-        <label class="field-label">
-          {{ field.replace("_", " ").title() }}
-          <input type="text" name="{{ agent.key }}__{{ field }}" value="{{ agent.generation.get(field) or '' }}">
-        </label>
-        {% endfor %}
+        <h4>Prompt sections</h4>
+        <div class="settings-grid settings-grid--prompts">
+          {% for section in agent.prompt_sections %}
+          <label class="field-label">
+            {{ section.label }}
+            <textarea name="{{ agent.key }}__prompt__{{ section.key }}" rows="4">{{ section.value }}</textarea>
+          </label>
+          {% endfor %}
+        </div>
+        <h4>Generation controls</h4>
+        <div class="settings-grid settings-grid--knobs">
+          {% for field in generation_fields %}
+          <label class="field-label">
+            {{ field.replace("_", " ").title() }}
+            <input type="text" name="{{ agent.key }}__{{ field }}" value="{{ agent.generation.get(field) or '' }}">
+          </label>
+          {% endfor %}
+        </div>
         <label class="field-label">
           Advanced generation config JSON
-          <textarea name="{{ agent.key }}__advanced_generation_config">{{ agent.advanced_generation_config }}</textarea>
+          <textarea name="{{ agent.key }}__advanced_generation_config" rows="4">{{ agent.advanced_generation_config }}</textarea>
         </label>
-      </div>
-      <label class="field-label">
-        Compiled prompt preview
-        <textarea readonly>{{ agent.compiled_prompt }}</textarea>
-      </label>
-    </section>
+        <label class="field-label">
+          Compiled prompt preview
+          <textarea readonly data-always-readonly rows="6">{{ agent.compiled_prompt }}</textarea>
+        </label>
+        <div class="agent-card-save">
+          <button type="submit" data-card-save hidden>Save {{ agent.display_name }}</button>
+        </div>
+        </div>
+        <div class="agent-card-pane" data-card-pane="logs">
+          {% if not agent_trace %}
+          <p class="muted agent-trace-empty">No recent trace events for this agent yet.</p>
+          {% else %}
+          <ol class="trace-history-list agent-trace-list">
+            {% for event in agent_trace %}
+            <li class="trace-history-item">
+              <div class="trace-history-main">
+                <span class="status-pill {{ 'err' if event.status == 'failed' else 'warn' if event.status in ['running', 'queued'] else 'ok' }}">{{ event.status }}</span>
+                <strong>{{ event.substep }}</strong>
+                {% if event.duration %}<span class="muted">{{ event.duration }}</span>{% endif %}
+              </div>
+              <p class="muted">
+                Run <code>{{ event.run_id }}</code>
+                {% if event.candidate_reference %} · {{ event.candidate_reference }}{% endif %}
+                {% if event.started_at %} · {{ event.started_at }}{% endif %}
+              </p>
+              {% if event.artifact_references %}
+              <p class="trace-artifacts">Artifacts: {{ event.artifact_references | join(", ") }}</p>
+              {% endif %}
+              {% if event.error_summary %}
+              <p class="trace-error">{{ event.error_summary }}</p>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ol>
+          {% endif %}
+        </div>
+      </form>
+    </details>
     {% endfor %}
-    <div class="settings-save-area">
-      <label class="field-label">
-        Save reason
-        <input type="text" name="reason" maxlength="240" placeholder="Why are you changing these agents?" required>
-      </label>
-      <button type="submit">Save agent settings</button>
-    </div>
-  </form>
+  </div>
 </section>
+
 
 <details class="panel wide-panel advanced-settings" open>
   <summary>Advanced: version history and rollback</summary>

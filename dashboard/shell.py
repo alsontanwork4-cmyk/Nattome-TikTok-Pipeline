@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 
@@ -38,7 +40,16 @@ def template_context(
         "nav_groups": fastapi_nav_groups(),
         "current_user": None,
         "error": "",
+        "asset_version": _asset_version(settings),
     }
+
+
+def _asset_version(settings: DashboardSettings) -> str:
+    try:
+        css_path = Path(settings.assets_path) / "dashboard.css"
+        return str(int(css_path.stat().st_mtime))
+    except Exception:
+        return "0"
 
 
 def fastapi_nav_groups() -> tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...]:
