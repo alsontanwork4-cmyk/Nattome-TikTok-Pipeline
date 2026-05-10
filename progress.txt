@@ -1994,3 +1994,28 @@ Feedback:
 
 Notes for next iteration:
 - No blocker remains from this issue. The next Ralph issue should start only after confirming no higher-priority AFK task supersedes the current queue.
+
+## 2026-05-10 - 0075 Bootstrap Supabase-First FastAPI Shell
+
+Task completed from `docs/issues/0075-bootstrap-supabase-first-fastapi-shell.md`.
+
+Key decisions made:
+- Added a compact FastAPI shell without importing `dashboard.web_server` or initializing the SQLite dashboard store.
+- Kept the first slice intentionally narrow: app factory, environment settings, `/healthz`, static asset serving, and a base Jinja template.
+- Made workspace, runs, data, template, asset, runtime mode, and Supabase settings environment-driven for later migration slices.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/config.py`
+- `dashboard/templates/base.html`
+- `requirements.txt`
+- `tests/test_dashboard_fastapi_shell.py`
+- `docs/issues/done/0075-bootstrap-supabase-first-fastapi-shell.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` failed because `dashboard.app` did not exist.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py -q` passed with 4 tests.
+- GREEN: `python -m pytest -q` passed with 95 tests and 48 subtests.
+
+Notes for next iteration:
+- Next FastAPI rewrite slice is expected to port the legacy dashboard visual theme into the Jinja shell while still avoiding full page rebuilds.

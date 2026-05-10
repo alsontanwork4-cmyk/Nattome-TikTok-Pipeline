@@ -1,2 +1,6 @@
 # Runtime note: use Python 3.10+.
+fastapi
 google-genai
+httpx
+jinja2
+uvicorn

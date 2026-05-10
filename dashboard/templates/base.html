@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nattome TikTok Scraper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <script src="/static/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <header class="topbar" role="banner">
+      <div class="brand">
+        <img class="brand-mark" src="/static/nattome-logo.png" alt="">
+        <div>
+          <strong>Nattome</strong>
+          <span class="brand-tag">Nattome TikTok Scraper</span>
+        </div>
+      </div>
+      <div class="topbar-status">
+        <span class="status-pill">FastAPI shell</span>
+        <span>{{ settings.runtime_mode }}</span>
+      </div>
+    </header>
+    <aside class="sidebar" aria-label="Dashboard navigation">
+      <nav>
+        <a href="/" aria-current="page">Overview</a>
+      </nav>
+    </aside>
+    <main>
+      {% block content %}
+      <section class="panel">
+        <h1>{{ page_title }}</h1>
+        <p>Dashboard shell ready.</p>
+      </section>
+      {% endblock %}
+    </main>
+  </div>
+</body>
+</html>
