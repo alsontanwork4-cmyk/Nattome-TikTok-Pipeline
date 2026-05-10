@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping
 
+from batch_analysis.env import load_dotenv_files
+
 
 _DASHBOARD_ROOT = Path(__file__).resolve().parent
 _PROJECT_ROOT = _DASHBOARD_ROOT.parent
@@ -41,6 +43,8 @@ class DashboardSettings:
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "DashboardSettings":
+        if env is None:
+            load_dotenv_files([Path.cwd(), _PROJECT_ROOT])
         source = os.environ if env is None else env
         workspace_path = _env_path(source, "DASHBOARD_WORKSPACE_PATH", _PROJECT_ROOT)
         return cls(

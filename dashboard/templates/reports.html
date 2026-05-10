@@ -8,6 +8,12 @@
 </div>
 {% endset %}
 {{ theme.page_header("Reports", "Supabase-backed report snapshots and CSV exports.", actions) }}
+{% if report_error %}
+<section class="panel notice">
+  <h2>Reports unavailable</h2>
+  <p class="muted">{{ report_error }}</p>
+</section>
+{% endif %}
 <section class="panel">
   <h2>Report Runs</h2>
   {% if not reports %}

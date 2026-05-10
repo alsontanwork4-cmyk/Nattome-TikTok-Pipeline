@@ -4,10 +4,10 @@ The VPS dashboard rewrite will replace the local plain HTTP dashboard with one c
 
 ## Decisions
 
-- Production metadata storage is Supabase Postgres. Run metadata, run status, settings versions, manual run records, curation records, selected videos, raw videos, and output metadata move to Supabase.
+- Production metadata storage is Supabase Postgres. Run metadata, run status, settings versions, manual run records, selected videos, raw videos, and output metadata move to Supabase.
 - SQLite is removed from the new dashboard runtime. It should not remain as local development storage or a second supported dashboard store. A later migration slice may read legacy SQLite only as a one-time import source if needed.
 - Large artifacts use Supabase Storage. Source videos, generated reports, workbooks, raw scrape JSON, evidence snapshots, Gemini responses, and other large files are stored as objects, with metadata rows in Supabase Postgres.
-- Authentication uses Supabase Auth. Dashboard user identity should flow into `created_by`, `updated_by`, manual-run trigger user, curation author, and other audit fields.
+- Authentication uses Supabase Auth. Dashboard user identity should flow into `created_by`, `updated_by`, manual-run trigger user, and other audit fields.
 - Rendering uses server-rendered Jinja templates. Report Markdown may be rendered server-side and inserted into a Jinja page, but the app should not keep large Python HTML string renderers as the main presentation layer.
 - The new Jinja dashboard should preserve the legacy dashboard's visual language: color theme, dense operational layout, navigation feel, card/table styling, buttons, status pills, and logo treatment. This rewrite is architectural, not a redesign.
 - Later FastAPI page slices must keep this legacy visual language unless a human explicitly approves a redesign.
@@ -34,7 +34,6 @@ Canonical FastAPI routes use clean resource-style paths. Temporary redirects fro
 | `GET` | `/settings` | Yes | Scrape settings and version history. |
 | `POST` | `/settings` | Yes | Save a new settings version. |
 | `POST` | `/settings/{version}/rollback` | Yes | Roll back settings to a prior version. |
-| `POST` | `/videos/{video_id}/curation` | Yes | Save curation labels and notes. |
 | `GET` | `/exports/raw-videos.csv` | Yes | Download raw video CSV export. |
 | `GET` | `/exports/run-summaries.csv` | Yes | Download run summary CSV export. |
 | `GET` | `/artifacts/{artifact_id}` | Yes | Signed download or proxy for a Supabase Storage artifact. |
@@ -56,7 +55,6 @@ dashboard/
     runs.py
     reports.py
     settings.py
-    curation.py
     exports.py
     artifacts.py
 

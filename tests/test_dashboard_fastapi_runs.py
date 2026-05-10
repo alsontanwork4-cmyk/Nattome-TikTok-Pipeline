@@ -100,6 +100,16 @@ class FakeDashboardDataClient:
         self.outputs = {
             "run-succeeded": [
                 {
+                    "artifact_type": "raw_scrape",
+                    "bucket": "dashboard-artifacts",
+                    "object_path": "runs/run-succeeded/data/raw_scrape_all.json",
+                    "filename": "raw_scrape_all.json",
+                    "content_type": "application/json",
+                    "size_bytes": 8192,
+                    "checksum": "sha256:raw",
+                    "created_at": "2026-05-10T00:07:00Z",
+                },
+                {
                     "artifact_type": "report",
                     "bucket": "dashboard-artifacts",
                     "object_path": "runs/run-succeeded/report.md",
@@ -111,6 +121,93 @@ class FakeDashboardDataClient:
                 }
             ]
         }
+        self.artifact_bodies = {
+            "runs/run-succeeded/data/raw_scrape_all.json": """
+            {
+              "generated_at": "2026-05-10T08:00:00+08:00",
+              "scope": "all",
+              "inputs": {
+                "hashtags": ["guthealth"],
+                "keywords": ["bloating"],
+                "profiles": ["gaviscon"]
+              },
+              "raw_item_count": 2,
+              "unique_video_count": 1,
+              "raw_items": [
+                {
+                  "id": "video-raw-1",
+                  "webVideoUrl": "https://www.tiktok.com/@nattome/video/123",
+                  "text": "Bloating is REAL #guthealth",
+                  "diggCount": 36500,
+                  "shareCount": 465,
+                  "playCount": 803200,
+                  "commentCount": 45,
+                  "isAd": false,
+                  "createTimeISO": "2026-05-10T00:00:00Z",
+                  "hashtags": [{"name": "guthealth"}, {"name": "bloating"}],
+                  "authorMeta": {
+                    "id": "author-1",
+                    "name": "nattomecreator",
+                    "nickName": "Nattome Creator",
+                    "verified": true,
+                    "signature": "Gut health creator",
+                    "fans": 4400000,
+                    "video": 4711,
+                    "privateAccount": false,
+                    "avatar": "https://cdn.example/avatar.jpg"
+                  },
+                  "musicMeta": {
+                    "musicName": "original sound",
+                    "musicAuthor": "Nattome Creator",
+                    "musicOriginal": true,
+                    "musicAlbum": "",
+                    "playUrl": "https://cdn.example/music.mp3",
+                    "coverMediumUrl": "https://cdn.example/music.jpg"
+                  },
+                  "videoMeta": {
+                    "coverUrl": "https://cdn.example/cover.jpg",
+                    "duration": 8,
+                    "definition": "540p",
+                    "format": "mp4",
+                    "height": 1024,
+                    "width": 576,
+                    "downloadAddr": "https://cdn.example/video.mp4"
+                  }
+                }
+              ]
+            }
+            """
+        }
+        self.raw_videos = [
+            {
+                "video_id": "video-raw-1",
+                "run_id": "run-succeeded",
+                "tiktok_url": "https://www.tiktok.com/@nattome/video/123",
+                "author_handle": "nattomecreator",
+                "caption": "Bloating is REAL #guthealth",
+                "hashtags": ["guthealth", "bloating"],
+                "source_input": "#guthealth",
+                "play_count": 803200,
+                "like_count": 36500,
+                "comment_count": 45,
+                "share_count": 465,
+                "created_at": "2026-05-10T00:00:00Z",
+            },
+            {
+                "video_id": "fallback-video",
+                "run_id": "run-running",
+                "tiktok_url": "https://www.tiktok.com/@fallback/video/1",
+                "author_handle": "fallbackauthor",
+                "caption": "Fallback compact caption",
+                "hashtags": ["fallbacktag"],
+                "source_input": "#fallbacktag",
+                "play_count": 12000,
+                "like_count": 900,
+                "comment_count": 20,
+                "share_count": 80,
+                "created_at": "2026-05-10T00:50:00Z",
+            }
+        ]
 
     def list_runs(self, *, limit: int = 50):
         return self.runs[:limit]
@@ -121,6 +218,12 @@ class FakeDashboardDataClient:
     def list_run_outputs(self, run_id: str):
         return self.outputs.get(run_id, [])
 
+    def download_artifact_text(self, metadata):
+        return self.artifact_bodies.get(metadata.object_path)
+
+    def list_raw_videos(self):
+        return self.raw_videos
+
     def get_active_manual_run(self, *, run_type: str):
         return self.active_manual_run
 
@@ -128,6 +231,11 @@ class FakeDashboardDataClient:
         self.enqueued_manual_runs.append((manual_run, run))
         self.runs.insert(0, run)
         return manual_run
+
+
+class FailingDashboardDataClient:
+    def list_runs(self, *, limit: int = 50):
+        raise RuntimeError("Supabase Postgres unavailable")
 
 
 class DashboardFastAPIRunsTest(unittest.TestCase):
@@ -142,6 +250,17 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
 
             self.assertEqual(response.status_code, 303)
             self.assertEqual(response.headers["location"], "/login")
+
+    def test_legacy_run_history_route_is_removed(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = TestClient(
+                create_app(DashboardSettings(workspace_path=Path(temp_dir))),
+                follow_redirects=False,
+            )
+
+            response = client.get("/run-history")
+
+            self.assertEqual(response.status_code, 404)
 
     def test_manual_run_trigger_requires_authentication(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -207,6 +326,16 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
             self.assertIn('<section class="panel">', response.text)
             self.assertFalse((workspace / "data" / "dashboard" / "dashboard.sqlite3").exists())
 
+    def test_runs_route_renders_data_error_instead_of_internal_server_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FailingDashboardDataClient())
+
+            response = client.get("/runs")
+
+            self.assertEqual(response.status_code, 503)
+            self.assertIn("Supabase Postgres unavailable", response.text)
+            self.assertIn("No Supabase runs yet", response.text)
+
     def test_runs_route_lists_supported_statuses_with_legacy_theme(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(Path(temp_dir), FakeDashboardDataClient())
@@ -216,6 +345,10 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('method="post" action="/runs"', response.text)
             self.assertIn("Run full pipeline", response.text)
+            self.assertIn("TikTok Scraper Runs", response.text)
+            self.assertIn("Scraped 30 TikTok results", response.text)
+            self.assertIn("803,200", response.text)
+            self.assertIn("nattomecreator", response.text)
             self.assertIn('<table class="data-table runs-table">', response.text)
             for run_id in [
                 "run-queued",
@@ -230,6 +363,16 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
                 with self.subTest(label=label):
                     self.assertIn(label, response.text)
 
+    def test_runs_route_filters_by_query_parameter(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FakeDashboardDataClient())
+
+            response = client.get("/runs?q=run-succeeded")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('href="/runs/run-succeeded"', response.text)
+            self.assertNotIn('href="/runs/run-failed"', response.text)
+
     def test_run_detail_renders_metadata_outputs_and_redacted_failure_summary(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(Path(temp_dir), FakeDashboardDataClient())
@@ -239,18 +382,56 @@ class DashboardFastAPIRunsTest(unittest.TestCase):
 
             self.assertEqual(succeeded_response.status_code, 200)
             self.assertIn("run-succeeded", succeeded_response.text)
-            self.assertIn("daily", succeeded_response.text)
             self.assertIn("2026-05-10T00:00:00Z", succeeded_response.text)
-            self.assertIn("2026-05-10T00:08:30Z", succeeded_response.text)
             self.assertIn("8m 30s", succeeded_response.text)
-            self.assertIn("report.md", succeeded_response.text)
-            self.assertIn("text/markdown", succeeded_response.text)
-            self.assertIn("4.0 KB", succeeded_response.text)
-            self.assertIn("sha256:abc", succeeded_response.text)
+            self.assertIn("Raw scrape artifact", succeeded_response.text)
+            self.assertIn("guthealth", succeeded_response.text)
+            self.assertIn("Total Plays", succeeded_response.text)
+            self.assertIn("Music original?", succeeded_response.text)
             self.assertEqual(failed_response.status_code, 200)
             self.assertIn("Gemini request failed", failed_response.text)
             self.assertIn("[redacted secret]", failed_response.text)
             self.assertNotIn("secret-value", failed_response.text)
+
+    def test_run_detail_renders_tiktok_output_tabs_from_raw_scrape_artifact(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FakeDashboardDataClient())
+
+            overview = client.get("/runs/run-succeeded")
+            posts = client.get("/runs/run-succeeded?tab=posts")
+            authors = client.get("/runs/run-succeeded?tab=authors")
+            music = client.get("/runs/run-succeeded?tab=music")
+            video = client.get("/runs/run-succeeded?tab=video")
+            all_fields = client.get("/runs/run-succeeded?tab=all-fields")
+
+            self.assertEqual(overview.status_code, 200)
+            for label in ["Overview", "Posts", "Authors", "Music", "Video", "All fields"]:
+                with self.subTest(label=label):
+                    self.assertIn(label, overview.text)
+            self.assertIn('href="/runs/run-succeeded?tab=posts" aria-current="page"', posts.text)
+            self.assertIn("Bloating is REAL #guthealth", posts.text)
+            self.assertIn("803200", posts.text)
+            self.assertIn("https://www.tiktok.com/@nattome/video/123", posts.text)
+            self.assertIn("Nattome Creator", authors.text)
+            self.assertIn("Gut health creator", authors.text)
+            self.assertIn("original sound", music.text)
+            self.assertIn("https://cdn.example/music.mp3", music.text)
+            self.assertIn("540p", video.text)
+            self.assertIn("https://cdn.example/video.mp4", video.text)
+            self.assertIn("authorMeta", all_fields.text)
+            self.assertIn("video-raw-1", all_fields.text)
+
+    def test_run_detail_falls_back_to_compact_raw_videos_without_raw_scrape_artifact(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FakeDashboardDataClient())
+
+            response = client.get("/runs/run-running?tab=posts")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Compact raw video metadata", response.text)
+            self.assertIn("Fallback compact caption", response.text)
+            self.assertIn("fallbackauthor", response.text)
+            self.assertIn("fallbacktag", response.text)
 
     def test_missing_run_detail_returns_404(self):
         with tempfile.TemporaryDirectory() as temp_dir:

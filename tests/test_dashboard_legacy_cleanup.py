@@ -51,17 +51,24 @@ class DashboardLegacyCleanupTest(unittest.TestCase):
             "initialize_dashboard_store",
             "DASHBOARD_DB_PATH",
         ]
-        runtime_files = [
-            path
-            for path in DASHBOARD_ROOT.glob("*.py")
-            if path.name not in {"legacy_import.py"}
-        ]
+        runtime_files = list(DASHBOARD_ROOT.glob("*.py"))
 
         for path in runtime_files:
             source = path.read_text(encoding="utf-8")
             for fragment in forbidden_fragments:
                 with self.subTest(path=path.name, fragment=fragment):
                     self.assertNotIn(fragment, source)
+
+    def test_retired_import_and_route_modules_are_removed(self):
+        retired_files = [
+            DASHBOARD_ROOT / "legacy_import.py",
+            DASHBOARD_ROOT / "routes" / "legacy.py",
+            DASHBOARD_ROOT / "time_display.py",
+        ]
+
+        for path in retired_files:
+            with self.subTest(path=path.name):
+                self.assertFalse(path.exists())
 
     def test_superseded_docs_do_not_prohibit_fastapi_or_supabase(self):
         docs_to_check = [

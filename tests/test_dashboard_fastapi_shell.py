@@ -1,15 +1,20 @@
 import json
+import os
 import subprocess
 import sys
 import tempfile
 import unittest
+from inspect import signature
 from pathlib import Path
+from unittest import mock
 
 from fastapi.testclient import TestClient
 
 from dashboard.app import create_app
 from dashboard.auth import AuthSession, AuthenticatedUser, AuthenticationError
+from dashboard.composition import EmptyDashboardDataClient, build_dashboard_data_client
 from dashboard.config import DashboardSettings
+from dashboard.supabase_client import DashboardSupabaseClient
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +72,70 @@ class DashboardFastAPIShellTest(unittest.TestCase):
             self.assertEqual(settings.workspace_path, workspace.resolve())
             self.assertEqual(settings.runs_path, (workspace / "custom-runs").resolve())
             self.assertEqual(settings.data_path, (workspace / "custom-data").resolve())
+
+    def test_settings_load_dotenv_when_no_explicit_environment_is_passed(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+            dotenv = workspace / ".env"
+            dotenv.write_text(
+                "\n".join(
+                    [
+                        "DASHBOARD_RUNTIME_MODE=production",
+                        "SUPABASE_URL=https://dotenv-project.supabase.co",
+                        "SUPABASE_ANON_KEY=dotenv-anon",
+                        "SUPABASE_SERVICE_ROLE_KEY=dotenv-service",
+                        "SUPABASE_STORAGE_BUCKET=dotenv-artifacts",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            previous_cwd = Path.cwd()
+            try:
+                os.chdir(workspace)
+                with mock.patch.dict(os.environ, {}, clear=True):
+                    settings = DashboardSettings.from_env()
+            finally:
+                os.chdir(previous_cwd)
+
+            self.assertEqual(settings.runtime_mode, "production")
+            self.assertEqual(settings.supabase_url, "https://dotenv-project.supabase.co")
+            self.assertEqual(settings.supabase_anon_key, "dotenv-anon")
+            self.assertEqual(settings.supabase_service_role_key, "dotenv-service")
+            self.assertEqual(settings.supabase_storage_bucket, "dotenv-artifacts")
+
+    def test_create_app_uses_supabase_data_client_when_service_role_is_configured(self):
+        settings = DashboardSettings(
+            supabase_url="https://project.supabase.co",
+            supabase_service_role_key="service-key",
+            supabase_storage_bucket="pipeline-artifacts",
+        )
+        fake_supabase = object()
+
+        with mock.patch("supabase.create_client", return_value=fake_supabase) as create_client:
+            app = create_app(settings)
+
+        create_client.assert_called_once_with("https://project.supabase.co", "service-key")
+        self.assertIsInstance(app.state.dashboard_client, DashboardSupabaseClient)
+        self.assertEqual(app.state.dashboard_client.storage_bucket, "pipeline-artifacts")
+
+    def test_create_app_avoids_settings_route_module_shadowing(self):
+        parameters = signature(create_app).parameters
+
+        self.assertIn("dashboard_settings", parameters)
+        self.assertNotIn("settings", parameters)
+
+    def test_development_data_client_can_be_empty_without_supabase_config(self):
+        settings = DashboardSettings()
+
+        client = build_dashboard_data_client(settings)
+
+        self.assertIsInstance(client, EmptyDashboardDataClient)
+
+    def test_production_data_client_requires_supabase_config(self):
+        settings = DashboardSettings(runtime_mode="production")
+
+        with self.assertRaisesRegex(RuntimeError, "SUPABASE_URL"):
+            build_dashboard_data_client(settings)
 
     def test_fastapi_app_starts_with_health_check_and_static_assets(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -204,6 +273,8 @@ class DashboardFastAPIShellTest(unittest.TestCase):
             self.assertIn('<section class="panel feature overview-hero">', response.text)
             self.assertIn('<div class="empty-state">', response.text)
             self.assertIn('class="action-link" href="/runs"', response.text)
+            self.assertIn('<a class="nav-link" href="/runs"', response.text)
+            self.assertNotIn('href="/run-history"', response.text)
             self.assertEqual(css_response.status_code, 200)
             self.assertIn("--accent: #B85B2E;", css_response.text)
             self.assertIn(".nav-link[aria-current=\"page\"]", css_response.text)

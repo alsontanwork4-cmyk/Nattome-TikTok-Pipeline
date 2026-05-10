@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The current Nattome TikTok dashboard started as a lightweight local Python HTTP server. It now needs to become a VPS-hosted control panel for batch analysis runs, run history, reports, scrape settings, curation, and persistent storage.
+The current Nattome TikTok dashboard started as a lightweight local Python HTTP server. It now needs to become a VPS-hosted control panel for batch analysis runs, run history, reports, scrape settings, and persistent storage.
 
 The preferred direction is a full dashboard rewrite, not a gradual long-term coexistence with the current local server. The goal is a simple, compact, powerful FastAPI application that keeps the valuable domain logic where it is still useful, but removes the old plain-HTTP dashboard once the replacement is complete.
 
@@ -14,7 +14,7 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - Host the dashboard and batch analysis control surface reliably on a VPS.
 - Remove legacy dashboard server code after FastAPI reaches feature parity.
 - Keep or extract useful business logic, but rewrite the web layer cleanly.
-- Provide Supabase-backed persistent storage for run metadata, settings, curation, and batch status.
+- Provide Supabase-backed persistent storage for run metadata, settings, and batch status.
 - Support authentication before exposing the dashboard over the internet.
 - Keep the first production version server-rendered unless a separate frontend becomes clearly necessary.
 - Make the final system easy to understand, deploy, debug, and extend.
@@ -48,9 +48,9 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 **Acceptance Criteria:**
 
 - [ ] Implement `/` for latest run overview.
-- [ ] Implement `/report` for selected run report viewing.
-- [ ] Implement `/run-history` for historical runs and run detail.
-- [ ] Implement `/scrape-settings` for current settings and settings edits.
+- [ ] Implement `/reports` for selected run report viewing.
+- [ ] Implement `/runs` for historical runs and run detail.
+- [ ] Implement `/settings` for current settings and settings edits.
 - [ ] Use FastAPI route functions instead of the old manual request handler.
 - [ ] Verify pages in browser.
 
@@ -93,11 +93,11 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 
 ### US-006: Add persistent production storage
 
-**Description:** As a dashboard user, I want run history, run status, settings, and curation to persist reliably so that batch analysis results survive restarts and can be queried over time.
+**Description:** As a dashboard user, I want run history, run status, and settings to persist reliably so that batch analysis results survive restarts and can be queried over time.
 
 **Acceptance Criteria:**
 
-- [ ] Define production tables for runs, run outputs, selected videos, raw videos, curation, settings versions, and manual runs.
+- [ ] Define production tables for runs, run outputs, selected videos, raw videos, settings versions, and manual runs.
 - [ ] Use Supabase Postgres as the production metadata store.
 - [ ] Store large artifacts in Supabase Storage, not database blobs or VPS-local dashboard storage.
 - [ ] Store artifact metadata in the database.
@@ -127,18 +127,17 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - [ ] Long-running execution does not block the web request until completion.
 - [ ] Trigger failures produce a visible, actionable error.
 
-### US-009: Rebuild settings and curation flows
+### US-009: Rebuild settings flows
 
-**Description:** As a dashboard user, I want scrape settings and video curation to work in the new dashboard so that production decisions are captured.
+**Description:** As a dashboard user, I want scrape settings to work in the new dashboard so that production decisions are captured.
 
 **Acceptance Criteria:**
 
 - [ ] View active scrape settings.
 - [ ] Save a new settings version.
 - [ ] Roll back to a prior settings version.
-- [ ] Save video curation labels and notes.
 - [ ] Validate form data server-side.
-- [ ] Tests cover save, rollback, validation, and curation persistence.
+- [ ] Tests cover save, rollback, and validation.
 
 ### US-010: Serve reports, exports, and artifacts
 
@@ -181,9 +180,9 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 
 - FR-1: The dashboard must run as a FastAPI app.
 - FR-2: The production app must be served by `uvicorn` or a compatible ASGI server.
-- FR-3: The app must provide routes for overview, report, run history, scrape settings, exports, health check, curation, and manual run trigger.
+- FR-3: The app must provide routes for overview, report, run history, scrape settings, exports, health check, and manual run trigger.
 - FR-4: The app must require authentication for dashboard pages and mutating actions in production.
-- FR-5: The app must store run metadata, run status, settings versions, and curation data durably in Supabase Postgres.
+- FR-5: The app must store run metadata, run status, and settings versions durably in Supabase Postgres.
 - FR-6: The app must store large artifacts in Supabase Storage, with metadata in Supabase Postgres.
 - FR-7: The app must expose enough run status detail to operate the pipeline without SSH for normal cases.
 - FR-8: Manual run triggers must be protected against duplicate active runs.
@@ -222,7 +221,7 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - Settings validation rules from `dashboard/settings.py`
 - Export column definitions and CSV formatting rules from `dashboard/exports.py`
 - Report discovery/formatting behavior from `dashboard/report_view.py`
-- Time display helpers from `dashboard/time_display.py`
+- Time display behavior in active dashboard rendering modules
 - Static assets from `dashboard/assets/` where still useful
 
 ### Rewrite
@@ -232,13 +231,12 @@ This is still a Python rewrite, not a rewrite into another language. FastAPI bec
 - `dashboard/web_actions.py`
 - `dashboard/web_layout.py`
 - `dashboard/web_components.py`
-- `dashboard/web_constants.py`
 - `dashboard/web_overview.py`
 - `dashboard/web_report.py`
 - `dashboard/web_run_history.py`
 - `dashboard/web_settings.py`
 - SQLite-backed persistence in `dashboard/store.py`
-- Run history, manual run, settings, curation, and export data access around Supabase Postgres and Supabase Storage
+- Run history, manual run, settings, and export data access around Supabase Postgres and Supabase Storage
 
 Some rendering behavior can be translated, but the final structure belongs to FastAPI, Jinja, Supabase Auth, Supabase Postgres, and Supabase Storage. Do not carry forward the old server, SQLite store, or large Python HTML string rendering as production architecture.
 
@@ -258,7 +256,6 @@ dashboard/
     runs.py
     reports.py
     settings.py
-    curation.py
     exports.py
     artifacts.py
 
@@ -287,7 +284,7 @@ The production storage decision is locked in `docs/adr/0003-supabase-first-fasta
 - SQLite is removed from the new dashboard runtime and should not remain as a second supported dashboard store.
 - A later migration slice may read legacy SQLite only as a one-time import source if needed.
 
-Production metadata includes run metadata, run status, settings versions, manual runs, curation, selected videos, raw videos, and output metadata.
+Production metadata includes run metadata, run status, settings versions, manual runs, selected videos, raw videos, and output metadata.
 
 Candidate tables:
 
@@ -295,7 +292,6 @@ Candidate tables:
 - `run_outputs`
 - `raw_videos`
 - `selected_videos`
-- `video_curation`
 - `scrape_settings_versions`
 - `manual_runs`
 
@@ -303,7 +299,7 @@ Large artifacts should be referenced by metadata: Supabase Storage bucket, objec
 
 ## Authentication Decision
 
-Authentication uses Supabase Auth. Dashboard user identity should populate audit fields such as `created_by`, `updated_by`, manual-run trigger user, and curation author.
+Authentication uses Supabase Auth. Dashboard user identity should populate audit fields such as `created_by`, `updated_by`, and manual-run trigger user.
 
 ## Rendering Decision
 
@@ -330,7 +326,6 @@ Canonical FastAPI routes use clean resource-style paths:
 - `GET /settings`
 - `POST /settings`
 - `POST /settings/{version}/rollback`
-- `POST /videos/{video_id}/curation`
 - `GET /exports/raw-videos.csv`
 - `GET /exports/run-summaries.csv`
 - `GET /artifacts/{artifact_id}`
@@ -361,7 +356,6 @@ Canonical FastAPI routes use clean resource-style paths:
 - Rebuild reports.
 - Rebuild run history.
 - Rebuild scrape settings.
-- Rebuild curation save.
 - Rebuild exports.
 - Rebuild manual run trigger.
 

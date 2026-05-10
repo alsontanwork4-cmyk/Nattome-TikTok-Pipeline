@@ -93,6 +93,11 @@ class FakeDashboardDataClient:
         return self.outputs.get(run_id, [])
 
 
+class FailingDashboardDataClient:
+    def list_runs(self, *, limit: int = 50):
+        raise RuntimeError("Supabase Postgres unavailable")
+
+
 class DashboardFastAPIOverviewTest(unittest.TestCase):
     def test_overview_route_requires_authentication(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -122,6 +127,17 @@ class DashboardFastAPIOverviewTest(unittest.TestCase):
             self.assertIn('href="/runs"', response.text)
             self.assertIn('<section class="panel feature overview-hero">', response.text)
             self.assertFalse((workspace / "data" / "dashboard" / "dashboard.sqlite3").exists())
+
+    def test_overview_renders_data_error_instead_of_internal_server_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FailingDashboardDataClient())
+
+            response = client.get("/")
+
+            self.assertEqual(response.status_code, 503)
+            self.assertIn("Dashboard data unavailable", response.text)
+            self.assertIn("Supabase Postgres unavailable", response.text)
+            self.assertIn("No Supabase run data yet", response.text)
 
     def test_overview_renders_latest_run_summary_links_and_operational_issue(self):
         with tempfile.TemporaryDirectory() as temp_dir:

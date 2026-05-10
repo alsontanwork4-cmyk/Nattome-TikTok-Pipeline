@@ -147,15 +147,6 @@ class FakeDashboardDataClient:
                 "evidence_status": "analyzed",
             }
         ]
-        self.video_curation = [
-            {
-                "video_id": "video-1",
-                "labels": ["Relevant", "Good Nattome Fit"],
-                "note": "Keep for hook planning.",
-                "exclude_similar_reason": "",
-            }
-        ]
-
     def list_runs(self, *, limit: int = 50):
         return self.runs[:limit]
 
@@ -180,8 +171,10 @@ class FakeDashboardDataClient:
     def list_selected_videos(self):
         return self.selected_videos
 
-    def list_video_curation(self):
-        return self.video_curation
+
+class FailingDashboardDataClient:
+    def list_runs(self, *, limit: int = 50):
+        raise RuntimeError("Supabase Postgres unavailable")
 
 
 class DashboardFastAPIReportsExportsTest(unittest.TestCase):
@@ -220,6 +213,17 @@ class DashboardFastAPIReportsExportsTest(unittest.TestCase):
             self.assertIn('href="/reports/run-missing"', response.text)
             self.assertIn("report.md", response.text)
 
+    def test_reports_route_renders_data_error_instead_of_internal_server_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(Path(temp_dir), FailingDashboardDataClient())
+
+            response = client.get("/reports")
+
+            self.assertEqual(response.status_code, 503)
+            self.assertIn("Reports unavailable", response.text)
+            self.assertIn("Supabase Postgres unavailable", response.text)
+            self.assertIn("No Supabase reports yet", response.text)
+
     def test_report_detail_renders_markdown_and_missing_artifact_empty_state(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(Path(temp_dir), FakeDashboardDataClient())
@@ -257,7 +261,27 @@ class DashboardFastAPIReportsExportsTest(unittest.TestCase):
             self.assertEqual([row["video_id"] for row in raw_rows], ["video-1", "video-2"])
             self.assertEqual(raw_rows[0]["hashtags"], "guthealth; bloating")
             self.assertEqual(raw_rows[0]["selection_status"], "analyzed")
-            self.assertEqual(raw_rows[0]["curation_labels"], "Relevant; Good Nattome Fit")
+            self.assertEqual(
+                raw_rows[0].keys(),
+                {
+                    "video_id",
+                    "tiktok_url",
+                    "author_handle",
+                    "caption",
+                    "hashtags",
+                    "source_input",
+                    "play_count",
+                    "like_count",
+                    "comment_count",
+                    "share_count",
+                    "created_at",
+                    "is_downloadable",
+                    "run_id",
+                    "config_version",
+                    "selection_status",
+                    "source_artifact_path",
+                },
+            )
             self.assertEqual(raw_rows[1]["selection_status"], "raw")
             self.assertEqual(summary_response.status_code, 200)
             self.assertEqual(

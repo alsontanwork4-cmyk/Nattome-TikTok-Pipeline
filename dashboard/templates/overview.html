@@ -11,6 +11,13 @@
 {% endset %}
 {{ theme.page_header("Overview", "Latest Supabase-backed pipeline state.", actions) }}
 
+{% if data_error %}
+<section class="panel">
+  <p class="status-pill err">Dashboard data unavailable</p>
+  <p class="muted">{{ data_error }}</p>
+</section>
+{% endif %}
+
 <section class="panel feature overview-hero">
   <h2>Latest run</h2>
   {% if not latest_run %}

@@ -252,36 +252,10 @@ apt install -y certbot python3-certbot-nginx
 certbot --nginx -d your-domain.com
 ```
 
-## 9. Import Existing Artifacts Once
-
-Historical local artifacts can be imported into Supabase after the files are on
-the VPS. This is a one-time migration aid; the production dashboard reads
-Supabase Postgres and Supabase Storage, not the old local dashboard index.
-
-```bash
-cd /opt/nattome-pipeline
-. .venv/bin/activate
-python -m dashboard.legacy_import \
-  --workspace /opt/nattome-pipeline \
-  --storage-bucket dashboard-artifacts
-```
-
-If an old dashboard SQLite file has curation labels or notes that cannot be
-recovered from artifacts, pass it explicitly as a one-time source:
-
-```bash
-python -m dashboard.legacy_import \
-  --workspace /opt/nattome-pipeline \
-  --storage-bucket dashboard-artifacts \
-  --legacy-sqlite /opt/nattome-pipeline/data/dashboard/dashboard.sqlite3
-```
-
-Do not configure the production dashboard to read SQLite at runtime.
-
-## 10. Backups
+## 9. Backups
 
 Supabase Postgres backups protect metadata: runs, statuses, settings versions,
-manual-run records, curation, raw/selected video metadata, and artifact rows.
+manual-run records, raw/selected video metadata, and artifact rows.
 Enable Supabase Postgres backups in the Supabase project and periodically test a
 restore into a separate project before relying on the backup plan.
 

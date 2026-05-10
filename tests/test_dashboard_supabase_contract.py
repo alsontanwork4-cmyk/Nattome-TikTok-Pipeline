@@ -85,6 +85,28 @@ class FakeStorage:
         return FakeStorageBucket(bucket_name, self.recorder)
 
 
+class FakeRpc:
+    def __init__(self, name: str, params: dict, recorder: list[tuple]):
+        self.name = name
+        self.params = params
+        self.recorder = recorder
+        self.data = [
+            {
+                "version": 1,
+                "settings": params.get("p_settings"),
+                "reason": params.get("p_reason"),
+                "is_active": True,
+                "rollback_of_version": params.get("p_rollback_of_version"),
+                "created_by": params.get("p_created_by"),
+                "updated_by": params.get("p_created_by"),
+            }
+        ]
+
+    def execute(self):
+        self.recorder.append((self.name, "execute"))
+        return self
+
+
 class FakeSupabase:
     def __init__(self):
         self.calls: list[tuple] = []
@@ -94,6 +116,10 @@ class FakeSupabase:
         self.calls.append(("client", "table", table_name))
         return FakeQuery(table_name, self.calls)
 
+    def rpc(self, name: str, params: dict):
+        self.calls.append(("client", "rpc", name, params))
+        return FakeRpc(name, params, self.calls)
+
 
 class DashboardSupabaseContractTest(unittest.TestCase):
     def test_contract_defines_dashboard_tables_and_required_fields(self):
@@ -102,7 +128,6 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             "run_outputs",
             "raw_videos",
             "selected_videos",
-            "video_curation",
             "scrape_settings_versions",
             "manual_runs",
         }
@@ -283,20 +308,18 @@ class DashboardSupabaseContractTest(unittest.TestCase):
         )
         raw_videos = client.list_raw_videos()
         selected_videos = client.list_selected_videos()
-        video_curation = client.list_video_curation()
 
         self.assertEqual(report.object_path, "")
         self.assertEqual(report_body, "# Report\n")
         self.assertEqual(raw_videos, [{"table": "raw_videos"}])
         self.assertEqual(selected_videos, [{"table": "selected_videos"}])
-        self.assertEqual(video_curation, [{"table": "video_curation"}])
         self.assertIn(("run_outputs", "eq", "run_id", "run-1"), fake.calls)
         self.assertIn(("run_outputs", "eq", "artifact_type", "report"), fake.calls)
         self.assertIn(("dashboard-artifacts", "download", "runs/run-1/report.md"), fake.calls)
         self.assertIn(("raw_videos", "order", "play_count", True), fake.calls)
         self.assertIn(("raw_videos", "order", "video_id", False), fake.calls)
 
-    def test_client_versions_settings_and_upserts_video_curation(self):
+    def test_client_versions_settings(self):
         fake = FakeSupabase()
         client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
         settings = {
@@ -311,25 +334,25 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             reason="Initial production settings",
             user="owner@example.com",
         )
-        curation = client.upsert_video_curation(
-            "video-1",
-            labels=["Relevant", "Good Nattome Fit"],
-            note="Use for hook planning.",
-            exclude_similar_reason="",
-            user="owner@example.com",
-        )
 
         self.assertEqual(saved["version"], 1)
         self.assertEqual(saved["settings"], settings)
         self.assertEqual(saved["created_by"], "owner@example.com")
-        self.assertEqual(curation["video_id"], "video-1")
-        self.assertEqual(curation["labels"], ["Relevant", "Good Nattome Fit"])
-        self.assertEqual(curation["updated_by"], "owner@example.com")
         self.assertIn(("scrape_settings_versions", "order", "version", True), fake.calls)
-        self.assertIn(("scrape_settings_versions", "update", {"is_active": False}), fake.calls)
-        self.assertIn(("scrape_settings_versions", "eq", "is_active", True), fake.calls)
-        self.assertIn(("video_curation", "upsert", curation, "video_id"), fake.calls)
-
+        self.assertIn(
+            (
+                "client",
+                "rpc",
+                "save_scrape_settings_version",
+                {
+                    "p_settings": settings,
+                    "p_reason": "Initial production settings",
+                    "p_created_by": "owner@example.com",
+                    "p_rollback_of_version": None,
+                },
+            ),
+            fake.calls,
+        )
 
 if __name__ == "__main__":
     unittest.main()

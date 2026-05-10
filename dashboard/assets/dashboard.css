@@ -268,7 +268,6 @@
     .action-link,
     .action-form button,
     .run-control-form button,
-    .curation-form button,
     .settings-form button,
     .rollback-form button,
     .search-form button,
@@ -295,7 +294,6 @@
     .action-link:hover,
     .action-form button:hover,
     .run-control-form button:hover,
-    .curation-form button:hover,
     .settings-form button:hover,
     .rollback-form button:hover,
     .search-form button:hover,
@@ -515,19 +513,6 @@
       min-width: 180px;
     }
     /* ---- Forms ---- */
-    .curation-form {
-      border-top: 1px solid var(--line);
-      display: grid;
-      gap: 14px;
-      padding-top: 16px;
-      margin-top: 4px;
-    }
-    .curation-form fieldset {
-      border: 0;
-      margin: 0;
-      padding: 0;
-    }
-    .curation-form legend,
     .field-label {
       color: var(--muted);
       display: grid;
@@ -586,7 +571,6 @@
       resize: vertical;
       font-family: var(--font-sans);
     }
-    .curation-form button { justify-self: start; }
     .settings-panel { padding: 18px 22px; }
     .settings-form {
       display: grid;
@@ -1207,6 +1191,34 @@
       .overview-funnel { grid-template-columns: 1fr; }
     }
     /* ---- Run workbench (run history + tabs) ---- */
+    .run-list-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .run-list-header h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin: 4px 0;
+      text-transform: none;
+      letter-spacing: -0.01em;
+    }
+    .run-search-form {
+      min-width: min(320px, 100%);
+    }
+    .run-search-form .field-label {
+      margin: 0;
+    }
+    .run-id-line {
+      display: block;
+      font-size: 12px;
+      margin-top: 3px;
+    }
     .run-selector-table tbody tr.run-selector-active td { background: var(--bg-warm); }
     .run-selector-table tbody tr.run-selector-active td:first-child {
       box-shadow: inset 3px 0 0 var(--accent);
@@ -1329,8 +1341,28 @@
       text-transform: uppercase;
       color: var(--muted);
     }
+    .compact-metadata-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
     .run-selection-counts { margin-top: 10px; font-size: 12.5px; }
     .posts-table { min-width: 1480px; }
+    .overview-table { min-width: 1900px; }
+    .authors-table { min-width: 1720px; }
+    .music-table { min-width: 1180px; }
+    .video-table { min-width: 1420px; }
+    .run-thumb {
+      width: 38px;
+      height: 52px;
+      border-radius: var(--r-sm);
+      object-fit: cover;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      display: block;
+    }
     .post-hook {
       max-width: 320px;
       font-weight: 500;
@@ -1347,33 +1379,19 @@
     }
     .posts-table .status-pill { padding: 5px 9px; font-size: 10.5px; }
     .posts-table td .status-pill + .status-pill { margin-left: 4px; }
-    .curation-drawer {
-      margin-top: 18px;
-      border: 1px solid var(--line);
-      border-radius: var(--r-md);
-      background: var(--panel);
-    }
-    .curation-drawer summary {
-      cursor: pointer;
-      padding: 12px 16px;
-      font-weight: 600;
-      color: var(--ink-2);
-    }
-    .curation-drawer-list {
-      display: grid;
-      gap: 12px;
-      padding: 0 16px 16px;
-    }
-    .curation-card {
-      border-top: 1px solid var(--line);
-      padding-top: 12px;
-    }
-    .curation-card header {
+    .run-market-summary {
       display: flex;
-      gap: 12px;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 12.5px;
+      margin-bottom: 14px;
+    }
+    .run-market-summary span {
+      background: var(--bg-warm);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      padding: 5px 10px;
     }
     .all-fields-stack { display: grid; gap: 12px; }
     .all-fields-row {
@@ -1396,6 +1414,14 @@
       background: var(--bg-warm);
     }
     .all-fields-table td { word-break: break-word; }
+    .field-value {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+    }
     @media (max-width: 960px) {
       .run-overview-grid { grid-template-columns: 1fr; }
       .run-summary-stats dd { font-size: 18px; }

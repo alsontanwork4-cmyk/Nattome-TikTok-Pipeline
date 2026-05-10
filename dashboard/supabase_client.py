@@ -60,16 +60,6 @@ DASHBOARD_TABLE_CONTRACT: dict[str, tuple[str, ...]] = {
         "created_at",
         "updated_at",
     ),
-    "video_curation": (
-        "video_id",
-        "labels",
-        "note",
-        "exclude_similar_reason",
-        "created_by",
-        "updated_by",
-        "created_at",
-        "updated_at",
-    ),
     "scrape_settings_versions": (
         "version",
         "settings",
@@ -77,7 +67,9 @@ DASHBOARD_TABLE_CONTRACT: dict[str, tuple[str, ...]] = {
         "is_active",
         "rollback_of_version",
         "created_by",
+        "updated_by",
         "created_at",
+        "updated_at",
     ),
     "manual_runs": (
         "id",
@@ -225,10 +217,6 @@ class DashboardSupabaseClient:
         response = self._client.table("selected_videos").select("*").execute()
         return list(response.data or [])
 
-    def list_video_curation(self) -> list[dict[str, Any]]:
-        response = self._client.table("video_curation").select("*").execute()
-        return list(response.data or [])
-
     def list_settings_versions(self) -> list[dict[str, Any]]:
         response = (
             self._client.table("scrape_settings_versions")
@@ -248,7 +236,6 @@ class DashboardSupabaseClient:
         versions = self.list_settings_versions()
         next_version = _next_settings_version(versions)
         record = {
-            "version": next_version,
             "settings": settings,
             "reason": reason,
             "is_active": True,
@@ -256,7 +243,7 @@ class DashboardSupabaseClient:
             "created_by": user,
             "updated_by": user,
         }
-        return self._insert_settings_version(record)
+        return self._insert_settings_version(record, fallback_version=next_version)
 
     def rollback_settings_version(
         self,
@@ -273,7 +260,6 @@ class DashboardSupabaseClient:
         if target is None:
             raise ValueError(f"unknown scrape settings version: {target_version}")
         record = {
-            "version": _next_settings_version(versions),
             "settings": target.get("settings") or {},
             "reason": reason,
             "is_active": True,
@@ -281,43 +267,38 @@ class DashboardSupabaseClient:
             "created_by": user,
             "updated_by": user,
         }
-        return self._insert_settings_version(record)
+        return self._insert_settings_version(record, fallback_version=_next_settings_version(versions))
 
-    def upsert_video_curation(
+    def _insert_settings_version(
         self,
-        video_id: str,
+        record: dict[str, Any],
         *,
-        labels: list[str],
-        note: str,
-        exclude_similar_reason: str,
-        user: str,
+        fallback_version: int,
     ) -> dict[str, Any]:
-        record = {
-            "video_id": video_id,
-            "labels": labels,
-            "note": note,
-            "exclude_similar_reason": exclude_similar_reason,
-            "created_by": user,
-            "updated_by": user,
-        }
-        response = (
-            self._client.table("video_curation")
-            .upsert(record, on_conflict="video_id")
-            .execute()
-        )
-        rows = list(response.data or [])
-        return rows[0] if rows else record
+        rpc = getattr(self._client, "rpc", None)
+        if callable(rpc):
+            response = rpc(
+                "save_scrape_settings_version",
+                {
+                    "p_settings": record["settings"],
+                    "p_reason": record["reason"],
+                    "p_created_by": record["created_by"],
+                    "p_rollback_of_version": record["rollback_of_version"],
+                },
+            ).execute()
+            rows = list(response.data or [])
+            return rows[0] if rows else {**record, "version": fallback_version}
 
-    def _insert_settings_version(self, record: dict[str, Any]) -> dict[str, Any]:
+        fallback_record = {**record, "version": fallback_version}
         (
             self._client.table("scrape_settings_versions")
             .update({"is_active": False})
             .eq("is_active", True)
             .execute()
         )
-        response = self._client.table("scrape_settings_versions").insert(record).execute()
+        response = self._client.table("scrape_settings_versions").insert(fallback_record).execute()
         rows = list(response.data or [])
-        return rows[0] if rows else record
+        return rows[0] if rows else fallback_record
 
     def upsert_manual_run(self, record: dict[str, Any]) -> list[dict[str, Any]]:
         response = self._client.table("manual_runs").upsert(record, on_conflict="id").execute()
@@ -433,6 +414,26 @@ class DashboardSupabaseClient:
         response = (
             self._client.table("run_outputs")
             .upsert(metadata.to_record(), on_conflict="run_id,object_path")
+            .execute()
+        )
+        return list(response.data or [])
+
+    def upsert_raw_videos(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        if not records:
+            return []
+        response = (
+            self._client.table("raw_videos")
+            .upsert(records, on_conflict="run_id,video_id")
+            .execute()
+        )
+        return list(response.data or [])
+
+    def upsert_selected_videos(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        if not records:
+            return []
+        response = (
+            self._client.table("selected_videos")
+            .upsert(records, on_conflict="run_id,video_id")
             .execute()
         )
         return list(response.data or [])
