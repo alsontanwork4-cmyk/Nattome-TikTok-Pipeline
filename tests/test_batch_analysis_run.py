@@ -124,6 +124,72 @@ class BatchAnalysisRunCliTest(unittest.TestCase):
                 "completed",
             )
 
+    def test_cli_uses_local_agent_config_without_supabase(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            runs_dir = temp_path / "runs"
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            agent_config_path = temp_path / "agent-settings.json"
+            agent_config_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "agents": {
+                            "gemini_video_evidence": {
+                                "enabled": False,
+                                "model": "gemini-2.5-flash",
+                                "prompt_sections": {
+                                    "role": "Watch videos.",
+                                    "input_contract": "Use uploaded video and candidate metadata.",
+                                    "output_contract": "Return evidence JSON.",
+                                    "safety": "Do not infer unsupported claims.",
+                                },
+                                "generation": {"temperature": 0.2},
+                                "advanced_generation_config": {},
+                            },
+                            "nattome_creative_strategy": {
+                                "enabled": True,
+                                "model": "gemini-2.5-flash",
+                                "prompt_sections": {
+                                    "role": "Write Nattome reports.",
+                                    "input_contract": "Use evidence, metadata, and brand reference.",
+                                    "creative_direction": "Write specific marketer guidance.",
+                                    "report_outline": "Use a concise source-backed outline.",
+                                    "claim_safety": "Avoid clinical claims.",
+                                },
+                                "generation": {"temperature": 0.4},
+                                "advanced_generation_config": {},
+                            },
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            result = run_cli(
+                "--runs-dir",
+                str(runs_dir),
+                "--candidates",
+                str(candidates_path),
+                "--agent-config",
+                str(agent_config_path),
+                "--timestamp",
+                "2026-05-06T13:45:30Z",
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            run_folder = runs_dir / "20260506T214530+0800_daily"
+            snapshot = json.loads(
+                (run_folder / "data" / "agent_settings_snapshot.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(snapshot["source"], "local")
+            self.assertIs(snapshot["settings"]["agents"]["gemini_video_evidence"]["enabled"], False)
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["agent_settings"]["source"], "local")
+            phases = {phase["name"]: phase for phase in manifest["phases"]}
+            self.assertEqual(phases["gemini_video_evidence"]["status"], "disabled")
+
     def test_missing_explicit_config_fails_without_creating_run_folder(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

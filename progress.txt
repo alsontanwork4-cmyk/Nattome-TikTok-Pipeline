@@ -2401,3 +2401,38 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to wire resolved agent config into Gemini runs.
+
+## 2026-05-10 - 0090 Wire Agent Config Into Gemini Runs
+
+Task completed from `docs/issues/0090-wire-agent-config-into-gemini-runs.md`.
+
+Key decisions made:
+- `create_run` now resolves agent settings for candidate runs, writes `data/agent_settings_snapshot.json`, and records source/version/snapshot metadata in the run manifest.
+- Local CLI runs support `--agent-config` and otherwise fall back to built-in defaults without requiring Supabase.
+- Dashboard worker runs resolve active Supabase agent settings and pass that resolved version into the batch run.
+- Gemini reporting now uses per-agent enabled state, model, polished generation controls, and advanced generation config for Gemini SDK calls.
+- Disabling the Evidence Agent skips the full Gemini reporting chain; disabling the Creative Strategist still runs evidence extraction and skips report generation.
+- Invalid agent config produces visible Gemini phase failures before any Gemini SDK call.
+
+Files changed:
+- `batch_analysis/gemini_reports.py`
+- `batch_analysis/run.py`
+- `batch_analysis/run_batch_analysis.py`
+- `dashboard/worker.py`
+- `tests/test_batch_analysis_run.py`
+- `tests/test_dashboard_worker.py`
+- `tests/test_gemini_nattome_pov_reports.py`
+- `progress.txt`
+- `docs/issues/done/0090-wire-agent-config-into-gemini-runs.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_gemini_nattome_pov_reports.py` failed because run snapshots, disabled-agent behavior, configured generation options, and invalid-config preflight did not exist.
+- RED: `python -m unittest discover -s tests -p test_batch_analysis_run.py` failed because the CLI did not accept `--agent-config`.
+- RED: `python -m unittest discover -s tests -p test_dashboard_worker.py` failed because worker-created batch runs did not receive resolved Supabase agent settings.
+- GREEN: `python -m unittest discover -s tests -p test_gemini_nattome_pov_reports.py` passed with 11 tests.
+- GREEN: `python -m unittest discover -s tests -p test_batch_analysis_run.py` passed with 5 tests.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_worker.py` passed with 6 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 117 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add live agent trace event writing.

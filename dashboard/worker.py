@@ -12,6 +12,7 @@ from typing import Callable
 
 from .composition import build_dashboard_data_client
 from .config import DashboardSettings
+from .agent_settings import resolve_agent_settings
 from .run_publication import (
     ArtifactUpload as WorkerArtifact,
     artifact_uploads,
@@ -107,6 +108,7 @@ def build_pipeline_runner(
 ) -> WorkerRunner:
     resolved_runs_dir = runs_dir or _default_batch_runs_dir(settings)
     resolved_config_path = config_path or Path(settings.workspace_path) / "batch_analysis" / "scrape_config.json"
+    resolved_agent_config_path = Path(settings.workspace_path) / "batch_analysis" / "agent_config.json"
     resolved_discovery_runner = discovery_runner or _run_discovery
     if create_run_func is None:
         from batch_analysis.run import create_run as create_run_func
@@ -131,6 +133,10 @@ def build_pipeline_runner(
                 config=resolved_config_path,
                 candidates=candidates_path,
                 timestamp=timestamp,
+                agent_settings_resolution=resolve_agent_settings(
+                    data_client=dashboard_client,
+                    local_config_path=resolved_agent_config_path,
+                ),
             )
         )
         status, error_summary = publish_run_records(

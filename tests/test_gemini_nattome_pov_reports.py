@@ -6,6 +6,7 @@ from argparse import Namespace
 from pathlib import Path
 from unittest.mock import patch
 
+from dashboard.agent_settings import DEFAULT_AGENT_SETTINGS
 from batch_analysis.gemini_reports import generate_nattome_pov_reports
 from batch_analysis.run import create_run
 
@@ -34,8 +35,8 @@ class FakeGeminiClient:
         self.uploads.append(Path(file))
         return {"uri": f"gemini://{Path(file).name}", "mime_type": "video/mp4"}
 
-    def generate_content(self, *, model, contents):
-        self.calls.append({"model": model, "contents": contents})
+    def generate_content(self, *, model, contents, config=None):
+        self.calls.append({"model": model, "contents": contents, "config": config})
         if len(self.calls) == 1:
             return FakeGeminiResponse(
                 json.dumps(
@@ -68,7 +69,7 @@ class ExplodingGeminiClient:
     def upload(self, *, file):
         raise AssertionError("Gemini should not be called")
 
-    def generate_content(self, *, model, contents):
+    def generate_content(self, *, model, contents, config=None):
         raise AssertionError("Gemini should not be called")
 
 
@@ -91,6 +92,176 @@ def candidate(temp_path: Path, **overrides):
 
 
 class GeminiNattomePovReportsTest(unittest.TestCase):
+    def test_run_snapshots_default_agent_config_and_records_source_version(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                run_folder = create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                    ),
+                    gemini_client_factory=lambda api_key: FakeGeminiClient(),
+                )
+
+            snapshot = json.loads(
+                (run_folder / "data" / "agent_settings_snapshot.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(snapshot["source"], "defaults")
+            self.assertIsNone(snapshot["version"])
+            self.assertEqual(set(snapshot["settings"]["agents"]), {"gemini_video_evidence", "nattome_creative_strategy"})
+            self.assertNotIn("GEMINI_API_KEY", json.dumps(snapshot))
+
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                manifest["agent_settings"],
+                {
+                    "source": "defaults",
+                    "version": None,
+                    "snapshot": "data/agent_settings_snapshot.json",
+                },
+            )
+
+    def test_configured_agent_models_and_generation_options_are_used(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            settings = json.loads(json.dumps(DEFAULT_AGENT_SETTINGS))
+            settings["agents"]["gemini_video_evidence"]["model"] = "models/gemini-2.0-flash"
+            settings["agents"]["gemini_video_evidence"]["generation"]["temperature"] = 0.15
+            settings["agents"]["gemini_video_evidence"]["advanced_generation_config"] = {
+                "response_mime_type": "application/json"
+            }
+            settings["agents"]["nattome_creative_strategy"]["model"] = "gemini-2.5-pro"
+            settings["agents"]["nattome_creative_strategy"]["generation"]["temperature"] = 0.7
+            fake_client = FakeGeminiClient()
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        agent_settings_resolution={
+                            "source": "supabase",
+                            "version": 7,
+                            "settings": settings,
+                        },
+                    ),
+                    gemini_client_factory=lambda api_key: fake_client,
+                )
+
+            self.assertEqual(fake_client.calls[0]["model"], "models/gemini-2.0-flash")
+            self.assertEqual(fake_client.calls[0]["config"]["temperature"], 0.15)
+            self.assertEqual(fake_client.calls[0]["config"]["response_mime_type"], "application/json")
+            self.assertEqual(fake_client.calls[1]["model"], "gemini-2.5-pro")
+            self.assertEqual(fake_client.calls[1]["config"]["temperature"], 0.7)
+
+    def test_disabled_evidence_agent_skips_full_gemini_reporting_chain(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            settings = json.loads(json.dumps(DEFAULT_AGENT_SETTINGS))
+            settings["agents"]["gemini_video_evidence"]["enabled"] = False
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                run_folder = create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        agent_settings_resolution={"source": "local", "version": None, "settings": settings},
+                    ),
+                    gemini_client_factory=lambda api_key: ExplodingGeminiClient(),
+                )
+
+            self.assertFalse((run_folder / "data" / "001_first-video_gemini_evidence.json").exists())
+            self.assertFalse((run_folder / "reports" / "001_first-video_nattome_pov_report.md").exists())
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            phases = {phase["name"]: phase for phase in manifest["phases"]}
+            self.assertEqual(phases["gemini_video_evidence"]["status"], "disabled")
+            self.assertEqual(phases["gemini_creative_strategy"]["status"], "skipped")
+            self.assertEqual(phases["nattome_pov_reports"]["status"], "skipped")
+
+    def test_disabled_creative_agent_still_runs_evidence_and_skips_reports(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            settings = json.loads(json.dumps(DEFAULT_AGENT_SETTINGS))
+            settings["agents"]["nattome_creative_strategy"]["enabled"] = False
+            fake_client = FakeGeminiClient()
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                run_folder = create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        agent_settings_resolution={"source": "local", "version": None, "settings": settings},
+                    ),
+                    gemini_client_factory=lambda api_key: fake_client,
+                )
+
+            self.assertEqual(len(fake_client.calls), 1)
+            self.assertTrue((run_folder / "data" / "001_first-video_gemini_evidence.json").is_file())
+            self.assertFalse((run_folder / "data" / "001_first-video_gemini_creative_response.json").exists())
+            self.assertFalse((run_folder / "reports" / "001_first-video_nattome_pov_report.md").exists())
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            phases = {phase["name"]: phase for phase in manifest["phases"]}
+            self.assertEqual(phases["gemini_video_evidence"]["status"], "completed")
+            self.assertEqual(phases["gemini_creative_strategy"]["status"], "disabled")
+            self.assertEqual(phases["nattome_pov_reports"]["status"], "skipped")
+            self.assertEqual(manifest["outputs"]["final_outputs"], [])
+
+    def test_invalid_agent_config_records_preflight_failure_without_calling_gemini(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            candidates_path = temp_path / "candidates.json"
+            candidates_path.write_text(json.dumps({"top": [candidate(temp_path)]}), encoding="utf-8")
+            settings = json.loads(json.dumps(DEFAULT_AGENT_SETTINGS))
+            settings["agents"]["gemini_video_evidence"]["model"] = "text-bison"
+
+            with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}):
+                run_folder = create_run(
+                    Namespace(
+                        mode="daily",
+                        batch_size=1,
+                        runs_dir=temp_path / "runs",
+                        config=None,
+                        candidates=candidates_path,
+                        timestamp="2026-05-06T13:45:30Z",
+                        agent_settings_resolution={"source": "supabase", "version": 9, "settings": settings},
+                    ),
+                    gemini_client_factory=lambda api_key: ExplodingGeminiClient(),
+                )
+
+            self.assertFalse((run_folder / "data" / "agent_settings_snapshot.json").exists())
+            manifest = json.loads((run_folder / "run_manifest.json").read_text(encoding="utf-8"))
+            phases = {phase["name"]: phase for phase in manifest["phases"]}
+            self.assertEqual(phases["gemini_video_evidence"]["status"], "failed")
+            self.assertIn("model", str(phases["gemini_video_evidence"]["failure_details"]))
+            self.assertEqual(phases["gemini_creative_strategy"]["status"], "failed")
+            self.assertEqual(phases["nattome_pov_reports"]["status"], "failed")
+
     def test_completed_run_writes_two_agent_gemini_artifacts_manifest_phases_and_sends_telegram(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

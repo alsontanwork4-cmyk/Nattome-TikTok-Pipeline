@@ -39,6 +39,11 @@ def parse_args() -> argparse.Namespace:
         "--timestamp",
         help="UTC timestamp for deterministic runs or tests, for example 2026-05-06T13:45:30Z.",
     )
+    parser.add_argument(
+        "--agent-config",
+        type=Path,
+        help="Optional local JSON config for Gemini agent settings.",
+    )
     return parser.parse_args()
 
 

@@ -25,6 +25,7 @@ class FakeDashboardDataClient:
         self.runs = {}
         self.raw_videos = {}
         self.selected_videos = {}
+        self.agent_settings_versions = []
 
     def claim_queued_manual_run(self, *, worker_id: str):
         return self.claimed
@@ -58,6 +59,9 @@ class FakeDashboardDataClient:
         for record in records:
             self.selected_videos[(record["run_id"], record["video_id"])] = record
         return records
+
+    def list_agent_settings_versions(self):
+        return self.agent_settings_versions
 
 
 class DashboardWorkerTest(unittest.TestCase):
@@ -169,6 +173,42 @@ class DashboardWorkerTest(unittest.TestCase):
                 supabase_storage_bucket="pipeline-artifacts",
             )
             data_client = FakeDashboardDataClient()
+            data_client.agent_settings_versions = [
+                {
+                    "version": 3,
+                    "is_active": True,
+                    "settings": {
+                        "schema_version": 1,
+                        "agents": {
+                            "gemini_video_evidence": {
+                                "enabled": True,
+                                "model": "gemini-2.5-flash",
+                                "prompt_sections": {
+                                    "role": "Watch videos.",
+                                    "input_contract": "Use uploaded video and metadata.",
+                                    "output_contract": "Return evidence JSON.",
+                                    "safety": "Do not infer unsupported claims.",
+                                },
+                                "generation": {"temperature": 0.2},
+                                "advanced_generation_config": {},
+                            },
+                            "nattome_creative_strategy": {
+                                "enabled": False,
+                                "model": "gemini-2.5-flash",
+                                "prompt_sections": {
+                                    "role": "Write Nattome reports.",
+                                    "input_contract": "Use evidence and metadata.",
+                                    "creative_direction": "Write marketer guidance.",
+                                    "report_outline": "Use a concise source-backed outline.",
+                                    "claim_safety": "Avoid clinical claims.",
+                                },
+                                "generation": {"temperature": 0.4},
+                                "advanced_generation_config": {},
+                            },
+                        },
+                    },
+                }
+            ]
             expected_config = workspace / "batch_analysis" / "scrape_config.json"
 
             def fake_discovery(run_folder: Path, config_path: Path, timestamp: str) -> Path:
@@ -183,6 +223,12 @@ class DashboardWorkerTest(unittest.TestCase):
             def fake_create_run(args) -> Path:
                 self.assertEqual(args.runs_dir, workspace / "runs" / "batch-analysis")
                 self.assertEqual(args.config, expected_config)
+                self.assertEqual(args.agent_settings_resolution["source"], "supabase")
+                self.assertEqual(args.agent_settings_resolution["version"], 3)
+                self.assertIs(
+                    args.agent_settings_resolution["settings"]["agents"]["nattome_creative_strategy"]["enabled"],
+                    False,
+                )
                 run_folder = args.runs_dir / "20260510T080000+0800_daily"
                 (run_folder / "data").mkdir(parents=True, exist_ok=True)
                 (run_folder / "reports").mkdir(parents=True, exist_ok=True)

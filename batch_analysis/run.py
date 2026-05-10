@@ -19,6 +19,7 @@ from .config import (
 from .evidence_io import EvidenceBundleStore
 from .gemini_reports import GeminiClientFactory, generate_nattome_pov_reports
 from .telegram_delivery import TelegramDocumentSender, TelegramSender, deliver_reports_to_telegram
+from dashboard.agent_settings import resolve_agent_settings, validate_agent_settings
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -207,6 +208,66 @@ def existing_run_artifacts(run_folder: Path) -> list[Path]:
     return [path for path in candidates if path.exists()]
 
 
+def failed_agent_settings_result(error: str) -> dict[str, Any]:
+    failure = [{"status": "failed", "reason": error}]
+    return {
+        "phases": [
+            {
+                "name": "gemini_video_evidence",
+                "status": "failed",
+                "model_name": "",
+                "inputs": {},
+                "outputs": {},
+                "failure_details": failure,
+            },
+            {
+                "name": "gemini_creative_strategy",
+                "status": "failed",
+                "model_name": "",
+                "inputs": {},
+                "outputs": {},
+                "failure_details": failure,
+            },
+            {
+                "name": "nattome_pov_reports",
+                "status": "failed",
+                "model_name": "",
+                "inputs": {},
+                "outputs": {"reports": [], "per_video_reports": []},
+                "failure_details": failure,
+            },
+        ],
+        "final_outputs": [],
+    }
+
+
+def resolve_run_agent_settings(args: argparse.Namespace) -> dict[str, Any]:
+    explicit_resolution = getattr(args, "agent_settings_resolution", None)
+    if explicit_resolution is not None:
+        return {
+            "source": str(explicit_resolution.get("source") or "provided"),
+            "version": explicit_resolution.get("version"),
+            "settings": validate_agent_settings(explicit_resolution.get("settings") or {}),
+        }
+    local_config_path = getattr(args, "agent_config", None)
+    if local_config_path is None:
+        local_config_path = Path("batch_analysis") / "agent_config.json"
+    return resolve_agent_settings(local_config_path=local_config_path)
+
+
+def write_agent_settings_snapshot(run_folder: Path, resolution: dict[str, Any]) -> str:
+    snapshot_path = output_path(run_folder, "data", "agent_settings_snapshot.json")
+    write_json(
+        snapshot_path,
+        {
+            "source": resolution["source"],
+            "version": resolution["version"],
+            "settings": resolution["settings"],
+        },
+    )
+    return "data/agent_settings_snapshot.json"
+
+
 def create_run(
     args: argparse.Namespace,
     *,
@@ -244,16 +305,36 @@ def create_run(
 
     evidence_index = None
     gemini_reports = None
+    agent_settings_manifest = None
     if selected_batch is not None:
         write_selected_batch(run_folder, selected_batch)
         evidence_index = EvidenceBundleStore(run_folder).write_source_snapshots(
             selected_batch["selected_candidates"]
         )
-        gemini_reports = generate_nattome_pov_reports(
-            run_folder,
-            selected_batch["selected_candidates"],
-            client_factory=gemini_client_factory,
-        )
+        try:
+            agent_settings_resolution = resolve_run_agent_settings(args)
+            snapshot_path = write_agent_settings_snapshot(run_folder, agent_settings_resolution)
+            agent_settings_manifest = {
+                "source": agent_settings_resolution["source"],
+                "version": agent_settings_resolution["version"],
+                "snapshot": snapshot_path,
+            }
+            gemini_reports = generate_nattome_pov_reports(
+                run_folder,
+                selected_batch["selected_candidates"],
+                client_factory=gemini_client_factory,
+                agent_settings=agent_settings_resolution["settings"],
+            )
+        except ValueError as exc:
+            agent_settings_manifest = {
+                "source": str(
+                    (getattr(args, "agent_settings_resolution", {}) or {}).get("source")
+                    or "unknown"
+                ),
+                "version": (getattr(args, "agent_settings_resolution", {}) or {}).get("version"),
+                "snapshot": None,
+            }
+            gemini_reports = failed_agent_settings_result(str(exc))
 
     metadata = build_metadata(
         args,
@@ -271,6 +352,8 @@ def create_run(
         has_candidate_selection=selected_batch is not None,
         has_source_video_snapshots=evidence_index is not None,
     )
+    if agent_settings_manifest is not None:
+        manifest["agent_settings"] = agent_settings_manifest
     if gemini_reports is not None:
         manifest["phases"].extend(gemini_reports["phases"])
         manifest["outputs"]["final_outputs"] = gemini_reports["final_outputs"]

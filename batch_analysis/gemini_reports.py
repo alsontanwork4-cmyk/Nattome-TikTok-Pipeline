@@ -173,6 +173,8 @@ def build_creative_strategy_prompt(
 def phase_status(statuses: list[str]) -> str:
     if not statuses:
         return "skipped"
+    if all(status == "disabled" for status in statuses):
+        return "disabled"
     if all(status == "completed" for status in statuses):
         return "completed"
     if all(status == "skipped" for status in statuses):
@@ -214,6 +216,7 @@ class GeminiNattomePovReporter:
         model_name: str = DEFAULT_GEMINI_MODEL,
         client_factory: GeminiClientFactory | None = None,
         brand_reference_path: Path = NATTOME_BRAND_REFERENCE,
+        agent_settings: dict[str, Any] | None = None,
     ):
         self.run_folder = run_folder
         self.api_key = api_key if api_key is not None else os.environ.get("GEMINI_API_KEY")
@@ -221,10 +224,27 @@ class GeminiNattomePovReporter:
         self.client_factory = client_factory or create_official_gemini_client
         self.brand_reference_path = brand_reference_path
         self.store = EvidenceBundleStore(run_folder)
+        self.agent_settings = self._validated_agent_settings(agent_settings)
+        self.evidence_agent = self.agent_settings["agents"]["gemini_video_evidence"]
+        self.creative_agent = self.agent_settings["agents"]["nattome_creative_strategy"]
 
     def run(self, candidates: list[dict[str, Any]]) -> dict[str, Any]:
         if not candidates:
             return self._result([], [], [], [])
+        if not self.evidence_agent["enabled"]:
+            disabled = [
+                self._disabled_record(candidate, self.store.load_snapshot(candidate)["prefix"])
+                for candidate in candidates
+            ]
+            skipped = [
+                self._skipped_record(
+                    candidate,
+                    self.store.load_snapshot(candidate)["prefix"],
+                    "Gemini Video Evidence Agent is disabled.",
+                )
+                for candidate in candidates
+            ]
+            return self._result(disabled, skipped, skipped, [])
         if not self.api_key:
             missing = [
                 {
@@ -239,7 +259,11 @@ class GeminiNattomePovReporter:
 
         try:
             client = self.client_factory(self.api_key)
-            brand_reference = self.brand_reference_path.read_text(encoding="utf-8")
+            brand_reference = (
+                self.brand_reference_path.read_text(encoding="utf-8")
+                if self.creative_agent["enabled"]
+                else ""
+            )
         except Exception as exc:
             failed = [
                 self._failure_record(
@@ -283,6 +307,16 @@ class GeminiNattomePovReporter:
                 "creative": self._artifact_record(candidate, prefix, "skipped", creative_path),
                 "report": self._artifact_record(candidate, prefix, "skipped", report_path),
             }
+        if evidence_path.exists() and not self.creative_agent["enabled"]:
+            return {
+                "evidence": self._artifact_record(candidate, prefix, "skipped", evidence_path),
+                "creative": self._disabled_record(candidate, prefix),
+                "report": self._skipped_record(
+                    candidate,
+                    prefix,
+                    "Nattome Creative Strategist Agent is disabled.",
+                ),
+            }
 
         source_video = snapshot.get("source_video", {})
         if source_video.get("state") != "available" or not source_video.get("path"):
@@ -295,12 +329,13 @@ class GeminiNattomePovReporter:
             uploaded_file = client.files.upload(file=str(video_path))
             uploaded_file = self._wait_for_uploaded_file_active(client, uploaded_file)
             evidence_response = client.models.generate_content(
-                model=self.model_name,
+                model=self.evidence_agent["model"],
                 contents=[build_video_evidence_prompt(candidate), uploaded_file],
+                config=self._generation_config(self.evidence_agent),
             )
             evidence_payload = {
                 "agent": "gemini_video_evidence",
-                "model_name": self.model_name,
+                "model_name": self.evidence_agent["model"],
                 "candidate_id": candidate.get("id"),
                 "prefix": prefix,
                 "source_video": source_video["path"],
@@ -309,8 +344,19 @@ class GeminiNattomePovReporter:
             }
             write_json_object(evidence_path, evidence_payload)
 
+            if not self.creative_agent["enabled"]:
+                return {
+                    "evidence": self._artifact_record(candidate, prefix, "completed", evidence_path),
+                    "creative": self._disabled_record(candidate, prefix),
+                    "report": self._skipped_record(
+                        candidate,
+                        prefix,
+                        "Nattome Creative Strategist Agent is disabled.",
+                    ),
+                }
+
             creative_response = client.models.generate_content(
-                model=self.model_name,
+                model=self.creative_agent["model"],
                 contents=[
                     build_creative_strategy_prompt(
                         candidate,
@@ -318,10 +364,11 @@ class GeminiNattomePovReporter:
                         brand_reference,
                     )
                 ],
+                config=self._generation_config(self.creative_agent),
             )
             creative_payload = {
                 "agent": "gemini_creative_strategy",
-                "model_name": self.model_name,
+                "model_name": self.creative_agent["model"],
                 "candidate_id": candidate.get("id"),
                 "prefix": prefix,
                 "inputs": {
@@ -361,7 +408,7 @@ class GeminiNattomePovReporter:
                 phase_record(
                     "gemini_video_evidence",
                     phase_status([record["status"] for record in evidence_records]),
-                    model_name=self.model_name,
+                    model_name=self.evidence_agent["model"],
                     inputs={"source_video_snapshots": "data/evidence_bundle_index.json"},
                     outputs={"artifacts": self._paths(evidence_records)},
                     failure_details=self._failures(evidence_records),
@@ -369,7 +416,7 @@ class GeminiNattomePovReporter:
                 phase_record(
                     "gemini_creative_strategy",
                     phase_status([record["status"] for record in creative_records]),
-                    model_name=self.model_name,
+                    model_name=self.creative_agent["model"],
                     inputs={
                         "evidence": self._paths(evidence_records),
                         "brand_reference": str(self.brand_reference_path.relative_to(WORKSPACE_ROOT)).replace("\\", "/"),
@@ -380,7 +427,7 @@ class GeminiNattomePovReporter:
                 phase_record(
                     "nattome_pov_reports",
                     phase_status([record["status"] for record in report_records]),
-                    model_name=self.model_name,
+                    model_name=self.creative_agent["model"],
                     inputs={"creative_responses": self._paths(creative_records)},
                     outputs={
                         "reports": final_outputs,
@@ -411,6 +458,22 @@ class GeminiNattomePovReporter:
             "candidate_id": candidate.get("id"),
             "prefix": prefix,
             "status": "failed",
+            "reason": reason,
+        }
+
+    def _disabled_record(self, candidate: dict[str, Any], prefix: str) -> dict[str, Any]:
+        return {
+            "candidate_id": candidate.get("id"),
+            "prefix": prefix,
+            "status": "disabled",
+            "reason": "agent is disabled",
+        }
+
+    def _skipped_record(self, candidate: dict[str, Any], prefix: str, reason: str) -> dict[str, Any]:
+        return {
+            "candidate_id": candidate.get("id"),
+            "prefix": prefix,
+            "status": "skipped",
             "reason": reason,
         }
 
@@ -514,6 +577,20 @@ class GeminiNattomePovReporter:
         name = getattr(state, "name", None)
         return str(name or state)
 
+    def _generation_config(self, agent: dict[str, Any]) -> dict[str, Any]:
+        generation = {
+            key: value
+            for key, value in dict(agent.get("generation") or {}).items()
+            if value is not None
+        }
+        generation.update(dict(agent.get("advanced_generation_config") or {}))
+        return generation
+
+    def _validated_agent_settings(self, agent_settings: dict[str, Any] | None) -> dict[str, Any]:
+        from dashboard.agent_settings import DEFAULT_AGENT_SETTINGS, validate_agent_settings
+
+        return validate_agent_settings(agent_settings or DEFAULT_AGENT_SETTINGS)
+
 
 def generate_nattome_pov_reports(
     run_folder: Path,
@@ -522,10 +599,12 @@ def generate_nattome_pov_reports(
     api_key: str | None = None,
     model_name: str = DEFAULT_GEMINI_MODEL,
     client_factory: GeminiClientFactory | None = None,
+    agent_settings: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     return GeminiNattomePovReporter(
         run_folder,
         api_key=api_key,
         model_name=model_name,
         client_factory=client_factory,
+        agent_settings=agent_settings,
     ).run(candidates)
