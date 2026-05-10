@@ -46,7 +46,6 @@ READ_ONLY_SETTINGS: dict[str, str] = {
     "Apify actor ID": "clockworks~tiktok-scraper",
     "Output paths": "runs/batch-analysis/<timestamp>_daily",
     "Pipeline boundary": "source-video snapshots",
-    "Scoring internals": "Virality scoring",
 }
 
 

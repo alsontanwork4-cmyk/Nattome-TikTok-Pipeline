@@ -8,7 +8,6 @@ from typing import Any
 
 from .manual_runs import list_manual_runs
 from .refresh import refresh_dashboard_derivatives
-from .scoring import nattome_relevance, weighted_engagement
 from .store import connect_dashboard_store
 
 
@@ -31,8 +30,6 @@ class RunHistoryRow:
     raw_candidates: int
     eligible_candidates: int
     selected_count: int
-    average_nattome_relevance: float
-    average_engagement: float
     top_issue: str
     output_links: list[RunOutputLink]
     status: str = ""
@@ -195,8 +192,6 @@ def _scheduled_run_row(connection: sqlite3.Connection, run: sqlite3.Row) -> RunH
         raw_candidates=raw_candidates,
         eligible_candidates=eligible_candidates,
         selected_count=selected_count,
-        average_nattome_relevance=_average([nattome_relevance(video) for video in videos]),
-        average_engagement=_average([weighted_engagement(video) for video in videos]),
         top_issue=_top_issue(manifest),
         output_links=_output_links(connection, run_id),
     )
@@ -213,8 +208,6 @@ def _manual_run_row(run: object) -> RunHistoryRow:
         raw_candidates=0,
         eligible_candidates=0,
         selected_count=0,
-        average_nattome_relevance=0.0,
-        average_engagement=0.0,
         top_issue=getattr(run, "error_text") or "Await indexed output metrics",
         output_links=[
             RunOutputLink(
@@ -343,12 +336,6 @@ def _phase_list(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     if not isinstance(phases, list):
         return []
     return [phase for phase in phases if isinstance(phase, dict)]
-
-
-def _average(values: list[float]) -> float:
-    if not values:
-        return 0.0
-    return sum(values) / len(values)
 
 
 def _json_loads(value: Any) -> Any:

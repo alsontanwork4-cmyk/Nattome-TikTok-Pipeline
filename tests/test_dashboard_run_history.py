@@ -54,8 +54,6 @@ class DashboardRunHistoryTest(unittest.TestCase):
             self.assertEqual(history.rows[1].raw_candidates, 3)
             self.assertEqual(history.rows[1].eligible_candidates, 2)
             self.assertEqual(history.rows[1].selected_count, 2)
-            self.assertGreater(history.rows[1].average_nattome_relevance, 0)
-            self.assertGreater(history.rows[1].average_engagement, 0)
             self.assertTrue(any(link.artifact_type == "selected_batch" for link in history.rows[1].output_links))
             self.assertIn("current-video-1", [video.video_id for video in detail.raw_content])
             self.assertEqual([video.video_id for video in detail.selected_content], ["current-video-1", "current-video-2"])

@@ -6,12 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from .run_history import RunHistoryDetail, RunHistoryRow, load_run_history, load_run_history_detail
-from .scoring import (
-    nattome_relevance,
-    percent_text as _plain_percent_text,
-    score_text as _plain_score_text,
-    weighted_engagement,
-)
 from .time_display import display_datetime, display_datetime_field
 from .web_components import _format_count, _hashtag_text, _json_loads
 from .web_constants import CURATION_LABELS
@@ -196,8 +190,6 @@ def _render_overview_tab(detail: RunHistoryDetail) -> str:
           <h3>Run Summary</h3>
           <ul class="compact-list">
             <li><strong>Config Version:</strong> {html.escape(row.config_version)}</li>
-            <li><strong>Average Relevance:</strong> {_percent_text(row.average_nattome_relevance)}</li>
-            <li><strong>Average Engagement:</strong> {_percent_text(row.average_engagement)}</li>
           </ul>
         </article>
         <article>
@@ -256,9 +248,6 @@ def _render_posts_tab(detail: RunHistoryDetail) -> str:
               <th>Likes</th>
               <th>Comments</th>
               <th>Shares</th>
-              <th>Weighted Engagement</th>
-              <th>Nattome Relevance</th>
-              <th>Selection Score</th>
               <th>Created</th>
               <th>Music</th>
               <th>Downloadable</th>
@@ -278,7 +267,7 @@ def _ranked_videos(detail: RunHistoryDetail) -> list[dict[str, Any]]:
 
     def _sort_key(video: dict[str, Any]) -> tuple[int, float, int]:
         is_selected = 0 if video["video_id"] in detail.selected_video_ids else 1
-        return (is_selected, -weighted_engagement(video), -int(video.get("play_count") or 0))
+        return (is_selected, -int(video.get("play_count") or 0), -int(video.get("like_count") or 0))
 
     videos.sort(key=_sort_key)
     return videos
@@ -299,7 +288,6 @@ def _render_post_row(rank: int, video: dict[str, Any], detail: RunHistoryDetail)
         if tiktok_url
         else '<span class="muted">--</span>'
     )
-    selection_score = _selection_score(video, detail)
     return f"""
       <tr>
         <td>{rank}</td>
@@ -310,9 +298,6 @@ def _render_post_row(rank: int, video: dict[str, Any], detail: RunHistoryDetail)
         <td>{_format_count(video.get("like_count"))}</td>
         <td>{_format_count(video.get("comment_count"))}</td>
         <td>{_format_count(video.get("share_count"))}</td>
-        <td>{_percent_text(weighted_engagement(video))}</td>
-        <td>{_percent_text(nattome_relevance(video))}</td>
-        <td>{_score_text(selection_score)}</td>
         <td>{html.escape(display_datetime(video.get("created_at")))}</td>
         <td>{html.escape(_truncate(music_text, 36))}</td>
         <td>{"Yes" if int(video.get("is_downloadable") or 0) else "No"}</td>
@@ -330,18 +315,15 @@ def _render_authors_tab(detail: RunHistoryDetail) -> str:
         author = str(video.get("author_handle") or "Unknown")
         bucket = grouped.setdefault(
             author,
-            {"posts": 0, "selected": 0, "views": 0, "likes": 0, "engagements": []},
+            {"posts": 0, "selected": 0, "views": 0, "likes": 0},
         )
         bucket["posts"] += 1
         if video["video_id"] in detail.selected_video_ids:
             bucket["selected"] += 1
         bucket["views"] += int(video.get("play_count") or 0)
         bucket["likes"] += int(video.get("like_count") or 0)
-        bucket["engagements"].append(weighted_engagement(video))
     rows: list[str] = []
     for author, bucket in sorted(grouped.items(), key=lambda item: item[1]["views"], reverse=True):
-        engagements = bucket["engagements"] or [0.0]
-        average_engagement = sum(engagements) / len(engagements)
         rows.append(
             f"""
             <tr>
@@ -350,7 +332,6 @@ def _render_authors_tab(detail: RunHistoryDetail) -> str:
               <td>{bucket['selected']}</td>
               <td>{_format_count(bucket['views'])}</td>
               <td>{_format_count(bucket['likes'])}</td>
-              <td>{_percent_text(average_engagement)}</td>
             </tr>
             """
         )
@@ -364,7 +345,6 @@ def _render_authors_tab(detail: RunHistoryDetail) -> str:
               <th>Selected</th>
               <th>Views</th>
               <th>Likes</th>
-              <th>Avg Engagement</th>
             </tr>
           </thead>
           <tbody>{"".join(rows)}</tbody>
@@ -613,21 +593,12 @@ def _risk_flags(video: dict[str, Any], detail: RunHistoryDetail) -> list[str]:
     flags: list[str] = []
     if not int(video.get("is_downloadable") or 0):
         flags.append("Not downloadable")
-    if nattome_relevance(video) <= 0:
-        flags.append("Off-topic")
     if int(video.get("play_count") or 0) < int(detail.selection_config.get("minimum_views") or 0):
         flags.append("Below view floor")
     labels = _curation_labels(video.get("curation_labels"))
     if "Exclude Similar" in labels:
         flags.append("Excluded by marketer")
     return flags
-
-
-def _selection_score(video: dict[str, Any], detail: RunHistoryDetail) -> int:
-    base = (nattome_relevance(video) * 0.6 + min(weighted_engagement(video) / 0.1, 1.0) * 0.4) * 100
-    if video["video_id"] in detail.selected_video_ids:
-        base = max(base, 70.0)
-    return int(round(base))
 
 
 def _music_payload(video: dict[str, Any]) -> dict[str, Any]:
@@ -681,11 +652,3 @@ def _format_field(key: str, value: object) -> str:
         except (TypeError, ValueError):
             return str(value)
     return display_datetime_field(key, value)
-
-
-def _score_text(value: object) -> str:
-    return html.escape(_plain_score_text(value))
-
-
-def _percent_text(value: object) -> str:
-    return _plain_percent_text(value)

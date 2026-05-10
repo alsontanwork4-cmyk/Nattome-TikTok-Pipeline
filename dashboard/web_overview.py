@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from .refresh import refresh_dashboard_derivatives
-from .scoring import relevance_band
 from .settings import get_active_settings_version
 from .store import DASHBOARD_DB_PATH, connect_dashboard_store
 from .time_display import display_datetime
@@ -37,7 +36,7 @@ def _render_overview(workspace: Path, *, run_id: str = "") -> str:
     selector = _render_run_switcher(run_options, selected_run_id)
     return f"""
       {header}
-      <p class="lede" style="margin-top:-12px;">Marketer view: what we searched for, what we got back, whether it was useful for Nattome, and what to change next scrape.</p>
+      <p class="lede" style="margin-top:-12px;">Marketer view: what we searched for, what came back, and how many posts moved through selection.</p>
       {selector}
       {_render_hero_strip(snapshot)}
       <section class="panel wide-panel" aria-label="What did we search for">
@@ -48,9 +47,9 @@ def _render_overview(workspace: Path, *, run_id: str = "") -> str:
         <h2>2. What did we actually get?</h2>
         {_render_results_overview(snapshot)}
       </section>
-      <section class="panel wide-panel" aria-label="Was it useful for Nattome">
-        <h2>3. Was it useful for Nattome?</h2>
-        {_render_usefulness(snapshot)}
+      <section class="panel wide-panel" aria-label="Selection funnel">
+        <h2>3. Selection funnel</h2>
+        {_render_selection_funnel(snapshot)}
       </section>
     """
 
@@ -550,31 +549,15 @@ def _render_sample_posts(videos: list[dict[str, Any]]) -> str:
     return f'<ul class="video-list">{"".join(rows)}</ul>'
 
 
-# ---------- Section 3: usefulness ----------
+# ---------- Section 3: selection funnel ----------
 
-def _render_usefulness(snapshot: _Snapshot) -> str:
-    videos = snapshot.videos
-    bands = _relevance_bands(videos)
+def _render_selection_funnel(snapshot: _Snapshot) -> str:
     funnel = _funnel(snapshot)
     return f"""
-      <div class="overview-grid-3">
-        <article>
-          <h3>Relevance distribution</h3>
-          {_render_relevance_bands(bands, total=len(videos))}
-        </article>
-        <article>
-          <h3>Funnel</h3>
-          {_render_funnel(funnel)}
-        </article>
-      </div>
+      <article>
+        {_render_funnel(funnel)}
+      </article>
     """
-
-
-def _relevance_bands(videos: list[dict[str, Any]]) -> dict[str, int]:
-    bands = {"high relevance": 0, "medium relevance": 0, "low relevance": 0}
-    for video in videos:
-        bands[relevance_band(video)] += 1
-    return bands
 
 
 def _funnel(snapshot: _Snapshot) -> dict[str, int]:
@@ -588,22 +571,6 @@ def _funnel(snapshot: _Snapshot) -> dict[str, int]:
         "eligible": eligible,
         "selected": len(snapshot.selected_ids),
     }
-
-
-def _render_relevance_bands(bands: dict[str, int], *, total: int) -> str:
-    if total <= 0:
-        return '<p class="muted">No videos to score.</p>'
-    rows: list[str] = []
-    for label, key, css in (
-        ("High", "high relevance", "ok"),
-        ("Medium", "medium relevance", "accent"),
-        ("Low", "low relevance", "warn"),
-    ):
-        count = bands[key]
-        rows.append(
-            f'<li><span class="status-pill {css}">{label}</span> {count} of {total} ({_percent(count, total)})</li>'
-        )
-    return f'<ul class="overview-stat-list">{"".join(rows)}</ul>'
 
 
 def _render_funnel(funnel: dict[str, int]) -> str:

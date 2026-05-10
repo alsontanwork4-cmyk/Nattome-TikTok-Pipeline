@@ -5,7 +5,6 @@ import json
 
 from pathlib import Path
 
-from .scoring import engagement_rate_text, freshness_label, percent_text, relevance_label, score_text
 from .web_constants import CURATION_LABELS, NAV_GROUPS, NAV_ITEMS
 
 _ICON_PATHS: dict[str, str] = {
@@ -205,24 +204,6 @@ def _display_status(value: object) -> str:
     return "raw only"
 
 
-def _engagement_rate(video: dict[str, object]) -> str:
-    return engagement_rate_text(video)
-
-
-def _relevance_label(caption: str, hashtags: str, source_input: str) -> str:
-    return relevance_label(
-        {
-            "caption": caption,
-            "hashtags": hashtags,
-            "source_input": source_input,
-        }
-    )
-
-
-def _freshness_label(created_at: object) -> str:
-    return freshness_label(created_at)
-
-
 def _render_placeholder(title: str) -> str:
     escaped_title = html.escape(title)
     return f"""
@@ -240,12 +221,6 @@ def _title_for_path(path: str) -> str:
         if route == path:
             return "Latest Run Overview" if route == "/" else label
     return "Dashboard"
-def _score_text(value: object) -> str:
-    return html.escape(score_text(value))
-
-
-def _percent_text(value: object) -> str:
-    return percent_text(value)
 
 
 def _format_count(value: object) -> str:

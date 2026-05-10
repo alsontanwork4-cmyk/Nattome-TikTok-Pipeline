@@ -14,7 +14,7 @@ This document records the final verification pass for issue `0060`. It traces th
 - `0054` localized smaller dashboard store callers behind `dashboard.store`.
 - `0055` localized heavier feature modules behind `connect_dashboard_store` while keeping feature-specific SQL in feature modules.
 - `0056` centralized derived dashboard refresh in `dashboard.refresh`.
-- `0057` centralized Nattome scoring vocabulary in `dashboard.scoring`.
+- `0057` scoring vocabulary was removed from the dashboard after the scoring UI was retired.
 - `0058` extracted inline theme rendering into `dashboard.web_theme`.
 - `0059` simplified the lightweight dashboard request adapter with GET export and POST form action dispatch tables.
 - `0060` adds this contract verification document and executable architecture checks.
