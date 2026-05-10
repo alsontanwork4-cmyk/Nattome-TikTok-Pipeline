@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not run %}
+{{ theme.page_header("Run not found", "No Supabase run metadata exists for this id.") }}
+<section class="panel">
+  <h2>Run not found</h2>
+  <p class="muted">Check the run id or wait for the worker to publish metadata.</p>
+</section>
+{% else %}
+{{ theme.page_header(run.run_id, "Supabase-backed run detail.") }}
+<section class="panel feature">
+  <h2>Run Metadata</h2>
+  <dl class="metadata-grid">
+    <div>
+      <dt>Status</dt>
+      <dd>{{ theme.status_pill(run.status_label, run.status_tone) }}</dd>
+    </div>
+    <div>
+      <dt>Run type</dt>
+      <dd>{{ run.run_type }}</dd>
+    </div>
+    <div>
+      <dt>Started</dt>
+      <dd>{{ run.started_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Finished</dt>
+      <dd>{{ run.finished_at or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Duration</dt>
+      <dd>{{ run.duration }}</dd>
+    </div>
+    <div>
+      <dt>Triggered by</dt>
+      <dd>{{ run.triggered_by or "--" }}</dd>
+    </div>
+    <div>
+      <dt>Raw candidates</dt>
+      <dd>{{ run.raw_candidate_count }}</dd>
+    </div>
+    <div>
+      <dt>Eligible candidates</dt>
+      <dd>{{ run.eligible_candidate_count }}</dd>
+    </div>
+    <div>
+      <dt>Selected</dt>
+      <dd>{{ run.selected_count }}</dd>
+    </div>
+  </dl>
+  {% if run.error_summary %}
+  <h3>Error summary</h3>
+  <pre class="error-summary">{{ run.error_summary }}</pre>
+  {% endif %}
+</section>
+<section class="panel">
+  <h2>Outputs</h2>
+  {% if not outputs %}
+  <p class="muted">No output metadata has been published for this run.</p>
+  {% else %}
+  <table class="data-table run-outputs-table">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>Type</th>
+        <th>Content type</th>
+        <th>Size</th>
+        <th>Checksum</th>
+        <th>Object path</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for output in outputs %}
+      <tr>
+        <td>{{ output.filename }}</td>
+        <td>{{ output.artifact_type }}</td>
+        <td>{{ output.content_type or "--" }}</td>
+        <td>{{ output.size }}</td>
+        <td>{{ output.checksum or "--" }}</td>
+        <td><code>{{ output.object_path }}</code></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

@@ -2100,3 +2100,29 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to build authenticated runs list and run detail pages from Supabase.
+
+## 2026-05-10 - 0079 Build Runs List And Run Detail From Supabase
+
+Task completed from `docs/issues/0079-build-runs-list-and-run-detail-from-supabase.md`.
+
+Key decisions made:
+- Added authenticated FastAPI `GET /runs` and `GET /runs/{run_id}` pages using the dashboard Supabase client boundary rather than the old request handler or SQLite store.
+- Kept the first real data view narrow: newest-first run list, run detail metadata, output metadata, supported status pills, and missing-run handling.
+- Redacted secret-like lines from failed run error summaries while preserving concise actionable failure text.
+- Kept the pages on the legacy Jinja visual theme with panels, tables, metadata grids, and status pills.
+
+Files changed:
+- `dashboard/app.py`
+- `dashboard/templates/runs.html`
+- `dashboard/templates/run_detail.html`
+- `tests/test_dashboard_fastapi_runs.py`
+- `docs/issues/done/0079-build-runs-list-and-run-detail-from-supabase.md`
+
+Feedback:
+- RED: `python -m pytest tests/test_dashboard_fastapi_runs.py -q` failed because `/runs` returned 404 and `create_app` had no dashboard data-client seam.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_runs.py -q` passed with 5 tests and 10 subtests.
+- GREEN: `python -m pytest tests/test_dashboard_fastapi_shell.py tests/test_dashboard_supabase_contract.py tests/test_dashboard_fastapi_runs.py -q` passed with 21 tests and 17 subtests.
+- GREEN: `python -m pytest -q` passed with 112 tests and 65 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to build the authenticated overview from Supabase runs.
