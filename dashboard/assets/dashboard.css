@@ -356,8 +356,6 @@
       border-color: rgba(199,122,26,.35);
     }
     .notice h2 { color: var(--warn); }
-    .panel.healthy { background: linear-gradient(180deg, var(--success-soft), var(--panel) 70%); border-color: rgba(79,112,66,.3); }
-    .panel.healthy .metric { color: var(--success); }
     .panel.degraded { background: linear-gradient(180deg, var(--warn-soft), var(--panel) 70%); border-color: rgba(199,122,26,.35); }
     .panel.degraded .metric { color: var(--warn); }
     .panel.failing { background: linear-gradient(180deg, var(--danger-soft), var(--panel) 70%); border-color: rgba(176,65,58,.3); }
@@ -1102,32 +1100,6 @@
     }
     /* ---- Overview marketer view ---- */
     .overview-hero { margin-bottom: 18px; }
-    .score-logic-list {
-      display: grid;
-      gap: 7px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .score-logic-list li {
-      align-items: center;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      display: flex;
-      font-size: 12.5px;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 6px;
-    }
-    .score-logic-list li:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
-    .score-logic-list strong {
-      color: var(--ink-2);
-      font-feature-settings: "tnum";
-      white-space: nowrap;
-    }
     .overview-grid-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1145,10 +1117,6 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--muted);
-    }
-    .overview-disclaimer {
-      margin: -6px 0 14px;
-      font-size: 12.5px;
     }
     .chip-row {
       display: flex;
@@ -1214,18 +1182,6 @@
       font-size: 22px;
       color: var(--ink-2);
       font-weight: 600;
-    }
-    .suggestion-card.suggestion-keep {
-      background: linear-gradient(180deg, var(--success-soft), var(--bg-warm) 80%);
-      border-color: rgba(79,112,66,.35);
-    }
-    .suggestion-card.suggestion-add {
-      background: linear-gradient(180deg, var(--accent-soft), var(--bg-warm) 80%);
-      border-color: rgba(184,91,46,.3);
-    }
-    .suggestion-card.suggestion-remove {
-      background: linear-gradient(180deg, var(--danger-soft), var(--bg-warm) 80%);
-      border-color: rgba(176,65,58,.3);
     }
     @media (max-width: 960px) {
       .overview-grid-3 { grid-template-columns: 1fr; }

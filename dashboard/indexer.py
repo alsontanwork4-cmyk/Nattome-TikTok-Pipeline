@@ -11,13 +11,11 @@ from .store import connect_dashboard_store, dump_json
 
 
 DERIVED_TABLES = (
-    "scrape_quality_scores",
     "artifact_sources",
     "raw_videos",
     "selected_batches",
     "batch_runs",
     "run_outputs",
-    "pipeline_health_summaries",
 )
 
 

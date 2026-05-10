@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
 from typing import Any
 
 NATTOME_TERMS = (
@@ -47,64 +46,11 @@ def weighted_engagement(video: Any) -> float:
     return (likes + comments * 5 + shares * 10) / views
 
 
-def engagement_band(video: Any) -> str:
-    engagement = weighted_engagement(video)
-    if engagement >= 0.08:
-        return "high engagement"
-    if engagement >= 0.03:
-        return "medium engagement"
-    return "low engagement"
-
-
 def engagement_rate_text(video: Any) -> str:
     views = _positive_int(_value(video, "play_count"), 0)
     if views <= 0:
         return "--"
     return f"{weighted_engagement(video) * 100:.1f}%"
-
-
-def video_score_band(video: Any) -> str:
-    relevance = relevance_band(video)
-    engagement = engagement_band(video)
-    if relevance == "high relevance" and engagement == "high engagement":
-        return "strong scrape"
-    if relevance != "low relevance" and engagement != "low engagement":
-        return "usable scrape"
-    return "needs attention"
-
-
-def score_band(score: int) -> str:
-    if score >= 80:
-        return "strong scrape"
-    if score >= 60:
-        return "usable scrape"
-    return "needs attention"
-
-
-def scrape_freshness_score(
-    video: Any,
-    run_timestamp: datetime | str | None,
-    max_age_days: float,
-) -> float:
-    created = parse_datetime(_value(video, "created_at"))
-    run_time = parse_datetime(run_timestamp)
-    if created is None or run_time is None:
-        return 0.5
-    age_days = max((run_time - created).total_seconds() / 86400, 0.0)
-    return 1.0 - min(age_days / max(max_age_days, 1.0), 1.0)
-
-
-def freshness_facet(created_at: Any, run_timestamp: datetime | str | None) -> str:
-    created = parse_datetime(created_at)
-    run_time = parse_datetime(run_timestamp)
-    if created is None or run_time is None:
-        return "undated"
-    age_days = max((run_time - created).total_seconds() / 86400, 0.0)
-    if age_days <= 14:
-        return "fresh"
-    if age_days <= 45:
-        return "aging"
-    return "stale"
 
 
 def freshness_label(created_at: Any) -> str:
@@ -121,23 +67,6 @@ def percent_text(value: object) -> str:
     except (TypeError, ValueError):
         return "--"
     return f"{number * 100:.1f}%"
-
-
-def parse_datetime(value: Any) -> datetime | None:
-    if not value:
-        return None
-    if isinstance(value, datetime):
-        parsed = value
-    elif isinstance(value, (int, float)):
-        parsed = datetime.fromtimestamp(value, tz=timezone.utc)
-    else:
-        try:
-            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
-        except ValueError:
-            return None
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed.astimezone(timezone.utc)
 
 
 def _nattome_match_count(video: Any) -> int:

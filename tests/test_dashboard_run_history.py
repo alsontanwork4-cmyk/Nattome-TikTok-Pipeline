@@ -4,17 +4,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from dashboard.health import compute_pipeline_health
 from dashboard.indexer import index_pipeline_artifacts
 from dashboard.manual_runs import trigger_manual_run
-from dashboard.quality import compute_scrape_quality_scores
 from dashboard.run_history import load_run_history, load_run_history_detail
 from dashboard.store import DASHBOARD_DB_PATH, initialize_dashboard_store
 from dashboard.web import render_page
 
 
 class DashboardRunHistoryTest(unittest.TestCase):
-    def test_run_history_combines_scheduled_manual_trends_and_drilldown(self):
+    def test_run_history_combines_scheduled_manual_runs_and_drilldown(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_fixture_workspace(
@@ -35,11 +33,9 @@ class DashboardRunHistoryTest(unittest.TestCase):
             )
             initialize_dashboard_store(workspace)
             index_pipeline_artifacts(workspace)
-            compute_scrape_quality_scores(workspace)
-            compute_pipeline_health(workspace)
             trigger_manual_run(
                 workspace,
-                "scrape_only",
+                "full_pipeline",
                 triggered_by="marketer@example.com",
                 executor=lambda command, *, cwd: self._completed(command),
             )
@@ -58,22 +54,17 @@ class DashboardRunHistoryTest(unittest.TestCase):
             self.assertEqual(history.rows[1].raw_candidates, 3)
             self.assertEqual(history.rows[1].eligible_candidates, 2)
             self.assertEqual(history.rows[1].selected_count, 2)
-            self.assertGreater(history.rows[1].scrape_quality_score or 0, 0)
             self.assertGreater(history.rows[1].average_nattome_relevance, 0)
             self.assertGreater(history.rows[1].average_engagement, 0)
-            self.assertEqual(history.rows[1].pipeline_health, "completed")
             self.assertTrue(any(link.artifact_type == "selected_batch" for link in history.rows[1].output_links))
-            self.assertEqual([point.config_version for point in history.trend_points], ["v2", "v3"])
-            self.assertEqual([overlay.version for overlay in history.config_overlays], ["v2", "v3"])
             self.assertIn("current-video-1", [video.video_id for video in detail.raw_content])
             self.assertEqual([video.video_id for video in detail.selected_content], ["current-video-1", "current-video-2"])
-            self.assertTrue(detail.quality_drivers)
             self.assertTrue(detail.pipeline_phases)
             self.assertIn("logs/pipeline.log", detail.logs[0])
             self.assertFalse(any(link.artifact_type == "batch_index" for link in detail.output_links))
             self.assertIn("Scheduled Daily", body)
-            self.assertIn("Trend Monitoring", body)
-            self.assertIn("Config Overlays", body)
+            self.assertNotIn("Trend Monitoring", body)
+            self.assertNotIn("Config Overlays", body)
             self.assertIn("20260507T010000Z_daily", body)
             self.assertIn("2026-05-07 09:00:00 +0800", body)
             self.assertIn("data/selected_batch.json", body)
@@ -87,7 +78,6 @@ class DashboardRunHistoryTest(unittest.TestCase):
             body = render_page("/run-history", workspace)
 
             self.assertEqual(history.rows, [])
-            self.assertEqual(history.trend_points, [])
             self.assertIn("No scheduled or manual runs have been indexed yet.", body)
 
     def _completed(self, command):

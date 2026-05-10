@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .refresh import refresh_dashboard_derivatives
-from .scoring import nattome_relevance, relevance_band, weighted_engagement
+from .scoring import relevance_band
 from .settings import get_active_settings_version
 from .store import DASHBOARD_DB_PATH, connect_dashboard_store
 from .time_display import display_datetime
@@ -27,7 +27,7 @@ def _render_overview(workspace: Path, *, run_id: str = "") -> str:
     settings = _active_settings(workspace)
     header = _render_page_header(
         "Latest Run Overview",
-        "Local dashboard shell for monitoring scrape quality and pipeline health.",
+        "Local dashboard shell for monitoring TikTok discovery runs.",
         active_path="/",
     )
     if overview is None:
@@ -52,15 +52,6 @@ def _render_overview(workspace: Path, *, run_id: str = "") -> str:
         <h2>3. Was it useful for Nattome?</h2>
         {_render_usefulness(snapshot)}
       </section>
-      <section class="panel wide-panel" aria-label="Where did the scrape drift">
-        <h2>4. Where did the scrape drift?</h2>
-        {_render_drift(snapshot)}
-      </section>
-      <section class="panel wide-panel" aria-label="What should we change next scrape">
-        <h2>5. What should we change next scrape?</h2>
-        <p class="muted overview-disclaimer">Heuristic prompts based on this run's relevance bands and selection yield. Treat as suggestions, not commands.</p>
-        {_render_change_suggestions(snapshot)}
-      </section>
     """
 
 
@@ -71,8 +62,6 @@ class _Snapshot:
         self,
         *,
         run: dict[str, Any],
-        score: dict[str, Any] | None,
-        health: dict[str, Any] | None,
         config: dict[str, Any],
         phase_issues: list[str],
         videos: list[dict[str, Any]],
@@ -80,8 +69,6 @@ class _Snapshot:
         settings: dict[str, Any],
     ) -> None:
         self.run = run
-        self.score = score
-        self.health = health
         self.config = config
         self.phase_issues = phase_issues
         self.videos = videos
@@ -92,8 +79,6 @@ class _Snapshot:
     def from_overview(cls, overview: dict[str, Any], settings: dict[str, Any]) -> "_Snapshot":
         return cls(
             run=overview["run"],
-            score=overview["score"],
-            health=overview["health"],
             config=overview["config"],
             phase_issues=overview["phase_issues"],
             videos=overview["videos"],
@@ -180,14 +165,6 @@ def _load_latest_overview(workspace: Path) -> dict[str, object] | None:
 
 def _build_overview(connection, run) -> dict[str, object]:
     run_id = run["run_id"]
-    score = connection.execute(
-        "SELECT * FROM scrape_quality_scores WHERE run_id = ?",
-        (run_id,),
-    ).fetchone()
-    health_summary = connection.execute(
-        "SELECT * FROM pipeline_health_summaries WHERE run_id = ?",
-        (run_id,),
-    ).fetchone()
     selected = connection.execute(
         "SELECT * FROM selected_batches WHERE run_id = ?",
         (run_id,),
@@ -196,8 +173,6 @@ def _build_overview(connection, run) -> dict[str, object]:
     manifest = _json_loads(run["raw_json"])
     return {
         "run": dict(run),
-        "score": dict(score) if score else None,
-        "health": dict(health_summary) if health_summary else None,
         "videos": [dict(video) for video in videos],
         "selected_ids": _selected_ids(selected),
         "config": _run_configuration(manifest, selected),
@@ -364,70 +339,41 @@ def _render_run_switch_option(option: dict[str, str], is_selected: bool) -> str:
 # ---------- Hero strip ----------
 
 def _render_hero_strip(snapshot: _Snapshot) -> str:
-    score = snapshot.score
     run = snapshot.run
     config = snapshot.config
-    quality_metric = str(score["score"]) if score else "--"
-    quality_band = score["band"] if score else "not scored"
     config_version = config.get("version") or "Not recorded"
     next_scheduled_run = display_datetime(config.get("next_scheduled_run"), fallback="Not scheduled")
     run_timestamp = display_datetime(run["run_timestamp"], fallback="Timestamp not recorded")
+    inputs_count = sum(len(items) for items in snapshot.search_inputs.values())
     return f"""
       <section class="grid overview-hero" aria-label="Run snapshot">
-        <article class="panel feature">
-          <h2>Scrape Quality Score</h2>
-          <p class="metric">{html.escape(str(quality_metric))}</p>
-          <p class="muted">{html.escape(str(quality_band))}</p>
-        </article>
-        {_render_score_logic_card(score)}
+        {_render_run_issues_card(snapshot.phase_issues)}
         <article class="panel feature">
           <h2>Latest Run</h2>
           <p class="run-id-metric"><code>{html.escape(str(run["run_id"]))}</code></p>
           <p class="muted">{html.escape(run_timestamp)} &middot; {html.escape(str(run["mode"] or "Run type not recorded"))}</p>
           <p class="muted">Config {html.escape(str(config_version))} &middot; next run {html.escape(str(next_scheduled_run))}</p>
         </article>
+        <article class="panel feature">
+          <h2>Source Inputs</h2>
+          <p class="metric">{inputs_count}</p>
+          <p class="muted">hashtags, keywords, and competitor profiles active for this run.</p>
+        </article>
       </section>
     """
 
 
-def _render_score_logic_card(score: dict[str, Any] | None) -> str:
-    if not score:
-        return """
-        <article class="panel feature">
-          <h2>Score Logic</h2>
-          <p class="muted">Score components will appear once a run is indexed.</p>
-        </article>
-        """
-    components = [
-        ("Candidate volume", score.get("candidate_volume_score"), 25),
-        ("Eligibility yield", score.get("eligibility_yield_score"), 20),
-        ("Nattome relevance", score.get("nattome_relevance_score"), 20),
-        ("Freshness", score.get("freshness_score"), 15),
-        ("Engagement", score.get("engagement_strength_score"), 15),
-        ("Noise control", score.get("duplicate_noise_control_score"), 5),
-    ]
-    items = "".join(
-        f"""
-        <li>
-          <span>{html.escape(label)}</span>
-          <strong>{html.escape(str(_int_or_zero(value)))}/{maximum}</strong>
-        </li>
-        """
-        for label, value, maximum in components
-    )
+def _render_run_issues_card(phase_issues: list[str]) -> str:
+    issue_count = len(phase_issues)
+    status = "No run issues" if issue_count == 0 else f"{issue_count} issue(s)"
+    detail = "No failed, error, or blocked phases recorded." if issue_count == 0 else phase_issues[0]
     return f"""
         <article class="panel feature">
-          <h2>Score Logic</h2>
-          <ul class="score-logic-list">{items}</ul>
+          <h2>Run Issues</h2>
+          <p class="metric">{html.escape(status)}</p>
+          <p class="muted">{html.escape(detail)}</p>
         </article>
     """
-
-
-def _int_or_zero(value: object) -> int:
-    try:
-        return int(value or 0)
-    except (TypeError, ValueError):
-        return 0
 
 
 # ---------- Section 1: search inputs ----------
@@ -610,7 +556,6 @@ def _render_usefulness(snapshot: _Snapshot) -> str:
     videos = snapshot.videos
     bands = _relevance_bands(videos)
     funnel = _funnel(snapshot)
-    drivers = _quality_drivers_items(snapshot.score)
     return f"""
       <div class="overview-grid-3">
         <article>
@@ -620,10 +565,6 @@ def _render_usefulness(snapshot: _Snapshot) -> str:
         <article>
           <h3>Funnel</h3>
           {_render_funnel(funnel)}
-        </article>
-        <article>
-          <h3>Top Quality Drivers</h3>
-          {drivers}
         </article>
       </div>
     """
@@ -675,198 +616,6 @@ def _render_funnel(funnel: dict[str, int]) -> str:
     """
 
 
-def _quality_drivers_items(score: dict[str, object] | None) -> str:
-    if not score:
-        return '<p class="muted">No scrape quality drivers have been computed.</p>'
-    drivers = _json_loads(score.get("drivers_json"))
-    if not isinstance(drivers, list) or not drivers:
-        return '<p class="muted">No scrape quality drivers were recorded.</p>'
-    items: list[str] = []
-    for driver in drivers[:4]:
-        if not isinstance(driver, dict):
-            continue
-        direction = str(driver.get("direction") or "neutral")
-        message = str(driver.get("message") or driver.get("component") or "Quality driver")
-        items.append(f'<li><strong>{html.escape(direction.title())}</strong>: {html.escape(message)}</li>')
-    return f'<ul class="compact-list">{"".join(items)}</ul>' if items else '<p class="muted">No scrape quality drivers were recorded.</p>'
-
-
-# ---------- Section 4: drift ----------
-
-def _render_drift(snapshot: _Snapshot) -> str:
-    videos = snapshot.videos
-    if not videos and not snapshot.phase_issues:
-        return _render_empty_state("warning", "No drift signals yet.", "Run a scrape and the dashboard will surface low-relevance posts and weak attribution.")
-    low_relevance = sorted(
-        [v for v in videos if relevance_band(v) == "low relevance"],
-        key=lambda v: nattome_relevance(v),
-    )[:3]
-    missing_source = sum(1 for v in videos if not str(v.get("source_input") or "").strip())
-    drift_hashtags = _drift_hashtags(videos)
-    issue_items = "".join(f"<li>{html.escape(issue)}</li>" for issue in snapshot.phase_issues[:2])
-    return f"""
-      <div class="overview-grid-3">
-        <article>
-          <h3>Low-relevance examples</h3>
-          {_render_low_relevance(low_relevance)}
-        </article>
-        <article>
-          <h3>Weak attribution</h3>
-          <ul class="overview-stat-list">
-            <li><strong>{missing_source}</strong> post(s) returned with no source_input recorded.</li>
-            <li><strong>{sum(1 for v in videos if not int(v.get('is_downloadable') or 0))}</strong> post(s) not downloadable.</li>
-          </ul>
-        </article>
-        <article>
-          <h3>Off-topic-leaning hashtags</h3>
-          {_render_drift_hashtags(drift_hashtags)}
-        </article>
-      </div>
-      {f'<h3>Run issues</h3><ul class="compact-list">{issue_items}</ul>' if issue_items else ''}
-    """
-
-
-def _render_low_relevance(videos: list[dict[str, Any]]) -> str:
-    if not videos:
-        return '<p class="muted">No low-relevance posts in this run.</p>'
-    items: list[str] = []
-    for video in videos:
-        caption = str(video.get("caption") or "Untitled TikTok")
-        url = str(video.get("tiktok_url") or "")
-        link = f' <a href="{html.escape(url)}" target="_blank" rel="noopener">Open</a>' if url else ""
-        items.append(f"<li><strong>{html.escape(caption)}</strong>{link}</li>")
-    return f'<ul class="compact-list">{"".join(items)}</ul>'
-
-
-def _drift_hashtags(videos: list[dict[str, Any]]) -> list[tuple[str, int, float]]:
-    by_tag: dict[str, list[float]] = {}
-    for video in videos:
-        relevance = nattome_relevance(video)
-        for tag in _video_hashtags(video):
-            by_tag.setdefault(tag, []).append(relevance)
-    rows = []
-    for tag, scores in by_tag.items():
-        if len(scores) < 2:
-            continue
-        average = sum(scores) / len(scores)
-        if average <= 0.25:
-            rows.append((tag, len(scores), average))
-    rows.sort(key=lambda row: (-row[1], row[2]))
-    return rows[:5]
-
-
-def _render_drift_hashtags(rows: list[tuple[str, int, float]]) -> str:
-    if not rows:
-        return '<p class="muted">No hashtags pulled mostly off-topic posts.</p>'
-    items = "".join(
-        f'<li><span class="chip warn">#{html.escape(tag)}</span> &mdash; {count} posts, avg relevance {average:.0%}</li>'
-        for tag, count, average in rows
-    )
-    return f'<ul class="overview-stat-list">{items}</ul>'
-
-
-# ---------- Section 5: change suggestions ----------
-
-def _render_change_suggestions(snapshot: _Snapshot) -> str:
-    keep, add, remove = _suggestions(snapshot)
-    return f"""
-      <div class="overview-grid-3">
-        <article class="suggestion-card suggestion-keep">
-          <h3>Keep</h3>
-          {_render_suggestion_list(keep, empty="No clear high-yield seeds yet.")}
-        </article>
-        <article class="suggestion-card suggestion-add">
-          <h3>Consider adding</h3>
-          {_render_suggestion_list(add, empty="No new high-relevance hashtags surfaced beyond your settings.")}
-        </article>
-        <article class="suggestion-card suggestion-remove">
-          <h3>Consider removing</h3>
-          {_render_suggestion_list(remove, empty="No settings inputs are clearly underperforming.")}
-        </article>
-      </div>
-    """
-
-
-def _suggestions(snapshot: _Snapshot) -> tuple[list[str], list[str], list[str]]:
-    videos = snapshot.videos
-    inputs = snapshot.search_inputs
-    settings_hashtags = {tag.lstrip("#").lower() for tag in inputs["hashtags"]}
-    settings_keywords = {kw.lower() for kw in inputs["keywords"]}
-    settings_profiles = {p.lstrip("@").lower() for p in inputs["profiles"]}
-
-    by_tag_scores: dict[str, list[float]] = {}
-    by_tag_selected: dict[str, int] = {}
-    for video in videos:
-        relevance = nattome_relevance(video)
-        is_selected = video.get("video_id") in snapshot.selected_ids
-        for tag in _video_hashtags(video):
-            by_tag_scores.setdefault(tag, []).append(relevance)
-            if is_selected:
-                by_tag_selected[tag] = by_tag_selected.get(tag, 0) + 1
-
-    by_source: dict[str, list[float]] = {}
-    by_source_selected: dict[str, int] = {}
-    for video in videos:
-        source = str(video.get("source_input") or "").strip()
-        if not source:
-            continue
-        relevance = nattome_relevance(video)
-        by_source.setdefault(source, []).append(relevance)
-        if video.get("video_id") in snapshot.selected_ids:
-            by_source_selected[source] = by_source_selected.get(source, 0) + 1
-
-    keep: list[str] = []
-    for tag in settings_hashtags:
-        scores = by_tag_scores.get(tag, [])
-        if scores and sum(scores) / len(scores) >= 0.5:
-            keep.append(f"#{tag} ({by_tag_selected.get(tag, 0)} selected)")
-    for profile in settings_profiles:
-        seed = f"@{profile}"
-        scores = by_source.get(seed) or by_source.get(profile)
-        if scores and sum(scores) / len(scores) >= 0.5:
-            keep.append(f"{seed} ({by_source_selected.get(seed, 0) + by_source_selected.get(profile, 0)} selected)")
-
-    add: list[str] = []
-    for tag, scores in sorted(
-        by_tag_scores.items(),
-        key=lambda item: (-(sum(item[1]) / len(item[1])), -len(item[1])),
-    ):
-        if tag in settings_hashtags:
-            continue
-        if len(scores) < 2:
-            continue
-        average = sum(scores) / len(scores)
-        if average < 0.5:
-            continue
-        add.append(f"#{tag} (avg relevance {average:.0%}, {len(scores)} posts)")
-        if len(add) >= 5:
-            break
-
-    remove: list[str] = []
-    for tag in settings_hashtags:
-        scores = by_tag_scores.get(tag, [])
-        if scores and sum(scores) / len(scores) <= 0.0 and not by_tag_selected.get(tag):
-            remove.append(f"#{tag} (0% relevance, 0 selected)")
-    for keyword in settings_keywords:
-        scores = by_source.get(keyword) or []
-        if scores and sum(scores) / len(scores) <= 0.0 and not by_source_selected.get(keyword):
-            remove.append(f"\"{keyword}\" (0% relevance, 0 selected)")
-    for profile in settings_profiles:
-        seed = f"@{profile}"
-        scores = by_source.get(seed) or by_source.get(profile) or []
-        if scores and sum(scores) / len(scores) <= 0.0 and not (by_source_selected.get(seed) or by_source_selected.get(profile)):
-            remove.append(f"{seed} (0% relevance, 0 selected)")
-
-    return keep[:5], add, remove[:5]
-
-
-def _render_suggestion_list(items: list[str], *, empty: str) -> str:
-    if not items:
-        return f'<p class="muted">{html.escape(empty)}</p>'
-    rendered = "".join(f"<li>{html.escape(item)}</li>" for item in items)
-    return f'<ul class="compact-list">{rendered}</ul>'
-
-
 # ---------- Empty state ----------
 
 def _render_empty_overview(workspace: Path, header: str, settings: dict[str, Any]) -> str:
@@ -881,13 +630,9 @@ def _render_empty_overview(workspace: Path, header: str, settings: dict[str, Any
       <p class="lede" style="margin-top:-12px;">No indexed runs yet. The dashboard is ready once a Batch Analysis Run is available.</p>
       <section class="grid overview-hero" aria-label="Run snapshot">
         <article class="panel feature">
-          <h2>Scrape Quality Score</h2>
-          <p class="metric muted">--</p>
-          <p class="muted">No raw scrape candidates have been indexed.</p>
-        </article>
-        <article class="panel feature">
-          <h2>Score Logic</h2>
-          <p class="muted">Score components will appear once a run is indexed.</p>
+          <h2>Indexed Runs</h2>
+          <p class="metric muted">0</p>
+          <p class="muted">No Batch Analysis Run has been indexed.</p>
         </article>
         <article class="panel feature">
           <h2>Dashboard Store</h2>
@@ -916,10 +661,6 @@ def _render_empty_overview(workspace: Path, header: str, settings: dict[str, Any
       <section class="panel notice">
         <h2>Latest Run</h2>
         {_render_empty_state('warning', 'No Batch Analysis Run has been indexed.', 'Trigger a run above to populate this overview.')}
-      </section>
-      <section class="panel">
-        <h2>Top Quality Drivers</h2>
-        {_render_empty_state('spark', 'Artifact indexing and scoring will populate this area.')}
       </section>
     """
 

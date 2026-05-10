@@ -13,7 +13,7 @@ NAV_GROUPS = (
         ("Report", "/report", "report"),
         ("Run History", "/run-history", "history"),
     )),
-    ("Quality", (
+    ("Controls", (
         ("Scrape Settings", "/scrape-settings", "settings"),
     )),
 )

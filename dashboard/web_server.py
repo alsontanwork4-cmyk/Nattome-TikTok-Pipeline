@@ -99,7 +99,7 @@ def create_handler(
     def trigger_manual_run_action(current_workspace: Path, form: FormData) -> object:
         return trigger_manual_run(
             current_workspace,
-            _first_form_value(form, "run_type") or "scrape_only",
+            _first_form_value(form, "run_type") or "full_pipeline",
             triggered_by=_first_form_value(form, "user") or "local",
             executor=manual_run_executor,
         )

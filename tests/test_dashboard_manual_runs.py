@@ -43,26 +43,26 @@ class DashboardManualRunsTest(unittest.TestCase):
                 workspace,
                 "POST",
                 "/manual-runs/trigger",
-                body=urlencode({"run_type": "scrape_only", "user": "marketer@example.com"}),
+                body=urlencode({"user": "marketer@example.com"}),
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
                 executor=executor,
             )
             final_response, final_body = self._request(workspace, "GET", "/run-history")
 
             self.assertEqual(initial_response.status, 200)
-            self.assertIn("Run scrape now", initial_body)
+            self.assertNotIn("Run scrape now", initial_body)
             self.assertIn("Run full pipeline", initial_body)
-            self.assertIn("Estimated runtime: 3-8 minutes", initial_body)
-            self.assertIn("Expected outputs: full unique scrape JSON", initial_body)
+            self.assertIn("Estimated runtime: 15-30 minutes", initial_body)
+            self.assertIn("Expected outputs: scrape JSON, selected batch, and source-video snapshot run folder.", initial_body)
             self.assertEqual(post_response.status, 303)
-            self.assertEqual(len(executor.calls), 1)
+            self.assertEqual(len(executor.calls), 2)
             self.assertEqual(final_response.status, 200)
-            self.assertIn("Scrape Only", final_body)
+            self.assertIn("Full Pipeline", final_body)
             self.assertIn("completed", final_body)
             self.assertIn("marketer@example.com", final_body)
             self.assertIn("Source: manual", final_body)
 
-    def test_scrape_only_manual_run_records_provenance_and_outputs(self):
+    def test_full_pipeline_manual_run_records_provenance_and_outputs(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             save_settings_version(
@@ -85,13 +85,13 @@ class DashboardManualRunsTest(unittest.TestCase):
 
             record = trigger_manual_run(
                 workspace,
-                "scrape_only",
+                "full_pipeline",
                 triggered_by="marketer@example.com",
                 executor=executor,
                 now=datetime(2026, 5, 7, 9, 15, tzinfo=timezone.utc),
             )
 
-            self.assertEqual(record.run_type, "scrape_only")
+            self.assertEqual(record.run_type, "full_pipeline")
             self.assertEqual(record.status, "completed")
             self.assertEqual(record.config_version, "v1")
             self.assertEqual(record.triggered_by, "marketer@example.com")
@@ -108,7 +108,19 @@ class DashboardManualRunsTest(unittest.TestCase):
                 record.output_paths["run_folder"],
                 "runs/batch-analysis/20260507T171500+0800_daily",
             )
-            self.assertEqual(len(executor.calls), 1)
+            self.assertEqual(
+                record.output_paths["selected_batch"],
+                "runs/batch-analysis/20260507T171500+0800_daily/data/selected_batch.json",
+            )
+            self.assertEqual(
+                record.output_paths["source_video_index"],
+                "runs/batch-analysis/20260507T171500+0800_daily/data/evidence_bundle_index.json",
+            )
+            self.assertEqual(
+                record.output_paths["run_manifest"],
+                "runs/batch-analysis/20260507T171500+0800_daily/run_manifest.json",
+            )
+            self.assertEqual(len(executor.calls), 2)
             command, cwd = executor.calls[0]
             self.assertEqual(cwd, workspace)
             self.assertIn("batch_analysis/scrape_tiktok.py", command)
@@ -166,6 +178,8 @@ class DashboardManualRunsTest(unittest.TestCase):
             self.assertIn(record.output_paths["daily_selection"], batch_command)
             self.assertIn("--timestamp", batch_command)
             self.assertIn("2026-05-07T17:15:00+08:00", batch_command)
+            self.assertIn("--runs-dir", batch_command)
+            self.assertIn("runs/batch-analysis", batch_command)
             self.assertEqual(
                 record.output_paths["run_folder"],
                 "runs/batch-analysis/20260507T171500+0800_daily",
@@ -179,7 +193,7 @@ class DashboardManualRunsTest(unittest.TestCase):
 
             record = trigger_manual_run(
                 workspace,
-                "scrape_only",
+                "full_pipeline",
                 triggered_by="marketer@example.com",
                 executor=executor,
                 now=datetime(2026, 5, 7, 9, 15, tzinfo=timezone.utc),
@@ -205,7 +219,7 @@ class DashboardManualRunsTest(unittest.TestCase):
 
             record = trigger_manual_run(
                 workspace,
-                "scrape_only",
+                "full_pipeline",
                 triggered_by="marketer@example.com",
                 executor=executor,
                 now=datetime(2026, 5, 7, 9, 15, tzinfo=timezone.utc),
@@ -215,6 +229,13 @@ class DashboardManualRunsTest(unittest.TestCase):
                 record.output_paths["raw_scrape"],
                 "runs/batch-analysis/20260507T171501+0800_daily/data/raw_scrape_all.json",
             )
+
+    def test_scrape_only_manual_run_type_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workspace = Path(temp_dir)
+
+            with self.assertRaisesRegex(ValueError, "unknown manual run type: scrape_only"):
+                trigger_manual_run(workspace, "scrape_only")
 
     def _request(
         self,

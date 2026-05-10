@@ -14,9 +14,8 @@ from .settings import get_active_settings_version
 from .store import connect_dashboard_store, dump_json, load_json
 
 
-SCRAPE_ONLY = "scrape_only"
 FULL_PIPELINE = "full_pipeline"
-MANUAL_RUN_TYPES = {SCRAPE_ONLY, FULL_PIPELINE}
+MANUAL_RUN_TYPES = {FULL_PIPELINE}
 
 
 @dataclass(frozen=True)
@@ -39,7 +38,7 @@ RunExecutor = Callable[[Sequence[str]], subprocess.CompletedProcess[str]]
 
 def trigger_manual_run(
     workspace: Path | str = ".",
-    run_type: str = SCRAPE_ONLY,
+    run_type: str = FULL_PIPELINE,
     *,
     triggered_by: str = "local",
     executor: Callable[..., subprocess.CompletedProcess[str]] | None = None,
@@ -49,10 +48,11 @@ def trigger_manual_run(
     if run_type not in MANUAL_RUN_TYPES:
         raise ValueError(f"unknown manual run type: {run_type}")
 
+    run_timestamp = now or datetime.now(timezone.utc)
     active_settings = get_active_settings_version(workspace_path)
     config_version = f"v{active_settings.version}"
-    triggered_at = isoformat_local(now or datetime.now(timezone.utc))
-    timestamp = _available_timestamp(workspace_path, run_type, now or datetime.now(timezone.utc))
+    triggered_at = isoformat_local(run_timestamp)
+    timestamp = _available_timestamp(workspace_path, run_type, run_timestamp)
     run_id = _run_id(timestamp, run_type)
     output_paths = _output_paths(timestamp, run_type)
     config_path = _ensure_scraper_config(workspace_path, active_settings.version, active_settings.new_settings)
@@ -218,8 +218,6 @@ def _commands_for_run(
         "--daily-selection-output",
         output_paths["daily_selection"],
     ]
-    if run_type == SCRAPE_ONLY:
-        return [scrape_command]
     batch_command = [
         sys.executable,
         "batch_analysis/run_batch_analysis.py",
@@ -229,6 +227,8 @@ def _commands_for_run(
         config_path,
         "--timestamp",
         isoformat_local(timestamp),
+        "--runs-dir",
+        "runs/batch-analysis",
     ]
     return [scrape_command, batch_command]
 
@@ -279,6 +279,13 @@ def _output_paths(timestamp: datetime, run_type: str) -> dict[str, str]:
         "run_data_folder": f"{run_root}/data",
         "raw_scrape": f"{run_root}/data/raw_scrape_all.json",
         "daily_selection": f"{run_root}/data/daily_selection_top_videos.json",
+        "run_metadata": f"{run_root}/run_metadata.json",
+        "run_manifest": f"{run_root}/run_manifest.json",
+        "selected_batch": f"{run_root}/data/selected_batch.json",
+        "selected_batch_report": f"{run_root}/reports/selected_batch.md",
+        "source_video_index": f"{run_root}/data/evidence_bundle_index.json",
+        "reports_folder": f"{run_root}/reports",
+        "evidence_folder": f"{run_root}/evidence",
     }
     return paths
 

@@ -28,36 +28,14 @@ class RunHistoryRow:
     source_type: str
     triggered_by: str
     config_version: str
-    scrape_quality_score: int | None
     raw_candidates: int
     eligible_candidates: int
     selected_count: int
     average_nattome_relevance: float
     average_engagement: float
-    freshness_score: int | None
-    duplicate_noise_score: int | None
-    pipeline_health: str
     top_issue: str
     output_links: list[RunOutputLink]
-
-
-@dataclass(frozen=True)
-class RunTrendPoint:
-    run_id: str
-    timestamp: str
-    score: int | None
-    candidate_volume: int
-    eligibility_yield: float
-    average_relevance: float
-    average_engagement: float
-    config_version: str
-
-
-@dataclass(frozen=True)
-class ConfigOverlay:
-    version: str
-    first_seen_at: str
-    run_id: str
+    status: str = ""
 
 
 @dataclass(frozen=True)
@@ -76,7 +54,6 @@ class RunHistoryDetail:
     selected_content: list[RunContentItem]
     videos: list[dict[str, Any]]
     selected_video_ids: set[str]
-    quality_drivers: list[dict[str, Any]]
     pipeline_phases: list[dict[str, Any]]
     logs: list[str]
     output_links: list[RunOutputLink]
@@ -86,8 +63,6 @@ class RunHistoryDetail:
 @dataclass(frozen=True)
 class RunHistory:
     rows: list[RunHistoryRow]
-    trend_points: list[RunTrendPoint]
-    config_overlays: list[ConfigOverlay]
 
 
 def load_run_history(workspace: Path | str = ".") -> RunHistory:
@@ -111,12 +86,7 @@ def load_run_history(workspace: Path | str = ".") -> RunHistory:
             key=lambda row: (row.timestamp, row.run_id),
             reverse=True,
         )
-        trend_points = [_trend_point(row) for row in reversed(scheduled_rows)]
-        return RunHistory(
-            rows=rows,
-            trend_points=trend_points,
-            config_overlays=_config_overlays(trend_points),
-        )
+        return RunHistory(rows=rows)
     finally:
         connection.close()
 
@@ -137,7 +107,6 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
                 selected_content=[],
                 videos=[],
                 selected_video_ids=set(),
-                quality_drivers=[],
                 pipeline_phases=[],
                 logs=[],
                 output_links=row.output_links,
@@ -146,10 +115,6 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
         selected = _selected_batch(connection, run_id)
         raw_videos = _candidate_videos(connection, run_id, selected)
         selected_ids = _selected_video_ids(selected)
-        score = connection.execute(
-            "SELECT drivers_json FROM scrape_quality_scores WHERE run_id = ?",
-            (run_id,),
-        ).fetchone()
         manifest = _json_loads(run["raw_json"])
         videos_with_curation = _videos_with_curation(connection, raw_videos)
         return RunHistoryDetail(
@@ -162,7 +127,6 @@ def load_run_history_detail(workspace: Path | str, run_id: str) -> RunHistoryDet
             ],
             videos=videos_with_curation,
             selected_video_ids=selected_ids,
-            quality_drivers=_json_list(score["drivers_json"] if score else None),
             pipeline_phases=_phase_list(manifest),
             logs=[link.path for link in row.output_links if link.artifact_type == "log"],
             output_links=row.output_links,
@@ -220,14 +184,6 @@ def _scheduled_run_row(connection: sqlite3.Connection, run: sqlite3.Row) -> RunH
         selected_json.get("selected_candidate_count"),
         int(selected["selected_candidate_count"]) if selected else 0,
     )
-    score = connection.execute(
-        "SELECT * FROM scrape_quality_scores WHERE run_id = ?",
-        (run_id,),
-    ).fetchone()
-    health = connection.execute(
-        "SELECT * FROM pipeline_health_summaries WHERE run_id = ?",
-        (run_id,),
-    ).fetchone()
     manifest = _json_loads(run["raw_json"])
     return RunHistoryRow(
         run_id=run_id,
@@ -236,16 +192,12 @@ def _scheduled_run_row(connection: sqlite3.Connection, run: sqlite3.Row) -> RunH
         source_type="scheduled",
         triggered_by="pipeline",
         config_version=_config_version(manifest, selected_json),
-        scrape_quality_score=int(score["score"]) if score else None,
         raw_candidates=raw_candidates,
         eligible_candidates=eligible_candidates,
         selected_count=selected_count,
         average_nattome_relevance=_average([nattome_relevance(video) for video in videos]),
         average_engagement=_average([weighted_engagement(video) for video in videos]),
-        freshness_score=int(score["freshness_score"]) if score else None,
-        duplicate_noise_score=int(score["duplicate_noise_control_score"]) if score else None,
-        pipeline_health=str(health["status"]) if health else "unknown",
-        top_issue=_top_issue(health, score),
+        top_issue=_top_issue(manifest),
         output_links=_output_links(connection, run_id),
     )
 
@@ -258,15 +210,11 @@ def _manual_run_row(run: object) -> RunHistoryRow:
         source_type=getattr(run, "source_type"),
         triggered_by=getattr(run, "triggered_by"),
         config_version=getattr(run, "config_version"),
-        scrape_quality_score=None,
         raw_candidates=0,
         eligible_candidates=0,
         selected_count=0,
         average_nattome_relevance=0.0,
         average_engagement=0.0,
-        freshness_score=None,
-        duplicate_noise_score=None,
-        pipeline_health=getattr(run, "status"),
         top_issue=getattr(run, "error_text") or "Await indexed output metrics",
         output_links=[
             RunOutputLink(
@@ -277,38 +225,8 @@ def _manual_run_row(run: object) -> RunHistoryRow:
             )
             for label, path in getattr(run, "output_paths").items()
         ],
+        status=getattr(run, "status"),
     )
-
-
-def _trend_point(row: RunHistoryRow) -> RunTrendPoint:
-    eligibility_yield = row.eligible_candidates / row.raw_candidates if row.raw_candidates else 0.0
-    return RunTrendPoint(
-        run_id=row.run_id,
-        timestamp=row.timestamp,
-        score=row.scrape_quality_score,
-        candidate_volume=row.raw_candidates,
-        eligibility_yield=eligibility_yield,
-        average_relevance=row.average_nattome_relevance,
-        average_engagement=row.average_engagement,
-        config_version=row.config_version,
-    )
-
-
-def _config_overlays(points: list[RunTrendPoint]) -> list[ConfigOverlay]:
-    overlays: list[ConfigOverlay] = []
-    seen: set[str] = set()
-    for point in points:
-        if not point.config_version or point.config_version in seen:
-            continue
-        seen.add(point.config_version)
-        overlays.append(
-            ConfigOverlay(
-                version=point.config_version,
-                first_seen_at=point.timestamp,
-                run_id=point.run_id,
-            )
-        )
-    return overlays
 
 
 def _selected_batch(connection: sqlite3.Connection, run_id: str) -> sqlite3.Row | None:
@@ -397,20 +315,16 @@ def _config_version(manifest: dict[str, Any], selected_json: dict[str, Any]) -> 
     return str(version or "Not recorded")
 
 
-def _top_issue(health: sqlite3.Row | None, score: sqlite3.Row | None) -> str:
-    if health:
-        items = _json_list(health["items_json"])
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-            severity = str(item.get("severity") or "")
-            if severity in {"blocked", "error", "warning"}:
-                return str(item.get("impact") or item.get("component") or "Review pipeline health")
-    if score:
-        drivers = _json_list(score["drivers_json"])
-        for driver in drivers:
-            if isinstance(driver, dict) and driver.get("direction") == "hurt":
-                return str(driver.get("message") or "Review scrape quality drivers")
+def _top_issue(manifest: dict[str, Any]) -> str:
+    for phase in _phase_list(manifest):
+        status = str(phase.get("status") or "")
+        if status not in {"failed", "error", "blocked"}:
+            continue
+        detail = phase.get("exception") or phase.get("exception_text") or phase.get("error") or phase.get("reason")
+        if detail:
+            return str(detail)
+        phase_name = str(phase.get("name") or "Pipeline phase").replace("_", " ").title()
+        return f"{phase_name} reported {status}"
     return "No blocking issue"
 
 
@@ -444,11 +358,6 @@ def _json_loads(value: Any) -> Any:
         return json.loads(value)
     except (TypeError, json.JSONDecodeError):
         return {}
-
-
-def _json_list(value: Any) -> list[Any]:
-    data = _json_loads(value)
-    return data if isinstance(data, list) else []
 
 
 def _positive_int(value: Any, default: int) -> int:

@@ -24,7 +24,7 @@ This document records the final verification pass for issue `0060`. It traces th
 | PRD contract | Verification result |
 | --- | --- |
 | Public dashboard imports remain stable | Covered by `test_public_dashboard_web_imports_remain_usable`, which verifies `dashboard.web.__all__` and import identities. |
-| Current feature-oriented dashboard modules remain recognizable | Covered by `test_dashboard_architecture_contract_has_no_prohibited_abstractions`, which verifies key feature modules such as Run History, Search, Recommendations, Settings, Nattome POV Library, exports, Pipeline Health, and architecture browsing still exist. |
+| Current feature-oriented dashboard modules remain recognizable | Covered by `test_dashboard_architecture_contract_has_no_prohibited_abstractions`, which verifies key feature modules such as Run History, Search, Recommendations, Settings, Nattome POV Library, exports, and architecture browsing still exist. |
 | No broad folder-by-layer rewrite | Covered by `test_dashboard_architecture_contract_has_no_prohibited_abstractions`, which rejects generic dashboard `controllers`, `repositories`, `services`, and `adapters` folders. |
 | No full repository class per table | Covered by source checks that reject `Repository` and `class DashboardStore` patterns. Feature-specific SQL remains in feature modules where useful. |
 | No storage adapter abstraction, fake in-memory store, or generic store protocol | Covered by source checks rejecting `Protocol` and `class InMemory` patterns in dashboard modules. |

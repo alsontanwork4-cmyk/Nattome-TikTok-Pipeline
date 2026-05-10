@@ -36,7 +36,7 @@ class DashboardStoreTest(unittest.TestCase):
                 connection.close()
 
             self.assertTrue((workspace / DASHBOARD_DB_PATH).is_file())
-            self.assertEqual(schema["value"], "nattome_scrape_quality_dashboard")
+            self.assertEqual(schema["value"], "nattome_dashboard")
             self.assertEqual(user_version["user_version"], 1)
 
     def test_store_json_helpers_use_explicit_fallbacks_and_deterministic_dumps(self):
@@ -278,20 +278,17 @@ class DashboardWebShellTest(unittest.TestCase):
             response, body = self._get_overview(workspace)
 
             self.assertEqual(response.status, 200)
-            self.assertIn("strong scrape", body)
-            self.assertIn("Score Logic", body)
-            self.assertIn("Candidate volume", body)
-            self.assertNotIn("Pipeline Health", body)
-            self.assertNotIn("Pipeline outputs are ready for marketer review.", body)
+            self.assertIn("Run Issues", body)
+            self.assertIn("No failed, error, or blocked phases recorded.", body)
+            self.assertIn("Source Inputs", body)
             self.assertIn("2026-05-07 09:00:00 +0800", body)
             self.assertIn("default", body)
             self.assertIn("v7", body)
             self.assertIn("2026-05-08 09:00:00 +0800", body)
             self.assertIn("Acid reflux bloating gut health hook", body)
             self.assertIn("https://www.tiktok.com/@creator/video/strong-1", body)
-            self.assertIn("Top Quality Drivers", body)
 
-    def test_overview_route_summarizes_needs_attention_latest_run(self):
+    def test_overview_route_summarizes_blocked_latest_run(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_fixture_workspace(
@@ -332,11 +329,7 @@ class DashboardWebShellTest(unittest.TestCase):
             response, body = self._get_overview(workspace)
 
             self.assertEqual(response.status, 200)
-            self.assertIn("needs attention", body)
-            self.assertIn("Score Logic", body)
-            self.assertIn("Eligibility yield", body)
-            self.assertNotIn("Pipeline Health", body)
-            self.assertNotIn("Pipeline is blocked before marketer-ready outputs can be trusted.", body)
+            self.assertIn("Run Issues", body)
             self.assertIn("No usable raw candidates", body)
             self.assertIn("Random lifestyle clip", body)
 

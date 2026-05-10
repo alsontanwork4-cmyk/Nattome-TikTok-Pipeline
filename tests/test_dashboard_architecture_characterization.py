@@ -8,9 +8,7 @@ import unittest
 from pathlib import Path
 
 import dashboard.exports as dashboard_exports
-import dashboard.health as dashboard_health
 import dashboard.indexer as dashboard_indexer
-import dashboard.quality as dashboard_quality
 import dashboard.run_history as dashboard_run_history
 import dashboard.store as dashboard_store
 import dashboard.web as dashboard_web
@@ -25,9 +23,7 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
     def test_heavy_dashboard_modules_use_store_connection_helper(self):
         modules = [
             dashboard_exports,
-            dashboard_health,
             dashboard_indexer,
-            dashboard_quality,
             dashboard_run_history,
         ]
 
@@ -105,7 +101,7 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
                         user_version = connection.execute("PRAGMA user_version").fetchone()[0]
                     finally:
                         connection.close()
-                    self.assertEqual(schema_name, "nattome_scrape_quality_dashboard")
+                    self.assertEqual(schema_name, "nattome_dashboard")
                     self.assertEqual(user_version, 1)
 
     def test_health_check_route_stays_lightweight_and_does_not_initialize_store(self):
@@ -149,7 +145,6 @@ class DashboardArchitectureCharacterizationTest(unittest.TestCase):
 
         expected_feature_modules = {
             "exports.py",
-            "health.py",
             "manual_runs.py",
             "run_history.py",
             "settings.py",

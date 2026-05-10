@@ -1,14 +1,9 @@
 import unittest
-from datetime import datetime, timezone
 
 from dashboard.scoring import (
-    engagement_band,
-    freshness_facet,
     freshness_label,
     nattome_relevance,
     relevance_band,
-    scrape_freshness_score,
-    video_score_band,
     weighted_engagement,
 )
 
@@ -25,18 +20,10 @@ class DashboardScoringTest(unittest.TestCase):
             "share_count": 400,
             "created_at": "2026-05-06T00:00:00Z",
         }
-        run_timestamp = datetime(2026, 5, 7, tzinfo=timezone.utc)
 
         self.assertEqual(nattome_relevance(raw_video), 1.0)
         self.assertEqual(relevance_band(raw_video), "high relevance")
         self.assertEqual(weighted_engagement(raw_video), 0.145)
-        self.assertEqual(engagement_band(raw_video), "high engagement")
-        self.assertEqual(video_score_band(raw_video), "strong scrape")
-        self.assertAlmostEqual(
-            scrape_freshness_score(raw_video, run_timestamp, max_age_days=14),
-            1 - (1 / 14),
-        )
-        self.assertEqual(freshness_facet(raw_video["created_at"], run_timestamp), "fresh")
         self.assertEqual(freshness_label(raw_video["created_at"]), "created date available")
 
     def test_batch_run_missing_dates_keep_existing_freshness_text(self):
@@ -54,10 +41,6 @@ class DashboardScoringTest(unittest.TestCase):
         self.assertEqual(nattome_relevance(raw_video), 0.0)
         self.assertEqual(relevance_band(raw_video), "low relevance")
         self.assertEqual(weighted_engagement(raw_video), 0.0)
-        self.assertEqual(engagement_band(raw_video), "low engagement")
-        self.assertEqual(video_score_band(raw_video), "needs attention")
-        self.assertEqual(scrape_freshness_score(raw_video, None, max_age_days=14), 0.5)
-        self.assertEqual(freshness_facet(raw_video["created_at"], None), "undated")
         self.assertEqual(freshness_label(raw_video["created_at"]), "created date missing")
 
 

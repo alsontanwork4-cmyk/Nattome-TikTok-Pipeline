@@ -246,11 +246,6 @@ def _score_text(value: object) -> str:
 
 def _percent_text(value: object) -> str:
     return percent_text(value)
-def _health_panel_class(health_summary: dict[str, object] | None) -> str:
-    if not health_summary:
-        return "notice"
-    severity = str(health_summary.get("severity") or "")
-    return "notice" if severity in {"warning", "error", "blocked"} else ""
 
 
 def _format_count(value: object) -> str:

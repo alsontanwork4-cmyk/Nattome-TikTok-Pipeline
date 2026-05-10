@@ -47,8 +47,11 @@ def initialize_dashboard_store(workspace: Path | str = ".") -> Path:
         )
         connection.execute(
             """
-            INSERT OR IGNORE INTO dashboard_metadata (key, value)
-            VALUES ('schema_name', 'nattome_scrape_quality_dashboard')
+            INSERT INTO dashboard_metadata (key, value)
+            VALUES ('schema_name', 'nattome_dashboard')
+            ON CONFLICT(key) DO UPDATE SET
+                value = excluded.value,
+                updated_at = CURRENT_TIMESTAMP
             """
         )
         _create_mutable_tables(connection)
@@ -234,36 +237,6 @@ def _create_artifact_tables(connection: sqlite3.Connection) -> None:
             label TEXT NOT NULL,
             exists_on_disk INTEGER NOT NULL DEFAULT 0,
             indexed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    connection.execute(
-        """
-        CREATE TABLE IF NOT EXISTS scrape_quality_scores (
-            run_id TEXT PRIMARY KEY,
-            score INTEGER NOT NULL,
-            band TEXT NOT NULL,
-            needs_attention INTEGER NOT NULL DEFAULT 0,
-            candidate_volume_score INTEGER NOT NULL,
-            eligibility_yield_score INTEGER NOT NULL,
-            nattome_relevance_score INTEGER NOT NULL,
-            freshness_score INTEGER NOT NULL,
-            engagement_strength_score INTEGER NOT NULL,
-            duplicate_noise_control_score INTEGER NOT NULL,
-            drivers_json TEXT NOT NULL DEFAULT '[]',
-            computed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """
-    )
-    connection.execute(
-        """
-        CREATE TABLE IF NOT EXISTS pipeline_health_summaries (
-            run_id TEXT PRIMARY KEY,
-            severity TEXT NOT NULL,
-            status TEXT NOT NULL,
-            impact_summary TEXT NOT NULL,
-            items_json TEXT NOT NULL DEFAULT '[]',
-            computed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         )
         """
     )

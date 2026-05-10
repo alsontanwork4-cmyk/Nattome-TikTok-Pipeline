@@ -10,7 +10,7 @@ from dashboard.web import render_page
 
 
 class DashboardRefreshTest(unittest.TestCase):
-    def test_refresh_derivatives_indexes_artifacts_quality_and_health(self):
+    def test_refresh_derivatives_indexes_artifacts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workspace = Path(temp_dir)
             self._write_fixture_workspace(workspace)
@@ -20,10 +20,6 @@ class DashboardRefreshTest(unittest.TestCase):
             self.assertEqual(result.intent, "overview")
             self.assertEqual(result.scope, "all")
             self.assertEqual(result.artifact_summary.batch_runs, 1)
-            self.assertEqual([score.run_id for score in result.quality_scores], ["20260507T010000Z_daily"])
-            self.assertEqual([summary.run_id for summary in result.health_summaries], ["20260507T010000Z_daily"])
-            self.assertEqual(self._count(workspace, "scrape_quality_scores"), 1)
-            self.assertEqual(self._count(workspace, "pipeline_health_summaries"), 1)
 
     def test_overview_page_refreshes_derived_dashboard_data_without_manual_step(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -35,8 +31,6 @@ class DashboardRefreshTest(unittest.TestCase):
             self.assertIn("Latest Run Overview", body)
             self.assertIn("20260507T010000Z_daily", body)
             self.assertEqual(self._count(workspace, "batch_runs"), 1)
-            self.assertEqual(self._count(workspace, "scrape_quality_scores"), 1)
-            self.assertEqual(self._count(workspace, "pipeline_health_summaries"), 1)
 
     def _write_fixture_workspace(self, workspace: Path) -> None:
         raw_scrapes = workspace / "data" / "raw_scrapes"

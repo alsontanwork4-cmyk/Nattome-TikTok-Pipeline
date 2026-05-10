@@ -51,14 +51,6 @@ def _render_run_history(
         {_render_run_selector(rows, selected_run_id)}
       </section>
       {detail_markup}
-      <section class="panel wide-panel" aria-label="Trend monitoring">
-        <h2>Trend Monitoring</h2>
-        {_render_trend_points(history.trend_points)}
-      </section>
-      <section class="panel wide-panel" aria-label="Config overlays">
-        <h2>Config Overlays</h2>
-        {_render_config_overlays(history.config_overlays)}
-      </section>
     """
 
 
@@ -74,15 +66,6 @@ def _resolve_selected_run_id(rows: list[RunHistoryRow], requested_run_id: str) -
 def _render_manual_run_controls() -> str:
     return """
       <section class="run-controls" aria-label="Manual run controls">
-        <article class="panel">
-          <h2>Run scrape now</h2>
-          <p class="muted">Estimated runtime: 3-8 minutes.</p>
-          <p class="muted">Expected outputs: full unique scrape JSON and Daily Top Videos handoff.</p>
-          <form class="run-control-form" method="post" action="/manual-runs/trigger">
-            <input type="hidden" name="run_type" value="scrape_only">
-            <button type="submit">Run scrape now</button>
-          </form>
-        </article>
         <article class="panel">
           <h2>Run full pipeline</h2>
           <p class="muted">Estimated runtime: 15-30 minutes.</p>
@@ -110,8 +93,6 @@ def _render_run_selector(rows: list[RunHistoryRow], selected_run_id: str) -> str
               <th>Scanned</th>
               <th>Eligible</th>
               <th>Selected</th>
-              <th>Score</th>
-              <th>Health</th>
               <th>Outputs</th>
             </tr>
           </thead>
@@ -125,15 +106,14 @@ def _render_run_selector_row(row: RunHistoryRow, selected_run_id: str) -> str:
     is_active = row.run_id == selected_run_id
     row_class = ' class="run-selector-active"' if is_active else ""
     label = str(row.run_type).title()
+    status_text = f" Status: {html.escape(row.status)}." if row.status else ""
     return f"""
       <tr{row_class}>
-        <td><a href="/run-history?run_id={html.escape(row.run_id)}">{html.escape(label)}</a><br><code>{html.escape(row.run_id)}</code><br><span class="muted">Source: {html.escape(row.source_type)}. By {html.escape(row.triggered_by)}.</span></td>
+        <td><a href="/run-history?run_id={html.escape(row.run_id)}">{html.escape(label)}</a><br><code>{html.escape(row.run_id)}</code><br><span class="muted">Source: {html.escape(row.source_type)}. By {html.escape(row.triggered_by)}.{status_text}</span></td>
         <td>{html.escape(display_datetime(row.timestamp))}</td>
         <td>{row.raw_candidates}</td>
         <td>{row.eligible_candidates}</td>
         <td>{row.selected_count}</td>
-        <td>{_score_text(row.scrape_quality_score)}</td>
-        <td>{html.escape(row.pipeline_health)}</td>
         <td>{_render_output_links_compact(row.output_links)}</td>
       </tr>
     """
@@ -167,8 +147,6 @@ def _render_run_workbench(detail: RunHistoryDetail, active_tab: str) -> str:
           <div><dt>Scanned</dt><dd>{row.raw_candidates}</dd></div>
           <div><dt>Eligible</dt><dd>{row.eligible_candidates}</dd></div>
           <div><dt>Selected</dt><dd>{row.selected_count}</dd></div>
-          <div><dt>Score</dt><dd>{_score_text(row.scrape_quality_score)}</dd></div>
-          <div><dt>Health</dt><dd>{html.escape(row.pipeline_health)}</dd></div>
         </dl>
       </header>
     """
@@ -220,8 +198,6 @@ def _render_overview_tab(detail: RunHistoryDetail) -> str:
             <li><strong>Config Version:</strong> {html.escape(row.config_version)}</li>
             <li><strong>Average Relevance:</strong> {_percent_text(row.average_nattome_relevance)}</li>
             <li><strong>Average Engagement:</strong> {_percent_text(row.average_engagement)}</li>
-            <li><strong>Freshness Score:</strong> {_score_text(row.freshness_score)}</li>
-            <li><strong>Duplicate / Noise Score:</strong> {_score_text(row.duplicate_noise_score)}</li>
           </ul>
         </article>
         <article>
@@ -256,11 +232,6 @@ def _render_top_issues(detail: RunHistoryDetail) -> str:
     issues: list[str] = []
     if detail.row.top_issue and detail.row.top_issue != "No blocking issue":
         issues.append(html.escape(detail.row.top_issue))
-    for driver in detail.quality_drivers[:3]:
-        if isinstance(driver, dict) and driver.get("direction") == "hurt":
-            message = str(driver.get("message") or driver.get("component") or "")
-            if message:
-                issues.append(html.escape(message))
     if not issues:
         return '<p class="muted">No blocking issues recorded.</p>'
     rendered = "".join(f"<li>{issue}</li>" for issue in issues)
@@ -575,37 +546,6 @@ def _render_curation_card(video: dict[str, Any], run_id: str) -> str:
         </form>
       </article>
     """
-
-
-def _render_trend_points(points: list[object]) -> str:
-    if not points:
-        return '<p class="muted">Trend charts will appear after scheduled runs are indexed.</p>'
-    items: list[str] = []
-    for point in points:
-        items.append(
-            f"""
-            <li>
-              <strong>{html.escape(display_datetime(getattr(point, "timestamp")))}</strong>:
-              score {_score_text(getattr(point, "score"))},
-              candidates {getattr(point, "candidate_volume")},
-              yield {_percent_text(getattr(point, "eligibility_yield"))},
-              relevance {_percent_text(getattr(point, "average_relevance"))},
-              engagement {_percent_text(getattr(point, "average_engagement"))},
-              config {html.escape(getattr(point, "config_version"))}.
-            </li>
-            """
-        )
-    return f'<ol class="compact-list">{"".join(items)}</ol>'
-
-
-def _render_config_overlays(overlays: list[object]) -> str:
-    if not overlays:
-        return '<p class="muted">No config version changes have been indexed yet.</p>'
-    items = [
-        f"<li><strong>{html.escape(getattr(overlay, 'version'))}</strong> first appears at {html.escape(display_datetime(getattr(overlay, 'first_seen_at')))} on <code>{html.escape(getattr(overlay, 'run_id'))}</code>.</li>"
-        for overlay in overlays
-    ]
-    return f'<ul class="compact-list">{"".join(items)}</ul>'
 
 
 _OUTPUT_PRIORITY: tuple[str, ...] = (
