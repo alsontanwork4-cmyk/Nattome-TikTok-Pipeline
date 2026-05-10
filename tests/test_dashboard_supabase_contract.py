@@ -13,6 +13,14 @@ class FakeQuery:
         self.table_name = table_name
         self.recorder = recorder
         self.data = [{"table": table_name}]
+        if table_name == "agent_settings_versions":
+            self.data = [
+                {
+                    "version": 1,
+                    "settings": {"table": table_name},
+                    "is_active": True,
+                }
+            ]
 
     def select(self, columns: str):
         self.recorder.append((self.table_name, "select", columns))
@@ -129,6 +137,7 @@ class DashboardSupabaseContractTest(unittest.TestCase):
             "raw_videos",
             "selected_videos",
             "scrape_settings_versions",
+            "agent_settings_versions",
             "manual_runs",
         }
 
@@ -349,6 +358,66 @@ class DashboardSupabaseContractTest(unittest.TestCase):
                     "p_reason": "Initial production settings",
                     "p_created_by": "owner@example.com",
                     "p_rollback_of_version": None,
+                },
+            ),
+            fake.calls,
+        )
+
+    def test_client_versions_agent_settings_and_rolls_back(self):
+        fake = FakeSupabase()
+        client = DashboardSupabaseClient(fake, storage_bucket="dashboard-artifacts")
+        settings = {
+            "schema_version": 1,
+            "agents": {
+                "gemini_video_evidence": {
+                    "enabled": True,
+                    "model": "gemini-2.5-flash",
+                    "prompt_sections": {"role": "Watch videos."},
+                    "generation": {"temperature": 0.2},
+                    "advanced_generation_config": {},
+                }
+            },
+        }
+
+        saved = client.save_agent_settings_version(
+            settings,
+            reason="Tune evidence extraction",
+            user="owner@example.com",
+        )
+        rolled_back = client.rollback_agent_settings_version(
+            target_version=1,
+            reason="Restore prior agent config",
+            user="owner@example.com",
+        )
+
+        self.assertEqual(saved["version"], 1)
+        self.assertEqual(saved["settings"], settings)
+        self.assertEqual(rolled_back["rollback_of_version"], 1)
+        self.assertIn(("agent_settings_versions", "order", "version", True), fake.calls)
+        self.assertIn(
+            (
+                "client",
+                "rpc",
+                "save_agent_settings_version",
+                {
+                    "p_settings": settings,
+                    "p_reason": "Tune evidence extraction",
+                    "p_created_by": "owner@example.com",
+                    "p_rollback_of_version": None,
+                },
+            ),
+            fake.calls,
+        )
+        self.assertIn(
+            (
+                "client",
+                "rpc",
+                "save_agent_settings_version",
+                {
+                    "p_settings": {"table": "agent_settings_versions"},
+                    "p_reason": "Restore prior agent config",
+                    "p_created_by": "owner@example.com",
+                    "p_rollback_of_version": 1,
                 },
             ),
             fake.calls,

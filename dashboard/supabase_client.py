@@ -71,6 +71,17 @@ DASHBOARD_TABLE_CONTRACT: dict[str, tuple[str, ...]] = {
         "created_at",
         "updated_at",
     ),
+    "agent_settings_versions": (
+        "version",
+        "settings",
+        "reason",
+        "is_active",
+        "rollback_of_version",
+        "created_by",
+        "updated_by",
+        "created_at",
+        "updated_at",
+    ),
     "manual_runs": (
         "id",
         "run_id",
@@ -269,6 +280,61 @@ class DashboardSupabaseClient:
         }
         return self._insert_settings_version(record, fallback_version=_next_settings_version(versions))
 
+    def list_agent_settings_versions(self) -> list[dict[str, Any]]:
+        response = (
+            self._client.table("agent_settings_versions")
+            .select("*")
+            .order("version", desc=True)
+            .execute()
+        )
+        return list(response.data or [])
+
+    def save_agent_settings_version(
+        self,
+        settings: dict[str, Any],
+        *,
+        reason: str,
+        user: str,
+    ) -> dict[str, Any]:
+        versions = self.list_agent_settings_versions()
+        next_version = _next_settings_version(versions)
+        record = {
+            "settings": settings,
+            "reason": reason,
+            "is_active": True,
+            "rollback_of_version": None,
+            "created_by": user,
+            "updated_by": user,
+        }
+        return self._insert_agent_settings_version(record, fallback_version=next_version)
+
+    def rollback_agent_settings_version(
+        self,
+        *,
+        target_version: int,
+        reason: str,
+        user: str,
+    ) -> dict[str, Any]:
+        versions = self.list_agent_settings_versions()
+        target = next(
+            (version for version in versions if int(version.get("version") or 0) == target_version),
+            None,
+        )
+        if target is None:
+            raise ValueError(f"unknown agent settings version: {target_version}")
+        record = {
+            "settings": target.get("settings") or {},
+            "reason": reason,
+            "is_active": True,
+            "rollback_of_version": target_version,
+            "created_by": user,
+            "updated_by": user,
+        }
+        return self._insert_agent_settings_version(
+            record,
+            fallback_version=_next_settings_version(versions),
+        )
+
     def _insert_settings_version(
         self,
         record: dict[str, Any],
@@ -297,6 +363,37 @@ class DashboardSupabaseClient:
             .execute()
         )
         response = self._client.table("scrape_settings_versions").insert(fallback_record).execute()
+        rows = list(response.data or [])
+        return rows[0] if rows else fallback_record
+
+    def _insert_agent_settings_version(
+        self,
+        record: dict[str, Any],
+        *,
+        fallback_version: int,
+    ) -> dict[str, Any]:
+        rpc = getattr(self._client, "rpc", None)
+        if callable(rpc):
+            response = rpc(
+                "save_agent_settings_version",
+                {
+                    "p_settings": record["settings"],
+                    "p_reason": record["reason"],
+                    "p_created_by": record["created_by"],
+                    "p_rollback_of_version": record["rollback_of_version"],
+                },
+            ).execute()
+            rows = list(response.data or [])
+            return rows[0] if rows else {**record, "version": fallback_version}
+
+        fallback_record = {**record, "version": fallback_version}
+        (
+            self._client.table("agent_settings_versions")
+            .update({"is_active": False})
+            .eq("is_active", True)
+            .execute()
+        )
+        response = self._client.table("agent_settings_versions").insert(fallback_record).execute()
         rows = list(response.data or [])
         return rows[0] if rows else fallback_record
 

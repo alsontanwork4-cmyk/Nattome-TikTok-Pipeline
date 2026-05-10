@@ -2369,3 +2369,35 @@ Feedback:
 
 Notes for next iteration:
 - No open AFK issue remains in `docs/issues/` after this cleanup.
+
+## 2026-05-10 - 0089 Add Agent Settings Versioning Tracer
+
+Task completed from `docs/issues/0089-add-agent-settings-versioning-tracer.md`.
+
+Key decisions made:
+- Added `dashboard.agent_settings` as the normalized settings boundary for the two fixed Gemini agents.
+- Kept `GEMINI_API_KEY` outside dashboard-managed config and validated secret-key leakage, Gemini model names, required prompt sections, numeric generation ranges, advanced JSON object shape, supported Gemini generation keys, and polished-field conflicts.
+- Added built-in defaults, local JSON fallback loading, and active Supabase version resolution through the same validation layer.
+- Added `agent_settings_versions` to the Supabase table contract, schema, and idempotent migration with the same active-version/RPC pattern as scrape settings.
+- Added Supabase client methods for listing, saving, and rolling back agent settings versions.
+
+Files changed:
+- `dashboard/agent_settings.py`
+- `dashboard/supabase_client.py`
+- `docs/supabase-dashboard-data-contract.md`
+- `docs/supabase-dashboard-schema.sql`
+- `docs/migrations/20260510_agent_settings_versions.sql`
+- `tests/test_agent_settings.py`
+- `tests/test_dashboard_supabase_contract.py`
+- `progress.txt`
+- `docs/issues/done/0089-add-agent-settings-versioning-tracer.md`
+
+Feedback:
+- RED: `python -m unittest discover -s tests -p test_agent_settings.py` failed because `dashboard.agent_settings` did not exist.
+- RED: `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` failed because `agent_settings_versions` and agent settings client methods did not exist.
+- GREEN: `python -m unittest discover -s tests -p test_agent_settings.py` passed with 5 tests.
+- GREEN: `python -m unittest discover -s tests -p test_dashboard_supabase_contract.py` passed with 9 tests.
+- GREEN: `python -m unittest discover -s tests` passed with 111 tests.
+
+Notes for next iteration:
+- Next AFK slice is expected to wire resolved agent config into Gemini runs.
