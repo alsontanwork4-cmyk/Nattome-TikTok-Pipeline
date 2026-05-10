@@ -2334,3 +2334,38 @@ Feedback:
 
 Notes for next iteration:
 - No blocker remains from this issue. The next AFK slice is expected to remove the legacy dashboard server and SQLite runtime after FastAPI/Supabase parity.
+
+## 2026-05-10 - 0087 Remove Legacy Dashboard Server And SQLite Runtime
+
+Task completed from `docs/issues/0087-remove-legacy-dashboard-server-and-sqlite-runtime.md`.
+
+Key decisions made:
+- Deleted the retired plain HTTP dashboard server, local SQLite store, artifact indexer, refresh path, legacy settings/manual-run/export/read modules, and Python-rendered HTML modules.
+- Replaced `dashboard.web` with a compact FastAPI compatibility entrypoint that exposes `create_app`, `DashboardSettings`, and a `uvicorn` main.
+- Removed obsolete tests that only protected the retired request handler or local SQLite runtime.
+- Kept `dashboard.legacy_import` as the only allowed SQLite reader because it is a one-time migration aid.
+- Superseded the old architecture PRDs that previously prohibited FastAPI or treated SQLite as the only dashboard store.
+- Updated README to point production dashboard operators to the FastAPI/Supabase deployment path.
+- Added a cleanup regression test that protects the removal of legacy runtime files and SQLite initialization paths.
+
+Files changed:
+- `README.md`
+- `dashboard/web.py`
+- Deleted legacy dashboard runtime files under `dashboard/`
+- `docs/prd/dashboard-architecture-contract-verification.md`
+- `docs/prd/dashboard-codebase-architecture-deepening-prd.md`
+- Deleted obsolete legacy dashboard tests under `tests/`
+- `tests/test_dashboard_legacy_cleanup.py`
+- `tests/test_scrape_settings.py`
+- `progress.txt`
+- `docs/issues/done/0087-remove-legacy-dashboard-server-and-sqlite-runtime.md`
+
+Feedback:
+- RED: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_dashboard_legacy_cleanup` failed while legacy modules and docs still existed.
+- GREEN: `C:\Users\Alson\AppData\Local\Programs\Python\Python312\python.exe -m unittest tests.test_dashboard_legacy_cleanup tests.test_scrape_settings` passed with 6 tests after cleanup.
+- GREEN: `.\.venv\Scripts\python.exe -m unittest discover -s tests` passed with 88 tests after installing missing project requirements.
+- GREEN: `rg -n "python -m dashboard\.web" README.md docs dashboard tests -S` only found regression-test guard strings.
+- GREEN: `rg -n "initialize_dashboard_store|connect_dashboard_store|DASHBOARD_DB_PATH|from \.store|from dashboard\.store|sqlite3\.connect\(" dashboard -S` returned no runtime hits.
+
+Notes for next iteration:
+- No open AFK issue remains in `docs/issues/` after this cleanup.

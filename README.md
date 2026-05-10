@@ -87,6 +87,14 @@ The final report is not rendered from a Python template. The Creative Strategist
 
 After report generation, the pipeline sends a Telegram summary message followed by the generated `.md` report document when `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are configured. The summary uses the run timestamp in Singapore time and includes run time, videos compared, and success/fail status. Telegram delivery is recorded as its own manifest phase so delivery failures do not erase successful report artifacts.
 
+## Production Dashboard
+
+The production dashboard is the Supabase-first FastAPI app in `dashboard/app.py`.
+Deploy it with `uvicorn dashboard.app:create_app --factory` behind Nginx and run
+the queue worker as a separate service. Supabase Postgres stores dashboard
+metadata, Supabase Storage stores large artifacts, and Supabase Auth protects
+dashboard pages. See `docs/vps-dashboard-deployment.md`.
+
 ## Tests
 
 ```powershell
