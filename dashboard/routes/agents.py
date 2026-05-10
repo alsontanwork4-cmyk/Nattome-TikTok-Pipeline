@@ -24,15 +24,25 @@ def agents_page(request: Request) -> Response:
     dashboard_client = request.app.state.dashboard_client
 
     error = ""
+    trace_events = []
     try:
         versions = call_client_list(dashboard_client, "list_agent_settings_versions")
+        list_trace_events = getattr(dashboard_client, "list_recent_agent_trace_events", None)
+        if callable(list_trace_events):
+            trace_events = list(list_trace_events(limit=100) or [])
     except Exception as exc:
         versions = []
         error = sanitize_error_summary(exc) or "Agent settings data is unavailable."
     return templates.TemplateResponse(
         request,
         "agents.html",
-        agents_template_context(settings, user=user, versions=versions, error=error),
+        agents_template_context(
+            settings,
+            user=user,
+            versions=versions,
+            error=error,
+            trace_events=trace_events,
+        ),
         status_code=503 if error else 200,
     )
 

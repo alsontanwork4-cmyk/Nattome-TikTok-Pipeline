@@ -72,8 +72,19 @@
     }
   }
 
+  function initializeAgentAutoRefresh() {
+    var marker = document.querySelector("[data-agent-auto-refresh]");
+    if (!marker) return;
+    var seconds = parseInt(marker.getAttribute("data-agent-auto-refresh"), 10);
+    if (!seconds || seconds < 5) seconds = 5;
+    window.setTimeout(function () {
+      window.location.reload();
+    }, seconds * 1000);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initializeSettingsEditMode();
     initializeAutoSubmitControls();
+    initializeAgentAutoRefresh();
   });
 })();

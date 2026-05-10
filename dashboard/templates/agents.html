@@ -26,6 +26,79 @@
 </section>
 {% endif %}
 
+<section class="panel wide-panel live-agents-panel" {% if should_auto_refresh_agents %}data-agent-auto-refresh="5"{% endif %}>
+  <div class="live-agents-header">
+    <div>
+      <h2>Live agent runs</h2>
+      <p class="muted current-settings-helper">Recent trace events update this status without sockets or server-sent events.</p>
+    </div>
+    <a class="action-link secondary" href="/agents">Refresh</a>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table live-agent-table">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Enabled</th>
+          <th>Model</th>
+          <th>Config</th>
+          <th>State</th>
+          <th>Candidate</th>
+          <th>Elapsed</th>
+          <th>Latest error</th>
+          <th>Last completed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in live_agent_rows %}
+        <tr>
+          <td>{{ row.display_name }}</td>
+          <td>{% if row.enabled %}Enabled{% else %}Disabled{% endif %}</td>
+          <td><code>{{ row.model }}</code></td>
+          <td>v{{ row.config_version }}</td>
+          <td><span class="status-pill {{ 'err' if row.state == 'failed' else 'warn' if row.state in ['running', 'queued', 'disabled'] else 'ok' }}">{{ row.state }}</span></td>
+          <td>{{ row.current_candidate or "none" }}</td>
+          <td>{{ row.elapsed or "-" }}</td>
+          <td>{{ row.latest_error_summary or "-" }}</td>
+          <td>{{ row.last_completed_at or "-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel wide-panel trace-history-panel">
+  <h2>Trace history</h2>
+  {% if not trace_history %}
+  <p class="muted">No recent agent trace events yet.</p>
+  {% else %}
+  <ol class="trace-history-list">
+    {% for event in trace_history %}
+    <li class="trace-history-item">
+      <div class="trace-history-main">
+        <span class="status-pill {{ 'err' if event.status == 'failed' else 'warn' if event.status in ['running', 'queued'] else 'ok' }}">{{ event.status }}</span>
+        <strong>{{ event.substep }}</strong>
+        <span>{{ event.agent }}</span>
+      </div>
+      <p class="muted">
+        Run <code>{{ event.run_id }}</code>
+        {% if event.candidate_reference %} - {{ event.candidate_reference }}{% endif %}
+        {% if event.started_at %} - {{ event.started_at }}{% endif %}
+        {% if event.ended_at %} to {{ event.ended_at }}{% endif %}
+      </p>
+      {% if event.artifact_references %}
+      <p class="trace-artifacts">Artifacts: {{ event.artifact_references | join(", ") }}</p>
+      {% endif %}
+      {% if event.error_summary %}
+      <p class="trace-error">{{ event.error_summary }}</p>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+</section>
+
 <p class="settings-status">Next Gemini run uses agent config: <strong>v{{ active.version }}</strong></p>
 
 <section class="panel wide-panel settings-panel unified-settings">

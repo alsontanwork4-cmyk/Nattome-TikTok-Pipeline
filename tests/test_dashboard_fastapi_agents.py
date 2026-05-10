@@ -1,11 +1,13 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from dashboard.agent_settings import DEFAULT_AGENT_SETTINGS
+from dashboard.agent_views import agents_template_context
 from dashboard.app import create_app
 from dashboard.auth import AuthSession, AuthenticatedUser, AuthenticationError
 from dashboard.config import DashboardSettings
@@ -52,9 +54,13 @@ class FakeDashboardDataClient:
         ]
         self.saved_agent_settings = []
         self.rollbacks = []
+        self.agent_trace_events = []
 
     def list_agent_settings_versions(self):
         return self.agent_versions
+
+    def list_recent_agent_trace_events(self, *, limit: int = 100):
+        return self.agent_trace_events[:limit]
 
     def save_agent_settings_version(self, settings, *, reason: str, user: str):
         record = {
@@ -122,6 +128,170 @@ class DashboardFastAPIAgentsTest(unittest.TestCase):
             self.assertLess(response.text.index('href="/agents"'), response.text.index('href="/settings"'))
             self.assertIn('action="/agents/1/rollback"', response.text)
             self.assertNotIn("smoke", response.text.lower())
+
+    def test_agents_view_renders_live_status_rows_trace_history_and_polling_marker(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            data_client = FakeDashboardDataClient()
+            data_client.agent_trace_events = [
+                {
+                    "event_id": "evt-running",
+                    "run_id": "run-live",
+                    "agent": "gemini_video_evidence",
+                    "candidate_id": "video-1",
+                    "candidate_prefix": "001-first-video",
+                    "substep": "generating_evidence",
+                    "status": "running",
+                    "started_at": "2026-05-10T01:59:30+00:00",
+                    "ended_at": None,
+                    "config_source": "supabase",
+                    "config_version": 2,
+                    "artifact_references": ["data/001_evidence.json"],
+                    "error_summary": "",
+                },
+                {
+                    "event_id": "evt-failed",
+                    "run_id": "run-earlier",
+                    "agent": "nattome_creative_strategy",
+                    "candidate_id": "video-2",
+                    "candidate_prefix": "002-second-video",
+                    "substep": "generating_creative_strategy",
+                    "status": "failed",
+                    "started_at": "2026-05-10T01:54:00+00:00",
+                    "ended_at": "2026-05-10T01:55:00+00:00",
+                    "config_source": "supabase",
+                    "config_version": 2,
+                    "artifact_references": [],
+                    "error_summary": "Gemini quota exceeded",
+                },
+            ]
+            client, _ = self._client(Path(temp_dir), data_client)
+
+            response = client.get("/agents")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Live agent runs", response.text)
+            self.assertIn("Gemini Video Evidence Agent", response.text)
+            self.assertIn("Nattome Creative Strategist Agent", response.text)
+            self.assertIn("generating_evidence", response.text)
+            self.assertIn("run-live", response.text)
+            self.assertIn("001-first-video", response.text)
+            self.assertIn("running", response.text)
+            self.assertIn("Gemini quota exceeded", response.text)
+            self.assertIn('data-agent-auto-refresh="5"', response.text)
+            self.assertIn('href="/agents"', response.text)
+            self.assertIn('data-state="failed"', response.text)
+
+    def test_agents_view_model_derives_state_priority_and_preserves_latest_error(self):
+        settings = DashboardSettings(workspace_path=Path("."))
+        trace_events = [
+            {
+                "event_id": "failed-old",
+                "run_id": "run-1",
+                "agent": "gemini_video_evidence",
+                "candidate_id": "video-1",
+                "candidate_prefix": "001-old",
+                "substep": "generating_evidence",
+                "status": "failed",
+                "started_at": "2026-05-10T01:00:00+00:00",
+                "ended_at": "2026-05-10T01:01:00+00:00",
+                "config_source": "supabase",
+                "config_version": 2,
+                "artifact_references": [],
+                "error_summary": "Earlier failure remains visible",
+            },
+            {
+                "event_id": "running-new",
+                "run_id": "run-2",
+                "agent": "gemini_video_evidence",
+                "candidate_id": "video-2",
+                "candidate_prefix": "002-new",
+                "substep": "uploading_video",
+                "status": "running",
+                "started_at": "2026-05-10T01:59:00+00:00",
+                "ended_at": None,
+                "config_source": "supabase",
+                "config_version": 2,
+                "artifact_references": [],
+                "error_summary": "",
+            },
+            {
+                "event_id": "queued",
+                "run_id": "run-3",
+                "agent": "nattome_creative_strategy",
+                "candidate_id": "video-3",
+                "candidate_prefix": "003-queued",
+                "substep": "generating_creative_strategy",
+                "status": "queued",
+                "started_at": "2026-05-10T01:58:00+00:00",
+                "ended_at": None,
+                "config_source": "supabase",
+                "config_version": 2,
+                "artifact_references": [],
+                "error_summary": "",
+            },
+        ]
+
+        context = agents_template_context(
+            settings,
+            user=object(),
+            versions=FakeDashboardDataClient().agent_versions,
+            error="",
+            trace_events=trace_events,
+            now=datetime(2026, 5, 10, 2, 0, tzinfo=timezone.utc),
+        )
+
+        rows = {row["key"]: row for row in context["live_agent_rows"]}
+        self.assertEqual(rows["gemini_video_evidence"]["state"], "running")
+        self.assertEqual(rows["gemini_video_evidence"]["elapsed"], "1m 0s")
+        self.assertEqual(rows["gemini_video_evidence"]["latest_error_summary"], "Earlier failure remains visible")
+        self.assertEqual(rows["nattome_creative_strategy"]["state"], "queued")
+        self.assertEqual(context["mascot_state"], "running")
+        self.assertTrue(context["should_auto_refresh_agents"])
+
+    def test_agents_view_model_clears_failed_state_after_newer_success(self):
+        settings = DashboardSettings(workspace_path=Path("."))
+        trace_events = [
+            {
+                "event_id": "failed-old",
+                "run_id": "run-1",
+                "agent": "nattome_creative_strategy",
+                "candidate_id": "video-1",
+                "candidate_prefix": "001-old",
+                "substep": "generating_creative_strategy",
+                "status": "failed",
+                "started_at": "2026-05-10T01:00:00+00:00",
+                "ended_at": "2026-05-10T01:01:00+00:00",
+                "error_summary": "Previous model error",
+            },
+            {
+                "event_id": "completed-new",
+                "run_id": "run-2",
+                "agent": "nattome_creative_strategy",
+                "candidate_id": "video-2",
+                "candidate_prefix": "002-new",
+                "substep": "completed",
+                "status": "completed",
+                "started_at": "2026-05-10T01:59:00+00:00",
+                "ended_at": "2026-05-10T02:00:00+00:00",
+                "error_summary": "",
+            },
+        ]
+
+        context = agents_template_context(
+            settings,
+            user=object(),
+            versions=FakeDashboardDataClient().agent_versions,
+            error="",
+            trace_events=trace_events,
+            now=datetime(2026, 5, 10, 2, 1, tzinfo=timezone.utc),
+        )
+
+        rows = {row["key"]: row for row in context["live_agent_rows"]}
+        self.assertEqual(rows["nattome_creative_strategy"]["state"], "last succeeded")
+        self.assertEqual(rows["nattome_creative_strategy"]["latest_error_summary"], "Previous model error")
+        self.assertEqual(rows["nattome_creative_strategy"]["last_completed_at"], "2026-05-10T02:00:00+00:00")
+        self.assertEqual(context["mascot_state"], "idle")
+        self.assertFalse(context["should_auto_refresh_agents"])
 
     def test_agents_save_validates_and_persists_with_auth_identity(self):
         with tempfile.TemporaryDirectory() as temp_dir:

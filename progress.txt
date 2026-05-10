@@ -2504,3 +2504,33 @@ Feedback:
 
 Notes for next iteration:
 - Next AFK slice is expected to build live runs and trace history UI.
+
+## 2026-05-10 - 0093 Build Live Runs And Trace History UI
+
+Task completed from `docs/issues/0093-build-live-runs-and-trace-history-ui.md`.
+
+Key decisions made:
+- Added live status derivation to the Agents view model from recent Supabase agent trace rows.
+- Each fixed Gemini agent now gets one operational row with enabled state, model, active config version, current state, current candidate, running elapsed time, latest preserved error summary, and last completed timestamp.
+- Current state is derived from the latest event per agent, with disabled config taking precedence and completed events shown as last succeeded.
+- Mascot state now reflects live status priority: failed, running, queued, disabled, idle; a newer start or success for the same agent clears failed row state while preserving older error summaries.
+- Added compact trace history rendering across recent runs with substep, status, run id, candidate reference, timestamps, artifact references, and sanitized error summary.
+- Added a manual refresh link and a five-second auto-refresh marker/hook only while any agent is running; no websockets or server-sent events were added.
+
+Files changed:
+- `dashboard/agent_views.py`
+- `dashboard/routes/agents.py`
+- `dashboard/templates/agents.html`
+- `dashboard/assets/dashboard.css`
+- `dashboard/assets/dashboard.js`
+- `tests/test_dashboard_fastapi_agents.py`
+- `progress.txt`
+- `docs/issues/done/0093-build-live-runs-and-trace-history-ui.md`
+
+Feedback:
+- RED: `python -m pytest tests\test_dashboard_fastapi_agents.py -q` failed because live status inputs and rendering did not exist.
+- GREEN: `python -m pytest tests\test_dashboard_fastapi_agents.py -q` passed with 8 tests and 3 subtests.
+- GREEN: `python -m pytest -q` passed with 127 tests and 165 subtests.
+
+Notes for next iteration:
+- Next AFK slice is expected to add a run-detail agent trace tab.
